@@ -45,7 +45,7 @@
           </div>
         </div>
   
-        <a href="/Kamau Kelvin Resume.pdf" class="download-btn" download>
+        <a href="/Kamau _Kelvin _Resume.pdf" class="download-btn" download>
           Download Resume 📄
         </a>
       </div>
