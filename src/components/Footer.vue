@@ -1,38 +1,42 @@
 <template>
-    <footer class="footer">
-      <div class="footer-content">
-        <!-- Quick Links -->
-        <div class="footer-section links">
-          <h3>Quick Links</h3>
-          <ul>
-            <li><a href="#about">About</a></li>
-            <li><a href="#projects">Projects</a></li>
-            <li><a href="#contact">Contact</a></li>
-          </ul>
-        </div>
+    <div>
+      <!-- Footer (only on large screens) -->
+      <footer class="footer">
+        <div class="footer-content">
+          <!-- Quick Links -->
+          <div class="footer-section links">
+            <h3>Quick Links</h3>
+            <ul>
+              <li><a href="#about">About</a></li>
+              <li><a href="#projects">Projects</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div>
   
-        <!-- Social Media -->
-        <div class="footer-section socials">
-          <h3>Connect</h3>
-          <div class="footer-icons">
-            <a href="https://github.com/Njenga993" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="mailto:njengak993@gmail.com"><i class="fas fa-envelope"></i></a>
+          <!-- Social Media -->
+          <div class="footer-section socials">
+            <h3>Connect</h3>
+            <div class="footer-icons">
+              <a href="https://github.com/Njenga993" target="_blank"><i class="fab fa-github"></i></a>
+              <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank"><i class="fab fa-linkedin"></i></a>
+              <a href="mailto:njengak993@gmail.com"><i class="fas fa-envelope"></i></a>
+            </div>
+          </div>
+  
+          <!-- Copyright -->
+          <div class="footer-section copyright">
+            <p>&copy; {{ new Date().getFullYear() }} Kelvin Kamau. All rights reserved.</p>
           </div>
         </div>
+      </footer>
   
-        <!-- Copyright -->
-        <div class="footer-section copyright">
-          <p>&copy; {{ new Date().getFullYear() }} Kelvin Kamau. All rights reserved.</p>
-        </div>
-      </div>
-  
-      <!-- Back to Top Button -->
+      <!-- Back to Top Button (always visible) -->
       <button v-show="showButton" @click="scrollToTop" class="back-to-top">
         <i class="fas fa-arrow-up"></i>
       </button>
-    </footer>
+    </div>
   </template>
+  
   
   <script setup>
   import { ref, onMounted, onUnmounted } from 'vue';
@@ -146,11 +150,9 @@
   }
   
   @media (max-width: 768px) {
-    .footer-content {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-    }
+  .footer {
+    display: none;
+  }
   
     .footer-section {
       margin-bottom: 1.5rem;
@@ -160,6 +162,7 @@
       right: 1rem;
       bottom: 1.5rem;
     }
+    
   }
   </style>
   
