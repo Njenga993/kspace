@@ -32,6 +32,14 @@
 <script setup>
 const projects = [
   {
+    title: 'Nyakazi Organics Ecommerce',
+    description: 'A responsive ecommerce site for Nyakazi Organics with product showcase and order handling.',
+    tech: ['React.js', 'JavaScript'],
+    github: 'https://github.com/Njenga993/Nyakazi-ecommerce-',
+    demo: 'https://njenga993.github.io/Nyakazi-ecommerce-/',
+    image: import.meta.env.BASE_URL + 'Nyakazi-ecommerce.PNG',
+  },
+  {
     title: 'Nyakazi Website',
     description: 'A responsive ecommerce site for Nyakazi Organics with product showcase and order handling.',
     tech: ['HTML', 'CSS', 'JavaScript'],
