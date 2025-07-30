@@ -406,7 +406,9 @@ const openPortfolio = (url) => {
   position: relative;
   overflow: hidden;
   min-height: 100vh;
-  max-width: 1200px;
+  
+  width: 100%;
+  
 }
 
 body.dark-theme .experience-section {

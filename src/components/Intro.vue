@@ -116,8 +116,10 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   color: #fff;
-  margin-top: 4rem;
+  margin: 0;
+  padding: 0;
 }
+
 
 /* Background with gradient overlay */
 .hero-bg {

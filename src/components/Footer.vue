@@ -138,6 +138,8 @@ onUnmounted(() => {
   padding: 4rem 2rem 2rem;
   position: relative;
   border-top: 1px solid #e2e8f0;
+  width: 100%;
+  
 }
 
 .footer.dark {
@@ -512,6 +514,7 @@ onUnmounted(() => {
   .footer-container {
     grid-template-columns: 1fr;
     gap: 2rem;
+    width: 100%;
   }
 
   .footer-nav ul {
@@ -536,6 +539,7 @@ onUnmounted(() => {
 @media (max-width: 480px) {
   .footer {
     padding: 3rem 1.5rem 2rem;
+    width: 100%;
   }
 
   .contact-button {

@@ -192,7 +192,11 @@ const handleSkillLeave = () => {
   background: 
     linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   min-height: 100vh;
+  
   position: relative;
+  overflow: hidden;
+  width: 100%;
+  
 }
 
 .skills-section::before {

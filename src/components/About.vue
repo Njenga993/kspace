@@ -172,8 +172,10 @@ const techStack = ['vue', 'react', 'node', 'typescript', 'figma', 'photoshop'];
   position: relative;
   overflow: hidden;
   min-height: 100vh;
-  max-width: 1400px;
+ 
   margin: 0 auto;
+  width: 100%;
+ 
 }
 
 body.dark-theme .about-section {

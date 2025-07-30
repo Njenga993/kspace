@@ -308,7 +308,9 @@ const loadMoreProjects = () => {
   position: relative;
   overflow: hidden;
   min-height: 100vh;
-  max-width: 1200px;
+  
+  width: 100%;
+  
 }
 
 .projects-section::before {

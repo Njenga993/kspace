@@ -161,10 +161,11 @@ onBeforeUnmount(() => {
   position: fixed;
   top: 0;
   width: 100%;
-  max-width: 1200px;
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
+  margin-right: 2rem;
+  
 }
 
 .navbar-container.scrolled {
@@ -398,8 +399,8 @@ onBeforeUnmount(() => {
 
 /* Hamburger Menu */
 .mobile-toggle {
-  display: none;
-  background: none;
+  display: block;
+  background: #3b82f6;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
@@ -554,7 +555,7 @@ onBeforeUnmount(() => {
 }
 @media (max-width: 320px) {
   .navbar-container {
-    padding: 0.75rem 1.5rem;
+    padding: 0.55rem 0.5rem;
   }
 
   .navbar-logo img {

@@ -5,8 +5,6 @@
 
     <!-- Main Content Area -->
     <main class="main-content">
-
-
       <Intro />
       <About />
       <Skills />
@@ -20,6 +18,7 @@
 
 <script setup>
 import { ref, watch } from 'vue';
+
 import Sidebar from './components/Sidebar.vue';
 import Intro from './components/Intro.vue';
 import About from './components/About.vue';
@@ -31,82 +30,70 @@ import Footer from './components/Footer.vue';
 
 const isDarkMode = ref(true); // Default to dark mode
 
-const toggleTheme = () => {
-  isDarkMode.value = !isDarkMode.value;
-};
-
 watch(isDarkMode, (newVal) => {
   document.body.classList.toggle('dark-theme', newVal);
 });
 </script>
 
 <style>
-/* Layout */
+/* Remove all default spacing */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Layout Container */
 #app {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--background-color);
-  color: var(--text-color);
+  width: 100%;
 }
 
-/* Main Content */
+/* Main Content: full-width */
 .main-content {
-  padding: 2rem;
-  margin-left: 0;
   flex: 1;
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+  padding: 2rem;
   transition: background-color 0.3s, color 0.3s;
+  box-sizing: border-box;
 }
 
-/* Responsive adjustment for smaller screens */
+/* Responsive tweak for mobile */
 @media (max-width: 768px) {
   .main-content {
     padding: 1rem;
   }
 }
 
-/* Theme Toggle Button */
-.theme-toggle-btn {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  padding: 0.6rem 1.2rem;
-  background-color: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  z-index: 999;
-}
-
-/* Theme Variables */
+/* Theme Variables (Light by default, overridden in dark mode) */
 :root {
   --background-color: #ffffff;
-  --text-color: #333;
+  --text-color: #333333;
   --accent: #ff6347;
   --hover-color: #ff4500;
   --footer-bg: #f9f9f9;
-  --footer-text: #333;
-  --border-color: #ddd;
+  --footer-text: #333333;
+  --border-color: #dddddd;
 }
 
-/* Dark Theme Overrides */
+/* Dark Theme */
 body.dark-theme {
   --background-color: #121212;
   --text-color: #f5f5f5;
   --accent: #ffd700;
   --hover-color: #ffff00;
   --footer-bg: #1e1e1e;
-  --footer-text: #eee;
-  --border-color: #333;
+  --footer-text: #eeeeee;
+  --border-color: #333333;
+
   background-color: var(--background-color);
   color: var(--text-color);
-}
-
-html {
-  scroll-behavior: smooth;
 }
 </style>
