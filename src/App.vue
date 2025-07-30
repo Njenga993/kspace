@@ -1,20 +1,21 @@
 <template>
-  <div id="app">
+  <div id="app" :class="{ 'dark-theme': isDarkMode }">
+    <!-- Responsive Navbar -->
     <Sidebar />
-    <div class="main-content">
-      <button @click="toggleTheme" class="theme-toggle-btn">
-        Toggle Theme
-      </button>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+
+
       <Intro />
       <About />
       <Skills />
       <Experience />
       <Projects />
       <Contact />
-    </div>
-  </div>
-      <!-- Footer -->
       <Footer />
+    </main>
+  </div>
 </template>
 
 <script setup>
@@ -28,66 +29,52 @@ import Projects from './components/Projects.vue';
 import Contact from './components/Contact.vue';
 import Footer from './components/Footer.vue';
 
-const isDarkMode = ref(false);
+const isDarkMode = ref(true); // Default to dark mode
 
 const toggleTheme = () => {
   isDarkMode.value = !isDarkMode.value;
 };
 
 watch(isDarkMode, (newVal) => {
-  if (newVal) {
-    document.body.classList.add('dark-theme');
-  } else {
-    document.body.classList.remove('dark-theme');
-  }
+  document.body.classList.toggle('dark-theme', newVal);
 });
 </script>
 
 <style>
-/* Base Layout */
+/* Layout */
 #app {
   display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
+/* Main Content */
 .main-content {
-  margin-left: 250px;
-  flex: 1;
   padding: 2rem;
-  transition: margin-left 0.3s ease-in-out;
+  margin-left: 0;
+  flex: 1;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  transition: background-color 0.3s, color 0.3s;
 }
 
-/* Adjust for collapsed sidebar */
-body.sidebar-collapsed .main-content {
-  margin-left: 60px;
-}
-
-/* Responsive layout */
-@media screen and (max-width: 768px) {
+/* Responsive adjustment for smaller screens */
+@media (max-width: 768px) {
   .main-content {
-    margin-left: 0;
     padding: 1rem;
   }
 }
 
-/* Light/Dark Themes */
-body {
-  background-color: #ffffff;
-  color: #333333;
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
-
-body.dark-theme {
-  background-color: #1e1e1e;
-  color: #f0f0f0;
-}
-
-/* Button Styling */
+/* Theme Toggle Button */
 .theme-toggle-btn {
   position: fixed;
   top: 1rem;
   right: 1rem;
   padding: 0.6rem 1.2rem;
-  background-color: var(--accent, #ff6347);
+  background-color: var(--accent);
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -95,40 +82,31 @@ body.dark-theme {
   z-index: 999;
 }
 
+/* Theme Variables */
 :root {
-  --sidebar-bg: #ffffff;
+  --background-color: #ffffff;
   --text-color: #333;
   --accent: #ff6347;
   --hover-color: #ff4500;
-}
-
-body.dark-theme {
-  --sidebar-bg: #333;
-  --text-color: #fff;
-  --accent: #FFD700;
-  --hover-color: #FFFF00;
-}
-html {
-  scroll-behavior: smooth;
-}
-:root {
   --footer-bg: #f9f9f9;
   --footer-text: #333;
-  --footer-heading: #222;
-  --footer-link: #555;
-  --footer-icon: #444;
-  --accent: #ff6347;
-  --hover-color: #ff4500;
   --border-color: #ddd;
 }
+
+/* Dark Theme Overrides */
 body.dark-theme {
+  --background-color: #121212;
+  --text-color: #f5f5f5;
+  --accent: #ffd700;
+  --hover-color: #ffff00;
   --footer-bg: #1e1e1e;
   --footer-text: #eee;
-  --footer-heading: #fff;
-  --footer-link: #aaa;
-  --footer-icon: #ccc;
   --border-color: #333;
-  --accent: #FFD700;
-  --hover-color: #FFFF00;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+html {
+  scroll-behavior: smooth;
 }
 </style>
