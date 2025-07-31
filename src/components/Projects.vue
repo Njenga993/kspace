@@ -195,8 +195,8 @@ const projects = [
   {
   title: 'INOFO Africa Website',
   description: 'A modern and responsive informational website for INOFO Africa, aligned with INOFO’s global identity. The platform showcases organizational objectives, membership details, activities, and an archive section, providing a strong digital presence for African organic farmer organizations.',
-  tech: ['HTML5', 'CSS3', 'JavaScript', 'Vue.js', 'Responsive Design'],
-  category: 'Organizational Website',
+  tech: ['HTML5', 'Typescript', 'JavaScript', 'React.js', 'Responsive Design'],
+  category: 'Web Development',
   github: 'https://github.com/Njenga993/INOFO-Africa-',
   demo: 'https://njenga993.github.io/INOFO-Africa-/',
   image: import.meta.env.BASE_URL + 'inofo-africa.PNG',
@@ -209,8 +209,8 @@ const projects = [
 {
   title: 'Greania Build Website',
   description: 'A clean, professional website developed for Greania Build, a construction and interior design company. The platform highlights their services, project portfolio, and contact details, offering an engaging experience for prospective clients.',
-  tech: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
-  category: 'Corporate Website',
+  tech: ['HTML5', 'Typescript', 'JavaScript', 'React.js', 'Responsive Design'],
+  category: 'Web Development',
   github: 'https://github.com/Njenga993/greania-build',
   demo: 'https://njenga993.github.io/greania-build/',
   image: import.meta.env.BASE_URL + 'greania-build.PNG',

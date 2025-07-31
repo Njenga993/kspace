@@ -229,7 +229,7 @@ const experiences = [
       'Effective change management in traditional industries',
       'Scaling digital solutions for growing businesses'
     ],
-    portfolio: 'https://nyakazi-organics.com'
+    portfolio: 'https://nyakazi.org/'
   },
   {
     id: 2,
