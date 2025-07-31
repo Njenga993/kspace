@@ -164,7 +164,7 @@ onBeforeUnmount(() => {
   z-index: 1000;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
-  margin-right: 2rem;
+  
   
 }
 
@@ -280,7 +280,7 @@ onBeforeUnmount(() => {
 .navbar-socials {
   display: flex;
   gap: 1.2rem;
-  margin-right: 1.5rem;
+  margin-right: 2.5rem;
   margin-bottom: 1rem;
 }
 
@@ -415,13 +415,13 @@ onBeforeUnmount(() => {
   display: block;
   width: 100%;
   height: 2px;
-  background: #3b82f6;
+  background: #f2f2f3;
   transition: all 0.3s ease;
   transform-origin: center;
 }
 
 .navbar-container.dark .hamburger-line {
-  background: #60a5fa;
+  background: #e2e8f0;
 }
 
 .mobile-toggle.active .hamburger-line:nth-child(1) {
@@ -514,6 +514,7 @@ onBeforeUnmount(() => {
     margin-right: 0;
     margin-bottom: 3rem;
   }
+  
 }
 @media (max-width: 768px) {
   .mobile-toggle {

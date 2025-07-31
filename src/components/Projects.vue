@@ -193,6 +193,34 @@ const categories = ['All', 'Web Development', 'E-commerce', 'Full Stack', 'Front
 
 const projects = [
   {
+  title: 'INOFO Africa Website',
+  description: 'A modern and responsive informational website for INOFO Africa, aligned with INOFO’s global identity. The platform showcases organizational objectives, membership details, activities, and an archive section, providing a strong digital presence for African organic farmer organizations.',
+  tech: ['HTML5', 'CSS3', 'JavaScript', 'Vue.js', 'Responsive Design'],
+  category: 'Organizational Website',
+  github: 'https://github.com/Njenga993/INOFO-Africa-',
+  demo: 'https://njenga993.github.io/INOFO-Africa-/',
+  image: import.meta.env.BASE_URL + 'inofo-africa.PNG',
+  status: 'live',
+  duration: '2-3',
+  team: 'Solo',
+  year: '2025',
+  features: ['Organizational Info Pages', 'Membership Form', 'Responsive Layout', 'Multilingual Structure Ready']
+},
+{
+  title: 'Greania Build Website',
+  description: 'A clean, professional website developed for Greania Build, a construction and interior design company. The platform highlights their services, project portfolio, and contact details, offering an engaging experience for prospective clients.',
+  tech: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
+  category: 'Corporate Website',
+  github: 'https://github.com/Njenga993/greania-build',
+  demo: 'https://njenga993.github.io/greania-build/',
+  image: import.meta.env.BASE_URL + 'greania-build.PNG',
+  status: 'live',
+  duration: '2',
+  team: 'Solo',
+  year: '2024',
+  features: ['Services Showcase', 'Project Gallery', 'Contact Form', 'Responsive Layout']
+},
+  {
     title: 'Nyakazi Organics Ecommerce',
     description: 'A comprehensive e-commerce platform for organic products featuring seamless shopping experience, secure payment integration, and responsive design optimized for all devices.',
     tech: ['React.js', 'JavaScript', 'CSS3', 'HTML5', 'Responsive Design'],
@@ -255,7 +283,7 @@ const projects = [
     category: 'Frontend',
     github: 'https://github.com/Njenga993/Portfolio-',
     demo: 'https://njenga993.github.io/Portfolio-/',
-    image: import.meta.env.BASE_URL + 'React_Portfolio.png',
+    image: import.meta.env.BASE_URL + 'React_Portfolio.PNG',
     status: 'live',
     duration: '2',
     team: 'Solo',

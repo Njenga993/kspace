@@ -118,6 +118,13 @@ onMounted(() => {
   color: #fff;
   margin: 0;
   padding: 0;
+  max-width: 1880px;
+  background: linear-gradient(135deg, rgba(20, 20, 30, 0.9) 0%, rgba(50, 30, 40, 0.7) 100%);
+  font-family: 'Poppins', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+
+
 }
 
 
@@ -399,6 +406,43 @@ onMounted(() => {
 }
 
 /* Responsive Adjustments */
+@media (max-width: 1200px) {
+  .hero-content {
+    padding: 0 1rem;
+  }
+  
+  .hero-name {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  
+  .hero-tagline {
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    max-width: 90%;
+    border-right: none;
+  }
+  
+  .hero-cta {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .cta-button, .secondary-button {
+    width: fit-content;
+    text-align: center;
+    justify-content: center;
+  }
+  
+  .socials-container {
+    gap: 1rem;
+  }
+  
+  .social-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 1.2rem;
+  }
+}
+
 @media (max-width: 768px) {
   .hero-content {
     gap: 2rem;
@@ -433,6 +477,25 @@ onMounted(() => {
     width: 40px;
     height: 40px;
     font-size: 1rem;
+  }
+}
+@media (max-width: 480px) {
+  .hero-name {
+    font-size: clamp(2rem, 12vw, 3.5rem);
+  }
+  
+  .hero-tagline {
+    font-size: 1rem;
+  }
+  
+  .hero-cta {
+    gap: 0.5rem;
+  }
+  
+  .social-icon {
+    width: 35px;
+    height: 35px;
+    font-size: 0.9rem;
   }
 }
 </style>
