@@ -194,7 +194,7 @@ const categories = ['All', 'Web Development', 'E-commerce', 'Full Stack', 'Front
 const projects = [
   {
   title: 'INOFO Africa Website',
-  description: 'A modern and responsive informational website for INOFO Africa, aligned with INOFO’s global identity. The platform showcases organizational objectives, membership details, activities, and an archive section, providing a strong digital presence for African organic farmer organizations.',
+  description: 'A modern and responsive information website for INOFO Africa, aligned with INOFO’s global identity. The platform showcases organizational objectives, membership details, activities, and an archive section, providing a strong digital presence for African organic farmer organizations.',
   tech: ['HTML5', 'Typescript', 'JavaScript', 'React.js', 'Responsive Design'],
   category: 'Web Development',
   github: 'https://github.com/Njenga993/INOFO-Africa-',
