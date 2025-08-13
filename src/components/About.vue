@@ -172,9 +172,9 @@ const techStack = ['vue', 'react', 'node', 'typescript', 'figma', 'photoshop'];
   position: relative;
   overflow: hidden;
   min-height: 100vh;
- 
-  margin: 0 auto;
-  width: 100%;
+  margin-left: -2rem;
+  
+  width: 100vw;
  
 }
 
@@ -280,8 +280,10 @@ body.dark-theme .section-subtitle {
 .intro {
   font-size: 1.15rem;
   color: #64748b;
-  line-height: 1.8;
+  line-height: 1.5;
   margin-bottom: 3rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
 }
 
 body.dark-theme .intro {
@@ -292,6 +294,7 @@ body.dark-theme .intro {
   color: #3b82f6;
   font-weight: 600;
   position: relative;
+
 }
 
 body.dark-theme .highlight {
@@ -742,11 +745,14 @@ body.dark-theme .tech-badge {
 /* Responsive Design */
 @media (max-width: 1024px) {
   .about-section {
-    padding: 6rem 2rem;
+    padding: 4rem 1rem;
   }
-  
+  .highlight{
+    width: fit-content;
+    margin: auto;
+  }
   .about-content {
-    gap: 3rem;
+    gap: 2rem;
   }
   
   .image-container {
@@ -757,7 +763,7 @@ body.dark-theme .tech-badge {
 
 @media (max-width: 768px) {
   .about-section {
-    padding: 5rem 1.5rem;
+    padding: 4rem 1.5rem;
   }
   
   .about-content {
@@ -779,6 +785,7 @@ body.dark-theme .tech-badge {
   }
   
   .action-buttons {
+    max-width: fit-content;
     justify-content: center;
   }
 }

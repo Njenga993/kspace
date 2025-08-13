@@ -110,15 +110,15 @@ onMounted(() => {
 .hero-section {
   position: relative;
   height: 100vh;
-  width: 100%;
+  width: 100vw;
+  margin-left: -2rem;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
   color: #fff;
-  margin: 0;
+  margin-top: 4.5rem;
   padding: 0;
-  max-width: 1880px;
   background: linear-gradient(135deg, rgba(20, 20, 30, 0.9) 0%, rgba(50, 30, 40, 0.7) 100%);
   font-family: 'Poppins', sans-serif;
   font-size: 16px;

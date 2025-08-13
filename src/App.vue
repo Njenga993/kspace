@@ -40,7 +40,7 @@ watch(isDarkMode, (newVal) => {
 html, body {
   margin: 0;
   padding: 0;
-  width: 100%;
+  width: 100vw;
   overflow-x: hidden;
   scroll-behavior: smooth;
   background-color: var(--background-color);
@@ -53,13 +53,14 @@ html, body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  width: 100%;
+  width: 100vw;
+  margin-left: 0;
 }
 
 /* Main Content: full-width */
 .main-content {
   flex: 1;
-  width: 100%;
+  width: 100vw;
   padding: 2rem;
   transition: background-color 0.3s, color 0.3s;
   box-sizing: border-box;

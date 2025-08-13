@@ -138,8 +138,9 @@ onUnmounted(() => {
   padding: 4rem 2rem 2rem;
   position: relative;
   border-top: 1px solid #e2e8f0;
-  width: 100%;
-  
+  width: 100vw;
+   margin-left: -2rem;
+   margin-bottom: -2rem;
 }
 
 .footer.dark {
@@ -534,6 +535,9 @@ onUnmounted(() => {
     bottom: 1.5rem;
     right: 1.5rem;
   }
+  .contact-button{
+    max-width: fit-content;
+  }
 }
 
 @media (max-width: 480px) {
@@ -542,9 +546,8 @@ onUnmounted(() => {
     width: 100%;
   }
 
-  .contact-button {
-    width: 100%;
-    justify-content: center;
+  .contact-button{
+    max-width: fit-content;
   }
 }
 </style>

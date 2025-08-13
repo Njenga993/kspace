@@ -248,8 +248,8 @@ const resetForm = () => {
   position: relative;
   overflow: hidden;
   color: #e2e8f0;
-  width: 100%;
-  margin-left: 0;
+  width: 100vw;
+   margin-left: -2rem;
   
 }
 
@@ -463,7 +463,8 @@ body.dark-theme .contact-section {
 
 .form-group {
   margin-bottom: 1.5rem;
-  margin-right: 1rem;
+  margin-right: 2rem;
+  margin-left: -rem;
 }
 
 .form-row {

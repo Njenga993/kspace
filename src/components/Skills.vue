@@ -192,10 +192,10 @@ const handleSkillLeave = () => {
   background: 
     linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   min-height: 100vh;
-  
+   margin-left: -2rem;
   position: relative;
   overflow: hidden;
-  width: 100%;
+  width: 100vw;
   
 }
 
@@ -281,11 +281,13 @@ body.dark-theme .section-subtitle {
 /* Skills Grid */
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
   position: relative;
   z-index: 2;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
+  margin-left: -1rem;
+  margin-right: 4rem;
 }
 
 /* Skill Cards */
@@ -628,6 +630,8 @@ body.dark-theme .stat-divider {
     grid-template-columns: 1fr;
     gap: 1.5rem;
     margin-bottom: 3rem;
+    margin-left: 1rem;
+    margin-right: 2rem;
   }
   
   .skill-card {

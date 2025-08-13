@@ -192,6 +192,27 @@ const activeFilter = ref('All')
 const categories = ['All', 'Web Development', 'E-commerce', 'Full Stack', 'Frontend']
 
 const projects = [
+{
+  title: 'Seed Savers Network Kenya Website',
+  description: 'A dynamic and responsive website for Seed Savers Network Kenya, designed to promote seed sovereignty, showcase programs, events, resources, and facilitate community engagement. The platform features news updates, a resource library, donation options, and detailed organizational information, helping connect farmers, supporters, and stakeholders.',
+  tech: ['HTML5', 'TypeScript', 'JavaScript', 'React.js', 'Vite', 'Responsive Design'],
+  category: 'Web Development',
+  github: 'https://github.com/Njenga993/SeedSavers',
+  demo: 'https://njenga993.github.io/SeedSavers/',
+  image: import.meta.env.BASE_URL + 'ssn.PNG',
+  status: 'live',
+  duration: '3-4',
+  team: 'Solo',
+  year: '2025',
+  features: [
+    'Program & Project Pages',
+    'News & Events Section',
+    'Resource Library with Downloads',
+    'Donation Functionality',
+    'Contact & Regional Office Details',
+    'Responsive & Mobile-First Design'
+  ]
+},
   {
   title: 'INOFO Africa Website',
   description: 'A modern and responsive information website for INOFO Africa, aligned with INOFO’s global identity. The platform showcases organizational objectives, membership details, activities, and an archive section, providing a strong digital presence for African organic farmer organizations.',
@@ -336,8 +357,8 @@ const loadMoreProjects = () => {
   position: relative;
   overflow: hidden;
   min-height: 100vh;
-  
-  width: 100%;
+  margin-left: -2rem;
+  width: 100vw;
   
 }
 
@@ -536,6 +557,8 @@ body.dark-theme .filter-tabs {
   z-index: 2;
   max-width: 1400px;
   margin: 0 auto;
+  margin-left: -1rem;
+  margin-right: 4rem;
 }
 
 /* Project Cards */
@@ -551,6 +574,7 @@ body.dark-theme .filter-tabs {
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   animation: projectSlideIn 0.6s ease-out var(--delay) both;
+  
 }
 
 body.dark-theme .project-card {
@@ -1000,6 +1024,8 @@ body.dark-theme .projects-counter {
   .projects-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
+    margin-left: 1rem;
+    margin-right: 2rem;
   }
   
   .project-card {
