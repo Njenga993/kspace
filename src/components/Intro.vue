@@ -409,6 +409,7 @@ onMounted(() => {
 @media (max-width: 1200px) {
   .hero-content {
     padding: 0 1rem;
+    width: 100vw;
   }
   
   .hero-name {
@@ -446,6 +447,7 @@ onMounted(() => {
 @media (max-width: 768px) {
   .hero-content {
     gap: 2rem;
+    width: 100vw;
   }
   
   .hero-name {
@@ -482,6 +484,7 @@ onMounted(() => {
 @media (max-width: 480px) {
   .hero-name {
     font-size: clamp(2rem, 12vw, 3.5rem);
+    width: 100vw;
   }
   
   .hero-tagline {

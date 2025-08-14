@@ -1033,7 +1033,9 @@ body.dark-theme .stat-divider {
   .experience-section {
     padding: 4rem 1.5rem;
   }
-  
+ .filter-container {
+  max-width: fit-content;
+ } 
   .timeline-item {
     flex-direction: column;
     padding-bottom: 3rem;
@@ -1078,7 +1080,9 @@ body.dark-theme .stat-divider {
   .experience-section {
     padding: 3rem 1rem;
   }
-  
+   .filter-container {
+  max-width: fit-content;
+ } 
   .section-title {
     font-size: 2rem;
   }
