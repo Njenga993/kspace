@@ -97,7 +97,7 @@ const navLinks = [
 const socialLinks = [
   { id: 'github', name: 'GitHub', icon: 'fab fa-github', url: 'https://github.com/Njenga993' },
   { id: 'linkedin', name: 'LinkedIn', icon: 'fab fa-linkedin-in', url: 'https://www.linkedin.com/in/kelvin-kamau-788160277/' },
-  { id: 'twitter', name: 'Twitter', icon: 'fab fa-twitter', url: 'https://twitter.com/' },
+  { id: 'twitter', name: 'Twitter', icon: 'fab fa-twitter', url: 'https://x.com/kamau_nje' },
   { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
 ];
 

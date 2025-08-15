@@ -407,6 +407,7 @@ const openPortfolio = (url) => {
   overflow: hidden;
   min-height: 100vh;
    margin-left: -2rem;
+   margin-right: 2rem;
   width: 100vw;
   
 }
@@ -1032,6 +1033,7 @@ body.dark-theme .stat-divider {
 @media (max-width: 768px) {
   .experience-section {
     padding: 4rem 1.5rem;
+    max-width: fit-content;
   }
  .filter-container {
   max-width: fit-content;
@@ -1079,6 +1081,7 @@ body.dark-theme .stat-divider {
 @media (max-width: 480px) {
   .experience-section {
     padding: 3rem 1rem;
+    max-width: fit-content;
   }
    .filter-container {
   max-width: fit-content;
