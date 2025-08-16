@@ -62,7 +62,7 @@
 
       <!-- Bottom: Copyright -->
       <div class="footer-bottom">
-        <p>&copy; {{ new Date().getFullYear() }} Kelvin Kamau. All rights reserved.</p>
+        <p>&copy; {{ new Date().getFullYear() }} Kelvin Njenga Kamau. All rights reserved.</p>
         <div class="legal-links">
           <a href="#">Privacy Policy</a>
           <span>•</span>
