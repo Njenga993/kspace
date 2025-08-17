@@ -64,7 +64,7 @@
       <div class="footer-bottom">
         <p>&copy; {{ new Date().getFullYear() }} Kelvin Njenga Kamau. All rights reserved.</p>
         <div class="legal-links">
-          <a href="#">Privacy Policy</a>
+          <a href="#">Privacy Policies</a>
           <span>•</span>
           <a href="#">Terms of Service</a>
         </div>
