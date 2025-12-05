@@ -1,825 +1,992 @@
 <template>
   <section id="about" class="about-section">
-    <!-- Section Header -->
-    <div class="section-header">
-      <div class="header-badge">
-        <span class="badge-icon">👋</span>
-        <span>Introduction</span>
+    <!-- Terminal Window -->
+    <div class="terminal-container">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
+        <div class="terminal-title">about@k-space:~</div>
       </div>
-      <h2 class="section-title">About Me</h2>
-      <div class="title-decoration">
-        <div class="decoration-dot"></div>
-        <div class="decoration-line"></div>
-        <div class="decoration-dot"></div>
-      </div>
-      <p class="section-subtitle">
-        Get to know the person behind the code
-      </p>
-    </div>
-
-    <div class="about-content">
-      <div 
-        class="about-left"
-        v-motion="fadeUp"
-        v-intersection-observer
-      >
-        <p class="intro">
-          I'm <span class="highlight">Kelvin Njenga Kamau</span>, a passionate Full Stack Developer with a strong foundation in software development, UI/UX, and digital strategy.
-          I specialize in crafting scalable, responsive web apps that solve real-world problems — combining clean frontend design with powerful backend logic.
-        </p>
-
-        <div class="highlights">
-          <div class="highlight-block glowing-card" v-motion="fadeUp">
-            <div class="highlight-header">
-              <span class="highlight-icon">🎓</span>
-              <h3>Education</h3>
-            </div>
-            <p>Bachelor's Degree in Information Science (ICT Option) — Meru University of Science and Technology</p>
-            <div class="highlight-footer">
-              <span class="highlight-year">2019-2023</span>
-            </div>
-          </div>
-          
-          <div class="highlight-block glowing-card" v-motion="fadeUp">
-            <div class="highlight-header">
-              <span class="highlight-icon">💼</span>
-              <h3>Experience</h3>
-            </div>
-            <ul class="features-list">
-              <li>
-                <div class="feature-item">
-                  <div class="feature-bullet"></div>
-                  <div>
-                    <strong>Nyakazi Organics</strong> — Developer & Digital Manager
-                    <div class="feature-duration">2023-Present</div>
-                  </div>
+      
+      <div class="terminal-body">
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat personal_info.json</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="info-card">
+            <div class="info-header">
+              <div class="profile-container">
+                <img src="/profile.JPG" alt="Kelvin Kamau" class="profile-img" />
+                <div class="status-indicator online"></div>
+              </div>
+              <div class="identity-info">
+                <h1 class="identity-name">Kelvin Njenga Kamau</h1>
+                <div class="identity-role">
+                  <span class="role-text">Full Stack Developer</span>
                 </div>
-              </li>
-              <li>
-                <div class="feature-item">
-                  <div class="feature-bullet"></div>
-                  <div>
-                    <strong>Directorate of Immigration</strong> — ICT Intern
-                    <div class="feature-duration">2022</div>
-                  </div>
-                </div>
-              </li>
-              <li>
-                <div class="feature-item">
-                  <div class="feature-bullet"></div>
-                  <div>
-                    <strong>KNLS Nakuru Branch</strong> — IT Support
-                    <div class="feature-duration">2021</div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-          
-          <div class="highlight-block glowing-card" v-motion="fadeUp">
-            <div class="highlight-header">
-              <span class="highlight-icon">🚀</span>
-              <h3>Core Strengths</h3>
+              </div>
             </div>
-            <div class="skills-grid">
-              <div class="skill-pill">UI/UX Design</div>
-              <div class="skill-pill">Figma & Photoshop</div>
-              <div class="skill-pill">Clean Code</div>
-              <div class="skill-pill">Reusable Components</div>
-              <div class="skill-pill">Agile Workflows</div>
-              <div class="skill-pill">Team Collaboration</div>
+            
+            <div class="info-content">
+              <p class="intro-text">
+                I'm <span class="highlight">Kelvin Njenga Kamau</span>, a passionate Full Stack Developer with a strong foundation in software development, UI/UX, and digital strategy.
+                I specialize in crafting scalable, responsive web apps that solve real-world problems — combining clean frontend design with powerful backend logic.
+              </p>
             </div>
           </div>
         </div>
-
-        <div class="experience-stats">
-          <div class="stat-item">
-            <span class="stat-value"><AnimatedCounter :end="3" />+</span>
-            <span class="stat-label">Years Experience</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value"><AnimatedCounter :end="20" />+</span>
-            <span class="stat-label">Projects Completed</span>
-          </div>
-          <div class="stat-divider"></div>
-          <div class="stat-item">
-            <span class="stat-value"><AnimatedCounter :end="15" />+</span>
-            <span class="stat-label">Happy Clients</span>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">ls -la</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="file-list">
+            <div class="file-item">
+              <div class="file-icon">📁</div>
+              <div class="file-details">
+                <div class="file-name">education</div>
+                <div class="file-meta">2023</div>
+              </div>
+            </div>
+            
+            <div class="file-item">
+              <div class="file-icon">📁</div>
+              <div class="file-details">
+                <div class="file-name">experience</div>
+                <div class="file-meta">2023-Present</div>
+              </div>
+            </div>
+            
+            <div class="file-item">
+              <div class="file-icon">📁</div>
+              <div class="file-details">
+                <div class="file-name">skills</div>
+                <div class="file-meta">2023</div>
+              </div>
+            </div>
           </div>
         </div>
-
-        <div class="action-buttons">
-          <a href="/Kamau_Kelvin_Resume.pdf" class="download-btn" download>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat education.json</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="education-card">
+            <div class="education-header">
+              <div class="degree-icon">🎓</div>
+              <h3 class="degree-title">Bachelor's Degree in Information Science</h3>
+              <div class="degree-details">
+                <div class="university">Meru University of Science and Technology</div>
+                <div class="period">2019-2023</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat experience.json</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="experience-timeline">
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2023-Present</div>
+                <div class="timeline-position">
+                  <div class="position-title">Nyakazi Organics</div>
+                  <div class="position-role">Developer & Digital Manager</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2022</div>
+                <div class="timeline-position">
+                  <div class="position-title">Directorate of Immigration</div>
+                  <div class="position-role">ICT Intern</div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="timeline-item">
+              <div class="timeline-dot"></div>
+              <div class="timeline-content">
+                <div class="timeline-date">2021</div>
+                <div class="timeline-position">
+                  <div class="position-title">KNLS Nakuru Branch</div>
+                  <div class="position-role">IT Support</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat skills.json</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="skills-grid">
+            <div class="skill-category">
+              <div class="category-title">Frontend</div>
+              <div class="skill-list">
+                <div class="skill-item">Vue.js</div>
+                <div class="skill-item">React</div>
+                <div class="skill-item">TypeScript</div>
+                <div class="skill-item">HTML/CSS</div>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <div class="category-title">Backend</div>
+              <div class="skill-list">
+                <div class="skill-item">Node.js</div>
+                <div class="skill-item">Express.js</div>
+                <div class="skill-item">MongoDB</div>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <div class="category-title">Design</div>
+              <div class="skill-list">
+                <div class="skill-item">Figma</div>
+                <div class="skill-item">Photoshop</div>
+                <div class="skill-item">UI/UX</div>
+              </div>
+            </div>
+            
+            <div class="skill-category">
+              <div class="category-title">Tools</div>
+              <div class="skill-list">
+                <div class="skill-item">Git</div>
+                <div class="skill-item">Docker</div>
+                <div class="skill-item">CI/CD</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">./stats.sh</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="stats-container">
+            <div class="stat-item">
+              <span class="stat-label">experience:</span>
+              <span class="stat-value">3+ years</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">projects:</span>
+              <span class="stat-value">20+</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">clients:</span>
+              <span class="stat-value">15+</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">./contact.sh</span>
+        </div>
+        
+        <div class="terminal-actions">
+          <a href="/Kamau_Kelvin_Resume.pdf" class="terminal-button-primary" download>
             <span>Download Resume</span>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-              <polyline points="7 10 12 15 17 10"></polyline>
-              <line x1="12" y1="15" x2="12" y2="3"></line>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M21 15v4a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
-          <a href="#contact" class="contact-btn">
-            Contact Me
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          <a href="#contact" class="terminal-button-secondary">
+            <span>Contact Me</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+              <path d="M22 16L2 9m0 0l10 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M22 16L2 9m0 0l10 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </a>
         </div>
       </div>
-
-      <div 
-        class="about-right"
-        v-motion="fadeInRight"
-        v-intersection-observer
-      >
-        <div class="image-container">
-          <img src="/about.jpg" alt="Kelvin Njenga Kamau" class="profile-image" />
-
-        </div>
-      </div>
-    </div>
-
-    <!-- Background Decorations -->
-    <div class="bg-decorations">
-      <div class="decoration decoration-1"></div>
-      <div class="decoration decoration-2"></div>
-      <div class="decoration decoration-3"></div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import AnimatedCounter from './AnimatedCounter.vue';
-
-const fadeUp = {
-  initial: { opacity: 0, y: 50 },
-  enter: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
-}
-
-const fadeInRight = {
-  initial: { opacity: 0, x: 100 },
-  enter: { opacity: 1, x: 0, transition: { duration: 0.8 } },
-}
-
-const techStack = ['vue', 'react', 'node', 'typescript', 'figma', 'photoshop'];
+// No additional script needed for this component
 </script>
 
+<style>
+/* Global theme styles */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #1a202c;
+  --secondary-text: #4a5568;
+  --accent-color: #3182ce;
+  --accent-hover: #2c5282;
+  --terminal-bg: #1e1e1e;
+  --terminal-header: #323232;
+  --terminal-text: #d4d4d4;
+  --terminal-prompt: #4ec9b0;
+  --terminal-keyword: #569cd6;
+  --terminal-string: #ce9178;
+  --terminal-comment: #6a9955;
+  --terminal-function: #dcdcaa;
+  --terminal-variable: #9cdcfe;
+  --terminal-property: #9cdcfe;
+  --terminal-boolean: #569cd6;
+  --terminal-class: #4ec9b0;
+  --terminal-parameter: #9cdcfe;
+  --terminal-line-number: #858585;
+}
+
+.dark-theme {
+  --bg-color: #0d1117;
+  --text-color: #f0f6fc;
+  --secondary-text: #8b949e;
+  --accent-color: #58a6ff;
+  --accent-hover: #1f6feb;
+  --terminal-bg: #0d1117;
+  --terminal-header: #161b22;
+  --terminal-text: #e6edf3;
+  --terminal-prompt: #3fb950;
+  --terminal-keyword: #ff7b72;
+  --terminal-string: #a5d6ff;
+  --terminal-comment: #8b949e;
+  --terminal-function: #d2a8ff;
+  --terminal-variable: #79c0ff;
+  --terminal-property: #ffa657;
+  --terminal-boolean: #ff7b72;
+  --terminal-class: #3fb950;
+  --terminal-parameter: #ffa657;
+  --terminal-line-number: #30363d;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+</style>
+
 <style scoped>
-/* Base section styles */
+/* Base Styles */
 .about-section {
-  padding: 8rem 2rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
-  position: relative;
-  overflow: hidden;
+  padding: 6rem 2rem;
+  background-color: var(--bg-color);
   min-height: 100vh;
-  margin-left: -2rem;
-  
-  width: 100vw;
- 
-}
-
-body.dark-theme .about-section {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  color: #e2e8f0;
-}
-
-/* Section Header */
-.section-header {
-  text-align: center;
-  margin-bottom: 4rem;
-}
-
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  padding: 0.5rem 1.25rem;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-body.dark-theme .header-badge {
-  background: rgba(96, 165, 250, 0.1);
-  color: #60a5fa;
-}
-
-.badge-icon {
-  font-size: 1rem;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #1e293b;
-}
-
-body.dark-theme .section-title {
-  color: #f8fafc;
-}
-
-.title-decoration {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.decoration-dot {
-  width: 8px;
-  height: 8px;
-  background: #3b82f6;
-  border-radius: 50%;
-}
-
-.decoration-line {
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-}
-
-.section-subtitle {
-  font-size: 1.1rem;
-  color: #64748b;
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-body.dark-theme .section-subtitle {
-  color: #94a3b8;
-}
-
-/* Content layout */
-.about-content {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 4rem;
-  position: relative;
-  z-index: 2;
-}
-
-.about-left {
-  flex: 1 1 55%;
-  min-width: 300px;
-}
-
-.about-right {
-  flex: 1 1 40%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-/* Intro text */
-.intro {
-  font-size: 1.15rem;
-  color: #64748b;
-  line-height: 1.5;
-  margin-bottom: 3rem;
-  margin-left: 1rem;
-  margin-right: 1rem;
-}
-
-body.dark-theme .intro {
-  color: #cbd5e1;
-}
-
-.highlight {
-  color: #3b82f6;
-  font-weight: 600;
-  position: relative;
-
-}
-
-body.dark-theme .highlight {
-  color: #60a5fa;
-}
-
-.highlight::after {
-  content: '';
-  position: absolute;
-  bottom: -2px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: right;
-  transition: transform 0.3s ease;
-}
-
-.highlight:hover::after {
-  transform: scaleX(1);
-  transform-origin: left;
-}
-
-/* Highlight blocks */
-.highlights {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-  margin-bottom: 3rem;
-}
-
-.highlight-block {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16px;
-  padding: 1.75rem;
-  border: 1px solid rgba(226, 232, 240, 0.5);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-  backdrop-filter: blur(12px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-body.dark-theme .highlight-block {
-  background: rgba(15, 23, 42, 0.9);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.glowing-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 20px 25px -5px rgba(59, 130, 246, 0.15), 
-              0 10px 10px -5px rgba(59, 130, 246, 0.1);
-}
-
-.highlight-header {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.highlight-block h3 {
-  font-size: 1.15rem;
-  color: #1e293b;
-  margin: 0;
-}
-
-body.dark-theme .highlight-block h3 {
-  color: #f8fafc;
-}
-
-.highlight-icon {
-  font-size: 1.4rem;
-  line-height: 1;
-}
-
-.highlight-footer {
-  margin-top: 1rem;
-  padding-top: 0.75rem;
-  border-top: 1px dashed #e2e8f0;
-}
-
-body.dark-theme .highlight-footer {
-  border-color: #334155;
-}
-
-.highlight-year {
-  font-size: 0.8rem;
-  color: #64748b;
-  font-weight: 500;
-}
-
-body.dark-theme .highlight-year {
-  color: #94a3b8;
-}
-
-.highlight-block p {
-  font-size: 0.95rem;
-  color: #64748b;
-  line-height: 1.7;
-  margin: 0;
-}
-
-body.dark-theme .highlight-block p {
-  color: #cbd5e1;
-}
-
-/* Features list */
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.features-list li {
-  font-size: 0.95rem;
-  color: #475569;
-}
-
-body.dark-theme .features-list li {
-  color: #cbd5e1;
-}
-
-.feature-item {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.feature-bullet {
-  flex-shrink: 0;
-  width: 6px;
-  height: 6px;
-  background: #3b82f6;
-  border-radius: 50%;
-  margin-top: 0.5rem;
-}
-
-.feature-duration {
-  font-size: 0.8rem;
-  color: #64748b;
-  margin-top: 0.25rem;
-}
-
-body.dark-theme .feature-duration {
-  color: #94a3b8;
-}
-
-/* Skills grid */
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 0.75rem;
-  margin-top: 1rem;
-}
-
-.skill-pill {
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  padding: 0.5rem 1rem;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  text-align: center;
-  transition: all 0.3s ease;
-}
-
-body.dark-theme .skill-pill {
-  background: rgba(96, 165, 250, 0.1);
-  color: #60a5fa;
-}
-
-.skill-pill:hover {
-  background: rgba(59, 130, 246, 0.2);
-  transform: translateY(-2px);
-}
-
-/* Stats */
-.experience-stats {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin: 3rem 0;
-  padding: 2rem 0;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-body.dark-theme .experience-stats {
-  border-color: #334155;
-}
-
-.stat-item {
-  text-align: center;
-  flex: 1;
-}
-
-.stat-value {
-  display: block;
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin-bottom: 0.25rem;
-}
-
-body.dark-theme .stat-value {
-  color: #f8fafc;
-}
-
-.stat-label {
-  display: block;
-  font-size: 0.85rem;
-  color: #64748b;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-}
-
-body.dark-theme .stat-label {
-  color: #94a3b8;
-}
-
-.stat-divider {
-  width: 1px;
-  height: 60px;
-  background: #e2e8f0;
-}
-
-body.dark-theme .stat-divider {
-  background: #334155;
-}
-
-/* Buttons */
-.action-buttons {
-  display: flex;
-  gap: 1.5rem;
-  flex-wrap: wrap;
-}
-
-.download-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 2rem;
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
-  text-decoration: none;
   position: relative;
   overflow: hidden;
+  width: 100vw;
+  margin-left: -2rem;
+  margin-bottom: -2rem;
 }
 
-.download-btn:hover {
-  background: linear-gradient(135deg, #2563eb, #1e40af);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
-}
-
-.download-btn svg {
-  transition: transform 0.3s ease;
-}
-
-.download-btn:hover svg {
-  transform: translateY(2px);
-}
-
-.contact-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 2rem;
-  background: transparent;
-  color: #3b82f6;
-  border: 2px solid rgba(59, 130, 246, 0.3);
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 0.95rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
-
-.contact-btn:hover {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.5);
-  transform: translateY(-2px);
-}
-
-body.dark-theme .contact-btn {
-  color: #60a5fa;
-  border-color: rgba(96, 165, 250, 0.3);
-}
-
-body.dark-theme .contact-btn:hover {
-  background: rgba(96, 165, 250, 0.1);
-  border-color: rgba(96, 165, 250, 0.5);
-}
-
-.contact-btn svg {
-  transition: transform 0.3s ease;
-}
-
-.contact-btn:hover svg {
-  transform: translateX(2px);
-}
-
-/* Profile image */
-.image-container {
-  position: relative;
-  width: 350px;
-  height: 350px;
-}
-
-.profile-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-  transition: transform 0.5s ease;
-}
-
-body.dark-theme .profile-image {
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-}
-
-.image-container:hover .profile-image {
-  transform: scale(1.02);
-}
-
-.image-frame {
-  position: absolute;
-  top: -15px;
-  left: -15px;
-  right: 15px;
-  bottom: 15px;
-  border: 2px solid #3b82f6;
-  border-radius: 20px;
-  z-index: 1;
-  transition: all 0.3s ease;
-}
-
-.image-container:hover .image-frame {
-  top: -20px;
-  left: -20px;
-  right: 20px;
-  bottom: 20px;
-}
-
-.tech-badge {
-  position: absolute;
-  bottom: -25px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 1rem;
-  background: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 50px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  z-index: 3;
-}
-
-body.dark-theme .tech-badge {
-  background: #1e293b;
+/* Terminal Container */
+.terminal-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--terminal-bg);
+  border-radius: 8px;
+  overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.8s ease-out;
 }
 
-.tech-icon {
-  width: 24px;
-  height: 24px;
+.terminal-header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  background-color: var(--terminal-header);
+  padding: 0.75rem 1rem;
 }
 
-.tech-icon img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: grayscale(100%) contrast(0.8);
-  transition: all 0.3s ease;
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.tech-icon:hover img {
-  filter: none;
-  transform: scale(1.1);
-}
-
-/* Background decorations */
-.bg-decorations {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.decoration {
-  position: absolute;
+.terminal-button {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
-  animation: float 20s ease-in-out infinite;
+}
+
+.terminal-button.close {
+  background-color: #ff5f56;
+}
+
+.terminal-button.minimize {
+  background-color: #ffbd2e;
+}
+
+.terminal-button.maximize {
+  background-color: #27c93f;
+}
+
+.terminal-title {
+  color: var(--terminal-text);
+  font-size: 0.9rem;
   opacity: 0.8;
 }
 
-.decoration-1 {
-  width: 300px;
-  height: 300px;
-  top: 10%;
-  left: -5%;
-  animation-delay: 0s;
+.terminal-body {
+  padding: 1.5rem;
+  color: var(--terminal-text);
 }
 
-.decoration-2 {
-  width: 200px;
-  height: 200px;
-  top: 60%;
-  right: -3%;
-  animation-delay: 7s;
+.terminal-prompt {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.decoration-3 {
-  width: 150px;
-  height: 150px;
-  bottom: 20%;
-  left: 20%;
-  animation-delay: 14s;
+.prompt-symbol {
+  color: var(--terminal-prompt);
+  font-weight: bold;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-20px) rotate(120deg); }
-  66% { transform: translateY(10px) rotate(240deg); }
+.command {
+  color: var(--terminal-text);
+}
+
+.terminal-output {
+  margin-bottom: 1.5rem;
+}
+
+/* Info Card */
+.info-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.info-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.profile-container {
+  position: relative;
+}
+
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--accent-color);
+}
+
+.status-indicator {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #3fb950;
+  border: 2px solid var(--terminal-bg);
+}
+
+.identity-info {
+  flex: 1;
+}
+
+.identity-name {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  color: var(--terminal-text);
+}
+
+.identity-role {
+  font-size: 1.2rem;
+  color: var(--accent-color);
+}
+
+.info-content {
+  line-height: 1.6;
+}
+
+.intro-text {
+  font-size: 1.1rem;
+  color: var(--terminal-text);
+}
+
+.highlight {
+  color: var(--accent-color);
+  font-weight: 600;
+}
+
+/* File List */
+.file-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border-left: 4px solid var(--accent-color);
+  transition: transform 0.3s ease;
+}
+
+.file-item:hover {
+  transform: translateY(-3px);
+}
+
+.file-icon {
+  font-size: 1.5rem;
+}
+
+.file-details {
+  flex: 1;
+}
+
+.file-name {
+  font-weight: 600;
+  color: var(--terminal-text);
+  font-size: 1.1rem;
+}
+
+.file-meta {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+/* Education Card */
+.education-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.education-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.degree-icon {
+  font-size: 2rem;
+}
+
+.degree-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--terminal-text);
+  margin: 0;
+}
+
+.degree-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.university {
+  font-size: 1.1rem;
+  color: var(--terminal-text);
+}
+
+.period {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+/* Experience Timeline */
+.experience-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.timeline-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  margin-top: 0.25rem;
+  flex-shrink: 0;
+}
+
+.timeline-content {
+  flex: 1;
+}
+
+.timeline-date {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+}
+
+.timeline-position {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.position-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--terminal-text);
+}
+
+.position-role {
+  color: var(--terminal-string);
+  font-size: 0.9rem;
+}
+
+/* Skills Grid */
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.skill-category {
+  margin-bottom: 1.5rem;
+}
+
+.category-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--terminal-text);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.category-title::before {
+  content: '';
+  width: 20px;
+  height: 2px;
+  background-color: var(--accent-color);
+}
+
+.skill-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  color: var(--terminal-text);
+  font-size: 0.9rem;
+  border-left: 3px solid var(--accent-color);
+  transition: transform 0.3s ease;
+}
+
+.skill-item:hover {
+  transform: translateY(-3px);
+}
+
+/* Stats Container */
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.stat-label {
+  color: var(--terminal-property);
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--terminal-text);
+}
+
+/* Terminal Actions */
+.terminal-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.terminal-button-primary, .terminal-button-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.terminal-button-primary {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.terminal-button-primary:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.terminal-button-secondary {
+  background-color: transparent;
+  color: var(--terminal-text);
+  border: 1px solid var(--terminal-text);
+}
+
+.terminal-button-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .about-section {
-    padding: 4rem 1rem;
-  }
-  .highlight{
-    width: fit-content;
-    margin: auto;
-  }
-  .about-content {
-    gap: 2rem;
+/* Extra Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+  .terminal-container {
+    max-width: 1400px;
   }
   
-  .image-container {
-    width: 300px;
-    height: 300px;
+  .info-card, .education-card, .stats-container {
+    padding: 2rem;
+  }
+  
+  .identity-name {
+    font-size: 2.2rem;
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   }
 }
 
-@media (max-width: 768px) {
+/* Large Desktop (1200px to 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .terminal-container {
+    max-width: 1200px;
+  }
+  
+  .info-card, .education-card, .stats-container {
+    padding: 1.75rem;
+  }
+}
+
+/* Desktop (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .about-section {
+    padding: 5rem 1.5rem;
+  }
+  
+  .terminal-container {
+    max-width: 1000px;
+  }
+  
+  .info-card, .education-card, .stats-container {
+    padding: 1.5rem;
+  }
+  
+  .identity-name {
+    font-size: 1.8rem;
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+  
+  .file-list {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+}
+
+/* Tablet (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
   .about-section {
     padding: 4rem 1.5rem;
   }
   
-  .about-content {
-    flex-direction: column-reverse;
-    gap: 3rem;
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 1rem;
   }
   
-  .experience-stats {
-    flex-wrap: wrap;
+  .info-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
   }
   
-  .stat-divider {
-    display: none;
+  .profile-container {
+    margin: 0 auto 1rem 0;
   }
   
-  .stat-item {
-    flex: 0 0 calc(50% - 0.5rem);
-    margin-bottom: 1rem;
+  .info-card, .education-card, .stats-container {
+    padding: 1.25rem;
   }
   
-  .action-buttons {
-    max-width: fit-content;
+  .identity-name {
+    font-size: 1.7rem;
+  }
+  
+  .file-list {
+    grid-template-columns: 1fr;
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  
+  .stats-container {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Mobile Landscape (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .about-section {
+    padding: 3rem 1rem;
+  }
+  
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 0.75rem;
+  }
+  
+  .terminal-body {
+    padding: 1rem;
+  }
+  
+  .info-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+  
+  .profile-img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .info-card, .education-card, .stats-container {
+    padding: 1rem;
+  }
+  
+  .identity-name {
+    font-size: 1.5rem;
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+  
+  .terminal-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .terminal-button-primary, .terminal-button-secondary {
+    width: 100%;
     justify-content: center;
   }
 }
 
-@media (max-width: 480px) {
+/* Mobile Portrait (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
   .about-section {
-    padding: 4rem 1rem;
+    padding: 2.5rem 1rem;
   }
   
-  .section-title {
-    font-size: 2rem;
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 0.5rem;
   }
   
-  .image-container {
-    width: 250px;
-    height: 250px;
+  .terminal-body {
+    padding: 0.75rem;
   }
   
-  .highlight-block {
-    padding: 1.5rem;
+  .info-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .profile-img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .info-card, .education-card, .stats-container {
+    padding: 0.75rem;
+  }
+  
+  .identity-name {
+    font-size: 1.4rem;
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .timeline-dot {
+    width: 10px;
+    height: 10px;
   }
   
   .skills-grid {
-    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   }
   
-  .action-buttons {
+  .terminal-actions {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.5rem;
   }
   
-  .download-btn, .contact-btn {
+  .terminal-button-primary, .terminal-button-secondary {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .about-section {
+    padding: 2rem 0.75rem;
+  }
+  
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 0.5rem;
+  }
+  
+  .terminal-body {
+    padding: 0.5rem;
+  }
+  
+  .terminal-header {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .terminal-title {
+    font-size: 0.8rem;
+  }
+  
+  .info-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+  
+  .profile-img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .info-card, .education-card, .stats-container {
+    padding: 0.5rem;
+  }
+  
+  .identity-name {
+    font-size: 1.2rem;
+  }
+  
+  .timeline-item {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .timeline-dot {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  }
+  
+  .skill-item {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+  
+  .terminal-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .terminal-button-primary, .terminal-button-secondary {
+    width: 100%;
+    justify-content: center;
+    padding: 0.6rem 1rem;
   }
 }
 </style>

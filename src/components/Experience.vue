@@ -1,178 +1,281 @@
 <template>
   <section id="experience" class="experience-section">
-    <!-- Section Header - Matching Projects Section -->
-    <div class="section-header">
-      <div class="header-badge">
-        <span class="badge-icon">🚀</span>
-        <span>Experience</span>
+    <!-- Terminal Window Container -->
+    <div class="terminal-window experience-terminal">
+      <!-- Terminal Header -->
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
+        <div class="terminal-title">experience@portfolio:~</div>
       </div>
-      <h2 class="section-title">Professional Journey</h2>
-      <div class="title-decoration">
-        <div class="decoration-dot"></div>
-        <div class="decoration-line"></div>
-        <div class="decoration-dot"></div>
-      </div>
-      <p class="section-subtitle">
-        Where I've worked and what I've accomplished
-      </p>
-    </div>
-
-    <!-- Filter Categories - Matching Projects Section -->
-    <div class="filter-container">
-      <div class="filter-tabs">
-        <button 
-          v-for="filter in filters" 
-          :key="filter"
-          @click="setActiveFilter(filter)"
-          :class="['filter-tab', { active: activeFilter === filter }]"
-        >
-          {{ filter }}
-        </button>
-      </div>
-    </div>
-
-    <!-- Experience Timeline -->
-    <div class="experience-timeline">
-      <div 
-        v-for="(exp, index) in filteredExperiences"
-        :key="exp.id"
-        class="timeline-item"
-      >
-        <div class="timeline-marker">
-          <div class="marker-dot" :style="{ backgroundColor: exp.color }">
-            <component :is="exp.icon" class="marker-icon" />
-          </div>
-          <div class="marker-line"></div>
+      
+      <!-- Terminal Body -->
+      <div class="terminal-body">
+        <!-- Command Line -->
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat career_history.txt</span>
         </div>
         
-        <div 
-          class="experience-card"
-          :style="{ '--delay': index * 0.1 + 's' }"
-        >
-          <div class="card-header">
-            <div class="title-section">
-              <h3 class="job-title">{{ exp.title }}</h3>
-              <div class="company-info">
-                <span class="company-name">{{ exp.company }}</span>
-                <span class="company-type">{{ exp.type }}</span>
+        <!-- Terminal Output -->
+        <div class="terminal-output">
+          <!-- Filter Categories as Terminal Command -->
+          <div class="filter-container">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">filter --category=</span>
+            </div>
+            <div class="filter-options">
+              <button 
+                v-for="filter in filters" 
+                :key="filter"
+                @click="setActiveFilter(filter)"
+                :class="['filter-option', { active: activeFilter === filter }]"
+              >
+                {{ filter }}
+              </button>
+            </div>
+          </div>
+          
+          <!-- Experience Timeline -->
+          <div class="experience-timeline">
+            <div 
+              v-for="(exp, index) in filteredExperiences"
+              :key="exp.id"
+              class="timeline-item"
+            >
+              <div class="timeline-marker">
+                <div class="marker-dot" :style="{ backgroundColor: exp.color }">
+                  <component :is="exp.icon" class="marker-icon" />
+                </div>
+                <div class="marker-line"></div>
+              </div>
+              
+              <div 
+                class="experience-terminal-card"
+                :style="{ '--delay': index * 0.1 + 's' }"
+              >
+                <!-- Experience Header -->
+                <div class="experience-header">
+                  <div class="experience-number">
+                    <span class="code-comment">// Entry</span>
+                    <span class="code-variable">{{ String(index + 1).padStart(2, '0') }}</span>
+                  </div>
+                  <div class="experience-status" :class="exp.category">
+                    <span class="code-comment">// Type:</span>
+                    <span class="code-string">{{ exp.category }}</span>
+                  </div>
+                </div>
+                
+                <!-- Experience Content -->
+                <div class="experience-content">
+                  <div class="experience-title-line">
+                    <span class="code-keyword">const</span>
+                    <span class="code-variable">{{ exp.title.replace(/\s+/g, '') }}</span>
+                    <span class="code-operator">=</span>
+                    <span class="code-brace">{</span>
+                  </div>
+                  
+                  <div class="experience-properties">
+                    <div class="property-line">
+                      <span class="code-property">company:</span>
+                      <span class="code-string">"{{ exp.company }}"</span>,
+                    </div>
+                    
+                    <div class="property-line">
+                      <span class="code-property">type:</span>
+                      <span class="code-string">"{{ exp.type }}"</span>,
+                    </div>
+                    
+                    <div class="property-line">
+                      <span class="code-property">period:</span>
+                      <span class="code-string">"{{ exp.period }}"</span>,
+                    </div>
+                    
+                    <div class="property-line">
+                      <span class="code-property">duration:</span>
+                      <span class="code-string">"{{ exp.duration }}"</span>,
+                    </div>
+                    
+                    <div class="property-line">
+                      <span class="code-property">description:</span>
+                      <span class="code-string">"{{ exp.description }}"</span>,
+                    </div>
+                    
+                    <div v-if="exp.metrics" class="property-line">
+                      <span class="code-property">metrics:</span>
+                      <span class="code-bracket">[</span>
+                      <div class="metrics-list">
+                        <div v-for="metric in exp.metrics" :key="metric.label" class="metric-item">
+                          <span class="code-brace">{</span>
+                          <span class="code-property">value:</span>
+                          <span class="code-string">"{{ metric.value }}"</span>,
+                          <span class="code-property">label:</span>
+                          <span class="code-string">"{{ metric.label }}"</span>
+                          <span class="code-brace">}</span>
+                          <span class="code-punctuation">,</span>
+                        </div>
+                      </div>
+                      <span class="code-bracket">]</span>,
+                    </div>
+                    
+                    <div class="property-line">
+                      <span class="code-property">achievements:</span>
+                      <span class="code-bracket">[</span>
+                      <div class="achievements-list">
+                        <div v-for="(achievement, idx) in exp.achievements" :key="idx" class="achievement-item">
+                          <span class="code-string">"{{ achievement }}"</span>
+                          <span class="code-punctuation">,</span>
+                        </div>
+                      </div>
+                      <span class="code-bracket">]</span>,
+                    </div>
+                    
+                    <div class="property-line">
+                      <span class="code-property">skillCategories:</span>
+                      <span class="code-brace">{</span>
+                      <div class="nested-properties">
+                        <div v-for="(category, categoryName) in exp.skillCategories" :key="categoryName" class="property-line">
+                          <span class="code-property">{{ categoryName }}:</span>
+                          <span class="code-bracket">[</span>
+                          <span class="skill-list">
+                            <span 
+                              v-for="(skill, i) in category" 
+                              :key="i"
+                              class="skill-item"
+                            >
+                              <span class="code-string">"{{ skill }}"</span>
+                              <span v-if="i < category.length - 1" class="code-punctuation">,</span>
+                            </span>
+                          </span>
+                          <span class="code-bracket">]</span>
+                          <span class="code-punctuation">,</span>
+                        </div>
+                      </div>
+                      <span class="code-brace">}</span>,
+                    </div>
+                    
+                    <div v-if="exp.challenges" class="property-line">
+                      <span class="code-property">challenges:</span>
+                      <span class="code-bracket">[</span>
+                      <div class="challenges-list">
+                        <div v-for="challenge in exp.challenges" :key="challenge" class="challenge-item">
+                          <span class="code-string">"{{ challenge }}"</span>
+                          <span class="code-punctuation">,</span>
+                        </div>
+                      </div>
+                      <span class="code-bracket">]</span>,
+                    </div>
+                    
+                    <div v-if="exp.learnings" class="property-line">
+                      <span class="code-property">learnings:</span>
+                      <span class="code-bracket">[</span>
+                      <div class="learnings-list">
+                        <div v-for="learning in exp.learnings" :key="learning" class="learning-item">
+                          <span class="code-string">"{{ learning }}"</span>
+                          <span class="code-punctuation">,</span>
+                        </div>
+                      </div>
+                      <span class="code-bracket">]</span>,
+                    </div>
+                    
+                    <div v-if="exp.portfolio" class="property-line">
+                      <span class="code-property">portfolio:</span>
+                      <a :href="exp.portfolio" target="_blank" class="code-link">
+                        <span class="code-string">"{{ exp.portfolio }}"</span>
+                      </a>,
+                    </div>
+                  </div>
+                  
+                  <div class="experience-footer">
+                    <span class="code-brace">};</span>
+                  </div>
+                </div>
+                
+                <!-- Expanded Details Toggle -->
+                <div class="terminal-prompt">
+                  <span class="prompt-symbol">$</span>
+                  <button 
+                    @click="toggleDetails(exp.id)"
+                    class="terminal-button-secondary"
+                  >
+                    {{ expandedDetails.includes(exp.id) ? 'collapse_details.sh' : 'expand_details.sh' }}
+                  </button>
+                </div>
+                
+                <!-- Expanded Details -->
+                <div 
+                  v-if="expandedDetails.includes(exp.id)"
+                  class="expanded-details"
+                >
+                  <div class="terminal-prompt">
+                    <span class="prompt-symbol">$</span>
+                    <span class="command">cat additional_info.txt</span>
+                  </div>
+                  
+                  <div class="detail-section" v-if="exp.challenges">
+                    <div class="detail-title">
+                      <span class="code-comment">// Challenges Overcome</span>
+                    </div>
+                    <div class="detail-content">
+                      <div v-for="challenge in exp.challenges" :key="challenge" class="detail-item">
+                        <span class="code-string">"{{ challenge }}"</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="detail-section" v-if="exp.learnings">
+                    <div class="detail-title">
+                      <span class="code-comment">// Key Learnings</span>
+                    </div>
+                    <div class="detail-content">
+                      <div v-for="learning in exp.learnings" :key="learning" class="detail-item">
+                        <span class="code-string">"{{ learning }}"</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="period-section">
-              <span class="job-period">{{ exp.period }}</span>
-              <span class="job-duration">{{ exp.duration }}</span>
-            </div>
           </div>
           
-          <div class="impact-metrics" v-if="exp.metrics">
-            <div 
-              v-for="metric in exp.metrics" 
-              :key="metric.label"
-              class="metric-item"
-            >
-              <span class="metric-value">{{ metric.value }}</span>
-              <span class="metric-label">{{ metric.label }}</span>
+          <!-- Stats Summary Command -->
+          <div class="stats-container">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">career_stats.sh</span>
             </div>
-          </div>
-          
-          <p class="job-description">{{ exp.description }}</p>
-          
-          <div class="achievements-section">
-            <h4 class="features-title">Key Achievements</h4>
-            <ul class="features-list">
-              <li 
-                v-for="(achievement, idx) in exp.achievements" 
-                :key="idx"
-              >
-                {{ achievement }}
-              </li>
-            </ul>
-          </div>
-          
-          <div class="tech-stack">
-            <div class="stack-header">
-              <span class="stack-icon">⚡</span>
-              <span class="stack-title">Technologies & Skills</span>
-            </div>
-            <div class="tech-tags">
-              <span 
-                v-for="(category, categoryName) in exp.skillCategories"
-                :key="categoryName"
-                class="tech-tag"
-              >
-                {{ categoryName }}: {{ category.join(', ') }}
-              </span>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="card-actions">
-            <button 
-              v-if="exp.portfolio"
-              @click="openPortfolio(exp.portfolio)"
-              class="action-btn primary"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-                <path d="M18 13V19C18 19.5304 17.7893 20.0391 17.4142 20.4142C17.0391 20.7893 16.5304 21 16 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V8C3 7.46957 3.21071 6.96086 3.58579 6.58579C3.96086 6.21071 4.46957 6 5 6H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M15 3H21V9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M10 14L21 3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-              View Work
-            </button>
-            <button 
-              @click="toggleDetails(exp.id)"
-              class="action-btn secondary"
-            >
-              {{ expandedDetails.includes(exp.id) ? 'Less Details' : 'More Details' }}
-            </button>
-          </div>
-
-          <!-- Expanded Details -->
-          <div 
-            v-if="expandedDetails.includes(exp.id)"
-            class="expanded-details"
-          >
-            <div class="detail-section" v-if="exp.challenges">
-              <h5>Challenges Overcome</h5>
-              <ul class="features-list">
-                <li v-for="challenge in exp.challenges" :key="challenge">{{ challenge }}</li>
-              </ul>
-            </div>
-            
-            <div class="detail-section" v-if="exp.learnings">
-              <h5>Key Learnings</h5>
-              <ul class="features-list">
-                <li v-for="learning in exp.learnings" :key="learning">{{ learning }}</li>
-              </ul>
+            <div class="terminal-output">
+              <div class="stats-terminal">
+                <div class="stats-header">
+                  <span class="code-comment">// Career Statistics</span>
+                </div>
+                <div class="stats-content">
+                  <div class="stat-line">
+                    <span class="code-property">totalYears:</span>
+                    <span class="code-number">{{ totalYears }}+</span>,
+                  </div>
+                  <div class="stat-line">
+                    <span class="code-property">totalProjects:</span>
+                    <span class="code-number">{{ totalProjects }}+</span>,
+                  </div>
+                  <div class="stat-line">
+                    <span class="code-property">uniqueSkills:</span>
+                    <span class="code-number">{{ uniqueSkills }}</span>,
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Stats Summary -->
-    <div class="experience-stats">
-      <div class="stat-item">
-        <span class="stat-value">{{ totalYears }}+</span>
-        <span class="stat-label">Years Experience</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-value">{{ totalProjects }}+</span>
-        <span class="stat-label">Projects Completed</span>
-      </div>
-      <div class="stat-divider"></div>
-      <div class="stat-item">
-        <span class="stat-value">{{ uniqueSkills }}</span>
-        <span class="stat-label">Technologies Mastered</span>
-      </div>
-    </div>
-
-    <!-- Background Decorations - Matching Projects Section -->
-    <div class="bg-decorations">
-      <div class="decoration decoration-1"></div>
-      <div class="decoration decoration-2"></div>
-      <div class="decoration decoration-3"></div>
-    </div>
+    
+    <!-- Terminal Cursor -->
+    <div class="terminal-cursor"></div>
   </section>
 </template>
 
@@ -391,160 +494,187 @@ const toggleDetails = (id) => {
     expandedDetails.value.push(id)
   }
 }
-
-const openPortfolio = (url) => {
-  window.open(url, '_blank')
-}
 </script>
 
 <style scoped>
-/* Base section styles - matching projects section */
+/* Import base styles from hero section */
+:root {
+  --bg-color: #ffffff;
+  --text-color: #1a202c;
+  --secondary-text: #4a5568;
+  --accent-color: #3182ce;
+  --accent-hover: #2c5282;
+  --terminal-bg: #1e1e1e;
+  --terminal-header: #323232;
+  --terminal-text: #d4d4d4;
+  --terminal-prompt: #4ec9b0;
+  --terminal-keyword: #569cd6;
+  --terminal-string: #ce9178;
+  --terminal-comment: #6a9955;
+  --terminal-function: #dcdcaa;
+  --terminal-variable: #9cdcfe;
+  --terminal-property: #9cdcfe;
+  --terminal-boolean: #569cd6;
+  --terminal-class: #4ec9b0;
+  --terminal-parameter: #ffa657;
+  --terminal-line-number: #858585;
+}
+
+.dark-theme {
+  --bg-color: #0d1117;
+  --text-color: #f0f6fc;
+  --secondary-text: #8b949e;
+  --accent-color: #58a6ff;
+  --accent-hover: #1f6feb;
+  --terminal-bg: #0d1117;
+  --terminal-header: #161b22;
+  --terminal-text: #e6edf3;
+  --terminal-prompt: #3fb950;
+  --terminal-keyword: #ff7b72;
+  --terminal-string: #a5d6ff;
+  --terminal-comment: #8b949e;
+  --terminal-function: #d2a8ff;
+  --terminal-variable: #79c0ff;
+  --terminal-property: #ffa657;
+  --terminal-boolean: #ff7b72;
+  --terminal-class: #3fb950;
+  --terminal-parameter: #ffa657;
+  --terminal-line-number: #30363d;
+}
+
+/* Experience Section */
 .experience-section {
-  padding: 6rem 2rem;
-  background: 
-    linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
   position: relative;
-  overflow: hidden;
   min-height: 100vh;
-   margin-left: -2rem;
-   margin-right: 2rem;
-  width: 100vw;
-  
-}
-
-body.dark-theme .experience-section {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  color: #e2e8f0;
-}
-/* Section Header */
-.section-header {
-  text-align: center;
-  margin-bottom: 4rem;
-  position: relative;
-  z-index: 2;
-}
-
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.2);
-  border-radius: 50px;
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #3b82f6;
-  margin-bottom: 1.5rem;
-}
-
-.badge-icon {
-  font-size: 1rem;
-}
-
-.section-title {
-  font-size: clamp(2.5rem, 4vw, 3.5rem);
-  font-weight: 800;
-  color: #1e293b;
-  margin-bottom: 1rem;
-  letter-spacing: -0.02em;
-}
-
-body.dark-theme .section-title {
-  color: #f8fafc;
-}
-
-.title-decoration {
+  min-width: 100vw;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  overflow: hidden;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  margin-top: 0rem;
+  margin-left: -2rem;
+  padding: 2rem;
+  background-color: var(--bg-color);
 }
 
-.decoration-dot {
-  width: 6px;
-  height: 6px;
-  background: #3b82f6;
+/* Experience Terminal */
+.experience-terminal {
+  width: 100%;
+  max-width: 1200px;
+  background-color: var(--terminal-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.8s ease-out;
+}
+
+/* Terminal Header */
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--terminal-header);
+  padding: 0.75rem 1rem;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
 
-.decoration-line {
-  width: 80px;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, #3b82f6, transparent);
+.terminal-button.close {
+  background-color: #ff5f56;
 }
 
-.section-subtitle {
-  font-size: 1.1rem;
-  color: #64748b;
-  max-width: 700px;
-  margin: 0 auto;
-  line-height: 1.7;
+.terminal-button.minimize {
+  background-color: #ffbd2e;
 }
 
-body.dark-theme .section-subtitle {
-  color: #94a3b8;
+.terminal-button.maximize {
+  background-color: #27c93f;
+}
+
+.terminal-title {
+  color: var(--terminal-text);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Terminal Body */
+.terminal-body {
+  padding: 1.5rem;
+  color: var(--terminal-text);
+}
+
+.terminal-prompt {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.prompt-symbol {
+  color: var(--terminal-prompt);
+  font-weight: bold;
+}
+
+.command {
+  color: var(--terminal-text);
+}
+
+.terminal-output {
+  margin-bottom: 1.5rem;
 }
 
 /* Filter Container */
 .filter-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 3rem;
-  position: relative;
-  z-index: 2;
+  margin-bottom: 1.5rem;
 }
 
-.filter-tabs {
+.filter-options {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 0.5rem;
-  border-radius: 50px;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-top: 0.5rem;
+  margin-left: 1.5rem;
 }
 
-body.dark-theme .filter-tabs {
-  background: rgba(30, 41, 59, 0.7);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.filter-tab {
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  border: none;
-  border-radius: 25px;
-  font-weight: 500;
-  color: #64748b;
+.filter-option {
+  padding: 0.25rem 0.75rem;
+  background-color: transparent;
+  border: 1px solid var(--terminal-text);
+  border-radius: 4px;
+  color: var(--terminal-text);
+  font-family: 'Fira Code', 'Courier New', monospace;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-size: 0.875rem;
 }
 
-.filter-tab:hover {
-  color: #3b82f6;
-  background: rgba(59, 130, 246, 0.1);
+.filter-option:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
-.filter-tab.active {
-  background: #3b82f6;
-  color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+.filter-option.active {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
 }
-/* Timeline styles */
+
+/* Experience Timeline */
 .experience-timeline {
   position: relative;
-  padding: 3rem 0;
-  max-width: 926px;
-  margin: 0 auto;
+  padding: 1rem 0;
 }
 
 .timeline-item {
   position: relative;
-  padding-bottom: 4rem;
+  padding-bottom: 3rem;
   display: flex;
   align-items: flex-start;
 }
@@ -562,17 +692,13 @@ body.dark-theme .filter-tabs {
   height: 32px;
   border-radius: 50%;
   background: var(--accent);
-  border: 4px solid white;
+  border: 4px solid var(--terminal-bg);
   position: relative;
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-body.dark-theme .marker-dot {
-  border-color: #1e293b;
 }
 
 .marker-icon {
@@ -587,524 +713,283 @@ body.dark-theme .marker-dot {
   top: 32px;
   bottom: -2rem;
   width: 2px;
-  background: linear-gradient(to bottom, #e2e8f0, transparent);
+  background: var(--terminal-header);
   transform: translateX(-50%);
 }
 
-body.dark-theme .marker-line {
-  background: linear-gradient(to bottom, #334155, transparent);
-}
-
-/* Experience card - matching project cards */
-.experience-card {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.05),
-    0 2px 4px -1px rgba(0, 0, 0, 0.03);
-  backdrop-filter: blur(20px);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  position: relative;
-  margin-left: 2rem;
-  padding: 2rem;
-  animation: projectSlideIn 0.6s ease-out var(--delay) both;
-}
-
-body.dark-theme .experience-card {
-  background: rgba(30, 41, 59, 0.9);
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 
-    0 4px 6px -1px rgba(0, 0, 0, 0.2),
-    0 2px 4px -1px rgba(0, 0, 0, 0.1);
-}
-
-.experience-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Card content */
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+/* Experience Terminal Card */
+.experience-terminal-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border-left: 4px solid var(--accent-color);
+  padding: 1rem;
   margin-bottom: 1.5rem;
-  gap: 1rem;
-}
-
-.title-section {
+  margin-left: 1rem;
+  animation: fadeIn 0.5s ease-out var(--delay) both;
   flex: 1;
 }
 
-.job-title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #1e293b;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.3;
+.experience-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
 }
 
-body.dark-theme .job-title {
-  color: #f8fafc;
-}
-
-.company-info {
+.experience-number, .experience-status {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
-.company-name {
-  font-size: 1rem;
-  font-weight: 600;
+.experience-status.Development .code-string {
+  color: #06d6a0;
+}
+
+.experience-status.Management .code-string {
   color: #3b82f6;
 }
 
-.company-type {
-  font-size: 0.8rem;
-  padding: 0.25rem 0.75rem;
-  background: rgba(59, 130, 246, 0.1);
-  color: #3b82f6;
-  border-radius: 50px;
-  font-weight: 500;
+.experience-status.Internship .code-string {
+  color: #fb8500;
 }
 
-body.dark-theme .company-type {
-  background: rgba(96, 165, 250, 0.15);
-  color: #60a5fa;
+/* Experience Content */
+.experience-content {
+  margin-bottom: 1rem;
 }
 
-.period-section {
-  text-align: right;
-}
-
-.job-period {
-  display: block;
-  font-size: 1rem;
-  font-weight: 700;
-  color: #3b82f6;
-  margin-bottom: 0.25rem;
-}
-
-.job-duration {
-  font-size: 0.8rem;
-  color: #64748b;
-}
-
-body.dark-theme .job-duration {
-  color: #94a3b8;
-}
-
-/* Impact metrics */
-.impact-metrics {
-  display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding: 1rem 0;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-body.dark-theme .impact-metrics {
-  border-color: #334155;
-}
-
-.metric-item {
-  text-align: center;
-}
-
-.metric-value {
-  display: block;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #3b82f6;
-  line-height: 1;
-}
-
-.metric-label {
-  display: block;
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
-  margin-top: 0.25rem;
-}
-
-body.dark-theme .metric-label {
-  color: #94a3b8;
-}
-
-/* Job description */
-.job-description {
-  color: #64748b;
-  line-height: 1.7;
-  margin-bottom: 2rem;
-  font-size: 0.95rem;
-}
-
-body.dark-theme .job-description {
-  color: #cbd5e1;
-}
-
-/* Achievements - using projects section features styles */
-.achievements-section {
-  margin-bottom: 1.5rem;
-}
-
-.features-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #374151;
+.experience-title-line {
   margin-bottom: 0.5rem;
 }
 
-body.dark-theme .features-title {
-  color: #d1d5db;
+.experience-properties {
+  margin-left: 1rem;
 }
 
-.features-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.features-list li {
-  font-size: 0.85rem;
-  color: #6b7280;
+.property-line {
   margin-bottom: 0.25rem;
-  position: relative;
-  padding-left: 1rem;
 }
 
-body.dark-theme .features-list li {
-  color: #9ca3af;
+.nested-properties {
+  margin-left: 1rem;
 }
 
-.features-list li::before {
-  content: '✓';
-  position: absolute;
-  left: 0;
-  color: #22c55e;
-  font-weight: 600;
+.experience-footer {
+  margin-top: 0.5rem;
 }
 
-/* Tech stack - using projects section tech stack styles */
-.tech-stack {
-  margin-bottom: 2rem;
+/* Lists */
+.metrics-list, .achievements-list, .challenges-list, .learnings-list {
+  margin-left: 1rem;
 }
 
-.stack-header {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
+.metric-item, .achievement-item, .challenge-item, .learning-item {
+  margin-bottom: 0.25rem;
 }
 
-.stack-icon {
-  font-size: 1rem;
-}
-
-.stack-title {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #374151;
-}
-
-body.dark-theme .stack-title {
-  color: #d1d5db;
-}
-
-.tech-tags {
+/* Skill List */
+.skill-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
-.tech-tag {
-  padding: 0.5rem 1rem;
-  background: #f1f5f9;
-  color: #374151;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 500;
-  border: 1px solid #e2e8f0;
+.skill-item {
+  display: inline-block;
 }
 
-body.dark-theme .tech-tag {
-  background: #334155;
-  color: #d1d5db;
-  border-color: #475569;
-}
-
-/* Action buttons */
-.card-actions {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.action-btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.9rem;
-  border: none;
-}
-
-.action-btn.primary {
-  background: #3b82f6;
-  color: white;
-}
-
-.action-btn.primary:hover {
-  background: #2563eb;
-  transform: translateY(-2px);
-}
-
-.action-btn.secondary {
-  background: transparent;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
-}
-
-.action-btn.secondary:hover {
-  background: #f8fafc;
-  color: #1e293b;
-}
-
-body.dark-theme .action-btn.secondary {
-  color: #94a3b8;
-  border-color: #334155;
-}
-
-body.dark-theme .action-btn.secondary:hover {
-  background: #1e293b;
-  color: #f8fafc;
-}
-
-/* Expanded details */
+/* Expanded Details */
 .expanded-details {
-  margin-top: 1.5rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #f1f5f9;
-}
-
-body.dark-theme .expanded-details {
-  border-color: #334155;
+  margin-top: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1rem;
 }
 
 .detail-section {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-.detail-section h5 {
-  font-size: 1rem;
-  font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 0.75rem;
+.detail-title {
+  margin-bottom: 0.5rem;
 }
 
-body.dark-theme .detail-section h5 {
-  color: #f8fafc;
+.detail-content {
+  margin-left: 1rem;
 }
 
-/* Experience stats - matching projects stats */
-.experience-stats {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 4rem;
-  padding: 2rem 0;
-  border-top: 1px solid #e5e7eb;
-  max-width: 926px;
-  margin-left: auto;
-  margin-right: auto;
+.detail-item {
+  margin-bottom: 0.25rem;
 }
 
-body.dark-theme .experience-stats {
-  border-color: #374151;
+/* Stats Container */
+.stats-container {
+  margin-top: 2rem;
 }
 
-.stat-item {
-  text-align: center;
-  flex: 1;
+.stats-terminal {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border-left: 4px solid var(--accent-color);
+  padding: 1rem;
 }
 
-.stat-value {
-  display: block;
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: #1e293b;
+.stats-header {
+  margin-bottom: 1rem;
 }
 
-body.dark-theme .stat-value {
-  color: #f8fafc;
+.stats-content {
+  margin-left: 1rem;
 }
 
-.stat-label {
-  font-size: 0.75rem;
-  color: #64748b;
-  font-weight: 500;
+.stat-line {
+  margin-bottom: 0.25rem;
 }
 
-body.dark-theme .stat-label {
-  color: #94a3b8;
+/* Terminal Buttons */
+.terminal-button-primary, .terminal-button-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
 }
 
-.stat-divider {
-  width: 1px;
-  height: 30px;
-  background: #e5e7eb;
-  margin: 0 1rem;
+.terminal-button-primary {
+  background-color: var(--accent-color);
+  color: white;
 }
 
-body.dark-theme .stat-divider {
-  background: #374151;
+.terminal-button-primary:hover {
+  background-color: var(--accent-hover);
 }
 
-/* Background decorations - matching projects section */
-.bg-decorations {
+.terminal-button-secondary {
+  background-color: transparent;
+  color: var(--terminal-text);
+  border: 1px solid var(--terminal-text);
+}
+
+.terminal-button-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Code Syntax Highlighting */
+.code-keyword { color: var(--terminal-keyword); }
+.code-string { color: var(--terminal-string); }
+.code-comment { color: var(--terminal-comment); }
+.code-function { color: var(--terminal-function); }
+.code-variable { color: var(--terminal-variable); }
+.code-property { color: var(--terminal-property); }
+.code-boolean { color: var(--terminal-boolean); }
+.code-class { color: var(--terminal-class); }
+.code-parameter { color: var(--terminal-parameter); }
+.code-number { color: var(--terminal-boolean); }
+.code-operator { color: var(--terminal-text); }
+.code-brace { color: var(--terminal-text); }
+.code-bracket { color: var(--terminal-text); }
+.code-punctuation { color: var(--terminal-text); }
+.code-link {
+  color: var(--terminal-string);
+  text-decoration: underline;
+}
+
+/* Terminal Cursor */
+.terminal-cursor {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
+  bottom: 2rem;
+  left: 2rem;
+  width: 10px;
+  height: 20px;
+  background-color: var(--terminal-prompt);
+  animation: blink 1s infinite;
 }
 
-.decoration {
-  position: absolute;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(168, 85, 247, 0.1));
-  animation: float 20s ease-in-out infinite;
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.decoration-1 {
-  width: 300px;
-  height: 300px;
-  top: 10%;
-  left: -5%;
-  animation-delay: 0s;
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
-.decoration-2 {
-  width: 200px;
-  height: 200px;
-  top: 60%;
-  right: -3%;
-  animation-delay: 7s;
-}
-
-.decoration-3 {
-  width: 150px;
-  height: 150px;
-  bottom: 20%;
-  left: 20%;
-  animation-delay: 14s;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-20px) rotate(120deg); }
-  66% { transform: translateY(10px) rotate(240deg); }
-}
-
-/* Animation */
-@keyframes projectSlideIn {
-  0% { 
-    opacity: 0; 
-    transform: translateY(30px) scale(0.95); 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  100% { 
-    opacity: 1; 
-    transform: translateY(0) scale(1); 
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .experience-section {
-    padding: 4rem 1.5rem;
-    max-width: fit-content;
-  }
- .filter-container {
-  max-width: fit-content;
- } 
+@media (max-width: 992px) {
   .timeline-item {
     flex-direction: column;
-    padding-bottom: 3rem;
   }
   
   .timeline-marker {
     display: none;
   }
   
-  .experience-card {
+  .experience-terminal-card {
     margin-left: 0;
-    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .experience-section {
+    padding: 1rem;
   }
   
-  .card-header {
-    flex-direction: column;
-    gap: 1rem;
+  .terminal-body {
+    padding: 1rem;
   }
   
-  .period-section {
-    text-align: left;
+  .experience-terminal-card {
+    padding: 0.75rem;
   }
   
-  .impact-metrics {
-    flex-direction: column;
-    gap: 1rem;
+  .filter-options {
+    gap: 0.25rem;
   }
   
-  .metric-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    text-align: left;
-  }
-  
-  .card-actions {
-    flex-direction: column;
+  .filter-option {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
   .experience-section {
-    padding: 3rem 1rem;
-    max-width: fit-content;
-  }
-   .filter-container {
-  max-width: fit-content;
- } 
-  .section-title {
-    font-size: 2rem;
+    padding: 0.5rem;
   }
   
-  .section-subtitle {
-    font-size: 1rem;
+  .terminal-body {
+    padding: 0.75rem;
   }
   
-  .job-title {
-    font-size: 1.25rem;
+  .experience-terminal-card {
+    padding: 0.5rem;
   }
   
-  .experience-stats {
+  .filter-options {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.25rem;
   }
   
-  .stat-divider {
-    display: none;
+  .filter-option {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
   }
 }
 </style>

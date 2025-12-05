@@ -1,87 +1,120 @@
 <template>
   <section id="contact" class="contact-section">
-    <div class="section-container">
-      <!-- Section Header -->
-      <div class="section-header">
-        <div class="header-badge">
-          <span class="badge-icon">📨</span>
-          <span>CONTACT</span>
+    <div class="terminal-container">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
         </div>
-        <h2 class="section-title">Get In Touch</h2>
-        <div class="title-decoration">
-          <div class="decoration-dot"></div>
-          <div class="decoration-line"></div>
-          <div class="decoration-dot"></div>
-        </div>
-        <p class="section-subtitle">
-          Have a project in mind or want to discuss opportunities? Let's connect.
-        </p>
+        <div class="terminal-title">contact@k-space:~</div>
       </div>
-
-      <div class="contact-container">
-        <!-- Left: Contact Info -->
-        <div class="contact-info">
-          <div class="contact-image">
-            <img src="/contact.jpg" alt="Kelvin Njenga Kamau" />
-            <div class="image-frame"></div>
+      
+      <div class="terminal-body">
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">whoami</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="identity-output">
+            <div class="profile-section">
+              <div class="profile-img-container">
+                <img src="/contact.jpg" alt="Kelvin Njenga Kamau" class="profile-img" />
+                <div class="status-indicator online"></div>
+              </div>
+              <div class="profile-info">
+                <h3 class="profile-name">Kelvin Kamau</h3>
+                <p class="profile-title">Full Stack Developer & UI Engineer</p>
+              </div>
+            </div>
           </div>
-
-          <div class="contact-details">
-            <h3>Contact Information</h3>
-            <div class="detail-item">
-              <i class="fas fa-envelope"></i>
-              <div>
-                <span>Email</span>
-                <a href="mailto:njengak993@gmail.com">njengak993@gmail.com</a>
-              </div>
-            </div>
-            <div class="detail-item">
-              <i class="fas fa-map-marker-alt"></i>
-              <div>
-                <span>Location</span>
-                <p>Nairobi, Kenya</p>
-              </div>
-            </div>
-            <div class="detail-item">
-              <i class="fas fa-phone-alt"></i>
-              <div>
-                <span>Phone</span>
-                <a href="tel:+254703642280">+254 703 642 280</a>
-              </div>
-            </div>
-
-            <div class="social-links">
-              <a href="https://github.com/Njenga993" target="_blank" aria-label="GitHub">
-                <i class="fab fa-github"></i>
+        </div>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat contact.json</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="contact-info">
+            <div class="contact-item">
+              <span class="contact-key">"email":</span>
+              <a href="mailto:njengak993@gmail.com" class="contact-value">
+                "njengak993@gmail.com"
               </a>
-              <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" aria-label="LinkedIn">
-                <i class="fab fa-linkedin-in"></i>
-              </a>
-              <a href="https://x.com/kamau_nje/" target="_blank" aria-label="Twitter-x">
-                <i class="fab fa-twitter"></i>
+            </div>
+            <div class="contact-item">
+              <span class="contact-key">"location":</span>
+              <span class="contact-value">"Nairobi, Kenya"</span>
+            </div>
+            <div class="contact-item">
+              <span class="contact-key">"phone":</span>
+              <a href="tel:+254703642280" class="contact-value">
+                "+254 703 642 280"
               </a>
             </div>
           </div>
         </div>
-
-        <!-- Right: Form Content -->
-        <div class="contact-form-area">
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">git remote -v</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="social-links">
+            <a href="https://github.com/Njenga993" target="_blank" class="social-link">
+              <div class="social-icon github">
+                <i class="fab fa-github"></i>
+              </div>
+              <span class="social-name">GitHub</span>
+            </a>
+            <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" class="social-link">
+              <div class="social-icon linkedin">
+                <i class="fab fa-linkedin-in"></i>
+              </div>
+              <span class="social-name">LinkedIn</span>
+            </a>
+            <a href="https://x.com/kamau_nje/" target="_blank" class="social-link">
+              <div class="social-icon twitter">
+                <i class="fab fa-twitter"></i>
+              </div>
+              <span class="social-name">Twitter</span>
+            </a>
+          </div>
+        </div>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">./send_message.sh</span>
+        </div>
+        
+        <div class="terminal-output">
           <div v-if="formStatus === 'success'" class="form-status success">
-            <i class="fas fa-check-circle"></i>
-            <h3>Message Sent Successfully!</h3>
-            <p>Thank you for reaching out. I'll get back to you within 24 hours.</p>
-            <button @click="resetForm" class="action-button">
-              Send Another Message
-            </button>
+            <div class="status-icon">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="status-message">
+              <h3>Message Sent Successfully!</h3>
+              <p>Thank you for reaching out. I'll get back to you within 24 hours.</p>
+              <button @click="resetForm" class="terminal-btn">
+                <span class="btn-command">$ ./send_message.sh</span>
+              </button>
+            </div>
           </div>
 
           <div v-else-if="formStatus === 'error'" class="form-status error">
-            <i class="fas fa-exclamation-circle"></i>
-            <h3>Something Went Wrong</h3>
-            <p>Please try again or contact me directly at njengak993@gmail.com</p>
-            <button @click="resetForm" class="action-button">
-              Try Again
-            </button>
+            <div class="status-icon">
+              <i class="fas fa-exclamation-circle"></i>
+            </div>
+            <div class="status-message">
+              <h3>Something Went Wrong</h3>
+              <p>Please try again or contact me directly at njengak993@gmail.com</p>
+              <button @click="resetForm" class="terminal-btn">
+                <span class="btn-command">$ ./send_message.sh</span>
+              </button>
+            </div>
           </div>
 
           <form
@@ -97,92 +130,208 @@
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="table" />
             
-
-            <div class="form-group">
-              <label for="name">Your Name</label>
-              <input 
-                type="text" 
-                id="name" 
-                name="name" 
-                v-model="formData.name"
-                placeholder="John Doe" 
-                required 
-              />
-            </div>
-
-            <div class="form-row">
-              <div class="form-group">
-                <label for="email">Email Address</label>
-                <input 
-                  type="email" 
-                  id="email" 
-                  name="email" 
-                  v-model="formData.email"
-                  placeholder="john@example.com" 
-                  required 
-                />
+            <!-- Personal Information Section -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="code-comment">// Personal Information</span>
               </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">name=</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    v-model="formData.name"
+                    placeholder="John Doe" 
+                    required 
+                    class="form-input"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="email" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">email=</span>
+                  </label>
+                  <input 
+                    type="email" 
+                    id="email" 
+                    name="email" 
+                    v-model="formData.email"
+                    placeholder="john@example.com" 
+                    required 
+                    class="form-input"
+                  />
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="phone" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">phone=</span>
+                  </label>
+                  <input 
+                    type="tel" 
+                    id="phone" 
+                    name="phone" 
+                    v-model="formData.phone"
+                    placeholder="+254 700 000 000" 
+                    class="form-input"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="company" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">company=</span>
+                  </label>
+                  <input 
+                    type="text" 
+                    id="company" 
+                    name="company" 
+                    v-model="formData.company"
+                    placeholder="Your Company" 
+                    class="form-input"
+                  />
+                </div>
+              </div>
+            </div>
+            
+            <!-- Project Details Section -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="code-comment">// Project Details</span>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="subject" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">subject=</span>
+                  </label>
+                  <select id="subject" name="subject" v-model="formData.subject" required class="form-select">
+                    <option value="" disabled selected>Select a subject</option>
+                    <option value="Project Inquiry">Project Inquiry</option>
+                    <option value="Job Opportunity">Job Opportunity</option>
+                    <option value="Collaboration">Collaboration</option>
+                    <option value="Consultation">Consultation</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="timeline" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">timeline=</span>
+                  </label>
+                  <select id="timeline" name="timeline" v-model="formData.timeline" class="form-select">
+                    <option value="" disabled selected>Select timeline</option>
+                    <option value="ASAP">ASAP</option>
+                    <option value="1-2 weeks">1-2 weeks</option>
+                    <option value="2-4 weeks">2-4 weeks</option>
+                    <option value="1-2 months">1-2 months</option>
+                    <option value="3+ months">3+ months</option>
+                    <option value="Flexible">Flexible</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="budget" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">budget=</span>
+                  </label>
+                  <select id="budget" name="budget" v-model="formData.budget" class="form-select">
+                    <option value="" disabled selected>Select budget range</option>
+                    <option value="$500 – $1000">$500 – $1000</option>
+                    <option value="$1000 – $2500">$1000 – $2500</option>
+                    <option value="$2500 – $5000">$2500 – $5000</option>
+                    <option value="$5000 – $10000">$5000 – $10000</option>
+                    <option value="$10000+">$10000+</option>
+                    <option value="Not Sure">Not Sure Yet</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="projectType" class="form-label">
+                    <span class="label-prompt">$</span>
+                    <span class="label-text">projectType=</span>
+                  </label>
+                  <select id="projectType" name="projectType" v-model="formData.projectType" class="form-select">
+                    <option value="" disabled selected>Select project type</option>
+                    <option value="Website">Website</option>
+                    <option value="Web Application">Web Application</option>
+                    <option value="Mobile App">Mobile App</option>
+                    <option value="E-commerce">E-commerce</option>
+                    <option value="UI/UX Design">UI/UX Design</option>
+                    <option value="Full Stack Development">Full Stack Development</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Message Section -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="code-comment">// Message</span>
+              </div>
+              
               <div class="form-group">
-                <label for="phone">Phone (Optional)</label>
-                <input 
-                  type="tel" 
-                  id="phone" 
-                  name="phone" 
-                  v-model="formData.phone"
-                  placeholder="+254 700 000 000" 
-                />
+                <label for="message" class="form-label">
+                  <span class="label-prompt">$</span>
+                  <span class="label-text">message=</span>
+                </label>
+                <textarea 
+                  id="message" 
+                  name="message" 
+                  v-model="formData.message"
+                  rows="6" 
+                  placeholder="Tell me about your project in detail..." 
+                  required
+                  class="form-textarea"
+                ></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="additionalInfo" class="form-label">
+                  <span class="label-prompt">$</span>
+                  <span class="label-text">additionalInfo=</span>
+                </label>
+                <textarea 
+                  id="additionalInfo" 
+                  name="additionalInfo" 
+                  v-model="formData.additionalInfo"
+                  rows="3" 
+                  placeholder="Any additional information or requirements..." 
+                  class="form-textarea"
+                ></textarea>
               </div>
             </div>
 
-            <div class="form-group">
-              <label for="subject">Subject</label>
-              <select id="subject" name="subject" v-model="formData.subject" required>
-                <option value="" disabled selected>Select a subject</option>
-                <option value="Project Inquiry">Project Inquiry</option>
-                <option value="Job Opportunity">Job Opportunity</option>
-                <option value="Collaboration">Collaboration</option>
-                <option value="Other">Other</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="budget">Estimated Budget (Optional)</label>
-              <select id="budget" name="budget" v-model="formData.budget">
-                <option value="" disabled selected>Select budget range</option>
-                <option value="$500 – $1000">$500 – $1000</option>
-                <option value="$1000 – $2500">$1000 – $2500</option>
-                <option value="$2500+">$2500+</option>
-                <option value="Not Sure">Not Sure Yet</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label for="message">Your Message</label>
-              <textarea 
-                id="message" 
-                name="message" 
-                v-model="formData.message"
-                rows="5" 
-                placeholder="Tell me about your project..." 
-                required
-              ></textarea>
-            </div>
-
-            <button type="submit" class="submit-button" :disabled="isSubmitting">
-              <span v-if="!isSubmitting">Send Message</span>
-              <span v-else class="loading-spinner"></span>
+            <button type="submit" class="submit-btn" :disabled="isSubmitting">
+              <span v-if="!isSubmitting" class="btn-text">
+                <span class="btn-prompt">$</span>
+                <span class="btn-command">./send_message.sh</span>
+              </span>
+              <span v-else class="loading">
+                <span class="loading-text">Processing...</span>
+                <span class="loading-dots">...</span>
+              </span>
             </button>
           </form>
 
           <iframe name="formsubmit-iframe" style="display: none;"></iframe>
         </div>
+        
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command cursor">_</span>
+        </div>
       </div>
-    </div>
-
-    <!-- Background Decorations -->
-    <div class="bg-decorations">
-      <div class="decoration decoration-1"></div>
-      <div class="decoration decoration-2"></div>
     </div>
   </section>
 </template>
@@ -198,9 +347,13 @@ const formData = ref({
   name: '',
   email: '',
   phone: '',
+  company: '',
   subject: '',
+  timeline: '',
   budget: '',
-  message: ''
+  projectType: '',
+  message: '',
+  additionalInfo: ''
 });
 
 const handleSubmit = async () => {
@@ -233,443 +386,544 @@ const resetForm = () => {
     name: '',
     email: '',
     phone: '',
+    company: '',
     subject: '',
+    timeline: '',
     budget: '',
-    message: ''
+    projectType: '',
+    message: '',
+    additionalInfo: ''
   };
 };
 </script>
 
 <style scoped>
-/* Base section styles */
+/* Terminal Theme Variables */
+:root {
+  --terminal-bg: #0d1117;
+  --terminal-header: #161b22;
+  --terminal-text: #e6edf3;
+  --terminal-prompt: #3fb950;
+  --terminal-keyword: #ff7b72;
+  --terminal-string: #a5d6ff;
+  --terminal-comment: #8b949e;
+  --terminal-function: #d2a8ff;
+  --terminal-variable: #79c0ff;
+  --terminal-property: #ffa657;
+  --terminal-boolean: #ff7b72;
+  --terminal-class: #3fb950;
+  --terminal-parameter: #ffa657;
+  --terminal-line-number: #30363d;
+  --accent-color: #58a6ff;
+  --accent-hover: #1f6feb;
+}
+
+/* Base Section Styles */
 .contact-section {
   padding: 6rem 2rem;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  position: relative;
-  overflow: hidden;
-  color: #e2e8f0;
+  background-color: var(--terminal-bg);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  color: var(--terminal-text);
   width: 100vw;
-   margin-left: -2rem;
-  
-}
-
-body.dark-theme .contact-section {
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-}
-
-.section-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  margin-left: -2rem;
+  margin-bottom: -2rem;
   position: relative;
-  z-index: 2;
+  z-index: 10;
 }
 
-/* Section Header */
-.section-header {
-  text-align: center;
-  margin-bottom: 4rem;
+.terminal-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background-color: var(--terminal-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  justify-content: center;
 }
 
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(255, 92, 53, 0.1);
-  color: #ff5c35;
-  padding: 0.5rem 1.25rem;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-}
-
-.badge-icon {
-  font-size: 1rem;
-}
-
-.section-title {
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #f8fafc;
-}
-
-.title-decoration {
+/* Terminal Header */
+.terminal-header {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  background-color: var(--terminal-header);
+  padding: 0.75rem 1rem;
 }
 
-.decoration-dot {
-  width: 8px;
-  height: 8px;
-  background: #ff5c35;
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
 }
 
-.decoration-line {
-  width: 60px;
-  height: 2px;
-  background: linear-gradient(90deg, #ff5c35, #ff9a8b);
+.terminal-button.close {
+  background-color: #ff5f56;
 }
 
-.section-subtitle {
-  font-size: 1.1rem;
-  color: #94a3b8;
-  max-width: 600px;
-  margin: 0 auto;
+.terminal-button.minimize {
+  background-color: #ffbd2e;
 }
 
-/* Contact Container */
-.contact-container {
+.terminal-button.maximize {
+  background-color: #27c93f;
+}
+
+.terminal-title {
+  color: var(--terminal-text);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Terminal Body */
+.terminal-body {
+  padding: 1.5rem;
+}
+
+.terminal-prompt {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 3rem;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
-.contact-info {
-  flex: 1 1 40%;
-  min-width: 300px;
+.prompt-symbol {
+  color: var(--terminal-prompt);
+  font-weight: bold;
 }
 
-.contact-form-area {
-  flex: 1 1 45%;
+.command {
+  color: var(--terminal-text);
 }
 
-/* Contact Image */
-.contact-image {
+.cursor {
+  color: var(--terminal-prompt);
+  animation: blink 1s infinite;
+}
+
+.terminal-output {
+  margin-bottom: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+/* Identity Output */
+.identity-output {
+  margin-bottom: 1.5rem;
+}
+
+.profile-section {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.profile-img-container {
   position: relative;
-  width: 100%;
-  max-width: 350px;
-  margin-bottom: 2rem;
 }
 
-.contact-image img {
-  width: 100%;
-  height: auto;
-  border-radius: 20px;
+.profile-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
   object-fit: cover;
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--accent-color);
 }
 
-.image-frame {
+.status-indicator {
   position: absolute;
-  top: -15px;
-  left: -15px;
-  right: 15px;
-  bottom: 15px;
-  border: 2px solid #ff5c35;
-  border-radius: 20px;
-  z-index: 1;
-  transition: all 0.3s ease;
+  bottom: 5px;
+  right: 5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background-color: #3fb950;
+  border: 2px solid var(--terminal-bg);
 }
 
-.contact-image:hover .image-frame {
-  top: -20px;
-  left: -20px;
-  right: 20px;
-  bottom: 20px;
-}
-
-/* Contact Details */
-.contact-details {
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 16px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
-.contact-details h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: #f8fafc;
-}
-
-.detail-item {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.detail-item i {
-  font-size: 1.2rem;
-  color: #ff5c35;
-  margin-top: 0.2rem;
-}
-
-.detail-item div {
+.profile-info {
   flex: 1;
 }
 
-.detail-item span {
-  display: block;
-  font-size: 0.8rem;
-  color: #94a3b8;
-  margin-bottom: 0.25rem;
+.profile-name {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  color: var(--accent-color);
 }
 
-.detail-item a, .detail-item p {
-  color: #e2e8f0;
-  font-size: 1rem;
+.profile-title {
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--terminal-function);
+}
+
+/* Contact Info */
+.contact-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.contact-key {
+  color: var(--terminal-property);
+}
+
+.contact-value {
+  color: var(--terminal-string);
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
-.detail-item a:hover {
-  color: #ff5c35;
+.contact-value:hover {
+  color: var(--accent-color);
 }
 
+/* Social Links */
 .social-links {
   display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
 }
 
-.social-links a {
+.social-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.social-link:hover {
+  transform: translateY(-5px);
+}
+
+.social-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--terminal-header);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  color: #e2e8f0;
-  font-size: 1.2rem;
+  color: var(--terminal-text);
   transition: all 0.3s ease;
 }
 
-.social-links a:hover {
-  background: #ff5c35;
+.social-link:hover .social-icon {
+  background-color: var(--accent-color);
   color: white;
-  transform: translateY(-3px);
+}
+
+.social-name {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
 }
 
 /* Contact Form */
 .contact-form {
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 16px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.form-section {
+  margin-bottom: 2rem;
+}
+
+.section-title {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
-  margin-right: 2rem;
-  margin-left: -rem;
 }
 
 .form-row {
   display: flex;
   gap: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .form-row .form-group {
   flex: 1;
+  margin-bottom: 0;
 }
 
-label {
-  display: block;
+.form-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-  color: #94a3b8;
   font-weight: 500;
 }
 
-input, textarea, select {
+.label-prompt {
+  color: var(--terminal-prompt);
+  font-weight: bold;
+}
+
+.label-text {
+  color: var(--terminal-property);
+}
+
+.form-input, .form-select, .form-textarea {
   width: 100%;
-  padding: 0.875rem 1rem;
-  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.1);
-  background: rgba(15, 23, 42, 0.7);
-  color: #e2e8f0;
+  background-color: rgba(15, 23, 42, 0.7);
+  color: var(--terminal-text);
+  font-family: 'Fira Code', 'Courier New', monospace;
   font-size: 1rem;
   transition: all 0.3s ease;
 }
 
-input:focus, textarea:focus, select:focus {
+.form-input:focus, .form-select:focus, .form-textarea:focus {
   outline: none;
-  border-color: #ff5c35;
-  box-shadow: 0 0 0 3px rgba(255, 92, 53, 0.2);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
 }
 
-textarea {
-  min-height: 150px;
-  resize: vertical;
-}
-
-select {
+.form-select {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e6edf3' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658c-0.599.111-.793-.261-.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 12px;
 }
 
-.submit-button {
+.form-textarea {
+  min-height: 150px;
+  resize: vertical;
+}
+
+.submit-btn, .terminal-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.875rem 2rem;
-  background: linear-gradient(135deg, #ff5c35, #ff3c1a);
+  padding: 0.75rem 1.5rem;
+  background-color: var(--accent-color);
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 1rem;
+  border-radius: 4px;
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   width: 100%;
-  box-shadow: 0 4px 15px rgba(255, 92, 53, 0.3);
+  margin-top: 1rem;
 }
 
-.submit-button:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ff3c1a, #e82e0e);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 92, 53, 0.4);
+.submit-btn:hover:not(:disabled), .terminal-btn:hover {
+  background-color: var(--accent-hover);
 }
 
-.submit-button:disabled {
+.submit-btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
 }
 
-.loading-spinner {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 3px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 1s ease-in-out infinite;
+.btn-prompt {
+  color: var(--terminal-prompt);
+  font-weight: bold;
+  margin-right: 0.5rem;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.btn-command {
+  color: white;
+}
+
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-text {
+  margin-right: 0.5rem;
+}
+
+.loading-dots {
+  animation: loading-dots 1.5s infinite;
+}
+
+@keyframes loading-dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
 }
 
 /* Form Status */
 .form-status {
-  background: rgba(30, 41, 59, 0.7);
-  border-radius: 16px;
-  padding: 2.5rem;
-  text-align: center;
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
 }
 
-.form-status i {
-  font-size: 3rem;
-  margin-bottom: 1.5rem;
+.status-icon {
+  font-size: 2rem;
 }
 
-.form-status.success i {
-  color: #28a745;
+.form-status.success .status-icon {
+  color: #3fb950;
 }
 
-.form-status.error i {
-  color: #dc3545;
+.form-status.error .status-icon {
+  color: #ff7b72;
 }
 
-.form-status h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #f8fafc;
+.status-message h3 {
+  font-size: 1.3rem;
+  margin: 0 0 0.5rem 0;
+  color: var(--terminal-text);
 }
 
-.form-status p {
-  color: #94a3b8;
-  margin-bottom: 2rem;
+.status-message p {
+  margin: 0 0 1.5rem 0;
+  color: var(--terminal-comment);
 }
 
-.action-button {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  background: transparent;
-  color: #ff5c35;
-  border: 2px solid #ff5c35;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
+/* Code Syntax Highlighting */
+.code-comment {
+  color: var(--terminal-comment);
 }
 
-.action-button:hover {
-  background: rgba(255, 92, 53, 0.1);
-}
-
-/* Background Decorations */
-.bg-decorations {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 1;
-}
-
-.decoration {
-  position: absolute;
-  border-radius: 50%;
-  background: linear-gradient(135deg, rgba(255, 92, 53, 0.1), rgba(255, 154, 139, 0.1));
-  animation: float 20s ease-in-out infinite;
-  opacity: 0.8;
-}
-
-.decoration-1 {
-  width: 300px;
-  height: 300px;
-  top: 10%;
-  left: -5%;
-  animation-delay: 0s;
-}
-
-.decoration-2 {
-  width: 200px;
-  height: 200px;
-  top: 60%;
-  right: -3%;
-  animation-delay: 7s;
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0px) rotate(0deg); }
-  33% { transform: translateY(-20px) rotate(120deg); }
-  66% { transform: translateY(10px) rotate(240deg); }
+/* Animations */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* Responsive Design */
-@media (max-width: 992px) {
-  .contact-container {
-    flex-direction: column;
+/* Extra Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+  .terminal-container {
+    max-width: 1200px;
   }
   
-  .contact-info, .contact-form-area {
-    flex: 1 1 100%;
+  .profile-img {
+    width: 90px;
+    height: 90px;
   }
   
-  .contact-image {
-    margin: 0 auto 2rem;
+  .profile-name {
+    font-size: 1.7rem;
+  }
+  
+  .profile-title {
+    font-size: 1.2rem;
+  }
+  
+  .contact-info {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   }
 }
 
-@media (max-width: 768px) {
-  .contact-section {
-    padding: 4rem 1.5rem;
+/* Large Desktop (1200px to 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .terminal-container {
+    max-width: 1100px;
   }
   
-  .section-title {
-    font-size: 2rem;
+  .profile-img {
+    width: 85px;
+    height: 85px;
+  }
+  
+  .profile-name {
+    font-size: 1.6rem;
+  }
+  
+  .profile-title {
+    font-size: 1.15rem;
+  }
+}
+
+/* Desktop (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .terminal-container {
+    max-width: 1000px;
+  }
+  
+  .terminal-body {
+    padding: 1.2rem;
+  }
+  
+  .profile-img {
+    width: 75px;
+    height: 75px;
+  }
+  
+  .profile-name {
+    font-size: 1.5rem;
+  }
+  
+  .profile-title {
+    font-size: 1.1rem;
+  }
+  
+  .contact-info {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* Tablet (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 1rem;
+  }
+  
+  .terminal-body {
+    padding: 1rem;
+  }
+  
+  .profile-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .profile-img {
+    width: 70px;
+    height: 70px;
+  }
+  
+  .profile-name {
+    font-size: 1.4rem;
+  }
+  
+  .profile-title {
+    font-size: 1rem;
   }
   
   .form-row {
@@ -677,34 +931,279 @@ select {
     gap: 0;
   }
   
-  .contact-details, .contact-form {
-    padding: 1.5rem;
+  .form-row .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-links {
+    justify-content: center;
   }
 }
 
-@media (max-width: 480px) {
-  .contact-section {
-    padding: 3rem 1rem;
+/* Mobile Landscape (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 0.5rem;
   }
   
-  .section-header {
-    margin-bottom: 2rem;
+  .terminal-body {
+    padding: 0.8rem;
   }
   
-  .contact-image {
-    max-width: 280px;
+  .profile-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .profile-img {
+    width: 65px;
+    height: 65px;
+  }
+  
+  .profile-name {
+    font-size: 1.3rem;
+  }
+  
+  .profile-title {
+    font-size: 0.95rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-links {
+    justify-content: center;
+    gap: 1rem;
+  }
+  
+  .social-icon {
+    width: 45px;
+    height: 45px;
   }
   
   .form-status {
-    padding: 1.5rem;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+}
+
+/* Mobile Portrait (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+  .terminal-container {
+    max-width: 100%;
+    margin: 0;
   }
   
-  .form-status i {
-    font-size: 2.5rem;
+  .terminal-body {
+    padding: 0.6rem;
   }
   
-  .form-status h3 {
+  .terminal-prompt {
+    margin-bottom: 0.8rem;
+  }
+  
+  .terminal-output {
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+  }
+  
+  .profile-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .profile-img {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .status-indicator {
+    width: 12px;
+    height: 12px;
+    bottom: 3px;
+    right: 3px;
+  }
+  
+  .profile-name {
+    font-size: 1.2rem;
+  }
+  
+  .profile-title {
+    font-size: 0.9rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .social-links {
+    justify-content: center;
+    gap: 0.8rem;
+  }
+  
+  .social-icon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .social-name {
+    font-size: 0.8rem;
+  }
+  
+  .form-status {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .status-icon {
+    font-size: 1.5rem;
+  }
+  
+  .status-message h3 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .terminal-container {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .terminal-body {
+    padding: 0.5rem;
+  }
+  
+  .terminal-prompt {
+    margin-bottom: 0.8rem;
+  }
+  
+  .terminal-output {
+    margin-bottom: 1rem;
+    padding-left: 0.5rem;
+  }
+  
+  .profile-section {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .profile-img {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    bottom: 2px;
+    right: 2px;
+  }
+  
+  .profile-name {
+    font-size: 1.1rem;
+  }
+  
+  .profile-title {
+    font-size: 0.85rem;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-row .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .contact-info {
+    grid-template-columns: 1fr;
+  }
+  
+  .contact-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  
+  .social-links {
+    justify-content: center;
+    gap: 0.8rem;
+  }
+  
+  .social-icon {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .social-name {
+    font-size: 0.7rem;
+  }
+  
+  .form-status {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .status-icon {
     font-size: 1.3rem;
+  }
+  
+  .status-message h3 {
+    font-size: 1rem;
+  }
+  
+  .status-message p {
+    font-size: 0.9rem;
+  }
+  
+  .form-input, .form-select, .form-textarea {
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .form-textarea {
+    min-height: 120px;
+  }
+  
+  .submit-btn, .terminal-btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
   }
 }
 </style>

@@ -1,65 +1,132 @@
 <template>
-  <div class="navbar-container" :class="{ dark: isDark, scrolled: isScrolled }">
-    <!-- Logo -->
-    <div class="navbar-logo" @click="scrollToTop">
-      <img src="/profile.JPG" alt="Profile" />
-      <span class="logo-text"> K-SPACE </span>
+  <div class="navbar-container" :class="{ 'scrolled': isScrolled }">
+    <div class="terminal-navbar">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
+        <div class="terminal-title">navigation@k-space:~</div>
+      </div>
+      
+      <div class="terminal-body">
+        <!-- Logo Section -->
+        <div class="logo-section" @click="scrollToTop">
+          <div class="logo-wrapper">
+            <img src="/profile.JPG" alt="Profile" class="profile-img" />
+            <div class="status-indicator online"></div>
+          </div>
+          <span class="logo-name">K-SPACE $Terminal</span>
+        </div>
+
+        <!-- Desktop Navigation -->
+        <nav class="desktop-nav">
+          <div class="terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command">navigate</span>
+            <span class="cursor">_</span>
+          </div>
+          <ul class="nav-list">
+            <li v-for="link in navLinks" :key="link.id" class="nav-item">
+              <a 
+                :href="`#${link.id}`" 
+                @click="navigateToSection(link.id)"
+                :class="{ 'active': activeSection === link.id }"
+                class="nav-link"
+              >
+                {{ link.text }}
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <!-- Right Section -->
+        <div class="right-section">
+          <!-- Terminal Command Button -->
+          <button 
+            class="terminal-command-btn" 
+            @click="toggleMobileMenu"
+            :class="{ 'active': isMobileMenuOpen }"
+            aria-label="Toggle terminal menu"
+          >
+            <span class="command-symbol">&gt;</span>
+          </button>
+        </div>
+      </div>
     </div>
 
-    <!-- Hamburger -->
-    <button v-if="isMobile" @click="toggleDropdown" class="mobile-toggle" :class="{ active: showDropdown }">
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-      <span class="hamburger-line"></span>
-    </button>
-
-    <!-- Nav Links -->
-    <transition name="slide-fade">
-      <nav
-        v-if="!isMobile || showDropdown"
-        class="navbar-links"
-        :class="{ mobile: isMobile }"
-      >
-        <ul>
-          <li v-for="link in navLinks" :key="link.id">
-            <a 
-              :href="`#${link.id}`" 
-              @click="scrollTo(link.id)"
-              :class="{ active: activeSection === link.id }"
-            >
-              {{ link.text }}
-              <span class="nav-indicator"></span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </transition>
-
-    <!-- Right Side Controls -->
-    <div class="navbar-right">
-      <!-- Social Links -->
-      <div class="navbar-socials">
-        <a 
-          v-for="social in socialLinks" 
-          :key="social.id"
-          :href="social.url" 
-          target="_blank" 
-          :aria-label="social.name"
-        >
-          <i :class="social.icon"></i>
-          <span class="tooltip">{{ social.name }}</span>
-        </a>
-      </div>
-
-      <!-- Dark/Light Toggle -->
-      <button class="theme-toggle" @click="toggleTheme" aria-label="Toggle theme">
-        <div class="toggle-track">
-          <div class="toggle-thumb" :class="{ dark: isDark }">
-            <i class="fas fa-sun"></i>
-            <i class="fas fa-moon"></i>
+    <!-- Mobile Terminal Menu -->
+    <div class="mobile-terminal-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleMobileMenu">
+      <div class="mobile-terminal" @click.stop>
+        <div class="mobile-terminal-header">
+          <div class="terminal-buttons">
+            <div class="terminal-button close"></div>
+            <div class="terminal-button minimize"></div>
+            <div class="terminal-button maximize"></div>
+          </div>
+          <div class="terminal-title">mobile@k-space:~</div>
+        </div>
+        
+        <div class="mobile-terminal-body">
+          <div class="mobile-logo-section">
+            <div class="logo-wrapper">
+              <img src="/profile.JPG" alt="Profile" class="profile-img" />
+              <div class="status-indicator online"></div>
+            </div>
+            <span class="logo-name">K-SPACE</span>
+          </div>
+          
+          <div class="mobile-terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command">ls -la</span>
+          </div>
+          
+          <nav class="mobile-nav">
+            <ul class="mobile-nav-list">
+              <li v-for="link in navLinks" :key="link.id" class="mobile-nav-item">
+                <a 
+                  :href="`#${link.id}`" 
+                  @click="navigateToSection(link.id)"
+                  :class="{ 'active': activeSection === link.id }"
+                  class="mobile-nav-link"
+                >
+                  <span class="file-icon">📁</span>
+                  <span class="file-name">{{ link.text }}</span>
+                </a>
+              </li>
+            </ul>
+          </nav>
+          
+          <div class="mobile-terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command">cat social_links.txt</span>
+          </div>
+          
+          <div class="mobile-social-links">
+            <div class="social-links">
+              <a 
+                v-for="social in socialLinks" 
+                :key="social.id"
+                :href="social.url" 
+                target="_blank" 
+                :aria-label="social.name"
+                class="social-link"
+              >
+                <div class="social-icon">
+                  <i :class="social.icon"></i>
+                </div>
+                <span class="social-name">{{ social.name }}</span>
+              </a>
+            </div>
+          </div>
+          
+          <div class="mobile-terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command cursor">_</span>
           </div>
         </div>
-      </button>
+      </div>
     </div>
   </div>
 </template>
@@ -81,110 +148,176 @@ const socialLinks = [
   { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
 ];
 
-const isMobile = ref(false);
-const showDropdown = ref(false);
-const isDark = ref(false);
+// State variables
 const isScrolled = ref(false);
 const activeSection = ref('');
+const isMobileMenuOpen = ref(false);
 
-const toggleDropdown = () => {
-  showDropdown.value = !showDropdown.value;
-};
+onMounted(() => {
+  // Add scroll listener
+  window.addEventListener('scroll', handleScroll);
+  
+  // Check current section on load
+  handleScroll();
+  
+  // Prevent body scroll when mobile menu is open
+  document.addEventListener('keydown', handleEscapeKey);
+});
 
-const scrollTo = (section) => {
-  const el = document.getElementById(section);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' });
-    activeSection.value = section;
-    showDropdown.value = false;
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScroll);
+  document.removeEventListener('keydown', handleEscapeKey);
+  // Restore body scroll
+  document.body.style.overflow = '';
+});
+
+// Handle scroll events
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 50;
+  
+  // Update active section based on scroll position
+  const sections = navLinks.map(link => document.getElementById(link.id));
+  let currentSection = '';
+  
+  sections.forEach(section => {
+    if (!section) return;
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 150 && rect.bottom >= 150) {
+      currentSection = section.id;
+    }
+  });
+  
+  if (currentSection && currentSection !== activeSection.value) {
+    activeSection.value = currentSection;
   }
 };
 
+// Navigate to section
+const navigateToSection = (sectionId) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
+    activeSection.value = sectionId;
+    isMobileMenuOpen.value = false;
+  }
+};
+
+// Scroll to top
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   activeSection.value = '';
 };
 
-const updateScreen = () => {
-  isMobile.value = window.innerWidth < 768;
-};
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50;
+// Toggle mobile menu
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
   
-  // Update active section
-  const sections = navLinks.map(link => document.getElementById(link.id));
-  sections.forEach(section => {
-    if (!section) return;
-    const rect = section.getBoundingClientRect();
-    if (rect.top <= 100 && rect.bottom >= 100) {
-      activeSection.value = section.id;
-    }
-  });
-};
-
-const toggleTheme = () => {
-  isDark.value = !isDark.value;
-  document.body.classList.toggle('dark-theme', isDark.value);
-  localStorage.setItem('darkMode', isDark.value);
-};
-
-onMounted(() => {
-  updateScreen();
-  window.addEventListener('resize', updateScreen);
-  window.addEventListener('scroll', handleScroll);
-  
-  // Check for saved theme preference
-  const savedTheme = localStorage.getItem('darkMode');
-  if (savedTheme === 'true') {
-    isDark.value = true;
-    document.body.classList.add('dark-theme');
+  // Prevent body scroll when menu is open
+  if (isMobileMenuOpen.value) {
+    document.body.style.overflow = 'hidden';
+  } else {
+    document.body.style.overflow = '';
   }
-});
+};
 
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', updateScreen);
-  window.removeEventListener('scroll', handleScroll);
-});
+// Handle escape key to close mobile menu
+const handleEscapeKey = (e) => {
+  if (e.key === 'Escape' && isMobileMenuOpen.value) {
+    toggleMobileMenu();
+  }
+};
 </script>
 
 <style scoped>
-/* Base styles */
+/* Terminal Theme Variables */
+:root {
+  --terminal-bg: #0d1117;
+  --terminal-header: #161b22;
+  --terminal-text: #e6edf3;
+  --terminal-prompt: #3fb950;
+  --terminal-keyword: #ff7b72;
+  --terminal-string: #a5d6ff;
+  --terminal-comment: #8b949e;
+  --terminal-function: #d2a8ff;
+  --terminal-variable: #79c0ff;
+  --terminal-property: #ffa657;
+  --terminal-boolean: #ff7b72;
+  --terminal-class: #3fb950;
+  --terminal-parameter: #ffa657;
+  --terminal-line-number: #30363d;
+  --accent-color: #58a6ff;
+  --accent-hover: #1f6feb;
+}
+
+/* Base Styles */
 .navbar-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: all 0.3s ease;
+}
+
+.terminal-navbar {
+  background-color: var(--terminal-bg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  font-family: 'Fira Code', 'Courier New', monospace;
+}
+
+.navbar-container.scrolled .terminal-navbar {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* Terminal Header */
+.terminal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(10px);
-  color: #1a1a1a;
-  padding: 1rem 2rem;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  transition: all 0.3s ease;
-  
-  
+  background-color: var(--terminal-header);
+  padding: 0.5rem 1rem;
 }
 
-.navbar-container.scrolled {
-  padding: 0.75rem 2rem;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+.terminal-buttons {
+  display: flex;
+  gap: 0.5rem;
 }
 
-.navbar-container.dark {
-  background: rgba(15, 23, 42, 0.95);
-  color: #f8fafc;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
 
-.navbar-container.dark.scrolled {
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+.terminal-button.close {
+  background-color: #ff5f56;
 }
 
-/* Logo */
-.navbar-logo {
+.terminal-button.minimize {
+  background-color: #ffbd2e;
+}
+
+.terminal-button.maximize {
+  background-color: #27c93f;
+}
+
+.terminal-title {
+  color: var(--terminal-text);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Terminal Body */
+.terminal-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+}
+
+/* Logo Section */
+.logo-section {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -192,390 +325,496 @@ onBeforeUnmount(() => {
   transition: transform 0.3s ease;
 }
 
-.navbar-logo:hover {
+.logo-section:hover {
   transform: scale(1.05);
 }
 
-.navbar-logo img {
+.logo-wrapper {
+  position: relative;
+}
+
+.profile-img {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #3b82f6;
-  transition: all 0.3s ease;
+  border: 2px solid var(--accent-color);
 }
 
-.navbar-container.dark .navbar-logo img {
-  border-color: #60a5fa;
+.status-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #3fb950;
+  border: 2px solid var(--terminal-bg);
 }
 
-.logo-text {
-  font-weight: 600;
-  font-size: 1.1rem;
-  color: #1a1a1a;
+.logo-name {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--terminal-text);
 }
 
-.navbar-container.dark .logo-text {
-  color: #f8fafc;
+/* Desktop Navigation */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-/* Nav Links */
-.navbar-links ul {
+.terminal-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.prompt-symbol {
+  color: var(--terminal-prompt);
+  font-weight: bold;
+}
+
+.command {
+  color: var(--terminal-text);
+}
+
+.cursor {
+  color: var(--terminal-prompt);
+  animation: blink 1s infinite;
+}
+
+.nav-list {
   display: flex;
   list-style: none;
   gap: 1.5rem;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
-.navbar-links ul li a {
+.nav-link {
   position: relative;
-  text-decoration: none;
   font-weight: 500;
-  color: #64748b;
-  transition: all 0.3s ease;
+  color: var(--terminal-text);
+  text-decoration: none;
   padding: 0.5rem 0;
+  transition: all 0.3s ease;
 }
 
-.navbar-container.dark .navbar-links ul li a {
-  color: #94a3b8;
+.nav-link:hover {
+  color: var(--accent-color);
 }
 
-.navbar-links ul li a:hover {
-  color: #3b82f6;
-}
-
-.navbar-container.dark .navbar-links ul li a:hover {
-  color: #60a5fa;
-}
-
-.navbar-links ul li a.active {
-  color: #3b82f6;
+.nav-link.active {
+  color: var(--accent-color);
   font-weight: 600;
 }
 
-.navbar-container.dark .navbar-links ul li a.active {
-  color: #60a5fa;
+.nav-link.active::before {
+  content: '$ ';
+  color: var(--terminal-prompt);
 }
 
-.nav-indicator {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 0;
-  height: 2px;
-  background: #3b82f6;
-  transition: width 0.3s ease;
-}
-
-.navbar-container.dark .nav-indicator {
-  background: #60a5fa;
-}
-
-.navbar-links ul li a.active .nav-indicator {
-  width: 100%;
-}
-
-/* Social Links */
-.navbar-socials {
+/* Right Section */
+.right-section {
   display: flex;
-  gap: 1.2rem;
-  margin-right: 2.5rem;
-  margin-bottom: 1rem;
+  align-items: center;
 }
 
-.navbar-socials a {
-  position: relative;
-  font-size: 1.2rem;
-  color: #64748b;
-  transition: all 0.3s ease;
-}
-
-.navbar-container.dark .navbar-socials a {
-  color: #94a3b8;
-}
-
-.navbar-socials a:hover {
-  color: #3b82f6;
-  transform: translateY(-2px);
-}
-
-.navbar-container.dark .navbar-socials a:hover {
-  color: #60a5fa;
-}
-
-.tooltip {
-  position: absolute;
-  top: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1a1a1a;
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-}
-
-.navbar-container.dark .tooltip {
-  background: #f8fafc;
-  color: #1a1a1a;
-}
-
-.navbar-socials a:hover .tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-5px);
-}
-
-/* Theme Toggle */
-.theme-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  position: relative;
-  width: 50px;
-  height: 24px;
-}
-
-.toggle-track {
-  width: 100%;
-  height: 100%;
-  background: #e2e8f0;
-  border-radius: 12px;
-  position: relative;
-  transition: background 0.3s ease;
-}
-
-.navbar-container.dark .toggle-track {
-  background: #334155;
-}
-
-.toggle-thumb {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 20px;
-  height: 20px;
-  background: white;
-  border-radius: 50%;
+.terminal-command-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.toggle-thumb.dark {
-  transform: translateX(26px);
-}
-
-.toggle-thumb i {
-  font-size: 0.7rem;
-  position: absolute;
-  transition: opacity 0.3s ease;
-}
-
-.toggle-thumb .fa-sun {
-  color: #f59e0b;
-  opacity: 1;
-}
-
-.toggle-thumb.dark .fa-sun {
-  opacity: 0;
-}
-
-.toggle-thumb .fa-moon {
-  color: #1e293b;
-  opacity: 0;
-}
-
-.toggle-thumb.dark .fa-moon {
-  opacity: 1;
-}
-
-/* Hamburger Menu */
-.mobile-toggle {
-  display: block;
-  background: #3b82f6;
-  border: none;
+  width: 36px;
+  height: 36px;
+  background-color: var(--terminal-header);
+  border: 1px solid var(--terminal-prompt);
+  border-radius: 4px;
+  color: var(--terminal-prompt);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  font-weight: bold;
   cursor: pointer;
-  padding: 0.5rem;
-  z-index: 1001;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 30px;
-  height: 24px;
-}
-
-.hamburger-line {
-  display: block;
-  width: 100%;
-  height: 2px;
-  background: #f2f2f3;
   transition: all 0.3s ease;
-  transform-origin: center;
 }
 
-.navbar-container.dark .hamburger-line {
-  background: #e2e8f0;
+.terminal-command-btn:hover {
+  background-color: var(--terminal-prompt);
+  color: var(--terminal-bg);
 }
 
-.mobile-toggle.active .hamburger-line:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
+.command-symbol {
+  font-size: 1.2rem;
 }
 
-.mobile-toggle.active .hamburger-line:nth-child(2) {
-  opacity: 0;
-}
-
-.mobile-toggle.active .hamburger-line:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
-}
-
-/* Mobile dropdown */
-.navbar-links.mobile {
+/* Mobile Terminal Menu */
+.mobile-terminal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(255, 255, 255, 0.98);
-  backdrop-filter: blur(10px);
-  height: 100vh;
-  width: 100%;
-  padding: 5rem 2rem 2rem;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-terminal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-terminal {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80%;
+  max-width: 400px;
+  height: 100%;
+  background-color: var(--terminal-bg);
+  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  overflow-y: auto;
+  font-family: 'Fira Code', 'Courier New', monospace;
+}
+
+.mobile-terminal-overlay.active .mobile-terminal {
+  transform: translateX(0);
+}
+
+.mobile-terminal-header {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.navbar-container.dark .navbar-links.mobile {
-  background: rgba(15, 23, 42, 0.98);
-}
-
-.navbar-links.mobile ul {
-  flex-direction: column;
-  gap: 2rem;
   align-items: center;
+  justify-content: space-between;
+  background-color: var(--terminal-header);
+  padding: 0.75rem 1rem;
 }
 
-.navbar-links.mobile ul li a {
+.mobile-terminal-body {
+  padding: 1.5rem;
+  color: var(--terminal-text);
+}
+
+.mobile-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.mobile-terminal-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.mobile-nav {
+  margin-bottom: 1.5rem;
+}
+
+.mobile-nav-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mobile-nav-item {
+  margin-bottom: 0.5rem;
+}
+
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--terminal-text);
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.mobile-nav-link:hover {
+  background-color: var(--terminal-header);
+}
+
+.mobile-nav-link.active {
+  background-color: var(--terminal-header);
+  color: var(--accent-color);
+}
+
+.file-icon {
   font-size: 1.2rem;
 }
 
+.file-name {
+  font-weight: 500;
+}
+
+.mobile-social-links {
+  margin-bottom: 1.5rem;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.social-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--terminal-header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--terminal-text);
+  transition: all 0.3s ease;
+}
+
+.social-icon:hover {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.social-name {
+  font-size: 0.8rem;
+  color: var(--terminal-comment);
+}
+
 /* Animations */
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateY(-10px);
-  opacity: 0;
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 /* Responsive Design */
-@media (max-width: 1200px) {
-  .navbar-container {
-    padding: 0.75rem 1.5rem;
-  }
-
-  .navbar-logo img {
-    width: 36px;
-    height: 36px;
-  }
-
-  .logo-text {
-    font-size: 1rem;
-  }
-
-  .navbar-links ul {
-    display: none; /* Hide links by default */
-  }
-
-  .mobile-toggle {
-    display: flex; /* Show hamburger menu */
-  }
-
-  .navbar-links.mobile {
-    display: flex; /* Show mobile dropdown */
-  }
-
-  .navbar-socials {
-    margin-right: 0;
-    margin-bottom: 3rem;
+/* Extra Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+  .terminal-body {
+    padding: 0.75rem 2rem;
   }
   
-}
-@media (max-width: 768px) {
-  .mobile-toggle {
-    display: flex;
+  .nav-list {
+    gap: 2rem;
   }
-
-  .navbar-links:not(.mobile) {
-    display: none;
-  }
-
-  .navbar-socials {
-    margin-right: 4rem;
+  
+  .logo-name {
+    font-size: 1.3rem;
   }
 }
 
-@media (max-width: 480px) {
-  .navbar-container {
+/* Large Desktop (1200px to 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .terminal-body {
     padding: 0.75rem 1.5rem;
   }
+}
 
-  .navbar-logo img {
+/* Desktop (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .terminal-body {
+    padding: 0.75rem 1rem;
+  }
+  
+  .nav-list {
+    gap: 1.2rem;
+  }
+  
+  .logo-name {
+    font-size: 1.1rem;
+  }
+}
+
+/* Tablet (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .terminal-body {
+    padding: 0.75rem 1rem;
+  }
+  
+  .nav-list {
+    gap: 1rem;
+  }
+  
+  .nav-link {
+    font-size: 0.9rem;
+  }
+  
+  .logo-name {
+    font-size: 1rem;
+  }
+  
+  .profile-img {
     width: 36px;
     height: 36px;
   }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+  }
+}
 
-  .logo-text {
+/* Mobile Landscape (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .desktop-nav {
+    display: none;
+  }
+  
+  .terminal-body {
+    padding: 0.75rem 1rem;
+  }
+  
+  .logo-name {
     font-size: 1rem;
   }
+  
+  .profile-img {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .mobile-terminal {
+    width: 85%;
+  }
+}
 
-  .navbar-socials {
-    gap: 1rem;
-    margin-right: 2.5rem;
+/* Mobile Portrait (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+  .desktop-nav {
+    display: none;
+  }
+  
+  .terminal-body {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .logo-name {
+    font-size: 0.9rem;
+  }
+  
+  .profile-img {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .terminal-header {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .terminal-title {
+    font-size: 0.8rem;
+  }
+  
+  .terminal-command-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .mobile-terminal {
+    width: 90%;
+  }
+  
+  .mobile-terminal-body {
+    padding: 1rem;
+  }
+  
+  .social-icon {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .desktop-nav {
+    display: none;
+  }
+  
+  .terminal-body {
+    padding: 0.5rem;
+  }
+  
+  .logo-name {
+    font-size: 0.8rem;
+  }
+  
+  .profile-img {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .status-indicator {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .terminal-header {
+    padding: 0.4rem 0.5rem;
+  }
+  
+  .terminal-title {
+    font-size: 0.7rem;
+  }
+  
+  .terminal-command-btn {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .mobile-terminal {
+    width: 95%;
+  }
+  
+  .mobile-terminal-body {
+    padding: 0.75rem;
+  }
+  
+  .mobile-logo-section {
     margin-bottom: 1rem;
   }
-
-  .theme-toggle {
-    width: 40px;
+  
+  .mobile-terminal-prompt {
+    margin-bottom: 0.75rem;
+  }
+  
+  .mobile-nav {
+    margin-bottom: 1rem;
+  }
+  
+  .mobile-social-links {
+    margin-bottom: 1rem;
+  }
+  
+  .social-icon {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .social-name {
+    font-size: 0.7rem;
   }
 }
-@media (max-width: 320px) {
-  .navbar-container {
-    padding: 0.55rem 0.5rem;
-  }
-
-  .navbar-logo img {
-    width: 26px;
-    height: 26px;
-  }
-
-  .logo-text {
-    font-size: 1rem;
-  }
-
-  .navbar-socials {
-    gap: 1rem;
-    margin-right: 2rem;
-  }
-
-  .theme-toggle {
-    width: 40px;
-  }
-}
-
 </style>
