@@ -1,5 +1,5 @@
 <template>
-  <footer class="terminal-footer">
+  <footer class="hero-section terminal-footer">
     <!-- Terminal Window Container -->
     <div class="terminal-container">
       <!-- Terminal Header -->
@@ -236,7 +236,7 @@ onUnmounted(() => {
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
   margin-bottom: -2rem;
-  margin-left: -2rem;
+  margin-left: -1.5rem;
   margin-top: 2rem;
   padding: 2rem;
   background-color: var(--bg-color);
@@ -639,8 +639,8 @@ onUnmounted(() => {
 @media (min-width: 768px) and (max-width: 991px) {
   .terminal-footer {
     padding: 1.5rem 0;
-    width: calc(100% - 1rem);
-     margin-right: -2rem;
+    width: calc(100% - 2rem);
+     margin-right: -3rem;
   }
   
   .terminal-body {
@@ -695,8 +695,8 @@ onUnmounted(() => {
 @media (min-width: 480px) and (max-width: 767px) {
   .terminal-footer {
     padding: 1rem 0;
-    width: calc(100% - 1rem);
-     margin-right: -2rem;
+    width: calc(100% - 2rem);
+     margin-right: -3rem;
   }
   
   .terminal-body {
@@ -751,8 +751,8 @@ onUnmounted(() => {
 @media (max-width: 479px) {
   .terminal-footer {
     padding: 0.8rem 0;
-    width: calc(100% - 1rem);
-     margin-right: -2rem;
+    width: calc(100% - 2rem);
+     margin-right: -3rem;
   }
   
   .terminal-body {

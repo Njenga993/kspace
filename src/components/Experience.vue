@@ -300,7 +300,7 @@ const experiences = [
     type: 'Full-time',
     period: '2024 - Present',
     duration: '1+ years',
-    category: 'Management',
+    category: 'development',
     color: '#3b82f6',
     icon: BriefcaseIcon,
     description: 'Led digital transformation initiatives for an organic food company, overseeing all digital solutions from branding to systems development.',
