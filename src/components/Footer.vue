@@ -226,20 +226,25 @@ onUnmounted(() => {
 
 /* Base Footer Styles */
 .terminal-footer {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  padding: 2rem 0;
-  margin-left: -2rem;
-  width: 100vw;
   position: relative;
-  z-index: 10;
+  min-height: 100vh;
+  width: calc(100% - 0.7rem);
+  min-width: 100vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-family: 'Fira Code', 'Courier New', monospace;
   margin-bottom: -2rem;
+  margin-left: -2rem;
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: var(--bg-color);
 }
 
 /* Terminal Container */
 .terminal-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   background-color: var(--terminal-bg);
   border-radius: 8px;
@@ -634,6 +639,7 @@ onUnmounted(() => {
 @media (min-width: 768px) and (max-width: 991px) {
   .terminal-footer {
     padding: 1.5rem 0;
+    width: calc(100% - 1rem);
   }
   
   .terminal-body {
@@ -688,6 +694,7 @@ onUnmounted(() => {
 @media (min-width: 480px) and (max-width: 767px) {
   .terminal-footer {
     padding: 1rem 0;
+    width: calc(100% - 1rem);
   }
   
   .terminal-body {
@@ -742,6 +749,7 @@ onUnmounted(() => {
 @media (max-width: 479px) {
   .terminal-footer {
     padding: 0.8rem 0;
+    width: calc(100% - 1rem);
   }
   
   .terminal-body {
