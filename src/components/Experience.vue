@@ -948,7 +948,7 @@ const toggleDetails = (id) => {
 @media (max-width: 768px) {
   .experience-section {
     padding: 1rem;
-     margin-right: -2rem;
+     margin-right: -1rem;
   }
   
   .terminal-body {
@@ -972,7 +972,7 @@ const toggleDetails = (id) => {
 @media (max-width: 480px) {
   .experience-section {
     padding: 0rem;
-    margin-right: -2rem;
+    margin-right: -1rem;
   }
   .experience-terminal {
     margin-left: 2rem;
