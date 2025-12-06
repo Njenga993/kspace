@@ -234,6 +234,7 @@ onUnmounted(() => {
   width: 100vw;
   position: relative;
   z-index: 10;
+  margin-bottom: -2rem;
 }
 
 /* Terminal Container */

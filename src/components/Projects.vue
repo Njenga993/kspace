@@ -436,7 +436,6 @@ const loadMoreProjects = () => {
   justify-content: center;
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
-  margin-top: 4.5rem;
   margin-left: -2rem;
   padding: 2rem;
   background-color: var(--bg-color);

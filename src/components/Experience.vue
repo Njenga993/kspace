@@ -553,7 +553,7 @@ const toggleDetails = (id) => {
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
   margin-top: 0rem;
-  margin-left: -4rem;
+  margin-left: -2rem;
   padding: 2rem;
   background-color: var(--bg-color);
 }
