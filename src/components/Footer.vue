@@ -640,6 +640,7 @@ onUnmounted(() => {
   .terminal-footer {
     padding: 1.5rem 0;
     width: calc(100% - 1rem);
+     margin-right: -2rem;
   }
   
   .terminal-body {
@@ -695,6 +696,7 @@ onUnmounted(() => {
   .terminal-footer {
     padding: 1rem 0;
     width: calc(100% - 1rem);
+     margin-right: -2rem;
   }
   
   .terminal-body {
@@ -750,6 +752,7 @@ onUnmounted(() => {
   .terminal-footer {
     padding: 0.8rem 0;
     width: calc(100% - 1rem);
+     margin-right: -2rem;
   }
   
   .terminal-body {
