@@ -432,12 +432,12 @@ const resetForm = () => {
 }
 
 .terminal-container {
-  max-width: 1000px;
+  max-width: 100px;
   margin: 0 auto;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  width: calc(90% - 0.7rem);
   justify-content: center;
 }
 
@@ -645,9 +645,10 @@ const resetForm = () => {
 /* Contact Form */
 .contact-form {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
-  border-left: 4px solid var(--accent-color);
+  border-radius: 4px;
+  padding: 0.5rem;
+  border-left: 2px solid var(--accent-color);
+  justify-content: center;
 }
 
 .form-section {
@@ -664,7 +665,7 @@ const resetForm = () => {
 }
 
 .form-row {
-  display: flex;
+  display: row;
   gap: 1.5rem;
   margin-bottom: 1.5rem;
 }
@@ -692,7 +693,7 @@ const resetForm = () => {
 }
 
 .form-input, .form-select, .form-textarea {
-  width: 100%;
+  width: 80%;
   padding: 0.75rem 1rem;
   border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -735,7 +736,7 @@ const resetForm = () => {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 100%;
+  width: 30%;
   margin-top: 1rem;
 }
 

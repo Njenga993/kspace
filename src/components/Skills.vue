@@ -251,11 +251,11 @@ const totalSkills = computed(() => {
 /* Skills Terminal */
 .skills-terminal {
   width: 100%;
-  max-width: 1200px;
-  background-color: var(--terminal-bg);
+  max-width: 1400px;
+  margin-left: -4rem;
+  width: calc(90% - 0.7rem);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.8s ease-out;
 }
 
@@ -445,6 +445,10 @@ const totalSkills = computed(() => {
 @media (max-width: 768px) {
   .skills-section {
     padding: 1rem;
+  }
+  .skills-terminal {
+    margin-left: 1rem;
+    width: calc(90% - 0.7rem);
   }
   
   .terminal-body {

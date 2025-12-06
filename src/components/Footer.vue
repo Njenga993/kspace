@@ -1,108 +1,111 @@
 <template>
-  <div>
-    <!-- Terminal Footer -->
-    <footer class="terminal-footer">
-      <div class="terminal-container">
-        <div class="terminal-header">
-          <div class="terminal-buttons">
-            <div class="terminal-button close"></div>
-            <div class="terminal-button minimize"></div>
-            <div class="terminal-button maximize"></div>
-          </div>
-          <div class="terminal-title">footer@k-space:~</div>
+  <footer class="terminal-footer">
+    <!-- Terminal Window Container -->
+    <div class="terminal-container">
+      <!-- Terminal Header -->
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
+        <div class="terminal-title">footer@portfolio:~</div>
+      </div>
+      
+      <!-- Terminal Body -->
+      <div class="terminal-body">
+        <!-- About Command -->
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat about.txt</span>
         </div>
         
-        <div class="terminal-body">
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">cat about.txt</span>
-          </div>
-          
-          <div class="terminal-output">
-            <div class="about-section">
-              <div class="profile-section">
-                <div class="profile-img-container">
-                  <img src="/profile.JPG" alt="Kelvin Kamau" class="profile-img" />
-                  <div class="status-indicator online"></div>
-                </div>
-                <div class="profile-info">
-                  <h3 class="profile-name">Kelvin Kamau</h3>
-                  <p class="profile-title">Full Stack Developer & UI Engineer</p>
-                  <p class="profile-description">Creating digital experiences that matter.</p>
-                </div>
-              </div>
+        <div class="terminal-output">
+          <div class="about-section">
+            <div class="profile-container">
+              <img src="/profile.JPG" alt="Kelvin Kamau" class="profile-img" />
+              <div class="status-indicator online"></div>
+            </div>
+            <div class="profile-info">
+              <h3 class="profile-name">Kelvin Kamau</h3>
+              <p class="profile-title">Full Stack Developer & UI Engineer</p>
+              <p class="profile-description">Creating digital experiences that matter.</p>
             </div>
           </div>
-          
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">ls -la</span>
-          </div>
-          
-          <div class="terminal-output">
-            <div class="file-list">
-              <div class="file-item" v-for="link in navLinks" :key="link.id">
-                <span class="file-icon">📁</span>
-                <a :href="`#${link.id}`" @click="scrollTo(link.id)" class="file-link">
-                  {{ link.text }}
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">cat contact.json</span>
-          </div>
-          
-          <div class="terminal-output">
-            <div class="contact-section">
-              <div class="contact-item">
-                <span class="contact-key">"email":</span>
-                <a href="mailto:njengak993@gmail.com" class="contact-value">
-                  "njengak993@gmail.com"
-                </a>
-              </div>
-              <div class="contact-item">
-                <span class="contact-key">"location":</span>
-                <span class="contact-value">"Nairobi, Kenya"</span>
-              </div>
-            </div>
-          </div>
-          
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">git remote -v</span>
-          </div>
-          
-          <div class="terminal-output">
-            <div class="social-links">
-              <a 
-                v-for="social in socialLinks" 
-                :key="social.id"
-                :href="social.url" 
-                target="_blank" 
-                :aria-label="social.name"
-                class="social-link"
-              >
-                <div class="social-icon">
-                  <i :class="social.icon"></i>
-                </div>
-                <span class="social-name">{{ social.name }}</span>
+        </div>
+        
+        <!-- Navigation Command -->
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">ls -la</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="nav-list">
+            <div class="nav-item" v-for="link in navLinks" :key="link.id">
+              <span class="file-icon">📁</span>
+              <a :href="`#${link.id}`" class="file-link">
+                {{ link.text }}
               </a>
             </div>
           </div>
-          
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command cursor">_</span>
+        </div>
+        
+        <!-- Contact Command -->
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">cat contact.json</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="contact-section">
+            <div class="contact-item">
+              <span class="contact-key">"email":</span>
+              <a href="mailto:njengak993@gmail.com" class="contact-value">
+                "njengak993@gmail.com"
+              </a>
+            </div>
+            <div class="contact-item">
+              <span class="contact-key">"location":</span>
+              <span class="contact-value">"Nairobi, Kenya"</span>
+            </div>
           </div>
+        </div>
+        
+        <!-- Social Command -->
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">git remote -v</span>
+        </div>
+        
+        <div class="terminal-output">
+          <div class="social-links">
+            <a 
+              v-for="social in socialLinks" 
+              :key="social.id"
+              :href="social.url" 
+              target="_blank" 
+              :aria-label="social.name"
+              class="social-link"
+            >
+              <div class="social-icon">
+                <i :class="social.icon"></i>
+              </div>
+              <span class="social-name">{{ social.name }}</span>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Terminal Cursor -->
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command cursor">_</span>
         </div>
       </div>
       
       <!-- Terminal Bottom Bar -->
       <div class="terminal-bottom">
-        <div class="terminal-status">
+        <div class="status-info">
           <span class="status-item">
             <span class="status-indicator online"></span>
             <span>Connected</span>
@@ -112,13 +115,13 @@
           </span>
         </div>
         <div class="terminal-actions">
-          <a href="#" class="terminal-link">Privacy Policies</a>
-          <span>•</span>
-          <a href="#" class="terminal-link">Terms of Service</a>
+          <a href="#" class="terminal-link">Privacy</a>
+          <span class="separator">•</span>
+          <a href="#" class="terminal-link">Terms</a>
         </div>
       </div>
-    </footer>
-
+    </div>
+    
     <!-- Back to Top Button -->
     <button 
       v-show="showBackToTop" 
@@ -128,11 +131,11 @@
     >
       <i class="fas fa-arrow-up"></i>
     </button>
-  </div>
+  </footer>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const navLinks = [
   { id: 'about', text: 'About' },
@@ -178,6 +181,33 @@ onUnmounted(() => {
 <style scoped>
 /* Terminal Theme Variables */
 :root {
+  --bg-color: #ffffff;
+  --text-color: #1a202c;
+  --secondary-text: #4a5568;
+  --accent-color: #3182ce;
+  --accent-hover: #2c5282;
+  --terminal-bg: #1e1e1e;
+  --terminal-header: #323232;
+  --terminal-text: #d4d4d4;
+  --terminal-prompt: #4ec9b0;
+  --terminal-keyword: #569cd6;
+  --terminal-string: #ce9178;
+  --terminal-comment: #6a9955;
+  --terminal-function: #dcdcaa;
+  --terminal-variable: #9cdcfe;
+  --terminal-property: #9cdcfe;
+  --terminal-boolean: #569cd6;
+  --terminal-class: #4ec9b0;
+  --terminal-parameter: #ffa657;
+  --terminal-line-number: #858585;
+}
+
+.dark-theme {
+  --bg-color: #0d1117;
+  --text-color: #f0f6fc;
+  --secondary-text: #8b949e;
+  --accent-color: #58a6ff;
+  --accent-hover: #1f6feb;
   --terminal-bg: #0d1117;
   --terminal-header: #161b22;
   --terminal-text: #e6edf3;
@@ -192,31 +222,29 @@ onUnmounted(() => {
   --terminal-class: #3fb950;
   --terminal-parameter: #ffa657;
   --terminal-line-number: #30363d;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
 }
 
 /* Base Footer Styles */
 .terminal-footer {
-  background-color: var(--terminal-bg);
-  color: var(--terminal-text);
+  background-color: var(--bg-color);
+  color: var(--text-color);
   font-family: 'Fira Code', 'Courier New', monospace;
-  padding: 0;
-  margin: 0;
-  width: 100vw;
+  padding: 2rem 0;
   margin-left: -2rem;
-  margin-bottom: -2rem;
+  width: 100vw;
   position: relative;
   z-index: 10;
 }
 
+/* Terminal Container */
 .terminal-container {
   max-width: 1200px;
   margin: 0 auto;
   background-color: var(--terminal-bg);
-  border-radius: 8px 8px 0 0;
+  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.8s ease-out;
 }
 
 /* Terminal Header */
@@ -260,6 +288,7 @@ onUnmounted(() => {
 /* Terminal Body */
 .terminal-body {
   padding: 1.5rem;
+  color: var(--terminal-text);
 }
 
 .terminal-prompt {
@@ -290,16 +319,13 @@ onUnmounted(() => {
 
 /* About Section */
 .about-section {
-  margin-bottom: 1.5rem;
-}
-
-.profile-section {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.profile-img-container {
+.profile-container {
   position: relative;
 }
 
@@ -346,21 +372,33 @@ onUnmounted(() => {
   font-style: italic;
 }
 
-/* File List */
-.file-list {
+/* Navigation */
+.nav-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.file-item {
+.nav-item {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border-left: 4px solid var(--accent-color);
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 .file-icon {
   font-size: 1.2rem;
+  color: var(--accent-color);
 }
 
 .file-link {
@@ -378,12 +416,17 @@ onUnmounted(() => {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .contact-item {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 0.5rem;
+  padding: 0.75rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  border-left: 4px solid var(--accent-color);
 }
 
 .contact-key {
@@ -392,6 +435,7 @@ onUnmounted(() => {
 
 .contact-value {
   color: var(--terminal-string);
+  transition: color 0.3s ease;
 }
 
 .contact-value:hover {
@@ -403,6 +447,7 @@ onUnmounted(() => {
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .social-link {
@@ -446,14 +491,14 @@ onUnmounted(() => {
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1rem;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.terminal-status {
+.status-info {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .status-item {
@@ -467,9 +512,7 @@ onUnmounted(() => {
 .terminal-actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  color: var(--terminal-comment);
-  font-size: 0.9rem;
+  gap: 1rem;
 }
 
 .terminal-link {
@@ -480,6 +523,11 @@ onUnmounted(() => {
 
 .terminal-link:hover {
   color: var(--accent-color);
+}
+
+.separator {
+  color: var(--terminal-text);
+  opacity: 0.5;
 }
 
 /* Back to Top Button */
@@ -498,7 +546,7 @@ onUnmounted(() => {
   justify-content: center;
   cursor: pointer;
   z-index: 100;
-  box-shadow: 0 4px 15px rgba(88, 166, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
   transition: all 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
@@ -512,7 +560,7 @@ onUnmounted(() => {
 .back-to-top:hover {
   background-color: var(--accent-hover);
   transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(88, 166, 255, 0.4);
+  box-shadow:  0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Animations */
@@ -521,11 +569,22 @@ onUnmounted(() => {
   51%, 100% { opacity: 0; }
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
+/* Large Desktop (1200px and up) */
+@media (min-width: 1200px) {
   .terminal-container {
-    max-width: 1400px;
+    max-width: 1200px;
   }
   
   .profile-img {
@@ -544,20 +603,12 @@ onUnmounted(() => {
   .profile-description {
     font-size: 1.1rem;
   }
-  
-  .file-list {
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  }
-  
-  .contact-section {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  }
 }
 
-/* Large Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
+/* Desktop (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
   .terminal-container {
-    max-width: 1200px;
+    max-width: 1100px;
   }
   
   .profile-img {
@@ -578,15 +629,23 @@ onUnmounted(() => {
   }
 }
 
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 1rem;
+/* Tablet (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .terminal-footer {
+    padding: 1.5rem 0;
   }
   
   .terminal-body {
     padding: 1.2rem;
+  }
+  
+  .about-section {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .profile-container {
+    margin-bottom: 1.5rem;
   }
   
   .profile-img {
@@ -595,7 +654,7 @@ onUnmounted(() => {
   }
   
   .profile-name {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
   
   .profile-title {
@@ -606,79 +665,41 @@ onUnmounted(() => {
     font-size: 1rem;
   }
   
-  .file-list {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-  
-  .contact-section {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-}
-
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 1rem;
-  }
-  
-  .terminal-body {
-    padding: 1rem;
-  }
-  
-  .profile-section {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .profile-img {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .profile-name {
-    font-size: 1.4rem;
-  }
-  
-  .profile-title {
-    font-size: 1rem;
-  }
-  
-  .profile-description {
-    font-size: 0.95rem;
-  }
-  
-  .file-list {
+  .nav-list {
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.8rem;
+  }
+  
+  .nav-item {
+    padding: 0.6rem;
   }
   
   .contact-section {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   }
   
-  .terminal-bottom {
-    flex-direction: column;
+  .social-links {
     gap: 1rem;
-    text-align: center;
   }
 }
 
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 0.5rem;
+/* Mobile (480px to 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .terminal-footer {
+    padding: 1rem 0;
   }
   
   .terminal-body {
-    padding: 0.8rem;
+    padding: 1rem;
   }
   
-  .profile-section {
+  .about-section {
     flex-direction: column;
-    align-items: center;
     text-align: center;
+  }
+  
+  .profile-container {
+    margin-bottom: 1rem;
   }
   
   .profile-img {
@@ -691,66 +712,62 @@ onUnmounted(() => {
   }
   
   .profile-title {
-    font-size: 0.95rem;
+    font-size: 1rem;
   }
   
   .profile-description {
     font-size: 0.9rem;
   }
   
-  .file-list {
+  .nav-list {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.6rem;
+  }
+  
+  .nav-item {
+    padding: 0.5rem;
   }
   
   .contact-section {
     grid-template-columns: 1fr;
   }
   
-  .terminal-bottom {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .terminal-status {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-actions {
-    justify-content: center;
-  }
-  
   .social-links {
-    justify-content: center;
-  }
-  
-  .social-icon {
-    width: 45px;
-    height: 45px;
+    gap: 0.8rem;
   }
 }
 
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0;
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .terminal-footer {
+    padding: 0.8rem 0;
   }
   
   .terminal-body {
-    padding: 0.6rem;
+    padding: 0.8rem;
   }
   
-  .profile-section {
+  .terminal-prompt {
+    margin-bottom: 0.8rem;
+  }
+  
+  .terminal-output {
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+  }
+  
+  .about-section {
     flex-direction: column;
-    align-items: center;
     text-align: center;
   }
   
+  .profile-container {
+    margin-bottom: 0.8rem;
+  }
+  
   .profile-img {
-    width: 60px;
-    height: 60px;
+    width: 55px;
+    height: 55px;
   }
   
   .profile-name {
@@ -765,136 +782,30 @@ onUnmounted(() => {
     font-size: 0.85rem;
   }
   
-  .file-list {
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  .nav-list {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  
+  .nav-item {
+    padding: 0.4rem;
   }
   
   .contact-section {
     grid-template-columns: 1fr;
   }
   
-  .terminal-bottom {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .terminal-status {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-actions {
-    justify-content: center;
-  }
-  
   .social-links {
-    justify-content: center;
-    gap: 1rem;
+    gap: 0.6rem;
+  }
+  
+  .social-link {
+    gap: 0.4rem;
   }
   
   .social-icon {
     width: 40px;
     height: 40px;
-  }
-  
-  .back-to-top {
-    width: 45px;
-    height: 45px;
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0;
-  }
-  
-  .terminal-body {
-    padding: 0.5rem;
-  }
-  
-  .terminal-prompt {
-    margin-bottom: 0.8rem;
-  }
-  
-  .terminal-output {
-    margin-bottom: 1rem;
-    padding-left: 1rem;
-  }
-  
-  .profile-section {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .profile-img {
-    width: 55px;
-    height: 55px;
-  }
-  
-  .status-indicator {
-    width: 12px;
-    height: 12px;
-    bottom: 3px;
-    right: 3px;
-  }
-  
-  .profile-name {
-    font-size: 1.1rem;
-  }
-  
-  .profile-title {
-    font-size: 0.85rem;
-  }
-  
-  .profile-description {
-    font-size: 0.8rem;
-  }
-  
-  .file-list {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-  }
-  
-  .contact-section {
-    grid-template-columns: 1fr;
-  }
-  
-  .contact-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.3rem;
-  }
-  
-  .terminal-bottom {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .terminal-status {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-actions {
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-  
-  .social-links {
-    justify-content: center;
-    gap: 0.8rem;
-  }
-  
-  .social-icon {
-    width: 35px;
-    height: 35px;
   }
   
   .social-name {
@@ -902,10 +813,10 @@ onUnmounted(() => {
   }
   
   .back-to-top {
-    width: 40px;
-    height: 40px;
-    bottom: 1rem;
-    right: 1rem;
+    width: 45px;
+    height: 45px;
+    bottom: 1.5rem;
+    right: 1.5rem;
   }
 }
 </style>

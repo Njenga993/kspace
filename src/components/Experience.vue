@@ -553,7 +553,7 @@ const toggleDetails = (id) => {
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
   margin-top: 0rem;
-  margin-left: -2rem;
+  margin-left: -4rem;
   padding: 2rem;
   background-color: var(--bg-color);
 }
@@ -561,11 +561,10 @@ const toggleDetails = (id) => {
 /* Experience Terminal */
 .experience-terminal {
   width: 100%;
-  max-width: 1200px;
-  background-color: var(--terminal-bg);
+  max-width: 1400px;
   border-radius: 8px;
+  width: calc(90% - 0.9rem);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.8s ease-out;
 }
 
@@ -971,7 +970,10 @@ const toggleDetails = (id) => {
 
 @media (max-width: 480px) {
   .experience-section {
-    padding: 0.5rem;
+    padding: 0rem;
+  }
+  .experience-terminal {
+    margin-left: 2rem;
   }
   
   .terminal-body {

@@ -51,115 +51,120 @@
               <div
                 v-for="(project, index) in filteredProjects.slice(0, visibleProjects)"
                 :key="index"
-                class="project-terminal"
+                class="project-container"
                 :style="{ '--delay': index * 0.1 + 's' }"
+                @mouseenter="hoveredIndex = index"
+                @mouseleave="hoveredIndex = null"
               >
-                <!-- Project Header -->
-                <div class="project-header">
-                  <div class="project-number">
-                    <span class="code-comment">// Project</span>
-                    <span class="code-variable">{{ String(index + 1).padStart(2, '0') }}</span>
-                  </div>
-                  <div class="project-status" :class="project.status">
-                    <span class="code-comment">// Status:</span>
-                    <span class="code-string">{{ project.status === 'live' ? 'Live' : 'Development' }}</span>
-                  </div>
-                </div>
-                
-                <!-- Project Content -->
-                <div class="project-content">
-                  <div class="project-title-line">
-                    <span class="code-keyword">const</span>
-                    <span class="code-variable">{{ project.title.replace(/\s+/g, '') }}</span>
-                    <span class="code-operator">=</span>
-                    <span class="code-brace">{</span>
+                <!-- Project Details Container - Moves to Center on Hover -->
+                <div class="project-details-container" :class="{ active: hoveredIndex === index }">
+                  <!-- Project Header -->
+                  <div class="project-header">
+                    <div class="project-number">
+                      <span class="code-comment">// Project</span>
+                      <span class="code-variable">{{ String(index + 1).padStart(2, '0') }}</span>
+                    </div>
+                    <div class="project-status" :class="project.status">
+                      <span class="code-comment">// Status:</span>
+                      <span class="code-string">{{ project.status === 'live' ? 'Live' : 'Development' }}</span>
+                    </div>
                   </div>
                   
-                  <div class="project-properties">
-                    <div class="property-line">
-                      <span class="code-property">title:</span>
-                      <span class="code-string">"{{ project.title }}"</span>,
+                  <!-- Project Content -->
+                  <div class="project-content">
+                    <div class="project-title-line">
+                      <span class="code-keyword">const</span>
+                      <span class="code-variable">{{ project.title.replace(/\s+/g, '') }}</span>
+                      <span class="code-operator">=</span>
+                      <span class="code-brace">{</span>
                     </div>
                     
-                    <div class="property-line">
-                      <span class="code-property">description:</span>
-                      <span class="code-string">"{{ project.description }}"</span>,
-                    </div>
-                    
-                    <div class="property-line">
-                      <span class="code-property">techStack:</span>
-                      <span class="code-bracket">[</span>
-                      <span class="tech-stack-list">
-                        <span 
-                          v-for="(tech, i) in project.tech" 
-                          :key="i"
-                          class="tech-item"
-                        >
-                          <span class="code-string">"{{ tech }}"</span>
-                          <span v-if="i < project.tech.length - 1" class="code-punctuation">,</span>
+                    <div class="project-properties">
+                      <div class="property-line">
+                        <span class="code-property">title:</span>
+                        <span class="code-string">"{{ project.title }}"</span>,
+                      </div>
+                      
+                      <div class="property-line">
+                        <span class="code-property">description:</span>
+                        <span class="code-string">"{{ project.description }}"</span>,
+                      </div>
+                      
+                      <div class="property-line">
+                        <span class="code-property">techStack:</span>
+                        <span class="code-bracket">[</span>
+                        <span class="tech-stack-list">
+                          <span 
+                            v-for="(tech, i) in project.tech" 
+                            :key="i"
+                            class="tech-item"
+                          >
+                            <span class="code-string">"{{ tech }}"</span>
+                            <span v-if="i < project.tech.length - 1" class="code-punctuation">,</span>
+                          </span>
                         </span>
-                      </span>
-                      <span class="code-bracket">]</span>,
+                        <span class="code-bracket">]</span>,
+                      </div>
+                      
+                      <div class="property-line">
+                        <span class="code-property">links:</span>
+                        <span class="code-brace">{</span>
+                        <div class="nested-properties">
+                          <div class="property-line">
+                            <span class="code-property">github:</span>
+                            <a :href="project.github" target="_blank" class="code-link">
+                              <span class="code-string">"{{ project.github }}"</span>
+                            </a>,
+                          </div>
+                          <div v-if="project.demo !== '#'" class="property-line">
+                            <span class="code-property">demo:</span>
+                            <a :href="project.demo" target="_blank" class="code-link">
+                              <span class="code-string">"{{ project.demo }}"</span>
+                            </a>,
+                          </div>
+                        </div>
+                        <span class="code-brace">}</span>,
+                      </div>
+                      
+                      <div v-if="project.features" class="property-line">
+                        <span class="code-property">features:</span>
+                        <span class="code-bracket">[</span>
+                        <div class="features-list">
+                          <div v-for="feature in project.features" :key="feature" class="feature-item">
+                            <span class="code-string">"{{ feature }}"</span>,
+                          </div>
+                        </div>
+                        <span class="code-bracket">]</span>,
+                      </div>
+                      
+                      <div class="property-line">
+                        <span class="code-property">stats:</span>
+                        <span class="code-brace">{</span>
+                        <div class="nested-properties">
+                          <div class="property-line">
+                            <span class="code-property">duration:</span>
+                            <span class="code-string">"{{ project.duration || '2-4' }} weeks"</span>,
+                          </div>
+                          <div class="property-line">
+                            <span class="code-property">team:</span>
+                            <span class="code-string">"{{ project.team || 'Solo' }}"</span>,
+                          </div>
+                          <div class="property-line">
+                            <span class="code-property">year:</span>
+                            <span class="code-string">"{{ project.year || '2024' }}"</span>,
+                          </div>
+                        </div>
+                        <span class="code-brace">}</span>,
+                      </div>
                     </div>
                     
-                    <div class="property-line">
-                      <span class="code-property">links:</span>
-                      <span class="code-brace">{</span>
-                      <div class="nested-properties">
-                        <div class="property-line">
-                          <span class="code-property">github:</span>
-                          <a :href="project.github" target="_blank" class="code-link">
-                            <span class="code-string">"{{ project.github }}"</span>
-                          </a>,
-                        </div>
-                        <div v-if="project.demo !== '#'" class="property-line">
-                          <span class="code-property">demo:</span>
-                          <a :href="project.demo" target="_blank" class="code-link">
-                            <span class="code-string">"{{ project.demo }}"</span>
-                          </a>,
-                        </div>
-                      </div>
-                      <span class="code-brace">}</span>,
+                    <div class="project-footer">
+                      <span class="code-brace">};</span>
                     </div>
-                    
-                    <div v-if="project.features" class="property-line">
-                      <span class="code-property">features:</span>
-                      <span class="code-bracket">[</span>
-                      <div class="features-list">
-                        <div v-for="feature in project.features" :key="feature" class="feature-item">
-                          <span class="code-string">"{{ feature }}"</span>,
-                        </div>
-                      </div>
-                      <span class="code-bracket">]</span>,
-                    </div>
-                    
-                    <div class="property-line">
-                      <span class="code-property">stats:</span>
-                      <span class="code-brace">{</span>
-                      <div class="nested-properties">
-                        <div class="property-line">
-                          <span class="code-property">duration:</span>
-                          <span class="code-string">"{{ project.duration || '2-4' }} weeks"</span>,
-                        </div>
-                        <div class="property-line">
-                          <span class="code-property">team:</span>
-                          <span class="code-string">"{{ project.team || 'Solo' }}"</span>,
-                        </div>
-                        <div class="property-line">
-                          <span class="code-property">year:</span>
-                          <span class="code-string">"{{ project.year || '2024' }}"</span>,
-                        </div>
-                      </div>
-                      <span class="code-brace">}</span>,
-                    </div>
-                  </div>
-                  
-                  <div class="project-footer">
-                    <span class="code-brace">};</span>
                   </div>
                 </div>
                 
-                <!-- Project Image Preview -->
+                <!-- Project Image Preview - Always Visible -->
                 <div class="project-image-preview">
                   <div class="image-terminal">
                     <div class="terminal-header">
@@ -211,6 +216,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 
+const hoveredIndex = ref(null)
 const visibleProjects = ref(6)
 const activeFilter = ref('All')
 
@@ -430,7 +436,7 @@ const loadMoreProjects = () => {
   justify-content: center;
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
-  margin-top: 0rem;
+  margin-top: 4.5rem;
   margin-left: -2rem;
   padding: 2rem;
   background-color: var(--bg-color);
@@ -556,14 +562,40 @@ const loadMoreProjects = () => {
   margin-top: 1rem;
 }
 
-/* Project Terminal */
-.project-terminal {
+/* Project Container */
+.project-container {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
   border-left: 4px solid var(--accent-color);
-  padding: 1rem;
+  padding: 0;
   margin-bottom: 1.5rem;
   animation: fadeIn 0.5s ease-out var(--delay) both;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.project-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Project Details Container - Moves to Center on Hover */
+.project-details-container {
+  padding: 1rem;
+  opacity: 0.7;
+  transform: scale(0.95);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.project-details-container.active {
+  opacity: 1;
+  transform: scale(1);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .project-header {
@@ -650,9 +682,13 @@ const loadMoreProjects = () => {
   margin-bottom: 0.25rem;
 }
 
-/* Project Image Preview */
+/* Project Image Preview - Always Visible */
 .project-image-preview {
   margin-top: 1rem;
+  width: 100%;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .image-terminal {
@@ -661,6 +697,13 @@ const loadMoreProjects = () => {
   border-radius: 6px;
   overflow: hidden;
   border: 1px solid var(--terminal-header);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.project-container:hover .image-terminal {
+  transform: scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 .image-terminal .terminal-header {
@@ -677,9 +720,14 @@ const loadMoreProjects = () => {
 
 .project-image {
   width: 100%;
-  height: 200px;
+  height: 250px;
   object-fit: cover;
   display: block;
+  transition: all 0.3s ease;
+}
+
+.project-container:hover .project-image {
+  transform: scale(1.05);
 }
 
 /* Load More */
@@ -739,54 +787,225 @@ const loadMoreProjects = () => {
 }
 
 /* Responsive Design */
-@media (max-width: 992px) {
+/* Extra Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
+  .projects-terminal {
+    max-width: 1300px;
+  }
+  
+  .project-image {
+    height: 300px;
+  }
+  
+  .project-image-preview {
+    max-width: 600px;
+  }
+}
+
+/* Large Desktop (1200px to 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .projects-terminal {
+    max-width: 1200px;
+  }
+  
+  .project-image {
+    height: 280px;
+  }
+  
+  .project-image-preview {
+    max-width: 550px;
+  }
+}
+
+/* Desktop (992px to 1199px) */
+@media (min-width: 992px) and (max-width: 1199px) {
+  .projects-terminal {
+    max-width: 1100px;
+  }
+  
+  .terminal-body {
+    padding: 1.2rem;
+  }
+  
+  .project-image {
+    height: 260px;
+  }
+  
+  .project-image-preview {
+    max-width: 500px;
+  }
+}
+
+/* Tablet (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .projects-terminal {
+    max-width: 100%;
+    margin: 0 1rem;
+  }
+  
+  .terminal-body {
+    padding: 1rem;
+  }
+  
   .projects-grid {
     grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .projects-section {
-    padding: 1rem;
+    gap: 1.5rem;
   }
   
-  .terminal-body {
-    padding: 1rem;
-  }
-  
-  .project-terminal {
-    padding: 0.75rem;
+  .project-container {
+    margin-bottom: 1.5rem;
   }
   
   .project-image {
-    height: 150px;
+    height: 240px;
+  }
+  
+  .project-image-preview {
+    max-width: 100%;
   }
 }
 
-@media (max-width: 480px) {
-  .projects-section {
-    padding: 0.5rem;
+/* Mobile Landscape (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .projects-terminal {
+    max-width: 100%;
+    margin: 0 0.5rem;
   }
   
   .terminal-body {
-    padding: 0.75rem;
+    padding: 0.8rem;
   }
   
-  .project-terminal {
-    padding: 0.5rem;
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1.2rem;
   }
   
-  .filter-options {
-    gap: 0.25rem;
-  }
-  
-  .filter-option {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
+  .project-container {
+    margin-bottom: 1.2rem;
   }
   
   .project-image {
-    height: 120px;
+    height: 220px;
+  }
+  
+  .project-image-preview {
+    max-width: 100%;
+  }
+  
+  .project-details-container {
+    padding: 0.8rem;
+  }
+}
+
+/* Mobile Portrait (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+  .projects-terminal {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .terminal-body {
+    padding: 0.7rem;
+  }
+  
+  .terminal-prompt {
+    margin-bottom: 0.8rem;
+  }
+  
+  .terminal-output {
+    margin-bottom: 1rem;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .project-container {
+    margin-bottom: 1rem;
+  }
+  
+  .project-image {
+    height: 200px;
+  }
+  
+  .project-image-preview {
+    max-width: 100%;
+  }
+  
+  .project-details-container {
+    padding: 0.6rem;
+  }
+  
+  .project-properties {
+    margin-left: 0.8rem;
+  }
+  
+  .nested-properties {
+    margin-left: 0.8rem;
+  }
+  
+  .features-list {
+    margin-left: 0.8rem;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .projects-terminal {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .terminal-body {
+    padding: 0.5rem;
+  }
+  
+  .terminal-prompt {
+    margin-bottom: 0.8rem;
+  }
+  
+  .terminal-output {
+    margin-bottom: 1rem;
+  }
+  
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  .project-container {
+    margin-bottom: 0.8rem;
+  }
+  
+  .project-image {
+    height: 180px;
+  }
+  
+  .project-image-preview {
+    max-width: 100%;
+  }
+  
+  .project-details-container {
+    padding: 0.5rem;
+  }
+  
+  .project-properties {
+    margin-left: 0.5rem;
+  }
+  
+  .nested-properties {
+    margin-left: 0.5rem;
+  }
+  
+  .features-list {
+    margin-left: 0.5rem;
+  }
+  
+  .project-header {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
 </style>

@@ -302,10 +302,9 @@ body {
 .terminal-container {
   max-width: 1200px;
   margin: 0 auto;
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
+  width: calc(90% - 0.7rem);
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+ 
   animation: slideUp 0.8s ease-out;
 }
 
@@ -657,12 +656,14 @@ body {
 .terminal-button-primary, .terminal-button-secondary {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
+  width: auto;
 }
 
 .terminal-button-primary {
@@ -737,6 +738,8 @@ body {
   
   .terminal-container {
     max-width: 1000px;
+    margin-left: -0.1rem;
+    width: calc(90% - 0.7rem);
   }
   
   .info-card, .education-card, .stats-container {
@@ -765,6 +768,8 @@ body {
   .terminal-container {
     max-width: 100%;
     margin: 0 1rem;
+    margin-left: -0.1rem;
+     width: calc(90% - 0.7rem);
   }
   
   .info-header {
@@ -808,6 +813,8 @@ body {
   .terminal-container {
     max-width: 100%;
     margin: 0 0.75rem;
+    margin-left: 2rem;
+     width: calc(90% - 0.7rem);
   }
   
   .terminal-body {
@@ -867,6 +874,8 @@ body {
   .terminal-container {
     max-width: 100%;
     margin: 0 0.5rem;
+    margin-left: 2rem;
+     width: calc(90% - 0.7rem);
   }
   
   .terminal-body {
@@ -926,6 +935,8 @@ body {
   .terminal-container {
     max-width: 100%;
     margin: 0 0.5rem;
+    margin-left: 1rem;
+     width: calc(90% - 0.7rem);
   }
   
   .terminal-body {

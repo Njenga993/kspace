@@ -258,6 +258,7 @@ body {
 .hero-section {
   position: relative;
   min-height: 100vh;
+  width: calc(90% - 0.7rem);
   min-width: 100vw;
   display: flex;
   align-items: center;
@@ -355,6 +356,7 @@ body {
   align-items: center;
   gap: 2rem;
   z-index: 10;
+  width: calc(90% - 0.7rem);
 }
 
 /* Terminal Window */
@@ -749,6 +751,7 @@ body {
 @media (min-width: 992px) and (max-width: 1199px) {
   .hero-section {
     padding: 1.5rem;
+    margin-top: 4rem;
   }
   
   .terminal-window {
@@ -777,6 +780,9 @@ body {
 @media (min-width: 768px) and (max-width: 991px) {
   .hero-section {
     padding: 1.5rem;
+    margin-top: 4rem;
+    margin-left: -3rem;
+    
   }
   
   .terminal-window, .social-terminal {
@@ -819,7 +825,8 @@ body {
 @media (min-width: 576px) and (max-width: 767px) {
   .hero-section {
     padding: 1rem;
-    margin-top: -5rem;
+    margin-top: 5rem;
+
   }
   
   .terminal-window, .social-terminal {
@@ -876,7 +883,7 @@ body {
 @media (min-width: 480px) and (max-width: 575px) {
   .hero-section {
     padding: 0.8rem;
-    margin-top: -5rem;
+    margin-top: 4rem;
   }
   
   .identity-name {
@@ -945,6 +952,7 @@ body {
 @media (max-width: 479px) {
   .hero-section {
     padding: 0.5rem;
+    margin-top: 3.8rem;
   }
   
   .identity-name {
