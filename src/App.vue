@@ -43,7 +43,7 @@ html, body {
   width: 100vw;
   overflow-x: hidden;
   scroll-behavior: smooth;
-  background-color: var(--background-color);
+  background-color: #0d1117;
   color: var(--text-color);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }

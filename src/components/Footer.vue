@@ -236,7 +236,7 @@ onUnmounted(() => {
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
   margin-bottom: -2rem;
-  margin-left: -1.5rem;
+  margin-left: -2.5rem;
   margin-top: 2rem;
   padding: 2rem;
   background-color: var(--bg-color);
@@ -695,8 +695,9 @@ onUnmounted(() => {
 @media (min-width: 480px) and (max-width: 767px) {
   .terminal-footer {
     padding: 1rem 0;
-    width: calc(100% - 2rem);
-     margin-right: -3rem;
+    width: calc(90% - 4rem);
+    margin-left: -3rem;
+     
   }
   
   .terminal-body {
