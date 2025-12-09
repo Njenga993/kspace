@@ -695,8 +695,8 @@ onUnmounted(() => {
 @media (min-width: 480px) and (max-width: 767px) {
   .terminal-footer {
     padding: 1rem 0;
-    width: calc(90% - 4rem);
-    margin-left: -3rem;
+    width: calc(90% - 1rem);
+    margin-left: -1.5rem;
      
   }
   
@@ -752,8 +752,8 @@ onUnmounted(() => {
 @media (max-width: 479px) {
   .terminal-footer {
     padding: 0.8rem 0;
-    width: calc(100% - 2rem);
-     margin-right: -3rem;
+    width: calc(90% - 1rem);
+     margin-right: -1.5rem;
   }
   
   .terminal-body {
