@@ -292,6 +292,7 @@ body {
   background-color: var(--bg-color);
   min-height: 100vh;
   position: relative;
+  font-family: 'Fira Code', 'Courier New', monospace;
   overflow: hidden;
   width: 100vw;
   margin-left: -2rem;
@@ -304,7 +305,6 @@ body {
   margin: 0 auto;
   width: calc(90% - 0.7rem);
   overflow: hidden;
- 
   animation: slideUp 0.8s ease-out;
 }
 
