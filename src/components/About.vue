@@ -155,6 +155,8 @@
               <div class="category-title">Backend</div>
               <div class="skill-list">
                 <div class="skill-item">Node.js</div>
+                <div class="skill-item">PHP</div>
+                <div class="skill-item">PYTHON</div>
                 <div class="skill-item">Express.js</div>
                 <div class="skill-item">MongoDB</div>
               </div>
