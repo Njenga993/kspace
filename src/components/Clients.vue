@@ -4,11 +4,7 @@
       <!-- Terminal Window for Clients -->
       <div class="clients-terminal">
         <div class="terminal-header">
-          <div class="terminal-buttons">
-            <div class="terminal-button close"></div>
-            <div class="terminal-button minimize"></div>
-            <div class="terminal-button maximize"></div>
-          </div>
+          
           <div class="terminal-title">clients_database --list</div>
         </div>
         

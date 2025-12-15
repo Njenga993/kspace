@@ -3,11 +3,7 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
-        </div>
+        
         <div class="terminal-title">system@portfolio:~# ./footer.sh</div>
       </div>
       

@@ -3,11 +3,7 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
-        </div>
+    
         <div class="terminal-title">experience@portfolio:~# ./career_log.sh</div>
       </div>
       
@@ -647,7 +643,7 @@ const getIconClass = (category) => {
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
   width: 100vw;
-  width: calc(95% + 2rem);
+  width: calc(95% + 1rem);
   margin-left: -2rem;
   overflow: hidden;
 }

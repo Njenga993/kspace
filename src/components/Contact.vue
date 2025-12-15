@@ -2,11 +2,7 @@
   <section id="contact" class="contact-section">
     <div class="terminal-container">
       <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
-        </div>
+        
         <div class="terminal-title">root@k-space:~# ./connect.sh</div>
       </div>
       

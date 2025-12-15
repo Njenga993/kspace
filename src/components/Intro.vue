@@ -18,11 +18,7 @@
     <div class="hero-container">
       <div class="terminal-window">
         <div class="terminal-header">
-          <div class="terminal-buttons">
-            <div class="terminal-button close"></div>
-            <div class="terminal-button minimize"></div>
-            <div class="terminal-button maximize"></div>
-          </div>
+          
           <div class="terminal-title">kelvin@developer:~/portfolio</div>
         </div>
         
@@ -64,7 +60,7 @@
               </div>
               
               <div class="card-description">
-                <p>Building scalable applications with Vue.js, Node.js, and modern cloud technologies. Passionate about clean code and user-centered design.</p>
+                <p>Building scalable applications with React, Vue.js, PHP , DJANGO Node.js, and modern cloud technologies. Passionate about clean code and user-centered design.</p>
               </div>
             </div>
           </div>
@@ -171,11 +167,7 @@
       <!-- Social Links -->
       <div class="social-terminal">
         <div class="social-terminal-header">
-          <div class="terminal-buttons">
-            <div class="terminal-button close"></div>
-            <div class="terminal-button minimize"></div>
-            <div class="terminal-button maximize"></div>
-          </div>
+  
           <div class="terminal-title">social_links</div>
         </div>
         <div class="social-terminal-body">

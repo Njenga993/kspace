@@ -3,11 +3,7 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
-        </div>
+        
         <div class="terminal-title">projects@portfolio:~# ./explore.sh</div>
       </div>
       
@@ -620,7 +616,7 @@ const closeProjectDetails = () => {
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
   width: 100vw;
-  width: calc(95% + 2rem);
+  width: calc(95% + 1rem);
   margin-left: -2rem;
   overflow: hidden;
 }
@@ -1467,8 +1463,8 @@ const closeProjectDetails = () => {
   }
   
   .terminal-container {
-    max-width: 100%;
-    margin: 0;
+    max-width: 95%;
+    margin-left: 2rem 0;
   }
   
   .tab-content {
@@ -1513,8 +1509,8 @@ const closeProjectDetails = () => {
   }
   
   .terminal-container {
-    max-width: 100%;
-    margin: 0;
+    max-width: 95%;
+    margin-left: 2rem 0;
   }
   
   .tab-content {

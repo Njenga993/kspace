@@ -3,11 +3,7 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
-        </div>
+      
         <div class="terminal-title">about@portfolio:~# ./system_profile.sh</div>
       </div>
       
@@ -122,7 +118,7 @@
                     </div>
                     <div class="interest-item">
                       <div class="interest-icon">🏃</div>
-                      <span class="interest-name">Running</span>
+                      <span class="interest-name">Football</span>
                     </div>
                   </div>
                 </div>
@@ -439,7 +435,7 @@ const activeTab = ref('profile');
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
   width: 100vw;
-  width: calc(95% + 2rem);
+  width: calc(95% + 1rem);
   margin-left: -2rem;
   overflow: hidden;
 }
