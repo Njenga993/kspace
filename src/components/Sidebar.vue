@@ -17,7 +17,7 @@
             <img src="/profile.JPG" alt="Profile" class="profile-img" />
             <div class="status-indicator online"></div>
           </div>
-          <span class="logo-name">K-SPACE $Terminal</span>
+          <span class="logo-name">K-SPACE</span>
         </div>
 
         <!-- Desktop Navigation -->
@@ -35,7 +35,8 @@
                 :class="{ 'active': activeSection === link.id }"
                 class="nav-link"
               >
-                {{ link.text }}
+                <span class="link-symbol">{{ link.symbol }}</span>
+                <span class="link-text">{{ link.text }}</span>
               </a>
             </li>
           </ul>
@@ -135,16 +136,17 @@
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const navLinks = [
-  { id: 'about', text: 'About' },
-  { id: 'skills', text: 'Skills' },
-  { id: 'experience', text: 'Experience' },
-  { id: 'projects', text: 'Projects' },
-  { id: 'contact', text: 'Contact' }
+  { id: 'about', text: 'About', symbol: '👤' },
+  { id: 'skills', text: 'Skills', symbol: '💻' },
+  { id: 'experience', text: 'Experience', symbol: '💼' },
+  { id: 'projects', text: 'Projects', symbol: '📁' },
+  { id: 'contact', text: 'Contact', symbol: '📧' }
 ];
 
 const socialLinks = [
   { id: 'github', name: 'GitHub', icon: 'fab fa-github', url: 'https://github.com/Njenga993' },
   { id: 'linkedin', name: 'LinkedIn', icon: 'fab fa-linkedin-in', url: 'https://www.linkedin.com/in/kelvin-kamau-788160277/' },
+  { id: 'twitter', name: 'Twitter', icon: 'fab fa-twitter', url: 'https://x.com/kamau_nje/' },
   { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
 ];
 
@@ -228,9 +230,36 @@ const handleEscapeKey = (e) => {
 };
 </script>
 
-<style scoped>
+<style>
 /* Terminal Theme Variables */
 :root {
+  --bg-color: #ffffff;
+  --text-color: #1a202c;
+  --secondary-text: #4a5568;
+  --accent-color: #3182ce;
+  --accent-hover: #2c5282;
+  --terminal-bg: #1e1e1e;
+  --terminal-header: #323232;
+  --terminal-text: #d4d4d4;
+  --terminal-prompt: #4ec9b0;
+  --terminal-keyword: #569cd6;
+  --terminal-string: #ce9178;
+  --terminal-comment: #6a9955;
+  --terminal-function: #dcdcaa;
+  --terminal-variable: #9cdcfe;
+  --terminal-property: #9cdcfe;
+  --terminal-boolean: #569cd6;
+  --terminal-class: #4ec9b0;
+  --terminal-parameter: #ffa657;
+  --terminal-line-number: #858585;
+}
+
+.dark-theme {
+  --bg-color: #0d1117;
+  --text-color: #f0f6fc;
+  --secondary-text: #8b949e;
+  --accent-color: #58a6ff;
+  --accent-hover: #1f6feb;
   --terminal-bg: #0d1117;
   --terminal-header: #161b22;
   --terminal-text: #e6edf3;
@@ -245,10 +274,10 @@ const handleEscapeKey = (e) => {
   --terminal-class: #3fb950;
   --terminal-parameter: #ffa657;
   --terminal-line-number: #30363d;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
 }
+</style>
 
+<style scoped>
 /* Base Styles */
 .navbar-container {
   position: fixed;
@@ -263,7 +292,6 @@ const handleEscapeKey = (e) => {
   background-color: var(--terminal-bg);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
-  font-family: 'Fira Code', 'Courier New', monospace;
 }
 
 .navbar-container.scrolled .terminal-navbar {
@@ -276,7 +304,7 @@ const handleEscapeKey = (e) => {
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
 }
 
 .terminal-buttons {
@@ -388,32 +416,46 @@ const handleEscapeKey = (e) => {
 .nav-list {
   display: flex;
   list-style: none;
-  gap: 1.5rem;
+  gap: 1rem;
   margin: 0;
   padding: 0;
 }
 
 .nav-link {
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-weight: 500;
   color: var(--terminal-text);
   text-decoration: none;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
   transition: all 0.3s ease;
+  position: relative;
 }
 
 .nav-link:hover {
   color: var(--accent-color);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .nav-link.active {
   color: var(--accent-color);
-  font-weight: 600;
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-link.active::before {
-  content: '$ ';
-  color: var(--terminal-prompt);
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--accent-color);
+}
+
+.link-symbol {
+  font-size: 1rem;
 }
 
 /* Right Section */
@@ -584,7 +626,7 @@ const handleEscapeKey = (e) => {
   transition: all 0.3s ease;
 }
 
-.social-icon:hover {
+.social-link:hover .social-icon {
   background-color: var(--accent-color);
   color: white;
 }
@@ -608,7 +650,7 @@ const handleEscapeKey = (e) => {
   }
   
   .nav-list {
-    gap: 2rem;
+    gap: 1.5rem;
   }
   
   .logo-name {
@@ -621,20 +663,28 @@ const handleEscapeKey = (e) => {
   .terminal-body {
     padding: 0.75rem 1.5rem;
   }
+  
+  .nav-list {
+    gap: 1.25rem;
+  }
+  
+  .logo-name {
+    font-size: 1.25rem;
+  }
 }
 
 /* Desktop (992px to 1199px) */
 @media (min-width: 992px) and (max-width: 1199px) {
   .terminal-body {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.25rem;
   }
   
   .nav-list {
-    gap: 1.2rem;
+    gap: 1rem;
   }
   
   .logo-name {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 }
 
@@ -645,15 +695,11 @@ const handleEscapeKey = (e) => {
   }
   
   .nav-list {
-    gap: 1rem;
-  }
-  
-  .nav-link {
-    font-size: 0.9rem;
+    gap: 0.75rem;
   }
   
   .logo-name {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
   
   .profile-img {
@@ -664,6 +710,11 @@ const handleEscapeKey = (e) => {
   .status-indicator {
     width: 10px;
     height: 10px;
+  }
+  
+  .terminal-command-btn {
+    width: 32px;
+    height: 32px;
   }
 }
 
@@ -691,6 +742,11 @@ const handleEscapeKey = (e) => {
     height: 8px;
   }
   
+  .terminal-command-btn {
+    width: 32px;
+    height: 32px;
+  }
+  
   .mobile-terminal {
     width: 85%;
   }
@@ -698,10 +754,6 @@ const handleEscapeKey = (e) => {
 
 /* Mobile Portrait (480px to 575px) */
 @media (min-width: 480px) and (max-width: 575px) {
-  .desktop-nav {
-    display: none;
-  }
-  
   .terminal-body {
     padding: 0.5rem 0.75rem;
   }
@@ -711,13 +763,18 @@ const handleEscapeKey = (e) => {
   }
   
   .profile-img {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
   
   .status-indicator {
     width: 8px;
     height: 8px;
+  }
+  
+  .terminal-command-btn {
+    width: 28px;
+    height: 28px;
   }
   
   .terminal-header {
@@ -728,68 +785,12 @@ const handleEscapeKey = (e) => {
     font-size: 0.8rem;
   }
   
-  .terminal-command-btn {
-    width: 32px;
-    height: 32px;
-  }
-  
   .mobile-terminal {
     width: 90%;
   }
   
   .mobile-terminal-body {
     padding: 1rem;
-  }
-  
-  .social-icon {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .desktop-nav {
-    display: none;
-  }
-  
-  .terminal-body {
-    padding: 0.5rem;
-  }
-  
-  .logo-name {
-    font-size: 0.8rem;
-  }
-  
-  .profile-img {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .status-indicator {
-    width: 6px;
-    height: 6px;
-  }
-  
-  .terminal-header {
-    padding: 0.4rem 0.5rem;
-  }
-  
-  .terminal-title {
-    font-size: 0.7rem;
-  }
-  
-  .terminal-command-btn {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .mobile-terminal {
-    width: 95%;
-  }
-  
-  .mobile-terminal-body {
-    padding: 0.75rem;
   }
   
   .mobile-logo-section {
@@ -809,12 +810,79 @@ const handleEscapeKey = (e) => {
   }
   
   .social-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .social-name {
+    font-size: 0.7rem;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .terminal-body {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .logo-name {
+    font-size: 0.8rem;
+  }
+  
+  .profile-img {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .status-indicator {
+    width: 6px;
+    height: 6px;
+  }
+  
+  .terminal-command-btn {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .terminal-header {
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .terminal-title {
+    font-size: 0.7rem;
+  }
+  
+  .mobile-terminal {
+    width: 95%;
+  }
+  
+  .mobile-terminal-body {
+    padding: 0.75rem;
+  }
+  
+  .mobile-logo-section {
+    margin-bottom: 0.75rem;
+  }
+  
+  .mobile-terminal-prompt {
+    margin-bottom: 0.75rem;
+  }
+  
+  .mobile-nav {
+    margin-bottom: 0.75rem;
+  }
+  
+  .mobile-social-links {
+    margin-bottom: 0.75rem;
+  }
+  
+  .social-icon {
     width: 32px;
     height: 32px;
   }
   
   .social-name {
-    font-size: 0.7rem;
+    font-size: 0.6rem;
   }
 }
 </style>

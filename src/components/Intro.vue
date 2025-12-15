@@ -71,6 +71,68 @@
           
           <div class="terminal-prompt">
             <span class="prompt-symbol">$</span>
+            <span class="command">git log --pretty=format:'%h %ad %s' --date=short --since='1 year ago'</span>
+          </div>
+          
+          <div class="terminal-output">
+            <div class="contributions-container">
+              <div class="contributions-header">
+                <div class="contributions-title">
+                  {{ contributions.length }} contributions in the last year
+                </div>
+                <div class="contributions-legend">
+                  <span class="legend-item">Less</span>
+                  <div class="legend-colors">
+                    <div class="legend-color level-0"></div>
+                    <div class="legend-color level-1"></div>
+                    <div class="legend-color level-2"></div>
+                    <div class="legend-color level-3"></div>
+                    <div class="legend-color level-4"></div>
+                  </div>
+                  <span class="legend-item">More</span>
+                </div>
+              </div>
+              
+              <div class="contributions-graph">
+                <div class="graph-months">
+                  <div 
+                    v-for="month in months" 
+                    :key="month" 
+                    class="graph-month"
+                  >
+                    <div class="month-label">{{ month }}</div>
+                    <div class="month-days">
+                      <div 
+                        v-for="(day, index) in getDaysInMonth(month)" 
+                        :key="index"
+                        class="day-square"
+                        :class="getContributionLevel(day)"
+                        :title="getContributionTooltip(day)"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="contributions-stats">
+                <div class="stat-item">
+                  <span class="stat-value">{{ longestStreak }}</span>
+                  <span class="stat-label">Longest streak</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">{{ currentStreak }}</span>
+                  <span class="stat-label">Current streak</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">{{ totalContributions }}</span>
+                  <span class="stat-label">Total contributions</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="terminal-prompt">
+            <span class="prompt-symbol">$</span>
             <span class="command">./contact.sh</span>
           </div>
           
@@ -104,7 +166,7 @@
             <a href="https://github.com/Njenga993" target="_blank" class="social-link">
               <div class="social-icon github">
                 <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                  <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12z"/>
                 </svg>
               </div>
               <span class="social-label">GitHub</span>
@@ -120,7 +182,7 @@
             <a href="mailto:njengak993@gmail.com" class="social-link">
               <div class="social-icon email">
                 <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm5.694 7.188l3.824 3.099 3.83-3.104 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
+                  <path d="M0 3v18h24v-18h-24zm6.623 7.929l-4.623 5.712v-9.458l4.623 3.746zm-4.141-5.929h19.035l-9.517 7.713-9.518-7.713zm13.5 12.268h-18.779l5.513-6.812 5.612 6.817h-18.779l5.513-6.812zm9.208-1.264l4.616-3.741v9.348l-4.616-5.607z"/>
                 </svg>
               </div>
               <span class="social-label">Email</span>
@@ -135,7 +197,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 
 const roles = [
   "Full Stack Developer",
@@ -163,6 +225,109 @@ const codeLines = [
   '',
   '<span class="code-comment">// Building the future, one line at a time</span>'
 ];
+
+// Generate contributions data (mimicking GitHub's structure)
+const generateContributions = () => {
+  const contributions = [];
+  const today = new Date();
+  const oneYearAgo = new Date(today);
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  
+  // Create an entry for each day in the past year
+  for (let d = new Date(oneYearAgo); d <= today; d.setDate(d.getDate() + 1)) {
+    const level = Math.floor(Math.random() * 5); // 0-4 contribution level
+    contributions.push({
+      date: new Date(d),
+      level: level,
+      count: level === 0 ? 0 : Math.floor(Math.random() * 10) + 1 // Random count if level > 0
+    });
+  }
+  
+  return contributions;
+};
+
+const contributions = ref(generateContributions());
+const months = ref(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+
+// Calculate streaks
+const calculateStreaks = () => {
+  let currentStreak = 0;
+  let longestStreak = 0;
+  let tempStreak = 0;
+  
+  // Go through contributions in reverse order (most recent first)
+  for (let i = contributions.value.length - 1; i >= 0; i--) {
+    if (contributions.value[i].level > 0) {
+      if (currentStreak === 0) {
+        currentStreak = 1;
+      } else {
+        currentStreak++;
+      }
+      
+      tempStreak++;
+      longestStreak = Math.max(longestStreak, tempStreak);
+    } else {
+      tempStreak = 0;
+      
+      // If we've already started counting the current streak and hit a zero, break
+      if (currentStreak > 0) {
+        break;
+      }
+    }
+  }
+  
+  return { currentStreak, longestStreak };
+};
+
+const streaks = computed(() => calculateStreaks());
+const currentStreak = computed(() => streaks.value.currentStreak);
+const longestStreak = computed(() => streaks.value.longestStreak);
+
+// Calculate total contributions
+const totalContributions = computed(() => {
+  return contributions.value.reduce((total, day) => total + day.count, 0);
+});
+
+// Helper functions for the contributions graph
+const getDaysInMonth = (month) => {
+  const monthIndex = months.value.indexOf(month);
+  const year = new Date().getFullYear();
+  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
+  
+  // Return an array of day objects for the month
+  const days = [];
+  for (let i = 1; i <= daysInMonth; i++) {
+    const date = new Date(year, monthIndex, i);
+    const contribution = contributions.value.find(c => 
+      c.date.getDate() === i && 
+      c.date.getMonth() === monthIndex && 
+      c.date.getFullYear() === year
+    );
+    
+    days.push(contribution || { date, level: 0, count: 0 });
+  }
+  
+  return days;
+};
+
+const getContributionLevel = (day) => {
+  return `level-${day.level}`;
+};
+
+const getContributionTooltip = (day) => {
+  const dateStr = day.date.toLocaleDateString('en-US', { 
+    weekday: 'short', 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric' 
+  });
+  
+  if (day.level === 0) {
+    return `No contributions on ${dateStr}`;
+  }
+  
+  return `${day.count} contribution${day.count > 1 ? 's' : ''} on ${dateStr}`;
+};
 
 onMounted(() => {
   typeRole();
@@ -220,7 +385,7 @@ function typeRole() {
   --terminal-property: #9cdcfe;
   --terminal-boolean: #569cd6;
   --terminal-class: #4ec9b0;
-  --terminal-parameter: #9cdcfe;
+  --terminal-parameter: #ffa657;
   --terminal-line-number: #858585;
 }
 
@@ -244,12 +409,6 @@ function typeRole() {
   --terminal-class: #3fb950;
   --terminal-parameter: #ffa657;
   --terminal-line-number: #30363d;
-}
-
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 </style>
 
@@ -524,6 +683,157 @@ body {
   font-style: italic;
 }
 
+/* Contributions Container */
+.contributions-container {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.contributions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.contributions-title {
+  color: var(--terminal-text);
+  font-weight: bold;
+}
+
+.contributions-legend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--terminal-comment);
+}
+
+.legend-colors {
+  display: flex;
+  gap: 2px;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+/* GitHub Exact Colors */
+.legend-color.level-0 {
+  background-color: #ebedf0;
+}
+
+.legend-color.level-1 {
+  background-color: #9be9a8;
+}
+
+.legend-color.level-2 {
+  background-color: #40c463;
+}
+
+.legend-color.level-3 {
+  background-color: #30a14e;
+}
+
+.legend-color.level-4 {
+  background-color: #216e39;
+}
+
+/* Contributions Graph */
+.contributions-graph {
+  margin-bottom: 1rem;
+}
+
+.graph-months {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+}
+
+.graph-month {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 120px;
+}
+
+.month-label {
+  font-size: 0.7rem;
+  color: var(--terminal-comment);
+  text-align: center;
+}
+
+.month-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+}
+
+.day-square {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  transition: transform 0.2s ease;
+}
+
+.day-square:hover {
+  transform: scale(1.2);
+}
+
+/* GitHub Exact Contribution Colors */
+.day-square.level-0 {
+  background-color: #ebedf0;
+}
+
+.day-square.level-1 {
+  background-color: #9be9a8;
+}
+
+.day-square.level-2 {
+  background-color: #40c463;
+}
+
+.day-square.level-3 {
+  background-color: #30a14e;
+}
+
+.day-square.level-4 {
+  background-color: #216e39;
+}
+
+/* Contributions Stats */
+.contributions-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: var(--terminal-comment);
+}
+
 /* Terminal Actions */
 .terminal-actions {
   display: flex;
@@ -611,12 +921,6 @@ body {
   transition: all 0.3s ease;
 }
 
-.social-icon svg {
-  width: 24px;
-  height: 24px;
-  color: white;
-}
-
 .social-icon.github {
   background-color: #333;
 }
@@ -636,39 +940,6 @@ body {
 
 .social-link:hover {
   transform: translateY(-5px);
-}
-
-/* Scroll Indicator */
-.scroll-indicator {
-  position: absolute;
-  bottom: 2rem;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  opacity: 0;
-  animation: fadeIn 1s ease forwards;
-  animation-delay: 1.5s;
-}
-
-.scroll-text {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.scroll-command {
-  color: var(--terminal-prompt);
-  font-size: 0.9rem;
-}
-
-.scroll-arrow {
-  color: var(--terminal-prompt);
-  font-size: 1.2rem;
-  animation: bounce 2s infinite;
 }
 
 /* Animations */
@@ -691,17 +962,6 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-  40% { transform: translateY(-10px); }
-  60% { transform: translateY(-5px); }
 }
 
 /* Responsive Design */
@@ -727,8 +987,13 @@ body {
     font-size: 1.3rem;
   }
   
-  .code-lines {
-    font-size: 1rem;
+  .day-square {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .month-label {
+    font-size: 0.8rem;
   }
 }
 
@@ -745,6 +1010,19 @@ body {
   .social-terminal {
     max-width: 420px;
   }
+  
+  .identity-name {
+    font-size: 2.1rem;
+  }
+  
+  .identity-role {
+    font-size: 1.25rem;
+  }
+  
+  .day-square {
+    width: 13px;
+    height: 13px;
+  }
 }
 
 /* Desktop (992px to 1199px) */
@@ -755,11 +1033,41 @@ body {
   }
   
   .terminal-window {
-    max-width: 750px;
+    max-width: 800px;
   }
   
   .social-terminal {
-    max-width: 380px;
+    max-width: 400px;
+  }
+  
+  .identity-name {
+    font-size: 2rem;
+  }
+  
+  .identity-role {
+    font-size: 1.2rem;
+  }
+  
+  .day-square {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .month-label {
+    font-size: 0.7rem;
+  }
+}
+
+/* Tablet (768px to 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .hero-section {
+    padding: 1.5rem;
+    margin-top: 4rem;
+    margin-left: -3rem;
+  }
+  
+  .terminal-window, .social-terminal {
+    max-width: 100%;
   }
   
   .identity-name {
@@ -770,54 +1078,27 @@ body {
     font-size: 1.1rem;
   }
   
-  .code-lines {
-    padding: 1.5rem;
-    font-size: 0.85rem;
-  }
-}
-
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .hero-section {
-    padding: 1.5rem;
-    margin-top: 4rem;
-    margin-left: -3rem;
-    
-  }
-  
-  .terminal-window, .social-terminal {
-    max-width: 100%;
-  }
-  
-  .identity-name {
-    font-size: 1.7rem;
-  }
-  
-  .identity-role {
-    font-size: 1rem;
-  }
-  
   .avatar {
     width: 70px;
     height: 70px;
   }
   
-  .terminal-body {
-    padding: 1.2rem;
+  .day-square {
+    width: 10px;
+    height: 10px;
   }
   
-  .social-terminal-body {
-    padding: 1.2rem;
+  .graph-months {
+    gap: 0.25rem;
   }
   
-  .code-lines {
-    padding: 1.2rem;
-    font-size: 0.8rem;
+  .month-label {
+    font-size: 0.6rem;
   }
   
-  .line-number {
-    width: 25px;
-    margin-right: 15px;
+  .contributions-stats {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
 
@@ -826,7 +1107,55 @@ body {
   .hero-section {
     padding: 1rem;
     margin-top: 5rem;
+  }
+  
+  .terminal-window, .social-terminal {
+    max-width: 100%;
+  }
+  
+  .identity-name {
+    font-size: 1.6rem;
+  }
+  
+  .identity-role {
+    font-size: 1rem;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .day-square {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .graph-months {
+    gap: 0.2rem;
+  }
+  
+  .month-label {
+    font-size: 0.55rem;
+  }
+  
+  .contributions-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .contributions-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
 
+/* Mobile Portrait (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+  .hero-section {
+    padding: 0.8rem;
+    margin-top: 4rem;
   }
   
   .terminal-window, .social-terminal {
@@ -838,59 +1167,6 @@ body {
   }
   
   .identity-role {
-    font-size: 1rem;
-  }
-  
-  .card-header {
-    flex-direction: column;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .terminal-body {
-    padding: 1rem;
-  }
-  
-  .social-terminal-body {
-    padding: 1rem;
-  }
-  
-  .terminal-actions {
-    flex-direction: column;
-  }
-  
-  .terminal-button-primary, .terminal-button-secondary {
-    width: 100%;
-    justify-content: center;
-  }
-  
-  .code-lines {
-    padding: 1rem;
-    font-size: 0.75rem;
-  }
-  
-  .line-number {
-    width: 20px;
-    margin-right: 10px;
-  }
-}
-
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .hero-section {
-    padding: 0.8rem;
-    margin-top: 4rem;
-  }
-  
-  .identity-name {
-    font-size: 1.4rem;
-  }
-  
-  .identity-role {
     font-size: 0.9rem;
   }
   
@@ -899,52 +1175,45 @@ body {
     height: 55px;
   }
   
-  .terminal-body {
-    padding: 0.8rem;
+  .day-square {
+    width: 7px;
+    height: 7px;
   }
   
-  .social-terminal-body {
-    padding: 0.8rem;
+  .graph-months {
+    gap: 0.15rem;
   }
   
-  .social-links {
-    gap: 1rem;
+  .month-label {
+    font-size: 0.5rem;
   }
   
-  .social-icon {
-    width: 45px;
-    height: 45px;
+  .contributions-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
   
-  .social-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-  
-  .social-label {
-    font-size: 0.8rem;
-  }
-  
-  .terminal-header {
-    padding: 0.6rem 0.8rem;
-  }
-  
-  .social-terminal-header {
-    padding: 0.6rem 0.8rem;
-  }
-  
-  .terminal-title {
-    font-size: 0.8rem;
-  }
-  
-  .code-lines {
-    padding: 0.8rem;
+  .contributions-legend {
     font-size: 0.7rem;
   }
   
-  .line-number {
-    width: 18px;
-    margin-right: 8px;
+  .legend-color {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .contributions-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .stat-value {
+    font-size: 1rem;
+  }
+  
+  .stat-label {
+    font-size: 0.7rem;
   }
 }
 
@@ -955,8 +1224,12 @@ body {
     margin-top: 3.8rem;
   }
   
+  .terminal-window, .social-terminal {
+    max-width: 100%;
+  }
+  
   .identity-name {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
   }
   
   .identity-role {
@@ -968,80 +1241,45 @@ body {
     height: 50px;
   }
   
-  .status-indicator {
-    width: 12px;
-    height: 12px;
-    bottom: 3px;
-    right: 3px;
+  .day-square {
+    width: 6px;
+    height: 6px;
   }
   
-  .terminal-body {
-    padding: 0.6rem;
+  .graph-months {
+    gap: 0.1rem;
   }
   
-  .social-terminal-body {
-    padding: 0.6rem;
+  .month-label {
+    font-size: 0.45rem;
   }
   
-  .social-links {
-    gap: 0.8rem;
-  }
-  
-  .social-icon {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .social-icon svg {
-    width: 18px;
-    height: 18px;
-  }
-  
-  .social-label {
-    font-size: 0.7rem;
-  }
-  
-  .terminal-header {
-    padding: 0.5rem 0.6rem;
-  }
-  
-  .social-terminal-header {
-    padding: 0.5rem 0.6rem;
-  }
-  
-  .terminal-title {
-    font-size: 0.7rem;
-  }
-  
-  .terminal-button {
-    width: 10px;
-    height: 10px;
-  }
-  
-  .detail-item {
+  .contributions-header {
     flex-direction: column;
-    margin-bottom: 0.3rem;
+    align-items: flex-start;
+    gap: 0.5rem;
   }
   
-  .detail-key {
-    margin-right: 0;
-    margin-bottom: 0.2rem;
+  .contributions-legend {
+    font-size: 0.6rem;
   }
   
-  .code-lines {
-    padding: 0.6rem;
-    font-size: 0.65rem;
-    line-height: 1.4;
-  }
-  
-  .line-number {
-    width: 15px;
-    margin-right: 6px;
-  }
-  
-  .terminal-cursor {
+  .legend-color {
     width: 8px;
-    height: 16px;
+    height: 8px;
+  }
+  
+  .contributions-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .stat-value {
+    font-size: 0.9rem;
+  }
+  
+  .stat-label {
+    font-size: 0.6rem;
   }
 }
 </style>

@@ -1,241 +1,390 @@
 <template>
   <section id="about" class="about-section">
-    <!-- Terminal Window -->
     <div class="terminal-container">
+      <!-- Terminal Header -->
       <div class="terminal-header">
         <div class="terminal-buttons">
           <div class="terminal-button close"></div>
           <div class="terminal-button minimize"></div>
           <div class="terminal-button maximize"></div>
         </div>
-        <div class="terminal-title">about@k-space:~</div>
+        <div class="terminal-title">about@portfolio:~# ./system_profile.sh</div>
       </div>
       
+      <!-- Terminal Body -->
       <div class="terminal-body">
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">cat personal_info.json</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="info-card">
-            <div class="info-header">
-              <div class="profile-container">
-                <img src="/profile.JPG" alt="Kelvin Kamau" class="profile-img" />
-                <div class="status-indicator online"></div>
-              </div>
-              <div class="identity-info">
-                <h1 class="identity-name">Kelvin Njenga Kamau</h1>
-                <div class="identity-role">
-                  <span class="role-text">Full Stack Developer</span>
-                </div>
-              </div>
-            </div>
-            
-            <div class="info-content">
-              <p class="intro-text">
-                I'm <span class="highlight">Kelvin Njenga Kamau</span>, a passionate Full Stack Developer with a strong foundation in software development, UI/UX, and digital strategy.
-                I specialize in crafting scalable, responsive web apps that solve real-world problems — combining clean frontend design with powerful backend logic.
-              </p>
-            </div>
+        <!-- System Info -->
+        <div class="system-info">
+          <div class="info-line">
+            <span class="info-text">System:</span>
+            <span class="info-value">Kelvin Kamau Profile v2.0.24</span>
+          </div>
+          <div class="info-line">
+            <span class="info-text">Status:</span>
+            <span class="info-value">Active</span>
+          </div>
+          <div class="info-line">
+            <span class="info-text">Last Updated:</span>
+            <span class="info-value">{{ new Date().toLocaleDateString() }}</span>
           </div>
         </div>
         
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">ls -la</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="file-list">
-            <div class="file-item">
-              <div class="file-icon">📁</div>
-              <div class="file-details">
-                <div class="file-name">education</div>
-                <div class="file-meta">2023</div>
-              </div>
-            </div>
-            
-            <div class="file-item">
-              <div class="file-icon">📁</div>
-              <div class="file-details">
-                <div class="file-name">experience</div>
-                <div class="file-meta">2023-Present</div>
-              </div>
-            </div>
-            
-            <div class="file-item">
-              <div class="file-icon">📁</div>
-              <div class="file-details">
-                <div class="file-name">skills</div>
-                <div class="file-meta">2023</div>
-              </div>
-            </div>
+        <!-- Terminal Tabs -->
+        <div class="terminal-tabs">
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'profile' }" 
+            @click="activeTab = 'profile'"
+          >
+            <span class="tab-icon">👤</span>
+            <span class="tab-text">profile</span>
+          </div>
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'education' }" 
+            @click="activeTab = 'education'"
+          >
+            <span class="tab-icon">🎓</span>
+            <span class="tab-text">education</span>
+          </div>
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'experience' }" 
+            @click="activeTab = 'experience'"
+          >
+            <span class="tab-icon">💼</span>
+            <span class="tab-text">experience</span>
+          </div>
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'skills' }" 
+            @click="activeTab = 'skills'"
+          >
+            <span class="tab-icon">💻</span>
+            <span class="tab-text">skills</span>
           </div>
         </div>
         
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">cat education.json</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="education-card">
-            <div class="education-header">
-              <div class="degree-icon">🎓</div>
-              <h3 class="degree-title">Bachelor's Degree in Information Science</h3>
-              <div class="degree-details">
-                <div class="university">Meru University of Science and Technology</div>
-                <div class="period">2019-2023</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">cat experience.json</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="experience-timeline">
-            <div class="timeline-item">
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-date">2023-Present</div>
-                <div class="timeline-position">
-                  <div class="position-title">Nyakazi Organics</div>
-                  <div class="position-role">Developer & Digital Manager</div>
-                </div>
-              </div>
+        <!-- Tab Content -->
+        <div class="tab-content">
+          <!-- Profile Tab -->
+          <div v-if="activeTab === 'profile'" class="profile-tab">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">cat personal_info.json</span>
             </div>
             
-            <div class="timeline-item">
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-date">2022</div>
-                <div class="timeline-position">
-                  <div class="position-title">Directorate of Immigration</div>
-                  <div class="position-role">ICT Intern</div>
+            <div class="profile-container">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="profile-avatar">
+                    <img src="/profile.JPG" alt="Kelvin Kamau" class="avatar-img" />
+                    <div class="status-indicator online"></div>
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">Kelvin Njenga Kamau</h2>
+                    <div class="profile-title">Full Stack Developer & UI/UX Engineer</div>
+                    <div class="profile-bio">
+                      <p>I'm a passionate Full Stack Developer with a strong foundation in software development, UI/UX, and digital strategy. I specialize in crafting scalable, responsive web apps that solve real-world problems — combining clean frontend design with powerful backend logic.</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            
-            <div class="timeline-item">
-              <div class="timeline-dot"></div>
-              <div class="timeline-content">
-                <div class="timeline-date">2021</div>
-                <div class="timeline-position">
-                  <div class="position-title">KNLS Nakuru Branch</div>
-                  <div class="position-role">IT Support</div>
+                
+                <div class="profile-stats">
+                  <div class="stat-item">
+                    <div class="stat-value">3+</div>
+                    <div class="stat-label">Years Experience</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">20+</div>
+                    <div class="stat-label">Projects Completed</div>
+                  </div>
+                  <div class="stat-item">
+                    <div class="stat-value">15+</div>
+                    <div class="stat-label">Happy Clients</div>
+                  </div>
+                </div>
+                
+                <div class="profile-interests">
+                  <h3>Interests & Hobbies</h3>
+                  <div class="interests-grid">
+                    <div class="interest-item">
+                      <div class="interest-icon">🎮</div>
+                      <span class="interest-name">Gaming</span>
+                    </div>
+                    <div class="interest-item">
+                      <div class="interest-icon">📚</div>
+                      <span class="interest-name">Reading</span>
+                    </div>
+                    <div class="interest-item">
+                      <div class="interest-icon">🎵</div>
+                      <span class="interest-name">Music</span>
+                    </div>
+                    <div class="interest-item">
+                      <div class="interest-icon">🏃</div>
+                      <span class="interest-name">Running</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">cat skills.json</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="skills-grid">
-            <div class="skill-category">
-              <div class="category-title">Frontend</div>
-              <div class="skill-list">
-                <div class="skill-item">Vue.js</div>
-                <div class="skill-item">React</div>
-                <div class="skill-item">TypeScript</div>
-                <div class="skill-item">HTML/CSS</div>
-              </div>
+          
+          <!-- Education Tab -->
+          <div v-if="activeTab === 'education'" class="education-tab">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">cat education.json</span>
             </div>
             
-            <div class="skill-category">
-              <div class="category-title">Backend</div>
-              <div class="skill-list">
-                <div class="skill-item">Node.js</div>
-                <div class="skill-item">PHP</div>
-                <div class="skill-item">PYTHON</div>
-                <div class="skill-item">Express.js</div>
-                <div class="skill-item">MongoDB</div>
+            <div class="education-container">
+              <div class="education-card">
+                <div class="education-header">
+                  <div class="education-icon">🎓</div>
+                  <div class="education-info">
+                    <h3 class="degree-title">Bachelor's Degree in Information Science</h3>
+                    <div class="university-info">
+                      <div class="university-name">Meru University of Science and Technology</div>
+                      <div class="education-period">2019 - 2023</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="education-details">
+                  <div class="detail-section">
+                    <h4>Key Achievements</h4>
+                    <ul>
+                      <li>Graduated with Second Class Honors (Upper Division)</li>
+                      <li>Specialized in Software Development and Database Systems</li>
+                      <li>Completed final year project on E-commerce Platform Development</li>
+                    </ul>
+                  </div>
+                  
+                  <div class="detail-section">
+                    <h4>Relevant Coursework</h4>
+                    <div class="coursework-grid">
+                      <div class="coursework-item">Web Development</div>
+                      <div class="coursework-item">Database Systems</div>
+                      <div class="coursework-item">Software Engineering</div>
+                      <div class="coursework-item">UI/UX Design</div>
+                      <div class="coursework-item">Data Structures</div>
+                      <div class="coursework-item">Algorithms</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
-            
-            <div class="skill-category">
-              <div class="category-title">Design</div>
-              <div class="skill-list">
-                <div class="skill-item">Figma</div>
-                <div class="skill-item">Photoshop</div>
-                <div class="skill-item">UI/UX</div>
-              </div>
+          </div>
+          
+          <!-- Experience Tab -->
+          <div v-if="activeTab === 'experience'" class="experience-tab">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">cat experience.json</span>
             </div>
             
-            <div class="skill-category">
-              <div class="category-title">Tools</div>
-              <div class="skill-list">
-                <div class="skill-item">Git</div>
-                <div class="skill-item">Docker</div>
-                <div class="skill-item">CI/CD</div>
+            <div class="experience-container">
+              <div class="experience-timeline">
+                <div class="timeline-item">
+                  <div class="timeline-date">
+                    <div class="date-year">2023</div>
+                    <div class="date-line"></div>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="experience-card">
+                      <div class="experience-header">
+                        <h3 class="position-title">Developer & Digital Manager</h3>
+                        <div class="company-info">
+                          <div class="company-name">Nyakazi Organics</div>
+                          <div class="employment-period">2023 - Present</div>
+                        </div>
+                      </div>
+                      <div class="experience-description">
+                        <p>Led digital transformation initiatives for an organic food company, overseeing all digital solutions from branding to systems development.</p>
+                      </div>
+                      <div class="experience-achievements">
+                        <h4>Key Achievements</h4>
+                        <ul>
+                          <li>Developed a fully functional POS system using React and Django</li>
+                          <li>Designed and implemented comprehensive company branding</li>
+                          <li>Optimized website performance, achieving 95+ Lighthouse scores</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-date">
+                    <div class="date-year">2022</div>
+                    <div class="date-line"></div>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="experience-card">
+                      <div class="experience-header">
+                        <h3 class="position-title">ICT Intern</h3>
+                        <div class="company-info">
+                          <div class="company-name">Directorate of Immigration</div>
+                          <div class="employment-period">2022</div>
+                        </div>
+                      </div>
+                      <div class="experience-description">
+                        <p>Gained foundational IT experience working with diverse technology stacks and systems.</p>
+                      </div>
+                      <div class="experience-achievements">
+                        <h4>Key Achievements</h4>
+                        <ul>
+                          <li>Automated catalog update processes, saving 15+ hours weekly</li>
+                          <li>Documented comprehensive network infrastructure</li>
+                          <li>Assisted in migrating legacy systems to modern platforms</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="timeline-item">
+                  <div class="timeline-date">
+                    <div class="date-year">2021</div>
+                    <div class="date-line"></div>
+                  </div>
+                  <div class="timeline-content">
+                    <div class="experience-card">
+                      <div class="experience-header">
+                        <h3 class="position-title">IT Support</h3>
+                        <div class="company-info">
+                          <div class="company-name">KNLS Nakuru Branch</div>
+                          <div class="employment-period">2021</div>
+                        </div>
+                      </div>
+                      <div class="experience-description">
+                        <p>Provided IT support and assistance to library staff and patrons.</p>
+                      </div>
+                      <div class="experience-achievements">
+                        <h4>Key Achievements</h4>
+                        <ul>
+                          <li>Provided technical support to 50+ staff members</li>
+                          <li>Created detailed training materials for new software</li>
+                          <li>Maintained library's digital catalog system</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Skills Tab -->
+          <div v-if="activeTab === 'skills'" class="skills-tab">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">cat skills.json</span>
+            </div>
+            
+            <div class="skills-container">
+              <div class="skills-grid">
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">🎨</div>
+                    <h3 class="category-title">Frontend</h3>
+                  </div>
+                  <div class="skill-list">
+                    <div class="skill-item">Vue.js</div>
+                    <div class="skill-item">React</div>
+                    <div class="skill-item">TypeScript</div>
+                    <div class="skill-item">JavaScript</div>
+                    <div class="skill-item">HTML5</div>
+                    <div class="skill-item">CSS3</div>
+                    <div class="skill-item">Tailwind CSS</div>
+                  </div>
+                </div>
+                
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">⚙️</div>
+                    <h3 class="category-title">Backend</h3>
+                  </div>
+                  <div class="skill-list">
+                    <div class="skill-item">Node.js</div>
+                    <div class="skill-item">PHP</div>
+                    <div class="skill-item">Python</div>
+                    <div class="skill-item">Django</div>
+                    <div class="skill-item">Express.js</div>
+                    <div class="skill-item">MongoDB</div>
+                    <div class="skill-item">MySQL</div>
+                  </div>
+                </div>
+                
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">🎯</div>
+                    <h3 class="category-title">Design</h3>
+                  </div>
+                  <div class="skill-list">
+                    <div class="skill-item">Figma</div>
+                    <div class="skill-item">Photoshop</div>
+                    <div class="skill-item">Illustrator</div>
+                    <div class="skill-item">UI/UX</div>
+                  </div>
+                </div>
+                
+                <div class="skill-category">
+                  <div class="category-header">
+                    <div class="category-icon">🔧</div>
+                    <h3 class="category-title">Tools</h3>
+                  </div>
+                  <div class="skill-list">
+                    <div class="skill-item">Git</div>
+                    <div class="skill-item">Docker</div>
+                    <div class="skill-item">CI/CD</div>
+                    <div class="skill-item">Webpack</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
         
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">./stats.sh</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="stats-container">
-            <div class="stat-item">
-              <span class="stat-label">experience:</span>
-              <span class="stat-value">3+ years</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">projects:</span>
-              <span class="stat-value">20+</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">clients:</span>
-              <span class="stat-value">15+</span>
-            </div>
-          </div>
-        </div>
-        
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">./contact.sh</span>
-        </div>
-        
+        <!-- Terminal Actions -->
         <div class="terminal-actions">
-          <a href="/Kamau_Kelvin_Resume.pdf" class="terminal-button-primary" download>
-            <span>Download Resume</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M21 15v4a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
-          <a href="#contact" class="terminal-button-secondary">
-            <span>Contact Me</span>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M22 16L2 9m0 0l10 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M22 16L2 9m0 0l10 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </a>
+          <div class="terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command">./actions.sh</span>
+          </div>
+          
+          <div class="action-buttons">
+            <a href="/Kamau_Kelvin_Resume.pdf" class="action-button primary" download>
+              <i class="fas fa-download"></i>
+              <span>Download Resume</span>
+            </a>
+            <a href="#contact" class="action-button secondary">
+              <i class="fas fa-envelope"></i>
+              <span>Contact Me</span>
+            </a>
+          </div>
+        </div>
+        
+        <!-- Terminal Footer -->
+        <div class="terminal-footer">
+          <div class="terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command cursor">_</span>
+          </div>
         </div>
       </div>
     </div>
   </section>
 </template>
 
-<script setup lang="ts">
-// No additional script needed for this component
+<script setup>
+import { ref } from 'vue';
+
+const activeTab = ref('profile');
 </script>
 
 <style>
-/* Global theme styles */
+/* Terminal Theme Variables */
 :root {
   --bg-color: #ffffff;
   --text-color: #1a202c;
@@ -254,7 +403,7 @@
   --terminal-property: #9cdcfe;
   --terminal-boolean: #569cd6;
   --terminal-class: #4ec9b0;
-  --terminal-parameter: #9cdcfe;
+  --terminal-parameter: #ffa657;
   --terminal-line-number: #858585;
 }
 
@@ -279,37 +428,34 @@
   --terminal-parameter: #ffa657;
   --terminal-line-number: #30363d;
 }
-
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
-}
 </style>
 
 <style scoped>
-/* Base Styles */
+/* Base Section Styles */
 .about-section {
-  padding: 6rem 2rem;
-  background-color: var(--bg-color);
-  min-height: 100vh;
   position: relative;
+  padding: 4rem 2rem;
+  background-color: var(--bg-color);
   font-family: 'Fira Code', 'Courier New', monospace;
-  overflow: hidden;
+  color: var(--text-color);
   width: 100vw;
+  width: calc(95% + 2rem);
   margin-left: -2rem;
-  margin-bottom: -2rem;
+  overflow: hidden;
 }
 
 /* Terminal Container */
 .terminal-container {
   max-width: 1200px;
   margin: 0 auto;
-  width: calc(90% - 0.7rem);
+  background-color: var(--terminal-bg);
+  border-radius: 8px;
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.8s ease-out;
 }
 
+/* Terminal Header */
 .terminal-header {
   display: flex;
   align-items: center;
@@ -347,16 +493,87 @@ body {
   opacity: 0.8;
 }
 
+/* Terminal Body */
 .terminal-body {
-  padding: 1.5rem;
-  color: var(--terminal-text);
+  padding: 0;
 }
 
-.terminal-prompt {
-  margin-bottom: 1rem;
+/* System Info */
+.system-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--terminal-header);
+}
+
+.info-line {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.info-text {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: var(--terminal-string);
+  font-weight: bold;
+}
+
+/* Terminal Tabs */
+.terminal-tabs {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--terminal-header);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab.active {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: var(--accent-color);
+}
+
+.tab-icon {
+  font-size: 1rem;
+}
+
+.tab-text {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+.tab.active .tab-text {
+  color: var(--terminal-text);
+}
+
+/* Tab Content */
+.tab-content {
+  padding: 1.5rem;
+  min-height: 500px;
+}
+
+/* Terminal Prompt */
+.terminal-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
 }
 
 .prompt-symbol {
@@ -368,250 +585,388 @@ body {
   color: var(--terminal-text);
 }
 
-.terminal-output {
-  margin-bottom: 1.5rem;
+.cursor {
+  color: var(--terminal-prompt);
+  animation: blink 1s infinite;
 }
 
-/* Info Card */
-.info-card {
+/* Profile Tab */
+.profile-container {
+  margin-top: 1rem;
+}
+
+.profile-card {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
+  border-radius: 8px;
+  padding: 2rem;
   border-left: 4px solid var(--accent-color);
 }
 
-.info-header {
+.profile-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 2rem;
+  margin-bottom: 2rem;
 }
 
-.profile-container {
+.profile-avatar {
   position: relative;
+  flex-shrink: 0;
 }
 
-.profile-img {
-  width: 80px;
-  height: 80px;
+.avatar-img {
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--accent-color);
+  border: 3px solid var(--accent-color);
 }
 
 .status-indicator {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 16px;
-  height: 16px;
+  bottom: 8px;
+  right: 8px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background-color: #3fb950;
-  border: 2px solid var(--terminal-bg);
+  border: 3px solid var(--terminal-bg);
 }
 
-.identity-info {
+.profile-info {
   flex: 1;
 }
 
-.identity-name {
+.profile-name {
   font-size: 2rem;
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
 }
 
-.identity-role {
+.profile-title {
   font-size: 1.2rem;
   color: var(--accent-color);
+  margin-bottom: 1rem;
 }
 
-.info-content {
+.profile-bio {
   line-height: 1.6;
+  color: var(--terminal-comment);
 }
 
-.intro-text {
-  font-size: 1.1rem;
-  color: var(--terminal-text);
+.profile-stats {
+  display: flex;
+  justify-content: space-around;
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
 }
 
-.highlight {
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: bold;
   color: var(--accent-color);
-  font-weight: 600;
+  margin-bottom: 0.5rem;
 }
 
-/* File List */
-.file-list {
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--terminal-comment);
+}
+
+.profile-interests {
+  margin-top: 2rem;
+}
+
+.profile-interests h3 {
+  font-size: 1.2rem;
+  color: var(--terminal-text);
+  margin-bottom: 1rem;
+}
+
+.interests-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 1rem;
 }
 
-.file-item {
+.interest-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 1rem;
+  padding: 0.75rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  border-left: 4px solid var(--accent-color);
   transition: transform 0.3s ease;
 }
 
-.file-item:hover {
+.interest-item:hover {
   transform: translateY(-3px);
 }
 
-.file-icon {
+.interest-icon {
   font-size: 1.5rem;
 }
 
-.file-details {
-  flex: 1;
-}
-
-.file-name {
-  font-weight: 600;
+.interest-name {
   color: var(--terminal-text);
-  font-size: 1.1rem;
 }
 
-.file-meta {
-  color: var(--terminal-comment);
-  font-size: 0.9rem;
+/* Education Tab */
+.education-container {
+  margin-top: 1rem;
 }
 
-/* Education Card */
 .education-card {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
+  border-radius: 8px;
+  padding: 2rem;
   border-left: 4px solid var(--accent-color);
 }
 
 .education-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.degree-icon {
-  font-size: 2rem;
+.education-icon {
+  font-size: 3rem;
+}
+
+.education-info {
+  flex: 1;
 }
 
 .degree-title {
   font-size: 1.5rem;
   font-weight: bold;
+  margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
-  margin: 0;
 }
 
-.degree-details {
+.university-info {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.university {
+.university-name {
   font-size: 1.1rem;
   color: var(--terminal-text);
 }
 
-.period {
-  color: var(--terminal-comment);
+.education-period {
   font-size: 0.9rem;
+  color: var(--terminal-comment);
 }
 
-/* Experience Timeline */
+.education-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.detail-section h4 {
+  font-size: 1.1rem;
+  color: var(--accent-color);
+  margin: 0 0 1rem 0;
+}
+
+.detail-section ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: var(--terminal-comment);
+}
+
+.detail-section li {
+  margin-bottom: 0.5rem;
+}
+
+.coursework-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.75rem;
+}
+
+.coursework-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  padding: 0.5rem;
+  color: var(--terminal-text);
+  text-align: center;
+}
+
+/* Experience Tab */
+.experience-container {
+  margin-top: 1rem;
+}
+
 .experience-timeline {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  position: relative;
 }
 
 .timeline-item {
   display: flex;
-  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.timeline-dot {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background-color: var(--accent-color);
-  margin-top: 0.25rem;
+.timeline-date {
+  width: 100px;
   flex-shrink: 0;
+  padding-right: 1.5rem;
+  text-align: right;
+  position: relative;
+}
+
+.date-year {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--accent-color);
+  margin-bottom: 0.5rem;
+}
+
+.date-line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background-color: var(--terminal-header);
 }
 
 .timeline-content {
   flex: 1;
+  padding-left: 2rem;
+  position: relative;
 }
 
-.timeline-date {
-  color: var(--terminal-comment);
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+.timeline-content::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  border: 2px solid var(--terminal-bg);
 }
 
-.timeline-position {
+.experience-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.experience-header {
+  margin-bottom: 1rem;
+}
+
+.position-title {
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  color: var(--terminal-text);
+}
+
+.company-info {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
 }
 
-.position-title {
+.company-name {
   font-size: 1.1rem;
-  font-weight: 600;
   color: var(--terminal-text);
 }
 
-.position-role {
-  color: var(--terminal-string);
+.employment-period {
   font-size: 0.9rem;
+  color: var(--terminal-comment);
 }
 
-/* Skills Grid */
+.experience-description {
+  margin-bottom: 1.5rem;
+  color: var(--terminal-comment);
+  line-height: 1.6;
+}
+
+.experience-achievements h4 {
+  font-size: 1.1rem;
+  color: var(--accent-color);
+  margin: 0 0 1rem 0;
+}
+
+.experience-achievements ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: var(--terminal-comment);
+}
+
+.experience-achievements li {
+  margin-bottom: 0.5rem;
+}
+
+/* Skills Tab */
+.skills-container {
+  margin-top: 1rem;
+}
+
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
 .skill-category {
-  margin-bottom: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.category-icon {
+  font-size: 1.5rem;
 }
 
 .category-title {
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: bold;
   color: var(--terminal-text);
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.category-title::before {
-  content: '';
-  width: 20px;
-  height: 2px;
-  background-color: var(--accent-color);
+  margin: 0;
 }
 
 .skill-list {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 0.75rem;
 }
 
 .skill-item {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  padding: 0.5rem;
   color: var(--terminal-text);
-  font-size: 0.9rem;
-  border-left: 3px solid var(--accent-color);
+  text-align: center;
   transition: transform 0.3s ease;
 }
 
@@ -619,74 +974,55 @@ body {
   transform: translateY(-3px);
 }
 
-/* Stats Container */
-.stats-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
-  border-left: 4px solid var(--accent-color);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.stat-label {
-  color: var(--terminal-property);
-  font-size: 0.9rem;
-}
-
-.stat-value {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: var(--terminal-text);
-}
-
 /* Terminal Actions */
 .terminal-actions {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--terminal-header);
+}
+
+.action-buttons {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
 }
 
-.terminal-button-primary, .terminal-button-secondary {
+.action-button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  width: auto;
 }
 
-.terminal-button-primary {
+.action-button.primary {
   background-color: var(--accent-color);
   color: white;
 }
 
-.terminal-button-primary:hover {
+.action-button.primary:hover {
   background-color: var(--accent-hover);
   transform: translateY(-2px);
 }
 
-.terminal-button-secondary {
+.action-button.secondary {
   background-color: transparent;
   color: var(--terminal-text);
   border: 1px solid var(--terminal-text);
 }
 
-.terminal-button-secondary:hover {
+.action-button.secondary:hover {
   background-color: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
+}
+
+/* Terminal Footer */
+.terminal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--terminal-header);
 }
 
 /* Animations */
@@ -701,305 +1037,137 @@ body {
   }
 }
 
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .terminal-container {
-    max-width: 1400px;
-  }
-  
-  .info-card, .education-card, .stats-container {
-    padding: 2rem;
-  }
-  
-  .identity-name {
-    font-size: 2.2rem;
-  }
-  
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-/* Large Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .terminal-container {
-    max-width: 1200px;
-  }
-  
-  .info-card, .education-card, .stats-container {
-    padding: 1.75rem;
-  }
-}
-
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .about-section {
-    padding: 5rem 1.5rem;
-  }
-  
-  .terminal-container {
-    max-width: 1000px;
-    margin-left: -0.1rem;
-    width: calc(90% - 0.7rem);
-  }
-  
-  .info-card, .education-card, .stats-container {
-    padding: 1.5rem;
-  }
-  
-  .identity-name {
-    font-size: 1.8rem;
-  }
-  
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-  
-  .file-list {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .about-section {
-    padding: 4rem 1.5rem;
-  }
-  
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 1rem;
-    margin-left: -0.1rem;
-     width: calc(90% - 0.7rem);
-  }
-  
-  .info-header {
+@media (max-width: 992px) {
+  .profile-header {
     flex-direction: column;
     text-align: center;
-    gap: 1rem;
   }
   
-  .profile-container {
-    margin: 0 auto 1rem 0;
-  }
-  
-  .info-card, .education-card, .stats-container {
-    padding: 1.25rem;
-  }
-  
-  .identity-name {
-    font-size: 1.7rem;
-  }
-  
-  .file-list {
+  .education-details {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
   
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  }
-  
-  .stats-container {
+  .timeline-item {
     flex-direction: column;
-    gap: 1rem;
+  }
+  
+  .timeline-date {
+    width: 100%;
+    text-align: left;
+    padding-right: 0;
+    padding-bottom: 1rem;
+  }
+  
+  .date-line {
+    top: auto;
+    bottom: 0;
+    right: auto;
+    left: 0;
+    width: 100%;
+    height: 2px;
+  }
+  
+  .timeline-content {
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+  
+  .timeline-content::before {
+    display: none;
   }
 }
 
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
+@media (max-width: 768px) {
   .about-section {
     padding: 3rem 1rem;
   }
   
   .terminal-container {
-    max-width: 100%;
-    margin: 0 0.75rem;
-    margin-left: 2rem;
-     width: calc(90% - 0.7rem);
+    margin: 0 1rem;
   }
   
-  .terminal-body {
+  .tab-content {
     padding: 1rem;
   }
   
-  .info-header {
+  .profile-card {
+    padding: 1.5rem;
+  }
+  
+  .profile-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .education-card {
+    padding: 1.5rem;
+  }
+  
+  .education-header {
     flex-direction: column;
     text-align: center;
-    gap: 0.75rem;
   }
   
-  .profile-img {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .info-card, .education-card, .stats-container {
+  .experience-card {
     padding: 1rem;
   }
   
-  .identity-name {
+  .skills-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .action-button {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-section {
+    padding: 2rem 0.5rem;
+  }
+  
+  .terminal-container {
+    margin: 0 0.5rem;
+  }
+  
+  .tab-content {
+    padding: 0.8rem;
+  }
+  
+  .profile-card {
+    padding: 1rem;
+  }
+  
+  .avatar-img {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .profile-name {
     font-size: 1.5rem;
   }
   
-  .timeline-item {
-    flex-direction: column;
-    gap: 0.75rem;
+  .education-card {
+    padding: 1rem;
   }
   
-  .timeline-dot {
-    width: 12px;
-    height: 12px;
+  .experience-card {
+    padding: 0.8rem;
   }
   
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  }
-  
-  .terminal-actions {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-  
-  .terminal-button-primary, .terminal-button-secondary {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .about-section {
-    padding: 2.5rem 1rem;
-  }
-  
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 0.5rem;
-    margin-left: 2rem;
-     width: calc(90% - 0.7rem);
-  }
-  
-  .terminal-body {
-    padding: 0.75rem;
-  }
-  
-  .info-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
-  }
-  
-  .profile-img {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .info-card, .education-card, .stats-container {
-    padding: 0.75rem;
-  }
-  
-  .identity-name {
-    font-size: 1.4rem;
-  }
-  
-  .timeline-item {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .timeline-dot {
-    width: 10px;
-    height: 10px;
-  }
-  
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  }
-  
-  .terminal-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-button-primary, .terminal-button-secondary {
-    width: 100%;
-    justify-content: center;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .about-section {
-    padding: 2rem 0.75rem;
-  }
-  
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 0.5rem;
-    margin-left: 1rem;
-     width: calc(90% - 0.7rem);
-  }
-  
-  .terminal-body {
-    padding: 0.5rem;
-  }
-  
-  .terminal-header {
-    padding: 0.5rem 0.75rem;
-  }
-  
-  .terminal-title {
-    font-size: 0.8rem;
-  }
-  
-  .info-header {
-    flex-direction: column;
-    text-align: center;
-    gap: 0.5rem;
-  }
-  
-  .profile-img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .info-card, .education-card, .stats-container {
-    padding: 0.5rem;
-  }
-  
-  .identity-name {
-    font-size: 1.2rem;
-  }
-  
-  .timeline-item {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .timeline-dot {
-    width: 8px;
-    height: 8px;
-  }
-  
-  .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  }
-  
-  .skill-item {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.8rem;
-  }
-  
-  .terminal-actions {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-button-primary, .terminal-button-secondary {
-    width: 100%;
-    justify-content: center;
-    padding: 0.6rem 1rem;
+  .skill-category {
+    padding: 1rem;
   }
 }
 </style>

@@ -1,7 +1,6 @@
 <template>
   <section id="experience" class="experience-section">
-    <!-- Terminal Window Container -->
-    <div class="terminal-window experience-terminal">
+    <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
         <div class="terminal-buttons">
@@ -9,231 +8,189 @@
           <div class="terminal-button minimize"></div>
           <div class="terminal-button maximize"></div>
         </div>
-        <div class="terminal-title">experience@portfolio:~</div>
+        <div class="terminal-title">experience@portfolio:~# ./career_log.sh</div>
       </div>
       
       <!-- Terminal Body -->
       <div class="terminal-body">
-        <!-- Command Line -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">cat career_history.txt</span>
+        <!-- System Info -->
+        <div class="system-info">
+          <div class="info-line">
+            <span class="info-text">System:</span>
+            <span class="info-value">Career Log v2.0.24</span>
+          </div>
+          <div class="info-line">
+            <span class="info-text">Entries:</span>
+            <span class="info-value">{{ experiences.length }}</span>
+          </div>
+          <div class="info-line">
+            <span class="info-text">Total Experience:</span>
+            <span class="info-value">{{ totalYears }}+ years</span>
+          </div>
         </div>
         
-        <!-- Terminal Output -->
-        <div class="terminal-output">
-          <!-- Filter Categories as Terminal Command -->
-          <div class="filter-container">
+        <!-- Terminal Tabs -->
+        <div class="terminal-tabs">
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'timeline' }" 
+            @click="activeTab = 'timeline'"
+          >
+            <span class="tab-icon">📅</span>
+            <span class="tab-text">timeline</span>
+          </div>
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'skills' }" 
+            @click="activeTab = 'skills'"
+          >
+            <span class="tab-icon">💻</span>
+            <span class="tab-text">skills</span>
+          </div>
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'stats' }" 
+            @click="activeTab = 'stats'"
+          >
+            <span class="tab-icon">📊</span>
+            <span class="tab-text">stats</span>
+          </div>
+        </div>
+        
+        <!-- Filter Command -->
+        <div class="terminal-prompt">
+          <span class="prompt-symbol">$</span>
+          <span class="command">filter --category=</span>
+          <div class="filter-input">
+            <span class="filter-value">{{ activeFilter }}</span>
+            <span class="cursor">_</span>
+          </div>
+        </div>
+        
+        <div class="filter-options">
+          <button 
+            v-for="filter in filters" 
+            :key="filter"
+            @click="setActiveFilter(filter)"
+            :class="['filter-option', { active: activeFilter === filter }]"
+          >
+            {{ filter }}
+          </button>
+        </div>
+        
+        <!-- Tab Content -->
+        <div class="tab-content">
+          <!-- Timeline View -->
+          <div v-if="activeTab === 'timeline'" class="timeline-view">
             <div class="terminal-prompt">
               <span class="prompt-symbol">$</span>
-              <span class="command">filter --category=</span>
+              <span class="command">cat career_history.txt</span>
             </div>
-            <div class="filter-options">
-              <button 
-                v-for="filter in filters" 
-                :key="filter"
-                @click="setActiveFilter(filter)"
-                :class="['filter-option', { active: activeFilter === filter }]"
-              >
-                {{ filter }}
-              </button>
-            </div>
-          </div>
-          
-          <!-- Experience Timeline -->
-          <div class="experience-timeline">
-            <div 
-              v-for="(exp, index) in filteredExperiences"
-              :key="exp.id"
-              class="timeline-item"
-            >
-              <div class="timeline-marker">
-                <div class="marker-dot" :style="{ backgroundColor: exp.color }">
-                  <component :is="exp.icon" class="marker-icon" />
-                </div>
-                <div class="marker-line"></div>
-              </div>
-              
+            
+            <div class="timeline-container">
               <div 
-                class="experience-terminal-card"
+                v-for="(exp, index) in filteredExperiences"
+                :key="exp.id"
+                class="timeline-item"
                 :style="{ '--delay': index * 0.1 + 's' }"
               >
-                <!-- Experience Header -->
-                <div class="experience-header">
-                  <div class="experience-number">
-                    <span class="code-comment">// Entry</span>
-                    <span class="code-variable">{{ String(index + 1).padStart(2, '0') }}</span>
-                  </div>
-                  <div class="experience-status" :class="exp.category">
-                    <span class="code-comment">// Type:</span>
-                    <span class="code-string">{{ exp.category }}</span>
-                  </div>
+                <div class="timeline-date">
+                  <span class="date-year">{{ exp.period.split(' - ')[0] }}</span>
+                  <div class="date-line"></div>
                 </div>
                 
-                <!-- Experience Content -->
-                <div class="experience-content">
-                  <div class="experience-title-line">
-                    <span class="code-keyword">const</span>
-                    <span class="code-variable">{{ exp.title.replace(/\s+/g, '') }}</span>
-                    <span class="code-operator">=</span>
-                    <span class="code-brace">{</span>
-                  </div>
-                  
-                  <div class="experience-properties">
-                    <div class="property-line">
-                      <span class="code-property">company:</span>
-                      <span class="code-string">"{{ exp.company }}"</span>,
-                    </div>
-                    
-                    <div class="property-line">
-                      <span class="code-property">type:</span>
-                      <span class="code-string">"{{ exp.type }}"</span>,
-                    </div>
-                    
-                    <div class="property-line">
-                      <span class="code-property">period:</span>
-                      <span class="code-string">"{{ exp.period }}"</span>,
-                    </div>
-                    
-                    <div class="property-line">
-                      <span class="code-property">duration:</span>
-                      <span class="code-string">"{{ exp.duration }}"</span>,
-                    </div>
-                    
-                    <div class="property-line">
-                      <span class="code-property">description:</span>
-                      <span class="code-string">"{{ exp.description }}"</span>,
-                    </div>
-                    
-                    <div v-if="exp.metrics" class="property-line">
-                      <span class="code-property">metrics:</span>
-                      <span class="code-bracket">[</span>
-                      <div class="metrics-list">
-                        <div v-for="metric in exp.metrics" :key="metric.label" class="metric-item">
-                          <span class="code-brace">{</span>
-                          <span class="code-property">value:</span>
-                          <span class="code-string">"{{ metric.value }}"</span>,
-                          <span class="code-property">label:</span>
-                          <span class="code-string">"{{ metric.label }}"</span>
-                          <span class="code-brace">}</span>
-                          <span class="code-punctuation">,</span>
+                <div class="timeline-content">
+                  <div class="experience-card" @click="toggleDetails(exp.id)">
+                    <div class="card-header">
+                      <div class="card-icon" :style="{ backgroundColor: exp.color }">
+                        <i :class="getIconClass(exp.category)"></i>
+                      </div>
+                      <div class="card-info">
+                        <h3 class="card-title">{{ exp.title }}</h3>
+                        <div class="card-meta">
+                          <span class="card-company">{{ exp.company }}</span>
+                          <span class="card-period">{{ exp.period }}</span>
                         </div>
                       </div>
-                      <span class="code-bracket">]</span>,
-                    </div>
-                    
-                    <div class="property-line">
-                      <span class="code-property">achievements:</span>
-                      <span class="code-bracket">[</span>
-                      <div class="achievements-list">
-                        <div v-for="(achievement, idx) in exp.achievements" :key="idx" class="achievement-item">
-                          <span class="code-string">"{{ achievement }}"</span>
-                          <span class="code-punctuation">,</span>
-                        </div>
+                      <div class="card-toggle">
+                        <i :class="expandedDetails.includes(exp.id) ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
                       </div>
-                      <span class="code-bracket">]</span>,
                     </div>
                     
-                    <div class="property-line">
-                      <span class="code-property">skillCategories:</span>
-                      <span class="code-brace">{</span>
-                      <div class="nested-properties">
-                        <div v-for="(category, categoryName) in exp.skillCategories" :key="categoryName" class="property-line">
-                          <span class="code-property">{{ categoryName }}:</span>
-                          <span class="code-bracket">[</span>
-                          <span class="skill-list">
-                            <span 
-                              v-for="(skill, i) in category" 
-                              :key="i"
-                              class="skill-item"
-                            >
-                              <span class="code-string">"{{ skill }}"</span>
-                              <span v-if="i < category.length - 1" class="code-punctuation">,</span>
-                            </span>
-                          </span>
-                          <span class="code-bracket">]</span>
-                          <span class="code-punctuation">,</span>
-                        </div>
+                    <div class="card-description">
+                      <p>{{ exp.description }}</p>
+                    </div>
+                    
+                    <div v-if="exp.metrics" class="card-metrics">
+                      <div 
+                        v-for="metric in exp.metrics" 
+                        :key="metric.label"
+                        class="metric-item"
+                      >
+                        <span class="metric-value">{{ metric.value }}</span>
+                        <span class="metric-label">{{ metric.label }}</span>
                       </div>
-                      <span class="code-brace">}</span>,
-                    </div>
-                    
-                    <div v-if="exp.challenges" class="property-line">
-                      <span class="code-property">challenges:</span>
-                      <span class="code-bracket">[</span>
-                      <div class="challenges-list">
-                        <div v-for="challenge in exp.challenges" :key="challenge" class="challenge-item">
-                          <span class="code-string">"{{ challenge }}"</span>
-                          <span class="code-punctuation">,</span>
-                        </div>
-                      </div>
-                      <span class="code-bracket">]</span>,
-                    </div>
-                    
-                    <div v-if="exp.learnings" class="property-line">
-                      <span class="code-property">learnings:</span>
-                      <span class="code-bracket">[</span>
-                      <div class="learnings-list">
-                        <div v-for="learning in exp.learnings" :key="learning" class="learning-item">
-                          <span class="code-string">"{{ learning }}"</span>
-                          <span class="code-punctuation">,</span>
-                        </div>
-                      </div>
-                      <span class="code-bracket">]</span>,
-                    </div>
-                    
-                    <div v-if="exp.portfolio" class="property-line">
-                      <span class="code-property">portfolio:</span>
-                      <a :href="exp.portfolio" target="_blank" class="code-link">
-                        <span class="code-string">"{{ exp.portfolio }}"</span>
-                      </a>,
                     </div>
                   </div>
                   
-                  <div class="experience-footer">
-                    <span class="code-brace">};</span>
-                  </div>
-                </div>
-                
-                <!-- Expanded Details Toggle -->
-                <div class="terminal-prompt">
-                  <span class="prompt-symbol">$</span>
-                  <button 
-                    @click="toggleDetails(exp.id)"
-                    class="terminal-button-secondary"
+                  <!-- Expanded Details -->
+                  <div 
+                    v-if="expandedDetails.includes(exp.id)"
+                    class="expanded-details"
                   >
-                    {{ expandedDetails.includes(exp.id) ? 'collapse_details.sh' : 'expand_details.sh' }}
-                  </button>
-                </div>
-                
-                <!-- Expanded Details -->
-                <div 
-                  v-if="expandedDetails.includes(exp.id)"
-                  class="expanded-details"
-                >
-                  <div class="terminal-prompt">
-                    <span class="prompt-symbol">$</span>
-                    <span class="command">cat additional_info.txt</span>
-                  </div>
-                  
-                  <div class="detail-section" v-if="exp.challenges">
-                    <div class="detail-title">
-                      <span class="code-comment">// Challenges Overcome</span>
+                    <div class="terminal-prompt">
+                      <span class="prompt-symbol">$</span>
+                      <span class="command">cat details.txt</span>
                     </div>
-                    <div class="detail-content">
-                      <div v-for="challenge in exp.challenges" :key="challenge" class="detail-item">
-                        <span class="code-string">"{{ challenge }}"</span>
+                    
+                    <div class="details-content">
+                      <div class="detail-section">
+                        <h4>Key Achievements</h4>
+                        <ul>
+                          <li v-for="achievement in exp.achievements" :key="achievement">
+                            {{ achievement }}
+                          </li>
+                        </ul>
                       </div>
-                    </div>
-                  </div>
-                  
-                  <div class="detail-section" v-if="exp.learnings">
-                    <div class="detail-title">
-                      <span class="code-comment">// Key Learnings</span>
-                    </div>
-                    <div class="detail-content">
-                      <div v-for="learning in exp.learnings" :key="learning" class="detail-item">
-                        <span class="code-string">"{{ learning }}"</span>
+                      
+                      <div class="detail-section">
+                        <h4>Skills Applied</h4>
+                        <div class="skill-tags">
+                          <span 
+                            v-for="(category, categoryName) in exp.skillCategories" 
+                            :key="categoryName"
+                            class="skill-category"
+                          >
+                            <span class="category-name">{{ categoryName }}:</span>
+                            <div class="category-skills">
+                              <span 
+                                v-for="skill in category" 
+                                :key="skill"
+                                class="skill-tag"
+                              >
+                                {{ skill }}
+                              </span>
+                            </div>
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div v-if="exp.challenges" class="detail-section">
+                        <h4>Challenges Overcome</h4>
+                        <ul>
+                          <li v-for="challenge in exp.challenges" :key="challenge">
+                            {{ challenge }}
+                          </li>
+                        </ul>
+                      </div>
+                      
+                      <div v-if="exp.learnings" class="detail-section">
+                        <h4>Key Learnings</h4>
+                        <ul>
+                          <li v-for="learning in exp.learnings" :key="learning">
+                            {{ learning }}
+                          </li>
+                        </ul>
                       </div>
                     </div>
                   </div>
@@ -242,55 +199,152 @@
             </div>
           </div>
           
-          <!-- Stats Summary Command -->
-          <div class="stats-container">
+          <!-- Skills View -->
+          <div v-if="activeTab === 'skills'" class="skills-view">
             <div class="terminal-prompt">
               <span class="prompt-symbol">$</span>
-              <span class="command">career_stats.sh</span>
+              <span class="command">cat skills_matrix.txt</span>
             </div>
-            <div class="terminal-output">
-              <div class="stats-terminal">
-                <div class="stats-header">
-                  <span class="code-comment">// Career Statistics</span>
+            
+            <div class="skills-container">
+              <div 
+                v-for="(category, categoryName) in skillsByCategory" 
+                :key="categoryName"
+                class="skill-category-card"
+              >
+                <div class="category-header">
+                  <h3>{{ categoryName }}</h3>
+                  <span class="skill-count">{{ category.length }} skills</span>
                 </div>
-                <div class="stats-content">
-                  <div class="stat-line">
-                    <span class="code-property">totalYears:</span>
-                    <span class="code-number">{{ totalYears }}+</span>,
-                  </div>
-                  <div class="stat-line">
-                    <span class="code-property">totalProjects:</span>
-                    <span class="code-number">{{ totalProjects }}+</span>,
-                  </div>
-                  <div class="stat-line">
-                    <span class="code-property">uniqueSkills:</span>
-                    <span class="code-number">{{ uniqueSkills }}</span>,
+                
+                <div class="skills-grid">
+                  <div 
+                    v-for="skill in category" 
+                    :key="skill.name"
+                    class="skill-item"
+                    :style="{ '--level': skill.level }"
+                  >
+                    <div class="skill-name">{{ skill.name }}</div>
+                    <div class="skill-level">
+                      <div class="level-bar">
+                        <div class="level-fill"></div>
+                      </div>
+                      <span class="level-text">{{ skill.level }}%</span>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          
+          <!-- Stats View -->
+          <div v-if="activeTab === 'stats'" class="stats-view">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">./career_stats.sh</span>
+            </div>
+            
+            <div class="stats-container">
+              <div class="stats-overview">
+                <div class="stat-card">
+                  <div class="stat-icon">
+                    <i class="fas fa-briefcase"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-value">{{ totalYears }}+</span>
+                    <span class="stat-label">Years Experience</span>
+                  </div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-icon">
+                    <i class="fas fa-project-diagram"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-value">{{ totalProjects }}+</span>
+                    <span class="stat-label">Projects Completed</span>
+                  </div>
+                </div>
+                
+                <div class="stat-card">
+                  <div class="stat-icon">
+                    <i class="fas fa-code"></i>
+                  </div>
+                  <div class="stat-info">
+                    <span class="stat-value">{{ uniqueSkills }}</span>
+                    <span class="stat-label">Unique Skills</span>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="stats-chart">
+                <h3>Experience Timeline</h3>
+                <div class="timeline-chart">
+                  <div 
+                    v-for="(exp, index) in experiences" 
+                    :key="exp.id"
+                    class="chart-bar"
+                    :style="{ 
+                      height: `${exp.duration / totalYears * 100}%`,
+                      backgroundColor: exp.color,
+                      left: `${(index / experiences.length) * 100}%`,
+                      width: `${90 / experiences.length}%`
+                    }"
+                  >
+                    <div class="bar-tooltip">
+                      <div class="tooltip-title">{{ exp.title }}</div>
+                      <div class="tooltip-company">{{ exp.company }}</div>
+                      <div class="tooltip-period">{{ exp.period }}</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="stats-skills">
+                <h3>Skills Distribution</h3>
+                <div class="skills-chart">
+                  <div 
+                    v-for="(category, categoryName) in skillsByCategory" 
+                    :key="categoryName"
+                    class="skill-bar"
+                  >
+                    <div class="skill-info">
+                      <span class="skill-category-name">{{ categoryName }}</span>
+                      <span class="skill-percentage">{{ Math.round(category.length / uniqueSkills * 100) }}%</span>
+                    </div>
+                    <div class="skill-progress">
+                      <div 
+                        class="skill-progress-fill"
+                        :style="{ width: `${category.length / uniqueSkills * 100}%` }"
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Terminal Footer -->
+        <div class="terminal-footer">
+          <div class="terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command cursor">_</span>
           </div>
         </div>
       </div>
     </div>
-    
-    <!-- Terminal Cursor -->
-    <div class="terminal-cursor"></div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed } from 'vue';
 
-// Icons (you can replace with actual icon components)
-const BriefcaseIcon = 'div'
-const CodeIcon = 'div'
-const GraduationCapIcon = 'div'
+const activeTab = ref('timeline');
+const activeFilter = ref('All');
+const expandedDetails = ref([]);
 
-const activeFilter = ref('All')
-const expandedDetails = ref([])
-
-const filters = ['All', 'Development', 'Management', 'Internship']
+const filters = ['All', 'Development', 'Management', 'Internship'];
 
 const experiences = [
   {
@@ -299,10 +353,9 @@ const experiences = [
     company: 'Nyakazi Organics',
     type: 'Full-time',
     period: '2024 - Present',
-    duration: '1+ years',
-    category: 'development',
+    duration: 1,
+    category: 'Development',
     color: '#3b82f6',
-    icon: BriefcaseIcon,
     description: 'Led digital transformation initiatives for an organic food company, overseeing all digital solutions from branding to systems development.',
     metrics: [
       { value: '150%', label: 'Sales Increase' },
@@ -340,10 +393,9 @@ const experiences = [
     company: 'Desiderata Consultancy',
     type: 'Full-time',
     period: '2023 - 2024',
-    duration: '1 year',
+    duration: 1,
     category: 'Development',
     color: '#06d6a0',
-    icon: CodeIcon,
     description: 'Built solutions for diverse client needs across multiple industries with a focus on web applications and data visualization.',
     metrics: [
       { value: '15+', label: 'Projects' },
@@ -380,10 +432,9 @@ const experiences = [
     company: 'Techlungs Technology',
     type: 'Full-time',
     period: '2022 - 2023',
-    duration: '1 year',
+    duration: 1,
     category: 'Development',
     color: '#f72585',
-    icon: CodeIcon,
     description: 'Specialized in creating engaging frontend experiences for SaaS products and high-conversion marketing sites.',
     metrics: [
       { value: '20+', label: 'Landing Pages' },
@@ -420,10 +471,9 @@ const experiences = [
     company: 'KNLS & Immigration Department',
     type: 'Internship',
     period: '2021 - 2022',
-    duration: '1 year',
+    duration: 1,
     category: 'Internship',
     color: '#fb8500',
-    icon: GraduationCapIcon,
     description: 'Gained foundational IT experience across two government departments, working with diverse technology stacks and systems.',
     metrics: [
       { value: '15+', label: 'Hours Saved Weekly' },
@@ -454,50 +504,95 @@ const experiences = [
       'Effective communication with non-technical users'
     ]
   }
-]
+];
 
 const filteredExperiences = computed(() => {
-  if (activeFilter.value === 'All') return experiences
-  return experiences.filter(exp => exp.category === activeFilter.value)
-})
+  if (activeFilter.value === 'All') return experiences;
+  return experiences.filter(exp => exp.category === activeFilter.value);
+});
 
 const totalYears = computed(() => {
-  return new Date().getFullYear() - 2021
-})
+  return new Date().getFullYear() - 2021;
+});
 
 const totalProjects = computed(() => {
   return experiences.reduce((total, exp) => {
-    const projectCount = exp.metrics?.find(m => m.label.includes('Project'))?.value
-    return total + (projectCount ? parseInt(projectCount) : 5)
-  }, 0)
-})
+    const projectCount = exp.metrics?.find(m => m.label.includes('Project'))?.value;
+    return total + (projectCount ? parseInt(projectCount) : 5);
+  }, 0);
+});
 
 const uniqueSkills = computed(() => {
-  const allSkills = new Set()
+  const allSkills = new Set();
   experiences.forEach(exp => {
     Object.values(exp.skillCategories).forEach(category => {
-      category.forEach(skill => allSkills.add(skill))
-    })
-  })
-  return allSkills.size
-})
+      category.forEach(skill => allSkills.add(skill));
+    });
+  });
+  return allSkills.size;
+});
+
+const skillsByCategory = computed(() => {
+  const skills = {};
+  
+  experiences.forEach(exp => {
+    Object.entries(exp.skillCategories).forEach(([categoryName, categorySkills]) => {
+      if (!skills[categoryName]) {
+        skills[categoryName] = [];
+      }
+      
+      categorySkills.forEach(skill => {
+        const existingSkill = skills[categoryName].find(s => s.name === skill);
+        if (existingSkill) {
+          existingSkill.frequency++;
+          existingSkill.level = Math.min(100, existingSkill.level + 10);
+        } else {
+          skills[categoryName].push({
+            name: skill,
+            frequency: 1,
+            level: 50 + Math.floor(Math.random() * 40)
+          });
+        }
+      });
+    });
+  });
+  
+  // Sort skills by frequency and then by level
+  Object.keys(skills).forEach(category => {
+    skills[category].sort((a, b) => {
+      if (a.frequency !== b.frequency) return b.frequency - a.frequency;
+      return b.level - a.level;
+    });
+  });
+  
+  return skills;
+});
 
 const setActiveFilter = (filter) => {
-  activeFilter.value = filter
-}
+  activeFilter.value = filter;
+};
 
 const toggleDetails = (id) => {
-  const index = expandedDetails.value.indexOf(id)
+  const index = expandedDetails.value.indexOf(id);
   if (index > -1) {
-    expandedDetails.value.splice(index, 1)
+    expandedDetails.value.splice(index, 1);
   } else {
-    expandedDetails.value.push(id)
+    expandedDetails.value.push(id);
   }
-}
+};
+
+const getIconClass = (category) => {
+  switch (category) {
+    case 'Development': return 'fas fa-code';
+    case 'Management': return 'fas fa-briefcase';
+    case 'Internship': return 'fas fa-graduation-cap';
+    default: return 'fas fa-briefcase';
+  }
+};
 </script>
 
-<style scoped>
-/* Import base styles from hero section */
+<style>
+/* Terminal Theme Variables */
 :root {
   --bg-color: #ffffff;
   --text-color: #1a202c;
@@ -541,30 +636,30 @@ const toggleDetails = (id) => {
   --terminal-parameter: #ffa657;
   --terminal-line-number: #30363d;
 }
+</style>
 
-/* Experience Section */
+<style scoped>
+/* Base Section Styles */
 .experience-section {
   position: relative;
-  min-height: 100vh;
-  min-width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  font-family: 'Fira Code', 'Courier New', monospace;
-  margin-top: 0rem;
-  margin-left: -2rem;
-  padding: 2rem;
+  padding: 4rem 2rem;
   background-color: var(--bg-color);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  color: var(--text-color);
+  width: 100vw;
+  width: calc(95% + 2rem);
+  margin-left: -2rem;
+  overflow: hidden;
 }
 
-/* Experience Terminal */
-.experience-terminal {
-  width: 100%;
+/* Terminal Container */
+.terminal-container {
   max-width: 1400px;
+  margin: 0 auto;
+  background-color: var(--terminal-bg);
   border-radius: 8px;
-  width: calc(90% - 0.9rem);
   overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   animation: slideUp 0.8s ease-out;
 }
 
@@ -608,15 +703,80 @@ const toggleDetails = (id) => {
 
 /* Terminal Body */
 .terminal-body {
-  padding: 1.5rem;
-  color: var(--terminal-text);
+  padding: 0;
 }
 
-.terminal-prompt {
-  margin-bottom: 1rem;
+/* System Info */
+.system-info {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--terminal-header);
+}
+
+.info-line {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.info-text {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+.info-value {
+  color: var(--terminal-string);
+  font-weight: bold;
+}
+
+/* Terminal Tabs */
+.terminal-tabs {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--terminal-header);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab.active {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: var(--accent-color);
+}
+
+.tab-icon {
+  font-size: 1rem;
+}
+
+.tab-text {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+.tab.active .tab-text {
+  color: var(--terminal-text);
+}
+
+/* Terminal Prompt */
+.terminal-prompt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 0;
 }
 
 .prompt-symbol {
@@ -628,21 +788,26 @@ const toggleDetails = (id) => {
   color: var(--terminal-text);
 }
 
-.terminal-output {
-  margin-bottom: 1.5rem;
+.cursor {
+  color: var(--terminal-prompt);
+  animation: blink 1s infinite;
 }
 
-/* Filter Container */
-.filter-container {
-  margin-bottom: 1.5rem;
+/* Filter Options */
+.filter-input {
+  display: flex;
+  align-items: center;
+}
+
+.filter-value {
+  color: var(--terminal-string);
 }
 
 .filter-options {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: 0.5rem;
-  margin-left: 1.5rem;
+  padding: 0 1.5rem 1rem;
 }
 
 .filter-option {
@@ -665,260 +830,463 @@ const toggleDetails = (id) => {
   border-color: var(--accent-color);
 }
 
-/* Experience Timeline */
-.experience-timeline {
+/* Tab Content */
+.tab-content {
+  padding: 1.5rem;
+  min-height: 500px;
+}
+
+/* Timeline View */
+.timeline-container {
   position: relative;
-  padding: 1rem 0;
+  margin-top: 1rem;
 }
 
 .timeline-item {
-  position: relative;
-  padding-bottom: 3rem;
   display: flex;
-  align-items: flex-start;
-}
-
-.timeline-marker {
-  position: relative;
-  width: 60px;
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-}
-
-.marker-dot {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--accent);
-  border: 4px solid var(--terminal-bg);
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-.marker-icon {
-  width: 16px;
-  height: 16px;
-  color: white;
-}
-
-.marker-line {
-  position: absolute;
-  left: 50%;
-  top: 32px;
-  bottom: -2rem;
-  width: 2px;
-  background: var(--terminal-header);
-  transform: translateX(-50%);
-}
-
-/* Experience Terminal Card */
-.experience-terminal-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  border-left: 4px solid var(--accent-color);
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  margin-left: 1rem;
+  margin-bottom: 2rem;
   animation: fadeIn 0.5s ease-out var(--delay) both;
-  flex: 1;
 }
 
-.experience-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
+.timeline-date {
+  width: 120px;
+  flex-shrink: 0;
+  padding-right: 1rem;
+  text-align: right;
+  position: relative;
 }
 
-.experience-number, .experience-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.experience-status.Development .code-string {
-  color: #06d6a0;
-}
-
-.experience-status.Management .code-string {
-  color: #3b82f6;
-}
-
-.experience-status.Internship .code-string {
-  color: #fb8500;
-}
-
-/* Experience Content */
-.experience-content {
-  margin-bottom: 1rem;
-}
-
-.experience-title-line {
+.date-year {
+  display: block;
+  color: var(--accent-color);
+  font-weight: bold;
   margin-bottom: 0.5rem;
 }
 
-.experience-properties {
-  margin-left: 1rem;
+.date-line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 2px;
+  height: 100%;
+  background-color: var(--terminal-header);
 }
 
-.property-line {
-  margin-bottom: 0.25rem;
+.timeline-content {
+  flex: 1;
+  padding-left: 2rem;
+  position: relative;
 }
 
-.nested-properties {
-  margin-left: 1rem;
+.timeline-content::before {
+  content: '';
+  position: absolute;
+  left: -6px;
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  border: 2px solid var(--terminal-bg);
 }
 
-.experience-footer {
-  margin-top: 0.5rem;
+.experience-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-/* Lists */
-.metrics-list, .achievements-list, .challenges-list, .learnings-list {
-  margin-left: 1rem;
+.experience-card:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
 }
 
-.metric-item, .achievement-item, .challenge-item, .learning-item {
-  margin-bottom: 0.25rem;
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
 }
 
-/* Skill List */
-.skill-list {
+.card-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.card-info {
+  flex: 1;
+}
+
+.card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  color: var(--terminal-text);
+}
+
+.card-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.25rem;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--terminal-comment);
 }
 
-.skill-item {
-  display: inline-block;
+.card-toggle {
+  color: var(--terminal-comment);
+  transition: color 0.3s ease;
+}
+
+.experience-card:hover .card-toggle {
+  color: var(--accent-color);
+}
+
+.card-description {
+  margin-bottom: 1rem;
+  color: var(--terminal-comment);
+}
+
+.card-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.metric-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.metric-value {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--accent-color);
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: var(--terminal-comment);
 }
 
 /* Expanded Details */
 .expanded-details {
-  margin-top: 1rem;
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1rem;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  animation: slideDown 0.3s ease-out;
 }
 
 .detail-section {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.detail-title {
+.detail-section:last-child {
+  margin-bottom: 0;
+}
+
+.detail-section h4 {
+  margin: 0 0 1rem 0;
+  color: var(--accent-color);
+}
+
+.detail-section ul {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: var(--terminal-comment);
+}
+
+.detail-section li {
   margin-bottom: 0.5rem;
 }
 
-.detail-content {
+.skill-tags {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skill-category {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.category-name {
+  color: var(--terminal-property);
+  font-weight: bold;
+}
+
+.category-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin-left: 1rem;
 }
 
-.detail-item {
-  margin-bottom: 0.25rem;
+.skill-tag {
+  background-color: rgba(88, 166, 255, 0.2);
+  color: var(--accent-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
 }
 
-/* Stats Container */
-.stats-container {
-  margin-top: 2rem;
+/* Skills View */
+.skills-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
 }
 
-.stats-terminal {
+.skill-category-card {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  border-left: 4px solid var(--accent-color);
-  padding: 1rem;
+  border-radius: 8px;
+  padding: 1.5rem;
 }
 
-.stats-header {
+.category-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
 }
 
-.stats-content {
-  margin-left: 1rem;
+.category-header h3 {
+  margin: 0;
+  color: var(--accent-color);
 }
 
-.stat-line {
-  margin-bottom: 0.25rem;
+.skill-count {
+  font-size: 0.9rem;
+  color: var(--terminal-comment);
 }
 
-/* Terminal Buttons */
-.terminal-button-primary, .terminal-button-secondary {
-  display: inline-flex;
+.skills-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skill-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skill-name {
+  font-weight: bold;
+  color: var(--terminal-text);
+}
+
+.skill-level {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-family: 'Fira Code', 'Courier New', monospace;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
 }
 
-.terminal-button-primary {
+.level-bar {
+  flex: 1;
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.level-fill {
+  height: 100%;
+  width: var(--level);
   background-color: var(--accent-color);
+}
+
+.level-text {
+  font-size: 0.8rem;
+  color: var(--terminal-comment);
+  min-width: 40px;
+  text-align: right;
+}
+
+/* Stats View */
+.stats-container {
+  margin-top: 1rem;
+}
+
+.stats-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: var(--accent-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
 }
 
-.terminal-button-primary:hover {
-  background-color: var(--accent-hover);
+.stat-info {
+  display: flex;
+  flex-direction: column;
 }
 
-.terminal-button-secondary {
-  background-color: transparent;
-  color: var(--terminal-text);
-  border: 1px solid var(--terminal-text);
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--accent-color);
 }
 
-.terminal-button-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--terminal-comment);
 }
 
-/* Code Syntax Highlighting */
-.code-keyword { color: var(--terminal-keyword); }
-.code-string { color: var(--terminal-string); }
-.code-comment { color: var(--terminal-comment); }
-.code-function { color: var(--terminal-function); }
-.code-variable { color: var(--terminal-variable); }
-.code-property { color: var(--terminal-property); }
-.code-boolean { color: var(--terminal-boolean); }
-.code-class { color: var(--terminal-class); }
-.code-parameter { color: var(--terminal-parameter); }
-.code-number { color: var(--terminal-boolean); }
-.code-operator { color: var(--terminal-text); }
-.code-brace { color: var(--terminal-text); }
-.code-bracket { color: var(--terminal-text); }
-.code-punctuation { color: var(--terminal-text); }
-.code-link {
-  color: var(--terminal-string);
-  text-decoration: underline;
+.stats-chart {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* Terminal Cursor */
-.terminal-cursor {
+.stats-chart h3 {
+  margin: 0 0 1rem 0;
+  color: var(--accent-color);
+}
+
+.timeline-chart {
+  position: relative;
+  height: 200px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.chart-bar {
   position: absolute;
-  bottom: 2rem;
-  left: 2rem;
-  width: 10px;
-  height: 20px;
-  background-color: var(--terminal-prompt);
-  animation: blink 1s infinite;
+  bottom: 0;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+}
+
+.chart-bar:hover {
+  opacity: 0.8;
+}
+
+.bar-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--terminal-bg);
+  border: 1px solid var(--terminal-header);
+  border-radius: 4px;
+  padding: 0.5rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.chart-bar:hover .bar-tooltip {
+  opacity: 1;
+}
+
+.tooltip-title {
+  font-weight: bold;
+  color: var(--terminal-text);
+}
+
+.tooltip-company {
+  font-size: 0.9rem;
+  color: var(--terminal-comment);
+}
+
+.tooltip-period {
+  font-size: 0.8rem;
+  color: var(--terminal-comment);
+}
+
+.stats-skills {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.stats-skills h3 {
+  margin: 0 0 1rem 0;
+  color: var(--accent-color);
+}
+
+.skills-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skill-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.skill-info {
+  display: flex;
+  justify-content: space-between;
+}
+
+.skill-category-name {
+  color: var(--terminal-text);
+}
+
+.skill-percentage {
+  color: var(--accent-color);
+}
+
+.skill-progress {
+  height: 8px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.skill-progress-fill {
+  height: 100%;
+  background-color: var(--accent-color);
+}
+
+/* Terminal Footer */
+.terminal-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--terminal-header);
 }
 
 /* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -930,70 +1298,127 @@ const toggleDetails = (id) => {
   }
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 1000px;
+  }
+}
+
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* Responsive Design */
 @media (max-width: 992px) {
   .timeline-item {
     flex-direction: column;
   }
   
-  .timeline-marker {
-    display: none;
+  .timeline-date {
+    width: 100%;
+    text-align: left;
+    padding-right: 0;
+    padding-bottom: 0.5rem;
   }
   
-  .experience-terminal-card {
-    margin-left: 0;
+  .date-line {
+    top: auto;
+    bottom: 0;
+    right: auto;
+    left: 0;
+    width: 100%;
+    height: 2px;
+  }
+  
+  .timeline-content {
+    padding-left: 0;
+    padding-top: 1rem;
+  }
+  
+  .timeline-content::before {
+    display: none;
   }
 }
 
 @media (max-width: 768px) {
   .experience-section {
+    padding: 3rem 1rem;
+  }
+  
+  .terminal-container {
+    margin: 0 1rem;
+  }
+  
+  .tab-content {
     padding: 1rem;
-     margin-right: -1rem;
   }
   
-  .terminal-body {
-    padding: 1rem;
+  .system-info {
+    flex-direction: column;
+    gap: 0.5rem;
   }
   
-  .experience-terminal-card {
-    padding: 0.75rem;
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
   }
   
-  .filter-options {
-    gap: 0.25rem;
+  .card-meta {
+    flex-direction: column;
+    gap: 0.5rem;
   }
   
-  .filter-option {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
+  .card-metrics {
+    flex-direction: column;
+  }
+  
+  .stats-overview {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (max-width: 480px) {
   .experience-section {
-    padding: 0rem;
-    margin-right: -1rem;
-  }
-  .experience-terminal {
-    margin-left: 2rem;
+    padding: 2rem 0.5rem;
   }
   
-  .terminal-body {
-    padding: 0.75rem;
+  .terminal-container {
+    margin: 0 0.5rem;
   }
   
-  .experience-terminal-card {
-    padding: 0.5rem;
+  .tab-content {
+    padding: 0.8rem;
   }
   
-  .filter-options {
-    flex-direction: column;
-    gap: 0.25rem;
+  .experience-card {
+    padding: 1rem;
   }
   
-  .filter-option {
-    padding: 0.25rem 0.5rem;
-    font-size: 0.8rem;
+  .expanded-details {
+    padding: 1rem;
+  }
+  
+  .skill-category-card {
+    padding: 1rem;
+  }
+  
+  .stat-card {
+    padding: 1rem;
+  }
+  
+  .stats-chart, .stats-skills {
+    padding: 1rem;
   }
 }
 </style>

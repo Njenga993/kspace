@@ -1,6 +1,5 @@
 <template>
-  <footer class="hero-section terminal-footer">
-    <!-- Terminal Window Container -->
+  <footer id="footer" class="footer-section">
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
@@ -9,115 +8,194 @@
           <div class="terminal-button minimize"></div>
           <div class="terminal-button maximize"></div>
         </div>
-        <div class="terminal-title">footer@portfolio:~</div>
+        <div class="terminal-title">system@portfolio:~# ./footer.sh</div>
       </div>
       
       <!-- Terminal Body -->
       <div class="terminal-body">
-        <!-- About Command -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">cat about.txt</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="about-section">
-            <div class="profile-container">
-              <img src="/profile.JPG" alt="Kelvin Kamau" class="profile-img" />
-              <div class="status-indicator online"></div>
-            </div>
-            <div class="profile-info">
-              <h3 class="profile-name">Kelvin Kamau</h3>
-              <p class="profile-title">Full Stack Developer & UI Engineer</p>
-              <p class="profile-description">Creating digital experiences that matter.</p>
-            </div>
+        <!-- System Status -->
+        <div class="system-status">
+          <div class="status-line">
+            <span class="status-text">System Status:</span>
+            <span class="status-value online">Online</span>
+          </div>
+          <div class="status-line">
+            <span class="status-text">Uptime:</span>
+            <span class="status-value">{{ uptime }}</span>
+          </div>
+          <div class="status-line">
+            <span class="status-text">Version:</span>
+            <span class="status-value">v2.0.24</span>
           </div>
         </div>
         
-        <!-- Navigation Command -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">ls -la</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="nav-list">
-            <div class="nav-item" v-for="link in navLinks" :key="link.id">
-              <span class="file-icon">📁</span>
-              <a :href="`#${link.id}`" class="file-link">
-                {{ link.text }}
-              </a>
-            </div>
+        <!-- Terminal Tabs -->
+        <div class="terminal-tabs">
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'about' }" 
+            @click="activeTab = 'about'"
+          >
+            <span class="tab-icon">ℹ️</span>
+            <span class="tab-text">about</span>
+          </div>
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'navigation' }" 
+            @click="activeTab = 'navigation'"
+          >
+            <span class="tab-icon">🧭</span>
+            <span class="tab-text">navigation</span>
+          </div>
+          <div 
+            class="tab" 
+            :class="{ active: activeTab === 'connect' }" 
+            @click="activeTab = 'connect'"
+          >
+            <span class="tab-icon">🔗</span>
+            <span class="tab-text">connect</span>
           </div>
         </div>
         
-        <!-- Contact Command -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">cat contact.json</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="contact-section">
-            <div class="contact-item">
-              <span class="contact-key">"email":</span>
-              <a href="mailto:njengak993@gmail.com" class="contact-value">
-                "njengak993@gmail.com"
-              </a>
+        <!-- Tab Content -->
+        <div class="tab-content">
+          <!-- About Tab -->
+          <div v-if="activeTab === 'about'" class="about-tab">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">cat profile.json</span>
             </div>
-            <div class="contact-item">
-              <span class="contact-key">"location":</span>
-              <span class="contact-value">"Nairobi, Kenya"</span>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Social Command -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">git remote -v</span>
-        </div>
-        
-        <div class="terminal-output">
-          <div class="social-links">
-            <a 
-              v-for="social in socialLinks" 
-              :key="social.id"
-              :href="social.url" 
-              target="_blank" 
-              :aria-label="social.name"
-              class="social-link"
-            >
-              <div class="social-icon">
-                <i :class="social.icon"></i>
+            
+            <div class="terminal-output">
+              <div class="profile-card">
+                <div class="profile-header">
+                  <div class="avatar-container">
+                    <img src="/profile.JPG" alt="Kelvin Kamau" class="avatar" />
+                    <div class="status-indicator online"></div>
+                  </div>
+                  <div class="profile-info">
+                    <h2 class="profile-name">Kelvin Kamau</h2>
+                    <div class="profile-tags">
+                      <span class="tag">Full Stack Developer</span>
+                      <span class="tag">UI/UX Engineer</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="profile-stats">
+                  <div class="stat-item">
+                    <span class="stat-number">5+</span>
+                    <span class="stat-label">Years Experience</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">Projects Completed</span>
+                  </div>
+                  <div class="stat-item">
+                    <span class="stat-number">100%</span>
+                    <span class="stat-label">Client Satisfaction</span>
+                  </div>
+                </div>
               </div>
-              <span class="social-name">{{ social.name }}</span>
-            </a>
+            </div>
+          </div>
+          
+          <!-- Navigation Tab -->
+          <div v-if="activeTab === 'navigation'" class="navigation-tab">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">ls -la /navigation/</span>
+            </div>
+            
+            <div class="terminal-output">
+              <div class="nav-grid">
+                <a 
+                  v-for="link in navLinks" 
+                  :key="link.id"
+                  :href="`#${link.id}`" 
+                  class="nav-item"
+                  @click="scrollToSection(link.id)"
+                >
+                  <div class="nav-icon">
+                    <i :class="link.icon"></i>
+                  </div>
+                  <div class="nav-info">
+                    <h3 class="nav-title">{{ link.text }}</h3>
+                    <p class="nav-description">{{ link.description }}</p>
+                  </div>
+                  <div class="nav-arrow">
+                    <i class="fas fa-arrow-right"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Connect Tab -->
+          <div v-if="activeTab === 'connect'" class="connect-tab">
+            <div class="terminal-prompt">
+              <span class="prompt-symbol">$</span>
+              <span class="command">git remote -v</span>
+            </div>
+            
+            <div class="terminal-output">
+              <div class="connect-grid">
+                <div class="connect-item">
+                  <h3 class="connect-title">Contact Information</h3>
+                  <div class="contact-list">
+                    <div class="contact-item">
+                      <span class="contact-icon">📧</span>
+                      <a href="mailto:njengak993@gmail.com" class="contact-value">
+                        njengak993@gmail.com
+                      </a>
+                    </div>
+                    <div class="contact-item">
+                      <span class="contact-icon">📍</span>
+                      <span class="contact-value">Nairobi, Kenya</span>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="connect-item">
+                  <h3 class="connect-title">Social Networks</h3>
+                  <div class="social-grid">
+                    <a 
+                      v-for="social in socialLinks" 
+                      :key="social.id"
+                      :href="social.url" 
+                      target="_blank" 
+                      :aria-label="social.name"
+                      class="social-link"
+                    >
+                      <div class="social-icon">
+                        <i :class="social.icon"></i>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
-        <!-- Terminal Cursor -->
+        <!-- Terminal Footer -->
+        <div class="terminal-footer">
+          <div class="footer-info">
+            <span class="copyright">© {{ new Date().getFullYear() }} Kelvin Kamau</span>
+            <span class="separator">|</span>
+            <span class="build-info">Build: v2.0.24</span>
+          </div>
+          <div class="footer-links">
+            <a href="#" class="footer-link">Privacy</a>
+            <span class="separator">|</span>
+            <a href="#" class="footer-link">Terms</a>
+          </div>
+        </div>
+        
+        <!-- Terminal Prompt -->
         <div class="terminal-prompt">
           <span class="prompt-symbol">$</span>
           <span class="command cursor">_</span>
-        </div>
-      </div>
-      
-      <!-- Terminal Bottom Bar -->
-      <div class="terminal-bottom">
-        <div class="status-info">
-          <span class="status-item">
-            <span class="status-indicator online"></span>
-            <span>Connected</span>
-          </span>
-          <span class="status-item">
-            <span>© {{ new Date().getFullYear() }} Kelvin Njenga Kamau</span>
-          </span>
-        </div>
-        <div class="terminal-actions">
-          <a href="#" class="terminal-link">Privacy</a>
-          <span class="separator">•</span>
-          <a href="#" class="terminal-link">Terms</a>
         </div>
       </div>
     </div>
@@ -135,14 +213,43 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue';
+
+const activeTab = ref('about');
+const uptime = ref('0d 0h 0m 0s');
+const showBackToTop = ref(false);
 
 const navLinks = [
-  { id: 'about', text: 'About' },
-  { id: 'skills', text: 'Skills' },
-  { id: 'experience', text: 'Experience' },
-  { id: 'projects', text: 'Projects' },
-  { id: 'contact', text: 'Contact' }
+  { 
+    id: 'about', 
+    text: 'About', 
+    icon: 'fas fa-user',
+    description: 'Learn more about my background and skills'
+  },
+  { 
+    id: 'skills', 
+    text: 'Skills', 
+    icon: 'fas fa-code',
+    description: 'Explore my technical expertise and technologies'
+  },
+  { 
+    id: 'experience', 
+    text: 'Experience', 
+    icon: 'fas fa-briefcase',
+    description: 'View my professional journey and achievements'
+  },
+  { 
+    id: 'projects', 
+    text: 'Projects', 
+    icon: 'fas fa-folder-open',
+    description: 'Check out my portfolio of work'
+  },
+  { 
+    id: 'contact', 
+    text: 'Contact', 
+    icon: 'fas fa-envelope',
+    description: 'Get in touch with me for opportunities'
+  }
 ];
 
 const socialLinks = [
@@ -152,7 +259,18 @@ const socialLinks = [
   { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
 ];
 
-const showBackToTop = ref(false);
+let startTime = Date.now();
+let uptimeInterval;
+
+const updateUptime = () => {
+  const elapsed = Date.now() - startTime;
+  const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
+  
+  uptime.value = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+};
 
 const checkScroll = () => {
   showBackToTop.value = window.scrollY > 300;
@@ -162,23 +280,26 @@ const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-const scrollTo = (section) => {
-  const el = document.getElementById(section);
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth' });
+const scrollToSection = (sectionId) => {
+  const element = document.getElementById(sectionId);
+  if (element) {
+    element.scrollIntoView({ behavior: 'smooth' });
   }
 };
 
 onMounted(() => {
   window.addEventListener('scroll', checkScroll);
+  uptimeInterval = setInterval(updateUptime, 1000);
+  updateUptime();
 });
 
 onUnmounted(() => {
   window.removeEventListener('scroll', checkScroll);
+  clearInterval(uptimeInterval);
 });
 </script>
 
-<style scoped>
+<style>
 /* Terminal Theme Variables */
 :root {
   --bg-color: #ffffff;
@@ -200,6 +321,7 @@ onUnmounted(() => {
   --terminal-class: #4ec9b0;
   --terminal-parameter: #ffa657;
   --terminal-line-number: #858585;
+  --success-color: #3fb950;
 }
 
 .dark-theme {
@@ -223,28 +345,25 @@ onUnmounted(() => {
   --terminal-parameter: #ffa657;
   --terminal-line-number: #30363d;
 }
+</style>
 
+<style scoped>
 /* Base Footer Styles */
-.terminal-footer {
+.footer-section {
   position: relative;
-  min-height: 100vh;
-  width: calc(100% - 0.7rem);
-  min-width: 100vw;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  font-family: 'Fira Code', 'Courier New', monospace;
-  margin-bottom: -2rem;
-  margin-left: -2.5rem;
-  margin-top: 2rem;
-  padding: 2rem;
+  padding: 4rem 2rem 2rem;
   background-color: var(--bg-color);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  color: var(--text-color);
+  width: 100vw;
+  margin-left: -2rem;
+  margin-bottom: -2rem;
+  overflow: hidden;
 }
 
 /* Terminal Container */
 .terminal-container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   background-color: var(--terminal-bg);
   border-radius: 8px;
@@ -293,8 +412,81 @@ onUnmounted(() => {
 
 /* Terminal Body */
 .terminal-body {
-  padding: 1.5rem;
+  padding: 0;
+}
+
+/* System Status */
+.system-status {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--terminal-header);
+}
+
+.status-line {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-text {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+.status-value {
+  color: var(--terminal-string);
+  font-weight: bold;
+}
+
+.status-value.online {
+  color: var(--success-color);
+}
+
+/* Terminal Tabs */
+.terminal-tabs {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid var(--terminal-header);
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.tab:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.tab.active {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-bottom-color: var(--accent-color);
+}
+
+.tab-icon {
+  font-size: 1rem;
+}
+
+.tab-text {
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+.tab.active .tab-text {
   color: var(--terminal-text);
+}
+
+/* Tab Content */
+.tab-content {
+  padding: 1.5rem;
+  min-height: 300px;
 }
 
 .terminal-prompt {
@@ -320,22 +512,66 @@ onUnmounted(() => {
 
 .terminal-output {
   margin-bottom: 1.5rem;
-  padding-left: 1.5rem;
 }
 
-/* About Section */
-.about-section {
+.terminal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background-color: var(--terminal-header);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--terminal-comment);
+  font-size: 0.9rem;
+}
+
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer-link {
+  color: var(--terminal-string);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-color);
+}
+
+.separator {
+  color: var(--terminal-comment);
+  opacity: 0.7;
+}
+
+/* Profile Card */
+.profile-card {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.profile-header {
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
-.profile-container {
+.avatar-container {
   position: relative;
 }
 
-.profile-img {
+.avatar {
   width: 80px;
   height: 80px;
   border-radius: 50%;
@@ -343,14 +579,14 @@ onUnmounted(() => {
   border: 2px solid var(--accent-color);
 }
 
-.status-indicator {
+.status-indicator.online {
   position: absolute;
   bottom: 5px;
   right: 5px;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: #3fb950;
+  background-color: var(--success-color);
   border: 2px solid var(--terminal-bg);
 }
 
@@ -362,85 +598,153 @@ onUnmounted(() => {
   font-size: 1.5rem;
   font-weight: bold;
   margin: 0 0 0.5rem 0;
+  color: var(--terminal-text);
+}
+
+.profile-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tag {
+  background-color: rgba(88, 166, 255, 0.2);
+  color: var(--accent-color);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.profile-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: bold;
   color: var(--accent-color);
 }
 
-.profile-title {
-  font-size: 1.1rem;
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-function);
-}
-
-.profile-description {
-  font-size: 1rem;
-  margin: 0;
+.stat-label {
+  font-size: 0.9rem;
   color: var(--terminal-comment);
-  font-style: italic;
 }
 
-/* Navigation */
-.nav-list {
+/* Navigation Grid */
+.nav-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1rem;
-  margin-bottom: 2rem;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
+  gap: 1rem;
+  padding: 1rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  border-left: 4px solid var(--accent-color);
+  text-decoration: none;
   transition: all 0.3s ease;
+  border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  border-left-color: var(--accent-color);
 }
 
-.file-icon {
-  font-size: 1.2rem;
+.nav-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--terminal-header);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--accent-color);
 }
 
-.file-link {
-  color: var(--terminal-string);
-  text-decoration: none;
-  transition: color 0.3s ease;
+.nav-info {
+  flex: 1;
 }
 
-.file-link:hover {
+.nav-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+  color: var(--terminal-text);
+}
+
+.nav-description {
+  font-size: 0.8rem;
+  margin: 0;
+  color: var(--terminal-comment);
+}
+
+.nav-arrow {
+  color: var(--terminal-comment);
+  transition: all 0.3s ease;
+}
+
+.nav-item:hover .nav-arrow {
   color: var(--accent-color);
+  transform: translateX(3px);
 }
 
-/* Contact Section */
-.contact-section {
+/* Connect Grid */
+.connect-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.connect-item {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+  border-left: 4px solid var(--accent-color);
+}
+
+.connect-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin: 0 0 1rem 0;
+  color: var(--terminal-text);
+}
+
+.contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .contact-item {
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  border-left: 4px solid var(--accent-color);
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.contact-key {
-  color: var(--terminal-property);
+.contact-icon {
+  font-size: 1.2rem;
 }
 
 .contact-value {
   color: var(--terminal-string);
+  text-decoration: none;
   transition: color 0.3s ease;
 }
 
@@ -448,28 +752,12 @@ onUnmounted(() => {
   color: var(--accent-color);
 }
 
-/* Social Links */
-.social-links {
+.social-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: 1rem;
 }
 
 .social-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  transition: transform 0.3s ease;
-}
-
-.social-link:hover {
-  transform: translateY(-5px);
-}
-
-.social-icon {
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -478,62 +766,14 @@ onUnmounted(() => {
   align-items: center;
   justify-content: center;
   color: var(--terminal-text);
+  text-decoration: none;
   transition: all 0.3s ease;
 }
 
-.social-link:hover .social-icon {
+.social-link:hover {
   background-color: var(--accent-color);
   color: white;
-}
-
-.social-name {
-  color: var(--terminal-comment);
-  font-size: 0.9rem;
-}
-
-/* Terminal Bottom Bar */
-.terminal-bottom {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.status-info {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--terminal-comment);
-  font-size: 0.9rem;
-}
-
-.terminal-actions {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.terminal-link {
-  color: var(--terminal-string);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.terminal-link:hover {
-  color: var(--accent-color);
-}
-
-.separator {
-  color: var(--terminal-text);
-  opacity: 0.5;
+  transform: translateY(-3px);
 }
 
 /* Back to Top Button */
@@ -566,7 +806,7 @@ onUnmounted(() => {
 .back-to-top:hover {
   background-color: var(--accent-hover);
   transform: translateY(-3px);
-  box-shadow:  0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 /* Animations */
@@ -587,13 +827,13 @@ onUnmounted(() => {
 }
 
 /* Responsive Design */
-/* Large Desktop (1200px and up) */
-@media (min-width: 1200px) {
+/* Extra Large Desktop (1400px and up) */
+@media (min-width: 1400px) {
   .terminal-container {
-    max-width: 1200px;
+    max-width: 1300px;
   }
   
-  .profile-img {
+  .avatar {
     width: 90px;
     height: 90px;
   }
@@ -601,13 +841,21 @@ onUnmounted(() => {
   .profile-name {
     font-size: 1.7rem;
   }
-  
-  .profile-title {
-    font-size: 1.2rem;
+}
+
+/* Large Desktop (1200px to 1399px) */
+@media (min-width: 1200px) and (max-width: 1399px) {
+  .terminal-container {
+    max-width: 1200px;
   }
   
-  .profile-description {
-    font-size: 1.1rem;
+  .avatar {
+    width: 85px;
+    height: 85px;
+  }
+  
+  .profile-name {
+    font-size: 1.6rem;
   }
 }
 
@@ -617,103 +865,86 @@ onUnmounted(() => {
     max-width: 1100px;
   }
   
-  .profile-img {
-    width: 85px;
-    height: 85px;
+  .tab-content {
+    padding: 1.2rem;
+  }
+  
+  .avatar {
+    width: 75px;
+    height: 75px;
   }
   
   .profile-name {
-    font-size: 1.6rem;
-  }
-  
-  .profile-title {
-    font-size: 1.15rem;
-  }
-  
-  .profile-description {
-    font-size: 1.05rem;
+    font-size: 1.5rem;
   }
 }
 
 /* Tablet (768px to 991px) */
 @media (min-width: 768px) and (max-width: 991px) {
-  .terminal-footer {
-    padding: 1.5rem 0;
-    width: calc(100% - 2rem);
-     margin-right: -3rem;
+  .footer-section {
+    padding: 3rem 1rem 1rem;
   }
   
-  .terminal-body {
-    padding: 1.2rem;
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 1rem;
   }
   
-  .about-section {
+  .tab-content {
+    padding: 1rem;
+  }
+  
+  .profile-header {
     flex-direction: column;
+    align-items: center;
     text-align: center;
   }
   
-  .profile-container {
-    margin-bottom: 1.5rem;
-  }
-  
-  .profile-img {
-    width: 75px;
-    height: 75px;
+  .avatar {
+    width: 70px;
+    height: 70px;
   }
   
   .profile-name {
     font-size: 1.4rem;
   }
   
-  .profile-title {
-    font-size: 1.1rem;
+  .nav-grid {
+    grid-template-columns: 1fr;
   }
   
-  .profile-description {
-    font-size: 1rem;
+  .connect-grid {
+    grid-template-columns: 1fr;
   }
   
-  .nav-list {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 0.8rem;
-  }
-  
-  .nav-item {
-    padding: 0.6rem;
-  }
-  
-  .contact-section {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  }
-  
-  .social-links {
-    gap: 1rem;
+  .terminal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
 
-/* Mobile (480px to 767px) */
-@media (min-width: 480px) and (max-width: 767px) {
-  .terminal-footer {
-    padding: 1rem 0;
-    width: calc(90% - 1rem);
-    margin-left: -1.5rem;
-     
+/* Mobile Landscape (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .footer-section {
+    padding: 2.5rem 0.5rem 1rem;
   }
   
-  .terminal-body {
-    padding: 1rem;
+  .terminal-container {
+    max-width: 100%;
+    margin: 0 0.5rem;
   }
   
-  .about-section {
+  .tab-content {
+    padding: 0.8rem;
+  }
+  
+  .profile-header {
     flex-direction: column;
+    align-items: center;
     text-align: center;
   }
   
-  .profile-container {
-    margin-bottom: 1rem;
-  }
-  
-  .profile-img {
+  .avatar {
     width: 65px;
     height: 65px;
   }
@@ -722,107 +953,71 @@ onUnmounted(() => {
     font-size: 1.3rem;
   }
   
-  .profile-title {
-    font-size: 1rem;
-  }
-  
-  .profile-description {
-    font-size: 0.9rem;
-  }
-  
-  .nav-list {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 0.6rem;
-  }
-  
-  .nav-item {
-    padding: 0.5rem;
-  }
-  
-  .contact-section {
+  .nav-grid {
     grid-template-columns: 1fr;
   }
   
-  .social-links {
-    gap: 0.8rem;
+  .connect-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .terminal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .system-status {
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
 
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .terminal-footer {
-    padding: 0.8rem 0;
-    width: calc(90% - 1rem);
-     margin-right: -1.5rem;
+/* Mobile Portrait (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+  .footer-section {
+    padding: 2rem 0.5rem 1rem;
   }
   
-  .terminal-body {
-    padding: 0.8rem;
+  .terminal-container {
+    max-width: 100%;
+    margin: 0;
   }
   
-  .terminal-prompt {
-    margin-bottom: 0.8rem;
+  .tab-content {
+    padding: 0.6rem;
   }
   
-  .terminal-output {
-    margin-bottom: 1rem;
-    padding-left: 1rem;
-  }
-  
-  .about-section {
+  .profile-header {
     flex-direction: column;
+    align-items: center;
     text-align: center;
   }
   
-  .profile-container {
-    margin-bottom: 0.8rem;
-  }
-  
-  .profile-img {
-    width: 55px;
-    height: 55px;
+  .avatar {
+    width: 60px;
+    height: 60px;
   }
   
   .profile-name {
     font-size: 1.2rem;
   }
   
-  .profile-title {
-    font-size: 0.9rem;
-  }
-  
-  .profile-description {
-    font-size: 0.85rem;
-  }
-  
-  .nav-list {
+  .nav-grid {
     grid-template-columns: 1fr;
+  }
+  
+  .connect-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .terminal-footer {
+    flex-direction: column;
     gap: 0.5rem;
   }
   
-  .nav-item {
-    padding: 0.4rem;
-  }
-  
-  .contact-section {
-    grid-template-columns: 1fr;
-  }
-  
-  .social-links {
-    gap: 0.6rem;
-  }
-  
-  .social-link {
-    gap: 0.4rem;
-  }
-  
-  .social-icon {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .social-name {
-    font-size: 0.8rem;
+  .system-status {
+    flex-direction: column;
+    gap: 0.5rem;
   }
   
   .back-to-top {
@@ -830,6 +1025,67 @@ onUnmounted(() => {
     height: 45px;
     bottom: 1.5rem;
     right: 1.5rem;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .footer-section {
+    padding: 1.5rem 0.5rem 1rem;
+  }
+  
+  .terminal-container {
+    max-width: 100%;
+    margin: 0;
+  }
+  
+  .tab-content {
+    padding: 0.5rem;
+  }
+  
+  .profile-header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .avatar {
+    width: 55px;
+    height: 55px;
+  }
+  
+  .profile-name {
+    font-size: 1.1rem;
+  }
+  
+  .nav-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .connect-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .terminal-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .system-status {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .back-to-top {
+    width: 40px;
+    height: 40px;
+    bottom: 1rem;
+    right: 1rem;
+  }
+  
+  .social-link {
+    width: 40px;
+    height: 40px;
   }
 }
 </style>
