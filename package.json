@@ -18,6 +18,7 @@
     "@fortawesome/vue-fontawesome": "^3.1.1",
     "@iconify/vue": "^4.3.0",
     "@vueuse/motion": "^3.0.3",
+    "lucide-vue-next": "^0.561.0",
     "vue": "^3.5.13",
     "vue3-snowfall": "^1.0.6"
   },

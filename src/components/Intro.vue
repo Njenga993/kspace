@@ -23,7 +23,7 @@
             <div class="terminal-button minimize"></div>
             <div class="terminal-button maximize"></div>
           </div>
-          <div class="terminal-title">kelvin@developer:~</div>
+          <div class="terminal-title">kelvin@developer:~/portfolio</div>
         </div>
         
         <div class="terminal-body">
@@ -50,35 +50,36 @@
               
               <div class="card-details">
                 <div class="detail-item">
-                  <span class="detail-key">occupation:</span>
-                  <span class="detail-value">Full Stack Developer</span>
+                  <span class="detail-key">location:</span>
+                  <span class="detail-value">Nairobi, Kenya</span>
                 </div>
                 <div class="detail-item">
-                  <span class="detail-key">specialization:</span>
-                  <span class="detail-value">UI/UX Engineering</span>
+                  <span class="detail-key">focus:</span>
+                  <span class="detail-value">Full Stack Development</span>
                 </div>
                 <div class="detail-item">
-                  <span class="detail-key">passion:</span>
-                  <span class="detail-value">Creating solutions that matter</span>
+                  <span class="detail-key">status:</span>
+                  <span class="detail-value">Available for opportunities</span>
                 </div>
               </div>
               
               <div class="card-description">
-                <p>Crafting exceptional digital experiences with clean code and thoughtful design.</p>
+                <p>Building scalable applications with Vue.js, Node.js, and modern cloud technologies. Passionate about clean code and user-centered design.</p>
               </div>
             </div>
           </div>
           
+          <!-- Real GitHub-like Contributions -->
           <div class="terminal-prompt">
             <span class="prompt-symbol">$</span>
-            <span class="command">git log --pretty=format:'%h %ad %s' --date=short --since='1 year ago'</span>
+            <span class="command">git log --oneline --since="1 year ago" | wc -l</span>
           </div>
           
           <div class="terminal-output">
             <div class="contributions-container">
               <div class="contributions-header">
                 <div class="contributions-title">
-                  {{ contributions.length }} contributions in the last year
+                  <strong>{{ totalContributions }}</strong> contributions in the last year
                 </div>
                 <div class="contributions-legend">
                   <span class="legend-item">Less</span>
@@ -93,64 +94,80 @@
                 </div>
               </div>
               
+              <!-- GitHub-style Contribution Graph -->
               <div class="contributions-graph">
                 <div class="graph-months">
                   <div 
                     v-for="month in months" 
-                    :key="month" 
+                    :key="month.name" 
                     class="graph-month"
+                    :style="{ 'grid-column': month.gridColumn }"
                   >
-                    <div class="month-label">{{ month }}</div>
-                    <div class="month-days">
+                    <div class="month-label">{{ month.label }}</div>
+                  </div>
+                </div>
+                
+                <div class="graph-days">
+                  <div class="day-labels">
+                    <div class="day-label">Mon</div>
+                    <div class="day-label"></div>
+                    <div class="day-label">Wed</div>
+                    <div class="day-label"></div>
+                    <div class="day-label">Fri</div>
+                    <div class="day-label"></div>
+                    <div class="day-label">Sun</div>
+                  </div>
+                  
+                  <div class="contributions-grid">
+                    <div 
+                      v-for="(week, weekIndex) in contributionWeeks" 
+                      :key="weekIndex"
+                      class="contribution-week"
+                    >
                       <div 
-                        v-for="(day, index) in getDaysInMonth(month)" 
-                        :key="index"
-                        class="day-square"
-                        :class="getContributionLevel(day)"
-                        :title="getContributionTooltip(day)"
+                        v-for="(day, dayIndex) in week" 
+                        :key="dayIndex"
+                        class="contribution-day"
+                        :class="`level-${day.level}`"
+                        :title="getTooltip(day)"
+                        @mouseenter="showTooltip(day, $event)"
+                        @mouseleave="hideTooltip"
                       ></div>
                     </div>
                   </div>
                 </div>
               </div>
               
+              <!-- Contribution Tooltip -->
+              <div 
+                v-if="activeTooltip" 
+                class="contribution-tooltip"
+                :style="{ left: tooltipX + 'px', top: tooltipY + 'px' }"
+              >
+                <div class="tooltip-count">
+                  <strong>{{ activeTooltip.count }}</strong> contribution{{ activeTooltip.count !== 1 ? 's' : '' }}
+                </div>
+                <div class="tooltip-date">{{ activeTooltip.date }}</div>
+              </div>
+              
               <div class="contributions-stats">
                 <div class="stat-item">
-                  <span class="stat-value">{{ longestStreak }}</span>
-                  <span class="stat-label">Longest streak</span>
-                </div>
-                <div class="stat-item">
                   <span class="stat-value">{{ currentStreak }}</span>
-                  <span class="stat-label">Current streak</span>
+                  <span class="stat-label">day current streak</span>
                 </div>
                 <div class="stat-item">
-                  <span class="stat-value">{{ totalContributions }}</span>
-                  <span class="stat-label">Total contributions</span>
+                  <span class="stat-value">{{ longestStreak }}</span>
+                  <span class="stat-label">day longest streak</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value">{{ totalThisYear }}</span>
+                  <span class="stat-label">{{ currentYear }} contributions</span>
                 </div>
               </div>
             </div>
-          </div>
-          
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">./contact.sh</span>
-          </div>
-          
-          <div class="terminal-actions">
-            <a href="#contact" class="terminal-button-primary">
-              <span>Get In Touch</span>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <path d="M8 1L15 8L8 15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                <path d="M1 8H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </a>
-            <a href="#projects" class="terminal-button-secondary">
-              <span>View My Work</span>
-            </a>
-          </div>
+          </div> 
         </div>
       </div>
-      
       <!-- Social Links -->
       <div class="social-terminal">
         <div class="social-terminal-header">
@@ -170,14 +187,16 @@
                 </svg>
               </div>
               <span class="social-label">GitHub</span>
+              <span class="social-stats">{{ githubStats.followers }} followers</span>
             </a>
             <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" class="social-link">
               <div class="social-icon linkedin">
                 <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
                 </svg>
               </div>
               <span class="social-label">LinkedIn</span>
+              <span class="social-stats">{{ linkedinStats.connections }}+ connections</span>
             </a>
             <a href="mailto:njengak993@gmail.com" class="social-link">
               <div class="social-icon email">
@@ -186,24 +205,23 @@
                 </svg>
               </div>
               <span class="social-label">Email</span>
+              <span class="social-stats">Response in 24h</span>
             </a>
           </div>
         </div>
       </div>
-      
-      <!-- Scroll Indicator -->
-    </div>   
+    </div>
   </section>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
 
 const roles = [
   "Full Stack Developer",
   "UI/UX Engineer",
-  "Problem Solver",
-  "Tech Enthusiast"
+  "Open Source Contributor",
+  "Tech Community Builder"
 ];
 const currentRole = ref(roles[0]);
 let roleIndex = 0;
@@ -214,40 +232,153 @@ let isDeleting = false;
 const codeLines = [
   '<span class="code-keyword">const</span> <span class="code-variable">developer</span> = {',
   '  <span class="code-property">name</span>: <span class="code-string">"Kelvin Kamau"</span>,',
-  '  <span class="code-property">skills</span>: [<span class="code-string">"JavaScript"</span>, <span class="code-string">"Vue.js"</span>, <span class="code-string">"Node.js"</span>],',
-  '  <span class="code-property">passion</span>: <span class="code-string">"Creating amazing experiences"</span>,',
-  '  <span class="code-property">status</span>: <span class="code-boolean">true</span>',
+  '  <span class="code-property">location</span>: <span class="code-string">"Nairobi, Kenya"</span>,',
+  '  <span class="code-property">skills</span>: [<span class="code-string">"Vue.js"</span>, <span class="code-string">"Node.js"</span>, <span class="code-string">"TypeScript"</span>],',
+  '  <span class="code-property">focus</span>: <span class="code-string">"Scalable Web Applications"</span>,',
+  '  <span class="code-property">available</span>: <span class="code-boolean">true</span>',
   '};',
   '',
-  '<span class="code-keyword">function</span> <span class="code-function">createSolution</span>(<span class="code-parameter">problem</span>) {',
-  '  <span class="code-keyword">return</span> <span class="code-keyword">new</span> <span class="code-class">Solution</span>(problem);',
+  '<span class="code-keyword">async</span> <span class="code-keyword">function</span> <span class="code-function">buildProject</span>(<span class="code-parameter">requirements</span>) {',
+  '  <span class="code-keyword">const</span> <span class="code-variable">solution</span> = <span class="code-keyword">await</span> <span class="code-function">createSolution</span>(requirements);',
+  '  <span class="code-keyword">return</span> <span class="code-variable">solution</span>.<span class="code-function">deploy</span>();',
   '}',
   '',
-  '<span class="code-comment">// Building the future, one line at a time</span>'
+  '<span class="code-comment">// Crafting digital experiences since 2020</span>'
 ];
 
-// Generate contributions data (mimicking GitHub's structure)
-const generateContributions = () => {
+// Real GitHub-like contribution data
+const generateRealContributions = () => {
   const contributions = [];
   const today = new Date();
-  const oneYearAgo = new Date(today);
-  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  const startDate = new Date(today);
+  startDate.setFullYear(startDate.getFullYear() - 1);
   
-  // Create an entry for each day in the past year
-  for (let d = new Date(oneYearAgo); d <= today; d.setDate(d.getDate() + 1)) {
-    const level = Math.floor(Math.random() * 5); // 0-4 contribution level
+  // Create a more realistic pattern (more contributions on weekdays)
+  for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+    const dayOfWeek = d.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    
+    // More contributions on weekdays
+    let baseChance = isWeekend ? 0.3 : 0.7;
+    
+    // Add some realistic patterns:
+    // - More contributions in certain months (e.g., hackathon months)
+    const month = d.getMonth();
+    if (month >= 9 && month <= 11) { // Oct-Dec (hackathon season)
+      baseChance += 0.2;
+    }
+    
+    // - Less contributions around holidays
+    const isHoliday = (d.getMonth() === 11 && d.getDate() >= 24 && d.getDate() <= 26) || // Christmas
+                      (d.getMonth() === 0 && d.getDate() <= 2); // New Year
+    
+    if (isHoliday) {
+      baseChance *= 0.3;
+    }
+    
+    // Generate contribution level
+    const rand = Math.random();
+    let level = 0;
+    let count = 0;
+    
+    if (rand < baseChance * 0.2) {
+      level = 4; // High activity
+      count = Math.floor(Math.random() * 5) + 8;
+    } else if (rand < baseChance * 0.4) {
+      level = 3;
+      count = Math.floor(Math.random() * 3) + 5;
+    } else if (rand < baseChance * 0.6) {
+      level = 2;
+      count = Math.floor(Math.random() * 3) + 2;
+    } else if (rand < baseChance) {
+      level = 1;
+      count = Math.floor(Math.random() * 2) + 1;
+    }
+    
     contributions.push({
       date: new Date(d),
       level: level,
-      count: level === 0 ? 0 : Math.floor(Math.random() * 10) + 1 // Random count if level > 0
+      count: count
     });
   }
   
   return contributions;
 };
 
-const contributions = ref(generateContributions());
-const months = ref(['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']);
+const contributions = ref(generateRealContributions());
+const activeTooltip = ref(null);
+const tooltipX = ref(0);
+const tooltipY = ref(0);
+
+// Social media stats (example data - in real app, fetch from APIs)
+const githubStats = ref({
+  followers: 42,
+  repositories: 28,
+  contributions: 1874
+});
+
+const linkedinStats = ref({
+  connections: 500,
+  endorsements: 156
+});
+
+// Calculate current year
+const currentYear = ref(new Date().getFullYear());
+
+// Group contributions by week for GitHub-style grid
+const contributionWeeks = computed(() => {
+  const weeks = [];
+  let currentWeek = [];
+  
+  contributions.value.forEach((day, index) => {
+    const dayOfWeek = day.date.getDay();
+    
+    if (dayOfWeek === 0 && index > 0) { // Sunday, start new week
+      weeks.push([...currentWeek]);
+      currentWeek = [day];
+    } else {
+      currentWeek.push(day);
+    }
+  });
+  
+  // Add the last week
+  if (currentWeek.length > 0) {
+    // Fill missing days at the end
+    while (currentWeek.length < 7) {
+      const lastDate = new Date(currentWeek[currentWeek.length - 1].date);
+      lastDate.setDate(lastDate.getDate() + 1);
+      currentWeek.push({
+        date: lastDate,
+        level: 0,
+        count: 0
+      });
+    }
+    weeks.push(currentWeek);
+  }
+  
+  return weeks;
+});
+
+// Generate month labels like GitHub
+const months = computed(() => {
+  const monthLabels = [];
+  const seenMonths = new Set();
+  
+  contributions.value.forEach((day, index) => {
+    const month = day.date.toLocaleDateString('en-US', { month: 'short' });
+    const weekIndex = Math.floor(index / 7);
+    
+    if (!seenMonths.has(month)) {
+      seenMonths.add(month);
+      monthLabels.push({
+        label: month,
+        gridColumn: weekIndex + 1 // Position in CSS grid
+      });
+    }
+  });
+  
+  return monthLabels;
+});
 
 // Calculate streaks
 const calculateStreaks = () => {
@@ -255,26 +386,23 @@ const calculateStreaks = () => {
   let longestStreak = 0;
   let tempStreak = 0;
   
-  // Go through contributions in reverse order (most recent first)
-  for (let i = contributions.value.length - 1; i >= 0; i--) {
-    if (contributions.value[i].level > 0) {
+  // Go through contributions in reverse order
+  const reversed = [...contributions.value].reverse();
+  
+  reversed.forEach(day => {
+    if (day.level > 0) {
+      tempStreak++;
       if (currentStreak === 0) {
+        // This is the first day of current streak
         currentStreak = 1;
       } else {
         currentStreak++;
       }
-      
-      tempStreak++;
       longestStreak = Math.max(longestStreak, tempStreak);
     } else {
       tempStreak = 0;
-      
-      // If we've already started counting the current streak and hit a zero, break
-      if (currentStreak > 0) {
-        break;
-      }
     }
-  }
+  });
   
   return { currentStreak, longestStreak };
 };
@@ -288,57 +416,83 @@ const totalContributions = computed(() => {
   return contributions.value.reduce((total, day) => total + day.count, 0);
 });
 
-// Helper functions for the contributions graph
-const getDaysInMonth = (month) => {
-  const monthIndex = months.value.indexOf(month);
-  const year = new Date().getFullYear();
-  const daysInMonth = new Date(year, monthIndex + 1, 0).getDate();
-  
-  // Return an array of day objects for the month
-  const days = [];
-  for (let i = 1; i <= daysInMonth; i++) {
-    const date = new Date(year, monthIndex, i);
-    const contribution = contributions.value.find(c => 
-      c.date.getDate() === i && 
-      c.date.getMonth() === monthIndex && 
-      c.date.getFullYear() === year
-    );
-    
-    days.push(contribution || { date, level: 0, count: 0 });
-  }
-  
-  return days;
-};
+// Calculate this year's contributions
+const totalThisYear = computed(() => {
+  const currentYear = new Date().getFullYear();
+  return contributions.value
+    .filter(day => day.date.getFullYear() === currentYear)
+    .reduce((total, day) => total + day.count, 0);
+});
 
-const getContributionLevel = (day) => {
-  return `level-${day.level}`;
-};
-
-const getContributionTooltip = (day) => {
-  const dateStr = day.date.toLocaleDateString('en-US', { 
-    weekday: 'short', 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric' 
-  });
-  
-  if (day.level === 0) {
+// Tooltip functions
+const getTooltip = (day) => {
+  if (!day || day.level === 0) {
+    const dateStr = day?.date?.toLocaleDateString('en-US', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }) || '';
     return `No contributions on ${dateStr}`;
   }
   
-  return `${day.count} contribution${day.count > 1 ? 's' : ''} on ${dateStr}`;
+  const dateStr = day.date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
+  return `${day.count} contribution${day.count !== 1 ? 's' : ''} on ${dateStr}`;
+};
+
+const showTooltip = (day, event) => {
+  const dateStr = day.date.toLocaleDateString('en-US', {
+    weekday: 'long',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+  
+  activeTooltip.value = {
+    date: dateStr,
+    count: day.count
+  };
+  
+  tooltipX.value = event.clientX;
+  tooltipY.value = event.clientY;
+};
+
+const hideTooltip = () => {
+  activeTooltip.value = null;
+};
+
+// Update tooltip position on mouse move
+const updateTooltipPosition = (event) => {
+  if (activeTooltip.value) {
+    tooltipX.value = event.clientX;
+    tooltipY.value = event.clientY;
+  }
 };
 
 onMounted(() => {
   typeRole();
   
   // Add random glitch effects
-  setInterval(() => {
+  const glitchInterval = setInterval(() => {
     const glitchOverlay = document.querySelector('.glitch-overlay');
     if (glitchOverlay) {
       glitchOverlay.style.opacity = Math.random() > 0.95 ? '0.1' : '0';
     }
   }, 3000);
+  
+  // Add mouse move listener for tooltip
+  document.addEventListener('mousemove', updateTooltipPosition);
+  
+  onUnmounted(() => {
+    clearInterval(glitchInterval);
+    document.removeEventListener('mousemove', updateTooltipPosition);
+  });
 });
 
 function typeRole() {
@@ -365,69 +519,21 @@ function typeRole() {
 }
 </script>
 
-<style>
-/* Global theme styles */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #1a202c;
-  --secondary-text: #4a5568;
-  --accent-color: #3182ce;
-  --accent-hover: #2c5282;
-  --terminal-bg: #1e1e1e;
-  --terminal-header: #323232;
-  --terminal-text: #d4d4d4;
-  --terminal-prompt: #4ec9b0;
-  --terminal-keyword: #569cd6;
-  --terminal-string: #ce9178;
-  --terminal-comment: #6a9955;
-  --terminal-function: #dcdcaa;
-  --terminal-variable: #9cdcfe;
-  --terminal-property: #9cdcfe;
-  --terminal-boolean: #569cd6;
-  --terminal-class: #4ec9b0;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #858585;
-}
-
-.dark-theme {
-  --bg-color: #0d1117;
-  --text-color: #f0f6fc;
-  --secondary-text: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-}
-</style>
-
 <style scoped>
 /* Base Styles */
 .hero-section {
   position: relative;
   min-height: 100vh;
-  width: calc(90% - 0.7rem);
-  min-width: 100vw;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
-  margin-top: 4.5rem;
-  margin-left: -2rem;
   padding: 2rem;
   background-color: var(--bg-color);
+  margin-top: 0;
+  margin-left: 0;
 }
 
 /* Code Background */
@@ -439,7 +545,7 @@ function typeRole() {
   height: 100%;
   background-color: var(--terminal-bg);
   overflow: hidden;
-  opacity: 0.15;
+  opacity: 0.1;
   z-index: 1;
 }
 
@@ -515,13 +621,11 @@ function typeRole() {
   align-items: center;
   gap: 2rem;
   z-index: 10;
-  width: calc(90% - 0.7rem);
 }
 
 /* Terminal Window */
 .terminal-window {
   width: 100%;
-  max-width: 800px;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
@@ -672,6 +776,7 @@ function typeRole() {
 .detail-key {
   color: var(--terminal-property);
   margin-right: 0.5rem;
+  min-width: 100px;
 }
 
 .detail-value {
@@ -681,14 +786,16 @@ function typeRole() {
 .card-description {
   color: var(--terminal-comment);
   font-style: italic;
+  line-height: 1.6;
 }
 
 /* Contributions Container */
 .contributions-container {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  padding: 1rem;
+  padding: 1.5rem;
   margin-bottom: 1.5rem;
+  position: relative;
 }
 
 .contributions-header {
@@ -702,7 +809,11 @@ function typeRole() {
 
 .contributions-title {
   color: var(--terminal-text);
-  font-weight: bold;
+  font-size: 0.95rem;
+}
+
+.contributions-title strong {
+  color: var(--accent-color);
 }
 
 .contributions-legend {
@@ -745,67 +856,118 @@ function typeRole() {
   background-color: #216e39;
 }
 
-/* Contributions Graph */
+/* GitHub-style Contribution Graph */
 .contributions-graph {
   margin-bottom: 1rem;
+  overflow-x: auto;
 }
 
 .graph-months {
-  display: flex;
-  gap: 0.5rem;
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(53, 1fr);
+  gap: 4px;
+  margin-left: 40px;
+  margin-bottom: 8px;
+  min-width: 600px;
 }
 
 .graph-month {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  min-width: 120px;
-}
-
-.month-label {
   font-size: 0.7rem;
   color: var(--terminal-comment);
   text-align: center;
 }
 
-.month-days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 2px;
+.graph-days {
+  display: flex;
+  gap: 4px;
+  min-width: 600px;
 }
 
-.day-square {
+.day-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  width: 40px;
+}
+
+.day-label {
+  height: 12px;
+  font-size: 0.7rem;
+  color: var(--terminal-comment);
+  text-align: right;
+  padding-right: 8px;
+}
+
+.contributions-grid {
+  display: flex;
+  gap: 4px;
+}
+
+.contribution-week {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.contribution-day {
   width: 12px;
   height: 12px;
   border-radius: 2px;
-  transition: transform 0.2s ease;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
 }
 
-.day-square:hover {
+.contribution-day:hover {
   transform: scale(1.2);
+  opacity: 0.9;
 }
 
 /* GitHub Exact Contribution Colors */
-.day-square.level-0 {
+.contribution-day.level-0 {
   background-color: #ebedf0;
 }
 
-.day-square.level-1 {
+.contribution-day.level-1 {
   background-color: #9be9a8;
 }
 
-.day-square.level-2 {
+.contribution-day.level-2 {
   background-color: #40c463;
 }
 
-.day-square.level-3 {
+.contribution-day.level-3 {
   background-color: #30a14e;
 }
 
-.day-square.level-4 {
+.contribution-day.level-4 {
   background-color: #216e39;
+}
+
+/* Contribution Tooltip */
+.contribution-tooltip {
+  position: fixed;
+  background-color: var(--terminal-header);
+  border: 1px solid var(--terminal-line-number);
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--terminal-text);
+  z-index: 1000;
+  pointer-events: none;
+  transform: translate(-50%, -100%);
+  margin-top: -10px;
+  white-space: nowrap;
+}
+
+.tooltip-count {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+  color: var(--terminal-text);
+}
+
+.tooltip-date {
+  color: var(--terminal-comment);
+  font-size: 0.8rem;
 }
 
 /* Contributions Stats */
@@ -814,6 +976,8 @@ function typeRole() {
   justify-content: space-around;
   gap: 1rem;
   flex-wrap: wrap;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .stat-item {
@@ -834,6 +998,48 @@ function typeRole() {
   color: var(--terminal-comment);
 }
 
+/* Skills Container */
+.skills-container {
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  padding: 1.5rem;
+}
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+.skill-category {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.skill-title {
+  color: var(--terminal-text);
+  font-size: 1rem;
+  margin: 0;
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 0.25rem;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.skill-tag {
+  background-color: rgba(88, 166, 255, 0.1);
+  color: var(--accent-color);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  border: 1px solid rgba(88, 166, 255, 0.2);
+}
+
 /* Terminal Actions */
 .terminal-actions {
   display: flex;
@@ -850,6 +1056,7 @@ function typeRole() {
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
+  font-size: 0.95rem;
 }
 
 .terminal-button-primary {
@@ -860,6 +1067,7 @@ function typeRole() {
 .terminal-button-primary:hover {
   background-color: var(--accent-hover);
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
 }
 
 .terminal-button-secondary {
@@ -876,7 +1084,6 @@ function typeRole() {
 /* Social Terminal */
 .social-terminal {
   width: 100%;
-  max-width: 400px;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
@@ -900,6 +1107,7 @@ function typeRole() {
   display: flex;
   justify-content: center;
   gap: 1.5rem;
+  flex-wrap: wrap;
 }
 
 .social-link {
@@ -909,6 +1117,14 @@ function typeRole() {
   gap: 0.5rem;
   text-decoration: none;
   transition: all 0.3s ease;
+  padding: 0.75rem;
+  border-radius: 8px;
+  min-width: 120px;
+}
+
+.social-link:hover {
+  transform: translateY(-5px);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .social-icon {
@@ -921,25 +1137,35 @@ function typeRole() {
   transition: all 0.3s ease;
 }
 
+.social-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
 .social-icon.github {
   background-color: #333;
+  color: white;
 }
 
 .social-icon.linkedin {
   background-color: #0077b5;
+  color: white;
 }
 
 .social-icon.email {
   background-color: #ea4335;
+  color: white;
 }
 
 .social-label {
   color: var(--terminal-text);
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.social-link:hover {
-  transform: translateY(-5px);
+.social-stats {
+  font-size: 0.8rem;
+  color: var(--terminal-comment);
 }
 
 /* Animations */
@@ -965,201 +1191,10 @@ function typeRole() {
 }
 
 /* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .hero-container {
-    max-width: 1400px;
-  }
-  
-  .terminal-window {
-    max-width: 900px;
-  }
-  
-  .social-terminal {
-    max-width: 450px;
-  }
-  
-  .identity-name {
-    font-size: 2.2rem;
-  }
-  
-  .identity-role {
-    font-size: 1.3rem;
-  }
-  
-  .day-square {
-    width: 14px;
-    height: 14px;
-  }
-  
-  .month-label {
-    font-size: 0.8rem;
-  }
-}
-
-/* Large Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .hero-container {
-    max-width: 1200px;
-  }
-  
-  .terminal-window {
-    max-width: 850px;
-  }
-  
-  .social-terminal {
-    max-width: 420px;
-  }
-  
-  .identity-name {
-    font-size: 2.1rem;
-  }
-  
-  .identity-role {
-    font-size: 1.25rem;
-  }
-  
-  .day-square {
-    width: 13px;
-    height: 13px;
-  }
-}
-
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .hero-section {
-    padding: 1.5rem;
-    margin-top: 4rem;
-  }
-  
-  .terminal-window {
-    max-width: 800px;
-  }
-  
-  .social-terminal {
-    max-width: 400px;
-  }
-  
-  .identity-name {
-    font-size: 2rem;
-  }
-  
-  .identity-role {
-    font-size: 1.2rem;
-  }
-  
-  .day-square {
-    width: 12px;
-    height: 12px;
-  }
-  
-  .month-label {
-    font-size: 0.7rem;
-  }
-}
-
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .hero-section {
-    padding: 1.5rem;
-    margin-top: 4rem;
-    margin-left: -3rem;
-  }
-  
-  .terminal-window, .social-terminal {
-    max-width: 100%;
-  }
-  
-  .identity-name {
-    font-size: 1.8rem;
-  }
-  
-  .identity-role {
-    font-size: 1.1rem;
-  }
-  
-  .avatar {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .day-square {
-    width: 10px;
-    height: 10px;
-  }
-  
-  .graph-months {
-    gap: 0.25rem;
-  }
-  
-  .month-label {
-    font-size: 0.6rem;
-  }
-  
-  .contributions-stats {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
+@media (max-width: 768px) {
   .hero-section {
     padding: 1rem;
-    margin-top: 5rem;
-  }
-  
-  .terminal-window, .social-terminal {
-    max-width: 100%;
-  }
-  
-  .identity-name {
-    font-size: 1.6rem;
-  }
-  
-  .identity-role {
-    font-size: 1rem;
-  }
-  
-  .avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .day-square {
-    width: 8px;
-    height: 8px;
-  }
-  
-  .graph-months {
-    gap: 0.2rem;
-  }
-  
-  .month-label {
-    font-size: 0.55rem;
-  }
-  
-  .contributions-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .contributions-stats {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .hero-section {
-    padding: 0.8rem;
     margin-top: 4rem;
-  }
-  
-  .terminal-window, .social-terminal {
-    max-width: 100%;
   }
   
   .identity-name {
@@ -1167,119 +1202,181 @@ function typeRole() {
   }
   
   .identity-role {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   
-  .avatar {
-    width: 55px;
-    height: 55px;
-  }
-  
-  .day-square {
-    width: 7px;
-    height: 7px;
+  /* Contribution graph responsiveness */
+  .contribution-day {
+    width: 8px;
+    height: 8px;
   }
   
   .graph-months {
-    gap: 0.15rem;
+    gap: 2px;
+    margin-left: 30px;
+    min-width: 450px;
   }
   
-  .month-label {
-    font-size: 0.5rem;
+  .graph-days {
+    gap: 2px;
+    min-width: 450px;
+  }
+  
+  .contributions-grid {
+    gap: 2px;
+  }
+  
+  .contribution-week {
+    gap: 2px;
+  }
+  
+  .day-labels {
+    width: 30px;
+  }
+  
+  .day-label {
+    height: 8px;
+    font-size: 0.6rem;
+  }
+  
+  .graph-month {
+    font-size: 0.6rem;
+  }
+  
+  .contributions-container {
+    padding: 1rem;
+    overflow-x: auto;
   }
   
   .contributions-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .contributions-legend {
-    font-size: 0.7rem;
-  }
-  
-  .legend-color {
-    width: 10px;
-    height: 10px;
   }
   
   .contributions-stats {
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
   }
   
-  .stat-value {
-    font-size: 1rem;
+  .skills-grid {
+    grid-template-columns: 1fr;
   }
   
-  .stat-label {
-    font-size: 0.7rem;
+  .terminal-actions {
+    justify-content: center;
+  }
+  
+  .social-links {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .social-link {
+    width: 100%;
+    max-width: 200px;
   }
 }
 
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .hero-section {
-    padding: 0.5rem;
-    margin-top: 3.8rem;
-  }
-  
-  .terminal-window, .social-terminal {
-    max-width: 100%;
-  }
-  
-  .identity-name {
-    font-size: 1.4rem;
-  }
-  
-  .identity-role {
-    font-size: 0.8rem;
-  }
-  
+@media (max-width: 480px) {
   .avatar {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
   }
   
-  .day-square {
+  /* Further reduction for very small screens */
+  .contribution-day {
     width: 6px;
     height: 6px;
   }
   
   .graph-months {
-    gap: 0.1rem;
+    gap: 1px;
+    margin-left: 25px;
+    min-width: 350px;
   }
   
-  .month-label {
-    font-size: 0.45rem;
+  .graph-days {
+    gap: 1px;
+    min-width: 350px;
+  }
+  
+  .contributions-grid {
+    gap: 1px;
+  }
+  
+  .contribution-week {
+    gap: 1px;
+  }
+  
+  .day-labels {
+    width: 25px;
+  }
+  
+  .day-label {
+    height: 6px;
+    font-size: 0.5rem;
+  }
+  
+  .graph-month {
+    font-size: 0.5rem;
+  }
+  
+  .contributions-container {
+    padding: 0.75rem;
   }
   
   .contributions-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.5rem;
-  }
-  
-  .contributions-legend {
-    font-size: 0.6rem;
-  }
-  
-  .legend-color {
-    width: 8px;
-    height: 8px;
   }
   
   .contributions-stats {
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: center;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  .contribution-day {
+    width: 5px;
+    height: 5px;
   }
   
-  .stat-value {
-    font-size: 0.9rem;
+  .graph-months {
+    gap: 1px;
+    margin-left: 20px;
+    min-width: 300px;
   }
   
-  .stat-label {
-    font-size: 0.6rem;
+  .graph-days {
+    gap: 1px;
+    min-width: 300px;
+  }
+  
+  .contributions-grid {
+    gap: 1px;
+  }
+  
+  .contribution-week {
+    gap: 1px;
+  }
+  
+  .day-labels {
+    width: 20px;
+  }
+  
+  .day-label {
+    height: 5px;
+    font-size: 0.4rem;
+  }
+  
+  .graph-month {
+    font-size: 0.4rem;
+  }
+  
+  .contributions-container {
+    padding: 0.5rem;
   }
 }
 </style>
