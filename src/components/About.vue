@@ -3,7 +3,11 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-      
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
         <div class="terminal-title">about@portfolio:~# ./system_profile.sh</div>
       </div>
       
@@ -379,71 +383,25 @@ import { ref } from 'vue';
 const activeTab = ref('profile');
 </script>
 
-<style>
-/* Terminal Theme Variables */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #1a202c;
-  --secondary-text: #4a5568;
-  --accent-color: #3182ce;
-  --accent-hover: #2c5282;
-  --terminal-bg: #1e1e1e;
-  --terminal-header: #323232;
-  --terminal-text: #d4d4d4;
-  --terminal-prompt: #4ec9b0;
-  --terminal-keyword: #569cd6;
-  --terminal-string: #ce9178;
-  --terminal-comment: #6a9955;
-  --terminal-function: #dcdcaa;
-  --terminal-variable: #9cdcfe;
-  --terminal-property: #9cdcfe;
-  --terminal-boolean: #569cd6;
-  --terminal-class: #4ec9b0;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #858585;
-}
-
-.dark-theme {
-  --bg-color: #0d1117;
-  --text-color: #f0f6fc;
-  --secondary-text: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-}
-</style>
-
 <style scoped>
 /* Base Section Styles */
 .about-section {
   position: relative;
-  padding: 4rem 2rem;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
   background-color: var(--bg-color);
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
-  width: 100vw;
-  width: calc(95% + 1rem);
-  margin-left: -2rem;
-  overflow: hidden;
 }
 
 /* Terminal Container */
 .terminal-container {
+  width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
@@ -457,7 +415,7 @@ const activeTab = ref('profile');
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
 }
 
 .terminal-buttons {
@@ -485,7 +443,7 @@ const activeTab = ref('profile');
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
 }
 
@@ -498,9 +456,11 @@ const activeTab = ref('profile');
 .system-info {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .info-line {
@@ -511,12 +471,13 @@ const activeTab = ref('profile');
 
 .info-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .info-value {
   color: var(--terminal-string);
   font-weight: bold;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Terminal Tabs */
@@ -524,16 +485,33 @@ const activeTab = ref('profile');
   display: flex;
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.terminal-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 3px;
 }
 
 .tab {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
   cursor: pointer;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -546,12 +524,12 @@ const activeTab = ref('profile');
 }
 
 .tab-icon {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .tab-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .tab.active .tab-text {
@@ -560,8 +538,8 @@ const activeTab = ref('profile');
 
 /* Tab Content */
 .tab-content {
-  padding: 1.5rem;
-  min-height: 500px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  min-height: 400px;
 }
 
 /* Terminal Prompt */
@@ -594,15 +572,15 @@ const activeTab = ref('profile');
 .profile-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 2rem;
+  padding: clamp(1rem, 2vw, 2rem);
   border-left: 4px solid var(--accent-color);
 }
 
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 2rem;
-  margin-bottom: 2rem;
+  gap: clamp(1rem, 2vw, 2rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
 .profile-avatar {
@@ -611,8 +589,8 @@ const activeTab = ref('profile');
 }
 
 .avatar-img {
-  width: 120px;
-  height: 120px;
+  width: clamp(80px, 15vw, 120px);
+  height: clamp(80px, 15vw, 120px);
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--accent-color);
@@ -634,14 +612,14 @@ const activeTab = ref('profile');
 }
 
 .profile-name {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
 }
 
 .profile-title {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   color: var(--accent-color);
   margin-bottom: 1rem;
 }
@@ -649,15 +627,18 @@ const activeTab = ref('profile');
 .profile-bio {
   line-height: 1.6;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .profile-stats {
   display: flex;
   justify-content: space-around;
-  margin: 2rem 0;
-  padding: 1.5rem;
+  margin: clamp(1.5rem, 3vw, 2rem) 0;
+  padding: clamp(1rem, 2vw, 1.5rem);
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .stat-item {
@@ -668,23 +649,23 @@ const activeTab = ref('profile');
 }
 
 .stat-value {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: bold;
   color: var(--accent-color);
   margin-bottom: 0.5rem;
 }
 
 .stat-label {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
 .profile-interests {
-  margin-top: 2rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
 }
 
 .profile-interests h3 {
-  font-size: 1.2rem;
+  font-size: clamp(1.1rem, 2vw, 1.2rem);
   color: var(--terminal-text);
   margin-bottom: 1rem;
 }
@@ -710,11 +691,12 @@ const activeTab = ref('profile');
 }
 
 .interest-icon {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
 }
 
 .interest-name {
   color: var(--terminal-text);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 /* Education Tab */
@@ -725,19 +707,19 @@ const activeTab = ref('profile');
 .education-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 2rem;
+  padding: clamp(1rem, 2vw, 2rem);
   border-left: 4px solid var(--accent-color);
 }
 
 .education-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 2rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
 .education-icon {
-  font-size: 3rem;
+  font-size: clamp(2rem, 4vw, 3rem);
 }
 
 .education-info {
@@ -745,7 +727,7 @@ const activeTab = ref('profile');
 }
 
 .degree-title {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
@@ -758,23 +740,23 @@ const activeTab = ref('profile');
 }
 
 .university-name {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
   color: var(--terminal-text);
 }
 
 .education-period {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
 .education-details {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+  grid-template-columns: 1fr;
+  gap: clamp(1.5rem, 3vw, 2rem);
 }
 
 .detail-section h4 {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
   color: var(--accent-color);
   margin: 0 0 1rem 0;
 }
@@ -783,6 +765,7 @@ const activeTab = ref('profile');
   margin: 0;
   padding-left: 1.5rem;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .detail-section li {
@@ -801,6 +784,7 @@ const activeTab = ref('profile');
   padding: 0.5rem;
   color: var(--terminal-text);
   text-align: center;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Experience Tab */
@@ -814,19 +798,19 @@ const activeTab = ref('profile');
 
 .timeline-item {
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
 }
 
 .timeline-date {
-  width: 100px;
+  width: clamp(80px, 10vw, 100px);
   flex-shrink: 0;
-  padding-right: 1.5rem;
+  padding-right: clamp(1rem, 2vw, 1.5rem);
   text-align: right;
   position: relative;
 }
 
 .date-year {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
   font-weight: bold;
   color: var(--accent-color);
   margin-bottom: 0.5rem;
@@ -843,7 +827,7 @@ const activeTab = ref('profile');
 
 .timeline-content {
   flex: 1;
-  padding-left: 2rem;
+  padding-left: clamp(1.5rem, 3vw, 2rem);
   position: relative;
 }
 
@@ -862,7 +846,7 @@ const activeTab = ref('profile');
 .experience-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-left: 4px solid var(--accent-color);
 }
 
@@ -871,7 +855,7 @@ const activeTab = ref('profile');
 }
 
 .position-title {
-  font-size: 1.3rem;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
@@ -884,12 +868,12 @@ const activeTab = ref('profile');
 }
 
 .company-name {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
   color: var(--terminal-text);
 }
 
 .employment-period {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
@@ -897,10 +881,11 @@ const activeTab = ref('profile');
   margin-bottom: 1.5rem;
   color: var(--terminal-comment);
   line-height: 1.6;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .experience-achievements h4 {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
   color: var(--accent-color);
   margin: 0 0 1rem 0;
 }
@@ -909,6 +894,7 @@ const activeTab = ref('profile');
   margin: 0;
   padding-left: 1.5rem;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .experience-achievements li {
@@ -923,13 +909,13 @@ const activeTab = ref('profile');
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .skill-category {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-left: 4px solid var(--accent-color);
 }
 
@@ -941,11 +927,11 @@ const activeTab = ref('profile');
 }
 
 .category-icon {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
 }
 
 .category-title {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
   font-weight: bold;
   color: var(--terminal-text);
   margin: 0;
@@ -964,6 +950,7 @@ const activeTab = ref('profile');
   color: var(--terminal-text);
   text-align: center;
   transition: transform 0.3s ease;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .skill-item:hover {
@@ -972,8 +959,8 @@ const activeTab = ref('profile');
 
 /* Terminal Actions */
 .terminal-actions {
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  padding-top: clamp(1rem, 2vw, 1.5rem);
   border-top: 1px solid var(--terminal-header);
 }
 
@@ -992,6 +979,7 @@ const activeTab = ref('profile');
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .action-button.primary {
@@ -1017,7 +1005,7 @@ const activeTab = ref('profile');
 
 /* Terminal Footer */
 .terminal-footer {
-  padding: 1rem 1.5rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
   border-top: 1px solid var(--terminal-header);
 }
 
@@ -1045,9 +1033,9 @@ const activeTab = ref('profile');
     text-align: center;
   }
   
-  .education-details {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .education-header {
+    flex-direction: column;
+    text-align: center;
   }
   
   .timeline-item {
@@ -1081,14 +1069,6 @@ const activeTab = ref('profile');
 }
 
 @media (max-width: 768px) {
-  .about-section {
-    padding: 3rem 1rem;
-  }
-  
-  .terminal-container {
-    margin: 0 1rem;
-  }
-  
   .tab-content {
     padding: 1rem;
   }
@@ -1104,11 +1084,6 @@ const activeTab = ref('profile');
   
   .education-card {
     padding: 1.5rem;
-  }
-  
-  .education-header {
-    flex-direction: column;
-    text-align: center;
   }
   
   .experience-card {
@@ -1130,11 +1105,7 @@ const activeTab = ref('profile');
 
 @media (max-width: 480px) {
   .about-section {
-    padding: 2rem 0.5rem;
-  }
-  
-  .terminal-container {
-    margin: 0 0.5rem;
+    padding: clamp(1rem, 4vw, 2rem) clamp(0.5rem, 3vw, 1rem);
   }
   
   .tab-content {
@@ -1143,15 +1114,6 @@ const activeTab = ref('profile');
   
   .profile-card {
     padding: 1rem;
-  }
-  
-  .avatar-img {
-    width: 80px;
-    height: 80px;
-  }
-  
-  .profile-name {
-    font-size: 1.5rem;
   }
   
   .education-card {
@@ -1164,6 +1126,10 @@ const activeTab = ref('profile');
   
   .skill-category {
     padding: 1rem;
+  }
+  
+  .interests-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

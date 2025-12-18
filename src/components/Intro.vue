@@ -1,4 +1,5 @@
 <template>
+  <!-- Your template remains the same - no changes needed -->
   <section class="hero-section">
     <!-- Animated Code Background -->
     <div class="code-background">
@@ -207,6 +208,7 @@
 </template>
 
 <script setup>
+// Your script remains the same - no changes needed
 import { ref, onMounted, computed, onUnmounted } from 'vue';
 
 const roles = [
@@ -522,10 +524,9 @@ function typeRole() {
   justify-content: center;
   overflow: hidden;
   font-family: 'Fira Code', 'Courier New', monospace;
-  padding: 2rem;
+  padding: clamp(1rem, 4vw, 2rem);
   background-color: var(--bg-color);
-  margin-top: 0;
-  margin-left: 0;
+  
 }
 
 /* Code Background */
@@ -542,8 +543,8 @@ function typeRole() {
 }
 
 .code-lines {
-  padding: 2rem;
-  font-size: 0.9rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   line-height: 1.6;
 }
 
@@ -611,7 +612,7 @@ function typeRole() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(1rem, 3vw, 2rem);
   z-index: 10;
 }
 
@@ -658,12 +659,12 @@ function typeRole() {
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
 }
 
 .terminal-body {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   color: var(--terminal-text);
 }
 
@@ -691,7 +692,7 @@ function typeRole() {
 .identity-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-left: 4px solid var(--accent-color);
 }
 
@@ -707,8 +708,8 @@ function typeRole() {
 }
 
 .avatar {
-  width: 80px;
-  height: 80px;
+  width: clamp(60px, 15vw, 80px);
+  height: clamp(60px, 15vw, 80px);
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--accent-color);
@@ -730,7 +731,7 @@ function typeRole() {
 }
 
 .identity-name {
-  font-size: 2rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
@@ -741,7 +742,7 @@ function typeRole() {
 }
 
 .identity-role {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
   display: flex;
   align-items: center;
   gap: 0.25rem;
@@ -785,9 +786,10 @@ function typeRole() {
 .contributions-container {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-bottom: 1.5rem;
   position: relative;
+  overflow-x: auto;
 }
 
 .contributions-header {
@@ -801,7 +803,7 @@ function typeRole() {
 
 .contributions-title {
   color: var(--terminal-text);
-  font-size: 0.95rem;
+  font-size: clamp(0.8rem, 1.5vw, 0.95rem);
 }
 
 .contributions-title strong {
@@ -812,7 +814,7 @@ function typeRole() {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.8rem;
+  font-size: clamp(0.6rem, 1vw, 0.8rem);
   color: var(--terminal-comment);
 }
 
@@ -852,6 +854,21 @@ function typeRole() {
 .contributions-graph {
   margin-bottom: 1rem;
   overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.contributions-graph::-webkit-scrollbar {
+  height: 8px;
+}
+
+.contributions-graph::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.contributions-graph::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 4px;
 }
 
 .graph-months {
@@ -990,89 +1007,6 @@ function typeRole() {
   color: var(--terminal-comment);
 }
 
-/* Skills Container */
-.skills-container {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
-}
-
-.skills-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-}
-
-.skill-category {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.skill-title {
-  color: var(--terminal-text);
-  font-size: 1rem;
-  margin: 0;
-  border-bottom: 2px solid var(--accent-color);
-  padding-bottom: 0.25rem;
-}
-
-.skill-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.skill-tag {
-  background-color: rgba(88, 166, 255, 0.1);
-  color: var(--accent-color);
-  padding: 0.25rem 0.75rem;
-  border-radius: 4px;
-  font-size: 0.85rem;
-  border: 1px solid rgba(88, 166, 255, 0.2);
-}
-
-/* Terminal Actions */
-.terminal-actions {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.terminal-button-primary, .terminal-button-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
-}
-
-.terminal-button-primary {
-  background-color: var(--accent-color);
-  color: white;
-}
-
-.terminal-button-primary:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(88, 166, 255, 0.3);
-}
-
-.terminal-button-secondary {
-  background-color: transparent;
-  color: var(--terminal-text);
-  border: 1px solid var(--terminal-text);
-}
-
-.terminal-button-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-}
-
 /* Social Terminal */
 .social-terminal {
   width: 100%;
@@ -1092,13 +1026,13 @@ function typeRole() {
 }
 
 .social-terminal-body {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
 }
 
 .social-links {
   display: flex;
   justify-content: center;
-  gap: 1.5rem;
+  gap: clamp(1rem, 3vw, 1.5rem);
   flex-wrap: wrap;
 }
 
@@ -1120,8 +1054,8 @@ function typeRole() {
 }
 
 .social-icon {
-  width: 50px;
-  height: 50px;
+  width: clamp(40px, 8vw, 50px);
+  height: clamp(40px, 8vw, 50px);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1151,12 +1085,12 @@ function typeRole() {
 
 .social-label {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.5vw, 0.9rem);
   font-weight: 500;
 }
 
 .social-stats {
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
   color: var(--terminal-comment);
 }
 
@@ -1186,7 +1120,6 @@ function typeRole() {
 @media (max-width: 768px) {
   .hero-section {
     padding: 1rem;
-    margin-top: 4rem;
   }
   
   .identity-name {
@@ -1195,6 +1128,11 @@ function typeRole() {
   
   .identity-role {
     font-size: 1rem;
+  }
+  
+  .avatar {
+    width: 60px;
+    height: 60px;
   }
   
   /* Contribution graph responsiveness */
@@ -1237,7 +1175,6 @@ function typeRole() {
   
   .contributions-container {
     padding: 1rem;
-    overflow-x: auto;
   }
   
   .contributions-header {
@@ -1248,14 +1185,6 @@ function typeRole() {
   .contributions-stats {
     flex-direction: column;
     align-items: center;
-  }
-  
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .terminal-actions {
-    justify-content: center;
   }
   
   .social-links {
@@ -1270,9 +1199,29 @@ function typeRole() {
 }
 
 @media (max-width: 480px) {
-  .avatar {
-    width: 60px;
-    height: 60px;
+  .hero-section {
+    padding: 0.75rem;
+  }
+  
+  .terminal-body {
+    padding: 1rem;
+  }
+  
+  .identity-card {
+    padding: 1rem;
+  }
+  
+  .card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .detail-item {
+    flex-direction: column;
+  }
+  
+  .detail-key {
+    min-width: auto;
   }
   
   /* Further reduction for very small screens */
@@ -1317,19 +1266,25 @@ function typeRole() {
     padding: 0.75rem;
   }
   
-  .contributions-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-  
-  .contributions-stats {
-    flex-direction: column;
-    align-items: center;
+  .social-terminal-body {
+    padding: 1rem;
   }
 }
 
 /* Extra small screens */
 @media (max-width: 360px) {
+  .hero-section {
+    padding: 0.5rem;
+  }
+  
+  .terminal-body {
+    padding: 0.75rem;
+  }
+  
+  .identity-card {
+    padding: 0.75rem;
+  }
+  
   .contribution-day {
     width: 5px;
     height: 5px;
@@ -1369,6 +1324,10 @@ function typeRole() {
   
   .contributions-container {
     padding: 0.5rem;
+  }
+  
+  .social-terminal-body {
+    padding: 0.75rem;
   }
 }
 </style>

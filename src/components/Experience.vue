@@ -3,7 +3,11 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-    
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
         <div class="terminal-title">experience@portfolio:~# ./career_log.sh</div>
       </div>
       
@@ -587,71 +591,25 @@ const getIconClass = (category) => {
 };
 </script>
 
-<style>
-/* Terminal Theme Variables */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #1a202c;
-  --secondary-text: #4a5568;
-  --accent-color: #3182ce;
-  --accent-hover: #2c5282;
-  --terminal-bg: #1e1e1e;
-  --terminal-header: #323232;
-  --terminal-text: #d4d4d4;
-  --terminal-prompt: #4ec9b0;
-  --terminal-keyword: #569cd6;
-  --terminal-string: #ce9178;
-  --terminal-comment: #6a9955;
-  --terminal-function: #dcdcaa;
-  --terminal-variable: #9cdcfe;
-  --terminal-property: #9cdcfe;
-  --terminal-boolean: #569cd6;
-  --terminal-class: #4ec9b0;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #858585;
-}
-
-.dark-theme {
-  --bg-color: #0d1117;
-  --text-color: #f0f6fc;
-  --secondary-text: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-}
-</style>
-
 <style scoped>
 /* Base Section Styles */
 .experience-section {
   position: relative;
-  padding: 4rem 2rem;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
   background-color: var(--bg-color);
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
-  width: 100vw;
-  width: calc(95% + 1rem);
-  margin-left: -2rem;
-  overflow: hidden;
 }
 
 /* Terminal Container */
 .terminal-container {
+  width: 100%;
   max-width: 1400px;
-  margin: 0 auto;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
@@ -665,7 +623,7 @@ const getIconClass = (category) => {
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
 }
 
 .terminal-buttons {
@@ -693,7 +651,7 @@ const getIconClass = (category) => {
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
 }
 
@@ -706,9 +664,11 @@ const getIconClass = (category) => {
 .system-info {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .info-line {
@@ -719,12 +679,13 @@ const getIconClass = (category) => {
 
 .info-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .info-value {
   color: var(--terminal-string);
   font-weight: bold;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Terminal Tabs */
@@ -732,16 +693,33 @@ const getIconClass = (category) => {
   display: flex;
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.terminal-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 3px;
 }
 
 .tab {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
   cursor: pointer;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -754,12 +732,12 @@ const getIconClass = (category) => {
 }
 
 .tab-icon {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .tab-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .tab.active .tab-text {
@@ -771,7 +749,7 @@ const getIconClass = (category) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-bottom: 0;
 }
 
@@ -797,13 +775,14 @@ const getIconClass = (category) => {
 
 .filter-value {
   color: var(--terminal-string);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .filter-options {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 0 1.5rem 1rem;
+  padding: 0 clamp(1rem, 2vw, 1.5rem) clamp(0.75rem, 1.5vw, 1rem);
 }
 
 .filter-option {
@@ -815,6 +794,7 @@ const getIconClass = (category) => {
   font-family: 'Fira Code', 'Courier New', monospace;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .filter-option:hover {
@@ -828,8 +808,8 @@ const getIconClass = (category) => {
 
 /* Tab Content */
 .tab-content {
-  padding: 1.5rem;
-  min-height: 500px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  min-height: 400px;
 }
 
 /* Timeline View */
@@ -840,14 +820,14 @@ const getIconClass = (category) => {
 
 .timeline-item {
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: clamp(1.5rem, 3vw, 2rem);
   animation: fadeIn 0.5s ease-out var(--delay) both;
 }
 
 .timeline-date {
-  width: 120px;
+  width: clamp(100px, 10vw, 120px);
   flex-shrink: 0;
-  padding-right: 1rem;
+  padding-right: clamp(0.75rem, 1.5vw, 1rem);
   text-align: right;
   position: relative;
 }
@@ -857,6 +837,7 @@ const getIconClass = (category) => {
   color: var(--accent-color);
   font-weight: bold;
   margin-bottom: 0.5rem;
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
 
 .date-line {
@@ -870,7 +851,7 @@ const getIconClass = (category) => {
 
 .timeline-content {
   flex: 1;
-  padding-left: 2rem;
+  padding-left: clamp(1.5rem, 3vw, 2rem);
   position: relative;
 }
 
@@ -889,7 +870,7 @@ const getIconClass = (category) => {
 .experience-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-bottom: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -903,18 +884,19 @@ const getIconClass = (category) => {
 .card-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
   margin-bottom: 1rem;
 }
 
 .card-icon {
-  width: 48px;
-  height: 48px;
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .card-info {
@@ -922,7 +904,7 @@ const getIconClass = (category) => {
 }
 
 .card-title {
-  font-size: 1.2rem;
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
@@ -932,7 +914,7 @@ const getIconClass = (category) => {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
@@ -948,6 +930,8 @@ const getIconClass = (category) => {
 .card-description {
   margin-bottom: 1rem;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  line-height: 1.5;
 }
 
 .card-metrics {
@@ -963,16 +947,21 @@ const getIconClass = (category) => {
   padding: 0.5rem 1rem;
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
+  transition: transform 0.3s ease;
+}
+
+.metric-item:hover {
+  transform: translateY(-2px);
 }
 
 .metric-value {
-  font-size: 1.2rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   font-weight: bold;
   color: var(--accent-color);
 }
 
 .metric-label {
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
   color: var(--terminal-comment);
 }
 
@@ -980,7 +969,7 @@ const getIconClass = (category) => {
 .expanded-details {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-top: 1rem;
   animation: slideDown 0.3s ease-out;
 }
@@ -996,12 +985,14 @@ const getIconClass = (category) => {
 .detail-section h4 {
   margin: 0 0 1rem 0;
   color: var(--accent-color);
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
 }
 
 .detail-section ul {
   margin: 0;
   padding-left: 1.5rem;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .detail-section li {
@@ -1023,6 +1014,7 @@ const getIconClass = (category) => {
 .category-name {
   color: var(--terminal-property);
   font-weight: bold;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .category-skills {
@@ -1037,21 +1029,26 @@ const getIconClass = (category) => {
   color: var(--accent-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Skills View */
 .skills-container {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
   margin-top: 1rem;
 }
 
 .skill-category-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  transition: transform 0.3s ease;
+}
+
+.skill-category-card:hover {
+  transform: translateY(-3px);
 }
 
 .category-header {
@@ -1064,10 +1061,11 @@ const getIconClass = (category) => {
 .category-header h3 {
   margin: 0;
   color: var(--accent-color);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
 
 .skill-count {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
@@ -1086,6 +1084,7 @@ const getIconClass = (category) => {
 .skill-name {
   font-weight: bold;
   color: var(--terminal-text);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .skill-level {
@@ -1109,7 +1108,7 @@ const getIconClass = (category) => {
 }
 
 .level-text {
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
   color: var(--terminal-comment);
   min-width: 40px;
   text-align: right;
@@ -1123,28 +1122,34 @@ const getIconClass = (category) => {
 .stats-overview {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
   margin-bottom: 2rem;
 }
 
 .stat-card {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   display: flex;
   align-items: center;
   gap: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
 }
 
 .stat-icon {
-  width: 48px;
-  height: 48px;
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
   border-radius: 50%;
   background-color: var(--accent-color);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .stat-info {
@@ -1153,26 +1158,27 @@ const getIconClass = (category) => {
 }
 
 .stat-value {
-  font-size: 1.5rem;
+  font-size: clamp(1.3rem, 2.5vw, 1.5rem);
   font-weight: bold;
   color: var(--accent-color);
 }
 
 .stat-label {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
 .stats-chart {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-bottom: 2rem;
 }
 
 .stats-chart h3 {
   margin: 0 0 1rem 0;
   color: var(--accent-color);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
 
 .timeline-chart {
@@ -1207,6 +1213,7 @@ const getIconClass = (category) => {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
+  z-index: 10;
 }
 
 .chart-bar:hover .bar-tooltip {
@@ -1216,27 +1223,29 @@ const getIconClass = (category) => {
 .tooltip-title {
   font-weight: bold;
   color: var(--terminal-text);
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .tooltip-company {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
 .tooltip-period {
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
   color: var(--terminal-comment);
 }
 
 .stats-skills {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
 }
 
 .stats-skills h3 {
   margin: 0 0 1rem 0;
   color: var(--accent-color);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
 
 .skills-chart {
@@ -1258,10 +1267,12 @@ const getIconClass = (category) => {
 
 .skill-category-name {
   color: var(--terminal-text);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .skill-percentage {
   color: var(--accent-color);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .skill-progress {
@@ -1278,7 +1289,7 @@ const getIconClass = (category) => {
 
 /* Terminal Footer */
 .terminal-footer {
-  padding: 1rem 1.5rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
   border-top: 1px solid var(--terminal-header);
 }
 
@@ -1348,14 +1359,6 @@ const getIconClass = (category) => {
 }
 
 @media (max-width: 768px) {
-  .experience-section {
-    padding: 3rem 1rem;
-  }
-  
-  .terminal-container {
-    margin: 0 1rem;
-  }
-  
   .tab-content {
     padding: 1rem;
   }
@@ -1382,17 +1385,13 @@ const getIconClass = (category) => {
   .stats-overview {
     grid-template-columns: 1fr;
   }
+  
+  .skills-container {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 480px) {
-  .experience-section {
-    padding: 2rem 0.5rem;
-  }
-  
-  .terminal-container {
-    margin: 0 0.5rem;
-  }
-  
   .tab-content {
     padding: 0.8rem;
   }
@@ -1415,6 +1414,14 @@ const getIconClass = (category) => {
   
   .stats-chart, .stats-skills {
     padding: 1rem;
+  }
+  
+  .category-skills {
+    margin-left: 0;
+  }
+  
+  .skill-tags {
+    gap: 0.75rem;
   }
 }
 </style>

@@ -1,10 +1,14 @@
 <template>
-  <section class="clients-section" id="clients">
+  <section id="clients" class="clients-section">
     <div class="clients-container">
       <!-- Terminal Window for Clients -->
       <div class="clients-terminal">
         <div class="terminal-header">
-          
+          <div class="terminal-buttons">
+            <div class="terminal-button close"></div>
+            <div class="terminal-button minimize"></div>
+            <div class="terminal-button maximize"></div>
+          </div>
           <div class="terminal-title">clients_database --list</div>
         </div>
         
@@ -105,7 +109,7 @@
                 <span class="detail-key">Technologies:</span>
                 <span class="detail-value">{{ selectedClient.technologies.join(', ') }}</span>
               </div>
-              <p class="client-description">{{ selectedClient.description }}</p>
+              <p class="detail-description">{{ selectedClient.description }}</p>
             </div>
           </div>
         </div>
@@ -125,7 +129,7 @@ const clients = ref([
     project: 'Web Application Development',
     year: '2025',
     technologies: ['REACT', 'javaScript', 'CSS', 'HTML'],
-    description: 'Developed a comprehensive web application to manage seed distribution and farmer networks across Kenya.'
+    description: 'Developed a comprehensive web application for SEED SAVERS NETWORK KENYA to manage seed distribution, farmer networks, and agricultural resources across Kenya.'
   },
   {
     name: 'INOFO Africa',
@@ -133,53 +137,44 @@ const clients = ref([
     logo: './inofo.JPG',
     project: 'Portfolio Website',
     year: '2025',
-    technologies: ['React', 'Typescript', 'Tailwind CSS'],
-    description: 'Created a modern portfolio website to showcase Inofo Africa\'s agricultural projects and initiatives.'
+    technologies: ['REACT', 'Typescript', 'CSS', 'HTML'],
+    description: 'Created a modern portfolio website for INOFO Africa to showcase their agricultural projects and initiatives.'
   },
   {
-    name: 'Greania Build Solutions',
+    name: 'GREANIA BUILD SOLUTIONS',
     industry: 'Construction Industry',
     logo: './Greania.JPG',
-    project: 'Portfolio website',
-    year: '2025',
-    technologies: ['React', 'JavaScript', 'CSS', 'HTML'],
-    description: 'Developed a sleek portfolio website to highlight Greania Build Solutions\' construction projects and services.'
-  },
-  {
-    name: 'Nyakazi Organics limited',
-    industry: 'Start-up',
-    logo: './Nyakazi.png',
     project: 'Portfolio Website',
-    year: '2024',
-    technologies: ['React', 'javascript'],
-    description: 'Built a responsive portfolio website to promote Nyakazi Organics\' organic products and brand story.'
+    year: '2025',
+    technologies: ['REACT', 'Typescript', 'CSS', 'HTML'],
+    description: 'Built a professional portfolio website for GREANIA BUILD SOLUTIONS to highlight their construction projects and services.'
   },
   {
-    name: 'Nyakazi Ecommerce',
-    industry: 'start-up',
-    logo: './Nyakazi-ecommerce.PNG',
-    project: 'E-commerce Website',
+    name: 'NYAKAZI ORGANICS',
+    industry: 'Organic Products',
+    logo: './Nyakazi.png',
+    project: 'E-commerce Platform',
     year: '2024',
-    technologies: ['React.js', 'Django', 'MySQL'],
-    description: 'Developed a full-featured e-commerce platform for Nyakazi Organics to sell their organic products online.'
+    technologies: ['REACT', 'Django', 'PostgreSQL'],
+    description: 'Developed a full-featured e-commerce platform for NYAKAZI ORGANICS to sell organic products online with a seamless shopping experience.'
   },
   {
     name: 'POINT OF SALE',
-    industry: 'E-commerce',
+    industry: 'Retail Technology',
     logo: './salehubPOS.png',
-    project: 'Internal System',
-    year: '2026',
+    project: 'Internal POS System',
+    year: '2024',
     technologies: ['Next.js', 'Stripe', 'Sanity'],
-    description: 'A point of sale system designed to streamline sales operations and inventory management for retail businesses.'
+    description: 'Created a point of sale system for retail businesses to manage inventory, sales, and customer relationships.'
   },
   {
-    name: 'K-SPACE Tech Solutions',
+    name: 'K-SPACE TECH SOLUTIONS',
     industry: 'IT Services',
     logo: './terminal.JPG',
-    project: 'PERSONAL PORTFOLIO WEBSITE',
-    year: '2025',
-    technologies: ['React.js', 'Express', 'PostgreSQL'],
-    description: 'Created a personal portfolio website to showcase projects and skills.'
+    project: 'Personal Portfolio',
+    year: '2023',
+    technologies: ['VUE', 'Typescript', 'CSS', 'HTML'],
+    description: 'Designed and developed a personal portfolio website to showcase technical skills and projects.'
   }
 ]);
 
@@ -239,7 +234,7 @@ function shuffleClients() {
 </script>
 
 <style>
-/* Using the same theme variables as the hero section */
+/* Using the same theme variables as other components */
 :root {
   --bg-color: #ffffff;
   --text-color: #1a202c;
@@ -258,7 +253,7 @@ function shuffleClients() {
   --terminal-property: #9cdcfe;
   --terminal-boolean: #569cd6;
   --terminal-class: #4ec9b0;
-  --terminal-parameter: #9cdcfe;
+  --terminal-parameter: #ffa657;
   --terminal-line-number: #858585;
 }
 
@@ -286,20 +281,29 @@ function shuffleClients() {
 </style>
 
 <style scoped>
-/* Base Styles */
+/* Base Section Styles */
 .clients-section {
   position: relative;
-  padding: 4rem 2rem;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
   background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s ease, color 0.3s ease;
   font-family: 'Fira Code', 'Courier New', monospace;
-  overflow: hidden;
+  color: var(--text-color);
 }
 
+/* Terminal Container */
 .clients-container {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 1400px;
+  background-color: var(--terminal-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.8s ease-out;
 }
 
 /* Terminal Styles */
@@ -317,7 +321,7 @@ function shuffleClients() {
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
 }
 
 .terminal-buttons {
@@ -345,20 +349,21 @@ function shuffleClients() {
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
 }
 
 .terminal-body {
-  padding: 1.5rem;
-  color: var(--terminal-text);
+  padding: 0;
 }
 
+/* Terminal Elements */
 .terminal-prompt {
-  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding: 0 clamp(1rem, 2vw, 1.5rem);
 }
 
 .prompt-symbol {
@@ -370,16 +375,16 @@ function shuffleClients() {
   color: var(--terminal-text);
 }
 
-.typing-animation {
-  overflow: hidden;
-  border-right: 2px solid var(--terminal-prompt);
-  white-space: nowrap;
-  animation: typing 3s steps(20, end), blink-caret 0.75s step-end infinite;
+.cursor {
+  color: var(--terminal-prompt);
+  animation: blink 1s infinite;
 }
 
-.cursor {
-  color: var(--accent-color);
-  animation: blink 1s infinite;
+.typing-animation {
+  overflow: hidden;
+  white-space: nowrap;
+  border-right: 2px solid var(--terminal-prompt);
+  animation: typing 3s steps(20, end) infinite;
 }
 
 .terminal-output {
@@ -391,21 +396,24 @@ function shuffleClients() {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 .stat-item {
   display: flex;
   align-items: center;
+  gap: 0.5rem;
 }
 
 .stat-key {
   color: var(--terminal-property);
-  margin-right: 0.5rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .stat-value {
   color: var(--terminal-string);
+  font-weight: bold;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .stat-value.success {
@@ -415,26 +423,25 @@ function shuffleClients() {
 .terminal-separator {
   height: 1px;
   background-color: var(--terminal-header);
-  margin: 1.5rem 0;
+  margin: 0 0 1rem 0;
 }
 
 /* Client Grid */
 .client-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: 1rem;
 }
 
 .client-card {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+  border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s ease;
   cursor: pointer;
   opacity: 0;
   transform: translateY(20px);
-  animation: fadeInUp 0.5s forwards;
 }
 
 .client-card:hover {
@@ -495,15 +502,16 @@ function shuffleClients() {
 }
 
 .client-name {
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
+  font-weight: bold;
   margin: 0 0 0.5rem 0;
-  font-size: 1.1rem;
   color: var(--terminal-text);
 }
 
 .client-industry {
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+  color: var(--terminal-comment);
   margin: 0;
-  font-size: 0.9rem;
-  color: var(--accent-color);
 }
 
 /* Terminal Actions */
@@ -511,32 +519,37 @@ function shuffleClients() {
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .terminal-button-primary, .terminal-button-secondary {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
+  padding: 0.75rem 1rem;
   border-radius: 4px;
   text-decoration: none;
   font-weight: 500;
   transition: all 0.3s ease;
-  background-color: transparent;
-  border: 1px solid var(--terminal-text);
-  color: var(--terminal-text);
-  cursor: pointer;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  font-family: 'Fira Code', 'Courier New', monospace;
 }
 
 .terminal-button-primary {
   background-color: var(--accent-color);
   color: white;
-  border-color: var(--accent-color);
+  border: 1px solid var(--accent-color);
 }
 
 .terminal-button-primary:hover {
   background-color: var(--accent-hover);
   transform: translateY(-2px);
+}
+
+.terminal-button-secondary {
+  background-color: transparent;
+  color: var(--terminal-text);
+  border: 1px solid var(--terminal-text);
 }
 
 .terminal-button-secondary:hover {
@@ -562,7 +575,7 @@ function shuffleClients() {
 .modal-content {
   background-color: var(--terminal-bg);
   border-radius: 8px;
-  max-width: 800px;
+  max-width: 900px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
@@ -580,13 +593,14 @@ function shuffleClients() {
 .modal-header h2 {
   margin: 0;
   color: var(--terminal-text);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
 }
 
 .close-button {
   background: none;
   border: none;
   color: var(--terminal-text);
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
   cursor: pointer;
   padding: 0;
   width: 30px;
@@ -621,38 +635,30 @@ function shuffleClients() {
 
 .detail-item {
   display: flex;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
 }
 
 .detail-key {
   color: var(--terminal-property);
   margin-right: 0.5rem;
   min-width: 100px;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .detail-value {
   color: var(--terminal-string);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
-.client-description {
+.detail-description {
   margin-top: 1rem;
   color: var(--terminal-comment);
   font-style: italic;
+  line-height: 1.5;
 }
 
 /* Animations */
 @keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUp {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -673,11 +679,6 @@ function shuffleClients() {
   to { width: 100%; }
 }
 
-@keyframes blink-caret {
-  from, to { border-color: transparent; }
-  50% { border-color: var(--terminal-prompt); }
-}
-
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -690,21 +691,17 @@ function shuffleClients() {
 }
 
 /* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
+/* Large Desktop (1400px and up) */
 @media (min-width: 1400px) {
-  .clients-container {
-    max-width: 1400px;
-  }
-  
   .client-grid {
     grid-template-columns: repeat(4, 1fr);
   }
 }
 
-/* Large Desktop (1200px to 1399px) */
+/* Desktop (1200px to 1399px) */
 @media (min-width: 1200px) and (max-width: 1399px) {
   .client-grid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -718,23 +715,7 @@ function shuffleClients() {
 /* Tablet (768px to 991px) */
 @media (min-width: 768px) and (max-width: 991px) {
   .clients-section {
-    padding: 3rem 1.5rem;
-  }
-  
-  .client-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-  }
-  
-  .modal-body {
-    flex-direction: column;
-  }
-}
-
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .clients-section {
-    padding: 2.5rem 1rem;
+    padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
   }
   
   .client-grid {
@@ -742,19 +723,24 @@ function shuffleClients() {
     gap: 1rem;
   }
   
+  .client-card {
+    padding: 1rem;
+  }
+  
   .client-logo-container {
     height: 100px;
   }
   
-  .terminal-body {
-    padding: 1rem;
+  .modal-body {
+    flex-direction: column;
+    gap: 1.5rem;
   }
 }
 
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
+/* Mobile Landscape (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
   .clients-section {
-    padding: 2rem 0.8rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2rem);
   }
   
   .client-grid {
@@ -762,75 +748,103 @@ function shuffleClients() {
     gap: 0.8rem;
   }
   
-  .client-logo-container {
-    height: 90px;
-  }
-  
-  .terminal-body {
+  .client-card {
     padding: 0.8rem;
-  }
-  
-  .terminal-header {
-    padding: 0.6rem 0.8rem;
-  }
-  
-  .terminal-title {
-    font-size: 0.8rem;
-  }
-  
-  .terminal-button {
-    width: 10px;
-    height: 10px;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .clients-section {
-    padding: 1.5rem 0.5rem;
-  }
-  
-  .client-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.6rem;
   }
   
   .client-logo-container {
     height: 80px;
   }
   
-  .terminal-body {
+  .terminal-actions {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+}
+
+/* Mobile Portrait (480px to 575px) */
+@media (min-width: 480px) and (max-width: 575px) {
+  .clients-section {
+    padding: clamp(1.5rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem);
+  }
+  
+  .client-grid {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+  
+  .client-card {
     padding: 0.6rem;
   }
   
-  .terminal-header {
-    padding: 0.5rem 0.6rem;
+  .client-logo-container {
+    height: 70px;
   }
   
-  .terminal-title {
-    font-size: 0.7rem;
-  }
-  
-  .terminal-button {
-    width: 8px;
-    height: 8px;
-  }
-  
-  .client-stats {
+  .terminal-actions {
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.8rem;
   }
   
   .modal-body {
-    padding: 1rem;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .clients-section {
+    padding: clamp(1rem, 3vw, 1.5rem) clamp(0.8rem, 3vw, 1rem);
+  }
+  
+  .client-grid {
+    grid-template-columns: 1fr;
+    gap: 0.6rem;
+  }
+  
+  .client-card {
+    padding: 0.5rem;
+  }
+  
+  .client-logo-container {
+    height: 60px;
+  }
+  
+  .terminal-actions {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  
+  .modal-body {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+  
+  .modal-header {
+    padding: 0.8rem 1rem;
+  }
+  
+  .modal-header h2 {
+    font-size: 1.1rem;
   }
   
   .detail-item {
     flex-direction: column;
+    margin-bottom: 0.8rem;
   }
   
   .detail-key {
-    margin-bottom: 0.25rem;
+    min-width: 80px;
+    font-size: 0.8rem;
+  }
+  
+  .detail-value {
+    font-size: 0.8rem;
+  }
+  
+  .detail-description {
+    font-size: 0.8rem;
   }
 }
 </style>

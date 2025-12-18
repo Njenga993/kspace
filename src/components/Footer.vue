@@ -3,7 +3,11 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-        
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
         <div class="terminal-title">system@portfolio:~# ./footer.sh</div>
       </div>
       
@@ -141,34 +145,36 @@
                   <div class="contact-list">
                     <div class="contact-item">
                       <span class="contact-icon">📧</span>
-                      <a href="mailto:njengak993@gmail.com" class="contact-value">
-                        njengak993@gmail.com
-                      </a>
+                      <span class="contact-value">njengak993@gmail.com</span>
                     </div>
-                    <div class="contact-item">
+                  </div>
+                  <div class="contact-item">
                       <span class="contact-icon">📍</span>
                       <span class="contact-value">Nairobi, Kenya</span>
                     </div>
                   </div>
+                  <div class="contact-item">
+                      <span class="contact-icon">📱</span>
+                      <span class="contact-value">+254 703 642 280</span>
+                    </div>
                 </div>
                 
-                <div class="connect-item">
-                  <h3 class="connect-title">Social Networks</h3>
-                  <div class="social-grid">
-                    <a 
-                      v-for="social in socialLinks" 
-                      :key="social.id"
-                      :href="social.url" 
-                      target="_blank" 
-                      :aria-label="social.name"
-                      class="social-link"
-                    >
-                      <div class="social-icon">
-                        <i :class="social.icon"></i>
-                      </div>
-                    </a>
-                  </div>
-                </div>
+                <div class="social-links">
+                  <a 
+                    v-for="social in socialLinks" 
+                    :key="social.id"
+                    :href="social.url" 
+                    target="_blank" 
+                    class="social-link"
+                  >
+                    <div class="social-icon">
+                      <i :class="social.icon"></i>
+                    </div>
+                    <div class="social-info">
+                      <h4 class="social-name">{{ social.name }}</h4>
+                      <p class="social-handle">{{ social.handle }}</p>
+                    </div>
+                  </a>
               </div>
             </div>
           </div>
@@ -181,30 +187,30 @@
             <span class="separator">|</span>
             <span class="build-info">Build: v2.0.24</span>
           </div>
+          
           <div class="footer-links">
             <a href="#" class="footer-link">Privacy</a>
             <span class="separator">|</span>
             <a href="#" class="footer-link">Terms</a>
           </div>
-        </div>
-        
-        <!-- Terminal Prompt -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command cursor">_</span>
+          
+          <div class="terminal-prompt">
+            <span class="prompt-symbol">$</span>
+            <span class="command cursor">_</span>
+          </div>
         </div>
       </div>
+      
+      <!-- Back to Top Button -->
+      <button 
+        v-show="showBackToTop" 
+        @click="scrollToTop" 
+        class="back-to-top"
+        aria-label="Back to top"
+      >
+        <i class="fas fa-arrow-up"></i>
+      </button>
     </div>
-    
-    <!-- Back to Top Button -->
-    <button 
-      v-show="showBackToTop" 
-      @click="scrollToTop" 
-      class="back-to-top"
-      aria-label="Back to top"
-    >
-      <i class="fas fa-arrow-up"></i>
-    </button>
   </footer>
 </template>
 
@@ -216,36 +222,11 @@ const uptime = ref('0d 0h 0m 0s');
 const showBackToTop = ref(false);
 
 const navLinks = [
-  { 
-    id: 'about', 
-    text: 'About', 
-    icon: 'fas fa-user',
-    description: 'Learn more about my background and skills'
-  },
-  { 
-    id: 'skills', 
-    text: 'Skills', 
-    icon: 'fas fa-code',
-    description: 'Explore my technical expertise and technologies'
-  },
-  { 
-    id: 'experience', 
-    text: 'Experience', 
-    icon: 'fas fa-briefcase',
-    description: 'View my professional journey and achievements'
-  },
-  { 
-    id: 'projects', 
-    text: 'Projects', 
-    icon: 'fas fa-folder-open',
-    description: 'Check out my portfolio of work'
-  },
-  { 
-    id: 'contact', 
-    text: 'Contact', 
-    icon: 'fas fa-envelope',
-    description: 'Get in touch with me for opportunities'
-  }
+  { id: 'about', text: 'About', icon: 'fas fa-user', description: 'Learn more about my background and skills.' },
+  { id: 'skills', text: 'Skills', icon: 'fas fa-code', description: 'Explore my technical expertise and proficiencies.' },
+  { id: 'experience', text: 'Experience', icon: 'fas fa-briefcase', description: 'View my professional journey and work history.' },
+  { id: 'projects', text: 'Projects', icon: 'fas fa-folder-open', description: 'Check out my portfolio of work.' },
+  { id: 'contact', text: 'Contact', icon: 'fas fa-envelope', description: 'Get in touch with me for opportunities.' }
 ];
 
 const socialLinks = [
@@ -255,48 +236,43 @@ const socialLinks = [
   { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
 ];
 
-let startTime = Date.now();
 let uptimeInterval;
 
 const updateUptime = () => {
-  const elapsed = Date.now() - startTime;
-  const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+  const now = new Date();
+  const startTime = new Date('2023-01-01T00:00:00:00');
+  const elapsed = now - startTime;
+  const days = Math.floor(elapsed / (1000 * 60 * 60 * 24)); // milliseconds in a day
+  
   const hours = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((elapsed % (1000 * 60)) / 1000);
   
-  uptime.value = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-};
-
-const checkScroll = () => {
-  showBackToTop.value = window.scrollY > 300;
+  uptime.value = `${days}d ${hours}h ${minutes}m`;
 };
 
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 };
 
-const scrollToSection = (sectionId) => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
-  }
+const checkScroll = () => {
+  showBackToTop.value = window.scrollY > 300;
 };
 
 onMounted(() => {
-  window.addEventListener('scroll', checkScroll);
-  uptimeInterval = setInterval(updateUptime, 1000);
+  uptimeInterval = setInterval(updateUptime, 60000); // Update every minute
   updateUptime();
+  
+  window.addEventListener('scroll', checkScroll);
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', checkScroll);
   clearInterval(uptimeInterval);
+  window.removeEventListener('scroll', checkScroll);
 });
 </script>
 
 <style>
-/* Terminal Theme Variables */
+/* Using the same theme variables as other components */
 :root {
   --bg-color: #ffffff;
   --text-color: #1a202c;
@@ -317,7 +293,6 @@ onUnmounted(() => {
   --terminal-class: #4ec9b0;
   --terminal-parameter: #ffa657;
   --terminal-line-number: #858585;
-  --success-color: #3fb950;
 }
 
 .dark-theme {
@@ -347,18 +322,16 @@ onUnmounted(() => {
 /* Base Footer Styles */
 .footer-section {
   position: relative;
-  padding: 4rem 2rem 2rem;
+  width: 100%;
   background-color: var(--bg-color);
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
-  width: 100vw;
-  margin-left: -2rem;
-  margin-bottom: -2rem;
-  overflow: hidden;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
 }
 
 /* Terminal Container */
 .terminal-container {
+  width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   background-color: var(--terminal-bg);
@@ -368,13 +341,13 @@ onUnmounted(() => {
   animation: slideUp 0.8s ease-out;
 }
 
-/* Terminal Header */
+/* Terminal Styles */
 .terminal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
 }
 
 .terminal-buttons {
@@ -402,7 +375,7 @@ onUnmounted(() => {
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
 }
 
@@ -414,47 +387,66 @@ onUnmounted(() => {
 /* System Status */
 .system-status {
   display: flex;
-  justify-content: space-between;
-  padding: 1rem;
-  background-color: rgba(0, 0, 0, 0.2);
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  background-color: rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid var(--terminal-header);
 }
 
 .status-line {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
 }
 
 .status-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .status-value {
   color: var(--terminal-string);
   font-weight: bold;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .status-value.online {
-  color: var(--success-color);
+  color: var(--terminal-prompt);
 }
 
 /* Terminal Tabs */
 .terminal-tabs {
   display: flex;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.05);
   border-bottom: 1px solid var(--terminal-header);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.terminal-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 3px;
 }
 
 .tab {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
   cursor: pointer;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -462,17 +454,17 @@ onUnmounted(() => {
 }
 
 .tab.active {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.1);
   border-bottom-color: var(--accent-color);
 }
 
 .tab-icon {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .tab-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .tab.active .tab-text {
@@ -481,7 +473,7 @@ onUnmounted(() => {
 
 /* Tab Content */
 .tab-content {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   min-height: 300px;
 }
 
@@ -510,56 +502,18 @@ onUnmounted(() => {
   margin-bottom: 1.5rem;
 }
 
-.terminal-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  background-color: var(--terminal-header);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.footer-info {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--terminal-comment);
-  font-size: 0.9rem;
-}
-
-.footer-links {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.footer-link {
-  color: var(--terminal-string);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-link:hover {
-  color: var(--accent-color);
-}
-
-.separator {
-  color: var(--terminal-comment);
-  opacity: 0.7;
-}
-
 /* Profile Card */
 .profile-card {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
+  border-radius: 8px;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-left: 4px solid var(--accent-color);
 }
 
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   margin-bottom: 1.5rem;
 }
 
@@ -568,21 +522,21 @@ onUnmounted(() => {
 }
 
 .avatar {
-  width: 80px;
-  height: 80px;
+  width: clamp(70px, 10vw, 80px);
+  height: clamp(70px, 10vw, 80px);
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--accent-color);
 }
 
-.status-indicator.online {
+.status-indicator {
   position: absolute;
   bottom: 5px;
   right: 5px;
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background-color: var(--success-color);
+  background-color: var(--terminal-prompt);
   border: 2px solid var(--terminal-bg);
 }
 
@@ -591,7 +545,7 @@ onUnmounted(() => {
 }
 
 .profile-name {
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
@@ -608,7 +562,7 @@ onUnmounted(() => {
   color: var(--accent-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
 }
 
 .profile-stats {
@@ -622,23 +576,20 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   text-align: center;
-  padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
 }
 
 .stat-number {
-  font-size: 1.5rem;
+  font-size: clamp(1.5rem, 2.5vw, 1.5rem);
   font-weight: bold;
-  color: var(--accent-color);
+  color: var(--terminal-string);
 }
 
 .stat-label {
-  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
-/* Navigation Grid */
+/* Navigation Tab */
 .nav-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -648,47 +599,37 @@ onUnmounted(() => {
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 1rem;
   padding: 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  text-decoration: none;
+  border-radius: 4px;
   transition: all 0.3s ease;
-  border-left: 3px solid transparent;
 }
 
 .nav-item:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
-  border-left-color: var(--accent-color);
+  transform: translateY(-2px);
 }
 
 .nav-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--terminal-header);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  font-size: clamp(1rem, 1.5vw, 1rem);
   color: var(--accent-color);
 }
 
 .nav-info {
   flex: 1;
+  text-align: left;
 }
 
 .nav-title {
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.5vw, 1rem);
   font-weight: bold;
-  margin: 0 0 0.25rem 0;
+  margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
 }
 
 .nav-description {
-  font-size: 0.8rem;
-  margin: 0;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
+  margin-top: 0.25rem;
 }
 
 .nav-arrow {
@@ -701,75 +642,137 @@ onUnmounted(() => {
   transform: translateX(3px);
 }
 
-/* Connect Grid */
+/* Connect Tab */
 .connect-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: 1rem;
 }
 
 .connect-item {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
-  border-left: 4px solid var(--accent-color);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .connect-title {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 1.5vw, 1rem);
   font-weight: bold;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
 }
 
 .contact-list {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .contact-item {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .contact-icon {
-  font-size: 1.2rem;
-}
-
-.contact-value {
-  color: var(--terminal-string);
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.contact-value:hover {
+  font-size: clamp(1rem, 1.5vw, 1rem);
   color: var(--accent-color);
 }
 
-.social-grid {
-  display: flex;
+.contact-value {
+  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
+  color: var(--terminal-string);
+}
+
+/* Social Links */
+.social-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
 }
 
 .social-link {
-  width: 50px;
-  height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-3px);
+}
+
+.social-icon {
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
   border-radius: 50%;
   background-color: var(--terminal-header);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--terminal-text);
-  text-decoration: none;
-  transition: all 0.3s ease;
 }
 
-.social-link:hover {
-  background-color: var(--accent-color);
-  color: white;
-  transform: translateY(-3px);
+.social-name {
+  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
+  font-weight: bold;
+  margin: 0 0 0.25rem 0;
+  color: var(--terminal-text);
+}
+
+.social-handle {
+  font-size: clamp(0.8rem, 1.2vw, 0.8rem);
+  color: var(--terminal-comment);
+}
+
+/* Terminal Footer */
+.terminal-footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
+  background-color: var(--terminal-header);
+  border-top: 1px solid var(--terminal-header);
+}
+
+.footer-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
+}
+
+.copyright {
+  color: var(--terminal-text);
+}
+
+.build-info {
+  color: var(--terminal-string);
+}
+
+.separator {
+  color: var(--terminal-comment);
+  opacity: 0.7;
+}
+
+.footer-links {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.footer-link {
+  color: var(--terminal-string);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: var(--accent-color);
 }
 
 /* Back to Top Button */
@@ -779,19 +782,18 @@ onUnmounted(() => {
   right: 2rem;
   width: 50px;
   height: 50px;
+  border-radius: 50%;
   background-color: var(--accent-color);
   color: white;
   border: none;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 100;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: all 0.3s ease;
   opacity: 0;
   transform: translateY(20px);
+  transition: all 0.3s ease;
+  z-index: 1000;
 }
 
 .back-to-top.show {
@@ -799,18 +801,7 @@ onUnmounted(() => {
   transform: translateY(0);
 }
 
-.back-to-top:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
 /* Animations */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -822,264 +813,149 @@ onUnmounted(() => {
   }
 }
 
-/* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .terminal-container {
-    max-width: 1300px;
-  }
-  
-  .avatar {
-    width: 90px;
-    height: 90px;
-  }
-  
-  .profile-name {
-    font-size: 1.7rem;
-  }
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
-/* Large Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .terminal-container {
-    max-width: 1200px;
+/* Responsive Design */
+/* Large Desktop (1200px and up) */
+@media (min-width: 1200px) {
+  .footer-section {
+    padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
   }
   
-  .avatar {
-    width: 85px;
-    height: 85px;
+  .terminal-container {
+    max-width: 1100px;
   }
   
   .profile-name {
-    font-size: 1.6rem;
+    font-size: clamp(1.3rem, 2.5vw, 1.5rem);
+  }
+  
+  .profile-stats {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 
 /* Desktop (992px to 1199px) */
 @media (min-width: 992px) and (max-width: 1199px) {
+  .footer-section {
+    padding: clamp(1.5rem, 3vw, 3rem);
+  }
+  
   .terminal-container {
-    max-width: 1100px;
-  }
-  
-  .tab-content {
-    padding: 1.2rem;
-  }
-  
-  .avatar {
-    width: 75px;
-    height: 75px;
+    max-width: 1000px;
   }
   
   .profile-name {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
   }
 }
 
 /* Tablet (768px to 991px) */
 @media (min-width: 768px) and (max-width: 991px) {
   .footer-section {
-    padding: 3rem 1rem 1rem;
+    padding: clamp(1.5rem, 3vw, 2.5rem);
   }
   
   .terminal-container {
     max-width: 100%;
-    margin: 0 1rem;
-  }
-  
-  .tab-content {
-    padding: 1rem;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .profile-name {
-    font-size: 1.4rem;
-  }
-  
-  .nav-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .connect-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .terminal-footer {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .footer-section {
-    padding: 2.5rem 0.5rem 1rem;
-  }
-  
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 0.5rem;
-  }
-  
-  .tab-content {
-    padding: 0.8rem;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 65px;
-    height: 65px;
-  }
-  
-  .profile-name {
-    font-size: 1.3rem;
-  }
-  
-  .nav-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .connect-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .terminal-footer {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .system-status {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-}
-
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .footer-section {
-    padding: 2rem 0.5rem 1rem;
-  }
-  
-  .terminal-container {
-    max-width: 100%;
-    margin: 0;
-  }
-  
-  .tab-content {
-    padding: 0.6rem;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 60px;
-    height: 60px;
-  }
-  
-  .profile-name {
-    font-size: 1.2rem;
-  }
-  
-  .nav-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .connect-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .terminal-footer {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .system-status {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .back-to-top {
-    width: 45px;
-    height: 45px;
-    bottom: 1.5rem;
-    right: 1.5rem;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .footer-section {
-    padding: 1.5rem 0.5rem 1rem;
-  }
-  
-  .terminal-container {
-    max-width: 100%;
-    margin: 0;
-  }
-  
-  .tab-content {
-    padding: 0.5rem;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 55px;
-    height: 55px;
   }
   
   .profile-name {
     font-size: 1.1rem;
   }
   
+  .profile-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
   .nav-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   .connect-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Mobile Landscape (576px to 767px) */
+@media (min-width: 576px) and (max-width: 767px) {
+  .footer-section {
+    padding: clamp(1rem, 3vw, 2rem);
   }
   
-  .terminal-footer {
+  .terminal-container {
+    max-width: 100%;
+  }
+  
+  .profile-header {
     flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .profile-name {
+    font-size: 1rem;
+  }
+  
+  .profile-stats {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+/* Mobile Portrait (480px to 575px) */
+@media (max-width: 575px) {
+  .footer-section {
+    padding: clamp(1rem, 3vw, 1.5rem);
+  }
+  
+  .terminal-container {
+    max-width: 100%;
+  }
+  
+  .profile-header {
+    gap: 0.75rem;
+  }
+  
+  .profile-name {
+    font-size: 0.9rem;
+  }
+  
+  .profile-stats {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+}
+
+/* Small Mobile (320px to 479px) */
+@media (max-width: 479px) {
+  .footer-section {
+    padding: clamp(1rem, 3vw, 1rem);
+  }
+  
+  .terminal-container {
+    max-width: 100%;
+  }
+  
+  .profile-header {
     gap: 0.5rem;
   }
   
-  .system-status {
+  .profile-name {
+    font-size: 0.8rem;
+  }
+  
+  .profile-stats {
     flex-direction: column;
     gap: 0.5rem;
   }
   
   .back-to-top {
-    width: 40px;
-    height: 40px;
     bottom: 1rem;
     right: 1rem;
-  }
-  
-  .social-link {
     width: 40px;
     height: 40px;
   }

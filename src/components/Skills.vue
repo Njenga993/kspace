@@ -3,7 +3,11 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-      
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
         <div class="terminal-title">skills@portfolio:~# ./system_profiler.sh</div>
       </div>
       
@@ -140,7 +144,11 @@
             
             <div class="skills-radar">
               <div class="radar-container">
-                <canvas ref="radarCanvas" id="skillsRadar" width="500" height="500"></canvas>
+                <canvas ref="radarCanvas" id="skillsRadar"></canvas>
+                <div v-if="isRadarLoading" class="radar-loading">
+                  <div class="loading-spinner"></div>
+                  <span>Rendering skills radar...</span>
+                </div>
               </div>
               
               <div class="radar-legend">
@@ -354,12 +362,13 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, nextTick } from 'vue';
+import { ref, computed, onMounted, nextTick, watch } from 'vue';
 
 const activeTab = ref('matrix');
 const expandedCategories = ref([]);
 const selectedSkill = ref(null);
 const radarCanvas = ref(null);
+const isRadarLoading = ref(false);
 
 const skillCategories = [
   {
@@ -518,8 +527,8 @@ const getSkillDescription = (skillName) => {
     'React': 'JavaScript library for building user interfaces.',
     'TypeScript': 'Typed superset of JavaScript that compiles to plain JavaScript.',
     'JavaScript': 'High-level, interpreted programming language.',
-    'HTML5': 'Latest evolution of the standard that defines HTML.',
-    'CSS3': 'Latest evolution of the Cascading Style Sheets language.',
+    'HTML5': 'Latest evolution of standard that defines HTML.',
+    'CSS3': 'Latest evolution of Cascading Style Sheets language.',
     'Tailwind CSS': 'Utility-first CSS framework for rapid UI development.',
     'Django': 'High-level Python web framework for rapid development.',
     'Python': 'High-level programming language for general-purpose programming.',
@@ -579,28 +588,81 @@ const getProjectsForSkill = (skillName) => {
 const drawRadarChart = () => {
   if (!radarCanvas.value) return;
   
-  const canvas = radarCanvas.value;
-  const ctx = canvas.getContext('2d');
-  const centerX = canvas.width / 2;
-  const centerY = canvas.height / 2;
-  const radius = Math.min(centerX, centerY) - 40;
-  const categories = skillCategories;
-  const angleStep = (Math.PI * 2) / categories.length;
+  isRadarLoading.value = true;
   
-  // Clear canvas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Draw grid
-  for (let i = 1; i <= 5; i++) {
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+  // Simulate loading time for better UX
+  setTimeout(() => {
+    const canvas = radarCanvas.value;
+    const ctx = canvas.getContext('2d');
+    const isMobile = window.innerWidth <= 768;
     
-    for (let j = 0; j < categories.length; j++) {
-      const angle = j * angleStep - Math.PI / 2;
-      const x = centerX + Math.cos(angle) * (radius * i / 5);
-      const y = centerY + Math.sin(angle) * (radius * i / 5);
+    // Set canvas size based on viewport
+    const size = isMobile ? Math.min(window.innerWidth - 60, 300) : 500;
+    canvas.width = size;
+    canvas.height = size;
+    
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = Math.min(centerX, centerY) - (isMobile ? 30 : 40);
+    const categories = skillCategories;
+    const angleStep = (Math.PI * 2) / categories.length;
+    
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw grid
+    for (let i = 1; i <= 5; i++) {
+      ctx.beginPath();
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
       
-      if (j === 0) {
+      for (let j = 0; j < categories.length; j++) {
+        const angle = j * angleStep - Math.PI / 2;
+        const x = centerX + Math.cos(angle) * (radius * i / 5);
+        const y = centerY + Math.sin(angle) * (radius * i / 5);
+        
+        if (j === 0) {
+          ctx.moveTo(x, y);
+        } else {
+          ctx.lineTo(x, y);
+        }
+      }
+      
+      ctx.closePath();
+      ctx.stroke();
+    }
+    
+    // Draw axes
+    for (let i = 0; i < categories.length; i++) {
+      const angle = i * angleStep - Math.PI / 2;
+      const x = centerX + Math.cos(angle) * radius;
+      const y = centerY + Math.sin(angle) * radius;
+      
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY);
+      ctx.lineTo(x, y);
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+      ctx.stroke();
+      
+      // Draw labels
+      ctx.font = isMobile ? '12px Fira Code, monospace' : '14px Fira Code, monospace';
+      ctx.fillStyle = '#e6edf3';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      const labelX = centerX + Math.cos(angle) * (radius + (isMobile ? 15 : 20));
+      const labelY = centerY + Math.sin(angle) * (radius + (isMobile ? 15 : 20));
+      ctx.fillText(categories[i].title, labelX, labelY);
+    }
+    
+    // Draw data
+    ctx.beginPath();
+    for (let i = 0; i < categories.length; i++) {
+      const angle = i * angleStep - Math.PI / 2;
+      const value = categories[i].level / 5;
+      const x = centerX + Math.cos(angle) * (radius * value);
+      const y = centerY + Math.sin(angle) * (radius * value);
+      
+      if (i === 0) {
         ctx.moveTo(x, y);
       } else {
         ctx.lineTo(x, y);
@@ -608,66 +670,27 @@ const drawRadarChart = () => {
     }
     
     ctx.closePath();
-    ctx.stroke();
-  }
-  
-  // Draw axes
-  for (let i = 0; i < categories.length; i++) {
-    const angle = i * angleStep - Math.PI / 2;
-    const x = centerX + Math.cos(angle) * radius;
-    const y = centerY + Math.sin(angle) * radius;
-    
-    ctx.beginPath();
-    ctx.moveTo(centerX, centerY);
-    ctx.lineTo(x, y);
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-    ctx.stroke();
-    
-    // Draw labels
-    ctx.font = '14px Fira Code, monospace';
-    ctx.fillStyle = '#e6edf3';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    
-    const labelX = centerX + Math.cos(angle) * (radius + 20);
-    const labelY = centerY + Math.sin(angle) * (radius + 20);
-    ctx.fillText(categories[i].title, labelX, labelY);
-  }
-  
-  // Draw data
-  ctx.beginPath();
-  for (let i = 0; i < categories.length; i++) {
-    const angle = i * angleStep - Math.PI / 2;
-    const value = categories[i].level / 5;
-    const x = centerX + Math.cos(angle) * (radius * value);
-    const y = centerY + Math.sin(angle) * (radius * value);
-    
-    if (i === 0) {
-      ctx.moveTo(x, y);
-    } else {
-      ctx.lineTo(x, y);
-    }
-  }
-  
-  ctx.closePath();
-  ctx.fillStyle = 'rgba(88, 166, 255, 0.3)';
-  ctx.fill();
-  ctx.strokeStyle = '#58a6ff';
-  ctx.lineWidth = 2;
-  ctx.stroke();
-  
-  // Draw points
-  for (let i = 0; i < categories.length; i++) {
-    const angle = i * angleStep - Math.PI / 2;
-    const value = categories[i].level / 5;
-    const x = centerX + Math.cos(angle) * (radius * value);
-    const y = centerY + Math.sin(angle) * (radius * value);
-    
-    ctx.beginPath();
-    ctx.arc(x, y, 5, 0, Math.PI * 2);
-    ctx.fillStyle = getCategoryColor(categories[i].title);
+    ctx.fillStyle = 'rgba(88, 166, 255, 0.3)';
     ctx.fill();
-  }
+    ctx.strokeStyle = '#58a6ff';
+    ctx.lineWidth = 2;
+    ctx.stroke();
+    
+    // Draw points
+    for (let i = 0; i < categories.length; i++) {
+      const angle = i * angleStep - Math.PI / 2;
+      const value = categories[i].level / 5;
+      const x = centerX + Math.cos(angle) * (radius * value);
+      const y = centerY + Math.sin(angle) * (radius * value);
+      
+      ctx.beginPath();
+      ctx.arc(x, y, isMobile ? 4 : 5, 0, Math.PI * 2);
+      ctx.fillStyle = getCategoryColor(categories[i].title);
+      ctx.fill();
+    }
+    
+    isRadarLoading.value = false;
+  }, 500);
 };
 
 onMounted(() => {
@@ -676,10 +699,16 @@ onMounted(() => {
       drawRadarChart();
     }
   });
+  
+  // Add resize listener for responsive radar chart
+  window.addEventListener('resize', () => {
+    if (activeTab.value === 'radar') {
+      drawRadarChart();
+    }
+  });
 });
 
-// Watch for tab changes to redraw the radar chart
-import { watch } from 'vue';
+// Watch for tab changes to redraw radar chart
 watch(activeTab, (newTab) => {
   if (newTab === 'radar') {
     nextTick(() => {
@@ -689,71 +718,25 @@ watch(activeTab, (newTab) => {
 });
 </script>
 
-<style>
-/* Terminal Theme Variables */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #1a202c;
-  --secondary-text: #4a5568;
-  --accent-color: #3182ce;
-  --accent-hover: #2c5282;
-  --terminal-bg: #1e1e1e;
-  --terminal-header: #323232;
-  --terminal-text: #d4d4d4;
-  --terminal-prompt: #4ec9b0;
-  --terminal-keyword: #569cd6;
-  --terminal-string: #ce9178;
-  --terminal-comment: #6a9955;
-  --terminal-function: #dcdcaa;
-  --terminal-variable: #9cdcfe;
-  --terminal-property: #9cdcfe;
-  --terminal-boolean: #569cd6;
-  --terminal-class: #4ec9b0;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #858585;
-}
-
-.dark-theme {
-  --bg-color: #0d1117;
-  --text-color: #f0f6fc;
-  --secondary-text: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-}
-</style>
-
 <style scoped>
 /* Base Section Styles */
 .skills-section {
   position: relative;
-  padding: 4rem 2rem;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
   background-color: var(--bg-color);
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
-  width: 100vw;
-  width: calc(95% + 1rem);
-  margin-left: -2rem;
-  overflow: hidden;
 }
 
 /* Terminal Container */
 .terminal-container {
+  width: 100%;
   max-width: 1400px;
-  margin: 0 auto;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
@@ -767,7 +750,7 @@ watch(activeTab, (newTab) => {
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
 }
 
 .terminal-buttons {
@@ -795,7 +778,7 @@ watch(activeTab, (newTab) => {
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
 }
 
@@ -808,9 +791,11 @@ watch(activeTab, (newTab) => {
 .system-info {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .info-line {
@@ -821,12 +806,13 @@ watch(activeTab, (newTab) => {
 
 .info-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .info-value {
   color: var(--terminal-string);
   font-weight: bold;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Terminal Tabs */
@@ -834,16 +820,33 @@ watch(activeTab, (newTab) => {
   display: flex;
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.terminal-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 3px;
 }
 
 .tab {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
   cursor: pointer;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -856,16 +859,22 @@ watch(activeTab, (newTab) => {
 }
 
 .tab-icon {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .tab-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .tab.active .tab-text {
   color: var(--terminal-text);
+}
+
+/* Tab Content */
+.tab-content {
+  padding: clamp(1rem, 2vw, 1.5rem);
+  min-height: 400px;
 }
 
 /* Terminal Prompt */
@@ -873,8 +882,7 @@ watch(activeTab, (newTab) => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem 1.5rem;
-  margin-bottom: 0;
+  margin-bottom: 1rem;
 }
 
 .prompt-symbol {
@@ -891,17 +899,11 @@ watch(activeTab, (newTab) => {
   animation: blink 1s infinite;
 }
 
-/* Tab Content */
-.tab-content {
-  padding: 1.5rem;
-  min-height: 500px;
-}
-
 /* Matrix View */
 .skills-matrix {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
   margin-top: 1rem;
 }
 
@@ -910,13 +912,19 @@ watch(activeTab, (newTab) => {
   border-radius: 8px;
   overflow: hidden;
   animation: fadeIn 0.5s ease-out var(--delay) both;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.skill-category-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .category-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -926,14 +934,15 @@ watch(activeTab, (newTab) => {
 }
 
 .category-icon {
-  width: 48px;
-  height: 48px;
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
   border-radius: 50%;
   background-color: var(--accent-color);
   display: flex;
   align-items: center;
   justify-content: center;
   color: white;
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .category-info {
@@ -941,7 +950,7 @@ watch(activeTab, (newTab) => {
 }
 
 .category-title {
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
@@ -950,7 +959,7 @@ watch(activeTab, (newTab) => {
 .category-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
@@ -975,7 +984,7 @@ watch(activeTab, (newTab) => {
 }
 
 .category-details {
-  padding: 1rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -986,20 +995,21 @@ watch(activeTab, (newTab) => {
 .category-description p {
   margin: 0;
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.85rem, 1.3vw, 0.9rem);
+  line-height: 1.5;
 }
 
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
 }
 
 .skill-item {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem;
+  padding: clamp(0.5rem, 1vw, 0.75rem);
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
   cursor: pointer;
@@ -1012,8 +1022,8 @@ watch(activeTab, (newTab) => {
 }
 
 .skill-icon {
-  width: 32px;
-  height: 32px;
+  width: clamp(28px, 5vw, 32px);
+  height: clamp(28px, 5vw, 32px);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -1029,7 +1039,7 @@ watch(activeTab, (newTab) => {
 }
 
 .skill-name {
-  font-size: 0.9rem;
+  font-size: clamp(0.85rem, 1.3vw, 0.9rem);
   font-weight: bold;
   margin: 0 0 0.25rem 0;
   color: var(--terminal-text);
@@ -1055,7 +1065,7 @@ watch(activeTab, (newTab) => {
 }
 
 .level-text {
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1vw, 0.8rem);
   color: var(--terminal-comment);
   min-width: 30px;
   text-align: right;
@@ -1066,23 +1076,53 @@ watch(activeTab, (newTab) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
   margin-top: 1rem;
 }
 
 .radar-container {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  aspect-ratio: 1/1;
+}
+
+.radar-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  color: var(--terminal-text);
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
 }
 
 .radar-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: clamp(0.75rem, 1.5vw, 1rem);
   justify-content: center;
 }
 
@@ -1099,7 +1139,7 @@ watch(activeTab, (newTab) => {
 }
 
 .legend-text {
-  font-size: 0.9rem;
+  font-size: clamp(0.85rem, 1.3vw, 0.9rem);
   color: var(--terminal-text);
 }
 
@@ -1107,9 +1147,24 @@ watch(activeTab, (newTab) => {
 .code-container {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-top: 1rem;
   overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.code-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-container::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 4px;
 }
 
 .code-line {
@@ -1118,15 +1173,17 @@ watch(activeTab, (newTab) => {
 }
 
 .line-number {
-  width: 30px;
+  width: clamp(25px, 4vw, 30px);
   color: var(--terminal-line-number);
   text-align: right;
-  margin-right: 1rem;
+  margin-right: clamp(0.75rem, 1.5vw, 1rem);
   user-select: none;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .code-content {
   flex: 1;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .code-category {
@@ -1135,14 +1192,14 @@ watch(activeTab, (newTab) => {
 
 /* Stats Container */
 .stats-container {
-  margin-top: 2rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
 }
 
 .stats-terminal {
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 6px;
   border-left: 4px solid var(--accent-color);
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
 }
 
 .stats-header {
@@ -1155,11 +1212,12 @@ watch(activeTab, (newTab) => {
 
 .stat-line {
   margin-bottom: 0.25rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Terminal Footer */
 .terminal-footer {
-  padding: 1rem 1.5rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
   border-top: 1px solid var(--terminal-header);
 }
 
@@ -1192,20 +1250,21 @@ watch(activeTab, (newTab) => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-bottom: 1px solid var(--terminal-header);
 }
 
 .modal-header h2 {
   margin: 0;
   color: var(--terminal-text);
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
 }
 
 .close-button {
   background: none;
   border: none;
   color: var(--terminal-text);
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   cursor: pointer;
   padding: 0;
   width: 30px;
@@ -1216,15 +1275,15 @@ watch(activeTab, (newTab) => {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .skill-icon-large {
-  width: 80px;
-  height: 80px;
+  width: clamp(60px, 12vw, 80px);
+  height: clamp(60px, 12vw, 80px);
   margin: 0 auto;
   border-radius: 8px;
   overflow: hidden;
@@ -1246,6 +1305,7 @@ watch(activeTab, (newTab) => {
   font-weight: bold;
   color: var(--terminal-text);
   min-width: 100px;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .level-bar-large {
@@ -1266,17 +1326,21 @@ watch(activeTab, (newTab) => {
   color: var(--accent-color);
   min-width: 30px;
   text-align: right;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .skill-description h3,
 .skill-projects h3 {
   margin: 0 0 0.5rem 0;
   color: var(--accent-color);
+  font-size: clamp(1rem, 1.8vw, 1.1rem);
 }
 
 .skill-description p {
   margin: 0;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  line-height: 1.5;
 }
 
 .project-tags {
@@ -1290,7 +1354,7 @@ watch(activeTab, (newTab) => {
   color: var(--accent-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Code Syntax Highlighting */
@@ -1337,6 +1401,11 @@ watch(activeTab, (newTab) => {
   }
 }
 
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
@@ -1345,30 +1414,21 @@ watch(activeTab, (newTab) => {
 /* Responsive Design */
 @media (max-width: 992px) {
   .skills-matrix {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .skills-matrix {
     grid-template-columns: 1fr;
   }
   
   .skills-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  }
-}
-
-@media (max-width: 768px) {
-  .skills-section {
-    padding: 3rem 1rem;
-  }
-  
-  .terminal-container {
-    margin: 0 1rem;
-  }
-  
-  .tab-content {
-    padding: 1rem;
-  }
-  
-  .system-info {
-    flex-direction: column;
-    gap: 0.5rem;
   }
   
   .category-header {
@@ -1379,35 +1439,34 @@ watch(activeTab, (newTab) => {
     padding: 0.75rem;
   }
   
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-  
   .skill-item {
     padding: 0.5rem;
   }
   
   .radar-container {
-    width: 100%;
-    overflow-x: auto;
+    max-width: 100%;
   }
   
-  #skillsRadar {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
+  .code-container {
+    padding: 1rem;
+  }
+  
+  .line-number {
+    width: 25px;
+    margin-right: 0.75rem;
+  }
+  
+  .modal-body {
+    padding: 1rem;
+  }
+  
+  .skill-icon-large {
+    width: 60px;
+    height: 60px;
   }
 }
 
 @media (max-width: 480px) {
-  .skills-section {
-    padding: 2rem 0.5rem;
-  }
-  
-  .terminal-container {
-    margin: 0 0.5rem;
-  }
-  
   .tab-content {
     padding: 0.8rem;
   }
@@ -1425,11 +1484,13 @@ watch(activeTab, (newTab) => {
   
   .skill-item {
     padding: 0.5rem;
+    flex-direction: column;
+    text-align: center;
   }
   
   .skill-icon {
-    width: 24px;
-    height: 24px;
+    width: 40px;
+    height: 40px;
   }
   
   .code-container {
@@ -1437,17 +1498,21 @@ watch(activeTab, (newTab) => {
   }
   
   .line-number {
-    width: 25px;
+    width: 20px;
     margin-right: 0.6rem;
   }
   
   .modal-body {
-    padding: 1rem;
+    padding: 0.8rem;
   }
   
   .skill-icon-large {
-    width: 60px;
-    height: 60px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .project-tags {
+    justify-content: center;
   }
 }
 </style>

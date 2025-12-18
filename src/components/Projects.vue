@@ -3,7 +3,11 @@
     <div class="terminal-container">
       <!-- Terminal Header -->
       <div class="terminal-header">
-        
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
         <div class="terminal-title">projects@portfolio:~# ./explore.sh</div>
       </div>
       
@@ -457,8 +461,8 @@ const projects = [
     description: 'A comprehensive e-commerce platform for organic products featuring seamless shopping experience.',
     tech: ['React.js', 'JavaScript', 'CSS3', 'HTML5', 'Responsive Design'],
     category: 'E-commerce',
-    github: 'https://github.com/Njenga993/Nyakazi-ecommerce-',
-    demo: 'https://njenga993.github.io/Nyakazi-ecommerce-/',
+    github: 'https://github.com/Njenga993/nyakazi-ecommerce-',
+    demo: 'https://njenga993.github.io/nyakazi-ecommerce-/',
     image: import.meta.env.BASE_URL + 'Nyakazi-ecommerce.PNG',
     status: 'live',
     size: '4.1MB',
@@ -470,7 +474,7 @@ const projects = [
     description: 'Professional corporate website for Nyakazi Organics showcasing company values, products, and services.',
     tech: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design', 'SEO'],
     category: 'Web Development',
-    github: 'https://github.com/Njenga993/Nyakazi',
+    github: 'https://github.com/Njenga993/nyakazi',
     demo: 'https://nyakazi.org',
     image: import.meta.env.BASE_URL + 'Nyakazi.png',
     status: 'live',
@@ -560,71 +564,25 @@ const closeProjectDetails = () => {
 };
 </script>
 
-<style>
-/* Terminal Theme Variables */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #1a202c;
-  --secondary-text: #4a5568;
-  --accent-color: #3182ce;
-  --accent-hover: #2c5282;
-  --terminal-bg: #1e1e1e;
-  --terminal-header: #323232;
-  --terminal-text: #d4d4d4;
-  --terminal-prompt: #4ec9b0;
-  --terminal-keyword: #569cd6;
-  --terminal-string: #ce9178;
-  --terminal-comment: #6a9955;
-  --terminal-function: #dcdcaa;
-  --terminal-variable: #9cdcfe;
-  --terminal-property: #9cdcfe;
-  --terminal-boolean: #569cd6;
-  --terminal-class: #4ec9b0;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #858585;
-}
-
-.dark-theme {
-  --bg-color: #0d1117;
-  --text-color: #f0f6fc;
-  --secondary-text: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-}
-</style>
-
 <style scoped>
 /* Base Section Styles */
 .projects-section {
   position: relative;
-  padding: 4rem 2rem;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
   background-color: var(--bg-color);
   font-family: 'Fira Code', 'Courier New', monospace;
   color: var(--text-color);
-  width: 100vw;
-  width: calc(95% + 1rem);
-  margin-left: -2rem;
-  overflow: hidden;
 }
 
 /* Terminal Container */
 .terminal-container {
+  width: 100%;
   max-width: 1400px;
-  margin: 0 auto;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
@@ -638,7 +596,7 @@ const closeProjectDetails = () => {
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
 }
 
 .terminal-buttons {
@@ -666,7 +624,7 @@ const closeProjectDetails = () => {
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
 }
 
@@ -679,9 +637,11 @@ const closeProjectDetails = () => {
 .system-info {
   display: flex;
   justify-content: space-between;
-  padding: 1rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem);
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .info-line {
@@ -692,12 +652,13 @@ const closeProjectDetails = () => {
 
 .info-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .info-value {
   color: var(--terminal-string);
   font-weight: bold;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Terminal Tabs */
@@ -705,16 +666,33 @@ const closeProjectDetails = () => {
   display: flex;
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.terminal-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 3px;
 }
 
 .tab {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
   cursor: pointer;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -727,12 +705,12 @@ const closeProjectDetails = () => {
 }
 
 .tab-icon {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .tab-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .tab.active .tab-text {
@@ -744,7 +722,7 @@ const closeProjectDetails = () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 1rem 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-bottom: 0;
 }
 
@@ -770,13 +748,14 @@ const closeProjectDetails = () => {
 
 .filter-value {
   color: var(--terminal-string);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .filter-options {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  padding: 0 1.5rem 1rem;
+  padding: 0 clamp(1rem, 2vw, 1.5rem) clamp(0.75rem, 1.5vw, 1rem);
 }
 
 .filter-option {
@@ -788,6 +767,7 @@ const closeProjectDetails = () => {
   font-family: 'Fira Code', 'Courier New', monospace;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .filter-option:hover {
@@ -801,15 +781,15 @@ const closeProjectDetails = () => {
 
 /* Tab Content */
 .tab-content {
-  padding: 1.5rem;
-  min-height: 500px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  min-height: 400px;
 }
 
 /* Grid View */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
   margin-top: 1rem;
 }
 
@@ -831,19 +811,20 @@ const closeProjectDetails = () => {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .project-icon {
-  width: 40px;
-  height: 40px;
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
   border-radius: 50%;
   background-color: var(--terminal-header);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--accent-color);
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .project-info {
@@ -851,7 +832,7 @@ const closeProjectDetails = () => {
 }
 
 .project-name {
-  font-size: 1rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: bold;
   margin: 0 0 0.25rem 0;
   color: var(--terminal-text);
@@ -860,7 +841,7 @@ const closeProjectDetails = () => {
 .project-meta {
   display: flex;
   justify-content: space-between;
-  font-size: 0.8rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   color: var(--terminal-comment);
 }
 
@@ -890,7 +871,7 @@ const closeProjectDetails = () => {
 
 .project-preview {
   position: relative;
-  height: 200px;
+  height: clamp(180px, 30vw, 220px);
   overflow: hidden;
 }
 
@@ -926,16 +907,17 @@ const closeProjectDetails = () => {
 .overlay-content {
   padding: 1rem;
   text-align: center;
+  max-width: 90%;
 }
 
 .overlay-content h4 {
-  font-size: 1.1rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
 }
 
 .overlay-content p {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   margin: 0 0 1rem 0;
   color: var(--terminal-comment);
 }
@@ -952,20 +934,20 @@ const closeProjectDetails = () => {
   color: var(--accent-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
 }
 
 .project-actions {
   display: flex;
   justify-content: flex-end;
   gap: 0.5rem;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .action-btn {
-  width: 36px;
-  height: 36px;
+  width: clamp(32px, 6vw, 36px);
+  height: clamp(32px, 6vw, 36px);
   border-radius: 50%;
   background-color: var(--terminal-header);
   display: flex;
@@ -974,6 +956,7 @@ const closeProjectDetails = () => {
   color: var(--terminal-text);
   text-decoration: none;
   transition: all 0.3s ease;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .action-btn:hover {
@@ -994,7 +977,7 @@ const closeProjectDetails = () => {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   background-color: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
   transition: all 0.3s ease;
@@ -1008,14 +991,15 @@ const closeProjectDetails = () => {
 }
 
 .list-icon {
-  width: 40px;
-  height: 40px;
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
   border-radius: 50%;
   background-color: var(--terminal-header);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--accent-color);
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .list-content {
@@ -1023,14 +1007,14 @@ const closeProjectDetails = () => {
 }
 
 .list-title {
-  font-size: 1rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: bold;
   margin: 0 0 0.25rem 0;
   color: var(--terminal-text);
 }
 
 .list-description {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   margin: 0 0 0.5rem 0;
   color: var(--terminal-comment);
 }
@@ -1052,13 +1036,13 @@ const closeProjectDetails = () => {
   color: var(--accent-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
 }
 
 .list-status {
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
   font-weight: bold;
 }
 
@@ -1081,9 +1065,24 @@ const closeProjectDetails = () => {
 .code-container {
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 8px;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   margin-top: 1rem;
   overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.code-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.code-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-container::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 4px;
 }
 
 .code-line {
@@ -1092,15 +1091,17 @@ const closeProjectDetails = () => {
 }
 
 .line-number {
-  width: 30px;
+  width: clamp(25px, 4vw, 30px);
   color: var(--terminal-line-number);
   text-align: right;
-  margin-right: 1rem;
+  margin-right: clamp(0.75rem, 1.5vw, 1rem);
   user-select: none;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .code-content {
   flex: 1;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .code-project {
@@ -1123,8 +1124,8 @@ const closeProjectDetails = () => {
 
 /* Pagination */
 .pagination {
-  margin-top: 2rem;
-  padding: 0 1.5rem;
+  margin-top: clamp(1.5rem, 3vw, 2rem);
+  padding: 0 clamp(1rem, 2vw, 1.5rem);
 }
 
 .pagination-controls {
@@ -1136,8 +1137,8 @@ const closeProjectDetails = () => {
 }
 
 .pagination-btn {
-  width: 36px;
-  height: 36px;
+  width: clamp(32px, 6vw, 36px);
+  height: clamp(32px, 6vw, 36px);
   border-radius: 50%;
   background-color: var(--terminal-header);
   display: flex;
@@ -1147,6 +1148,7 @@ const closeProjectDetails = () => {
   border: none;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .pagination-btn:hover:not(:disabled) {
@@ -1165,8 +1167,8 @@ const closeProjectDetails = () => {
 }
 
 .page-number {
-  width: 36px;
-  height: 36px;
+  width: clamp(32px, 6vw, 36px);
+  height: clamp(32px, 6vw, 36px);
   border-radius: 50%;
   background-color: transparent;
   display: flex;
@@ -1177,6 +1179,7 @@ const closeProjectDetails = () => {
   font-family: 'Fira Code', 'Courier New', monospace;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .page-number:hover {
@@ -1192,12 +1195,12 @@ const closeProjectDetails = () => {
 .pagination-info {
   text-align: center;
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 /* Terminal Footer */
 .terminal-footer {
-  padding: 1rem 1.5rem;
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
   border-top: 1px solid var(--terminal-header);
 }
 
@@ -1230,20 +1233,21 @@ const closeProjectDetails = () => {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1rem 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-bottom: 1px solid var(--terminal-header);
 }
 
 .modal-header h2 {
   margin: 0;
   color: var(--terminal-text);
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
 }
 
 .close-button {
   background: none;
   border: none;
   color: var(--terminal-text);
-  font-size: 1.5rem;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
   cursor: pointer;
   padding: 0;
   width: 30px;
@@ -1254,7 +1258,7 @@ const closeProjectDetails = () => {
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 2rem;
@@ -1280,17 +1284,21 @@ const closeProjectDetails = () => {
 .detail-section h3 {
   margin: 0 0 0.5rem 0;
   color: var(--accent-color);
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
 }
 
 .detail-section p {
   margin: 0;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  line-height: 1.5;
 }
 
 .detail-section ul {
   margin: 0;
   padding-left: 1.5rem;
   color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
 }
 
 .tech-list {
@@ -1314,6 +1322,7 @@ const closeProjectDetails = () => {
   border-radius: 4px;
   text-decoration: none;
   transition: all 0.3s ease;
+  font-size: clamp(0.9rem, 1.3vw, 1rem);
 }
 
 .link-btn:hover {
@@ -1338,11 +1347,6 @@ const closeProjectDetails = () => {
   to { opacity: 1; }
 }
 
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
 @keyframes modalFadeIn {
   from {
     opacity: 0;
@@ -1354,201 +1358,82 @@ const closeProjectDetails = () => {
   }
 }
 
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
 /* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .terminal-container {
-    max-width: 1300px;
-  }
-  
-  .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  }
-}
-
-/* Large Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .terminal-container {
-    max-width: 1200px;
-  }
-  
-  .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  }
-}
-
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .terminal-container {
-    max-width: 1100px;
-  }
-  
-  .tab-content {
-    padding: 1.2rem;
-  }
-  
+@media (max-width: 1200px) {
   .projects-grid {
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   }
 }
 
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .projects-section {
-    padding: 3rem 1rem;
+@media (max-width: 992px) {
+  .projects-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   }
   
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 1rem;
+  .modal-body {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .projects-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
-  .tab-content {
+  .project-card {
+    border-radius: 8px;
+  }
+  
+  .project-header {
     padding: 1rem;
   }
   
-  .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 1rem;
+  .project-actions {
+    padding: 1rem;
+  }
+  
+  .list-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .list-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .list-actions {
+    align-self: flex-end;
   }
   
   .modal-body {
-    grid-template-columns: 1fr;
-  }
-  
-  .system-info {
-    flex-direction: column;
-    gap: 0.5rem;
+    padding: 1rem;
   }
 }
 
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .projects-section {
-    padding: 2.5rem 0.5rem;
-  }
-  
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 0.5rem;
-  }
-  
-  .tab-content {
-    padding: 0.8rem;
-  }
-  
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  
-  .modal-body {
-    grid-template-columns: 1fr;
-  }
-  
-  .system-info {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-prompt {
-    padding: 0.8rem 1rem;
-  }
-}
-
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .projects-section {
-    padding: 2rem 0.5rem;
-  }
-  
-  .terminal-container {
-    max-width: 95%;
-    margin-left: 2rem 0;
-  }
-  
-  .tab-content {
-    padding: 0.6rem;
-  }
-  
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 0.8rem;
-  }
-  
-  .modal-body {
-    grid-template-columns: 1fr;
-  }
-  
-  .system-info {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-prompt {
-    padding: 0.6rem 0.8rem;
-  }
-  
-  .filter-options {
-    padding: 0 0.8rem 0.8rem;
+@media (max-width: 576px) {
+  .project-card {
+    border-radius: 8px;
   }
   
   .project-header {
-    padding: 0.8rem;
+    padding: 0.75rem;
   }
   
   .project-actions {
-    padding: 0.8rem;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .projects-section {
-    padding: 1.5rem 0.5rem;
-  }
-  
-  .terminal-container {
-    max-width: 95%;
-    margin-left: 2rem 0;
-  }
-  
-  .tab-content {
-    padding: 0.5rem;
-  }
-  
-  .projects-grid {
-    grid-template-columns: 1fr;
-    gap: 0.6rem;
-  }
-  
-  .modal-body {
-    grid-template-columns: 1fr;
-  }
-  
-  .system-info {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .terminal-prompt {
-    padding: 0.5rem 0.6rem;
-  }
-  
-  .filter-options {
-    padding: 0 0.6rem 0.6rem;
-  }
-  
-  .project-header {
-    padding: 0.6rem;
-  }
-  
-  .project-actions {
-    padding: 0.6rem;
+    padding: 0.75rem;
   }
   
   .project-name {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   
   .overlay-content h4 {
@@ -1560,20 +1445,36 @@ const closeProjectDetails = () => {
   }
   
   .list-title {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
   
   .list-description {
     font-size: 0.8rem;
   }
   
-  .code-container {
-    padding: 0.6rem;
+  .modal-body {
+    padding: 0.75rem;
   }
   
-  .line-number {
-    width: 25px;
-    margin-right: 0.6rem;
+  .detail-section h3 {
+    font-size: 1rem;
+  }
+  
+  .detail-section p {
+    font-size: 0.8rem;
+  }
+  
+  .tech-tag {
+    font-size: 0.7rem;
+  }
+  
+  .pagination-controls {
+    flex-wrap: wrap;
+  }
+  
+  .page-numbers {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
 </style>

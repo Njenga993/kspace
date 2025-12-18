@@ -1,4 +1,6 @@
+<!-- src/components/Sidebar.vue -->
 <template>
+  <!-- No changes to your excellent <template> structure -->
   <div class="navbar-container" :class="{ 'scrolled': isScrolled }">
     <div class="terminal-navbar">
       <div class="terminal-header">
@@ -43,7 +45,6 @@
 
         <!-- Right Section -->
         <div class="right-section">
-          <!-- Terminal Command Button -->
           <button 
             class="terminal-command-btn" 
             @click="toggleMobileMenu"
@@ -132,6 +133,7 @@
 </template>
 
 <script setup>
+// No changes to your excellent <script setup> logic
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const navLinks = [
@@ -148,37 +150,26 @@ const socialLinks = [
   { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
 ];
 
-// State variables
 const isScrolled = ref(false);
 const activeSection = ref('');
 const isMobileMenuOpen = ref(false);
 
 onMounted(() => {
-  // Add scroll listener
   window.addEventListener('scroll', handleScroll);
-  
-  // Check current section on load
   handleScroll();
-  
-  // Prevent body scroll when mobile menu is open
   document.addEventListener('keydown', handleEscapeKey);
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('scroll', handleScroll);
   document.removeEventListener('keydown', handleEscapeKey);
-  // Restore body scroll
   document.body.style.overflow = '';
 });
 
-// Handle scroll events
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50;
-  
-  // Update active section based on scroll position
   const sections = navLinks.map(link => document.getElementById(link.id));
   let currentSection = '';
-  
   sections.forEach(section => {
     if (!section) return;
     const rect = section.getBoundingClientRect();
@@ -186,13 +177,11 @@ const handleScroll = () => {
       currentSection = section.id;
     }
   });
-  
   if (currentSection && currentSection !== activeSection.value) {
     activeSection.value = currentSection;
   }
 };
 
-// Navigate to section
 const navigateToSection = (sectionId) => {
   const element = document.getElementById(sectionId);
   if (element) {
@@ -202,17 +191,13 @@ const navigateToSection = (sectionId) => {
   }
 };
 
-// Scroll to top
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   activeSection.value = '';
 };
 
-// Toggle mobile menu
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
-  
-  // Prevent body scroll when menu is open
   if (isMobileMenuOpen.value) {
     document.body.style.overflow = 'hidden';
   } else {
@@ -220,7 +205,6 @@ const toggleMobileMenu = () => {
   }
 };
 
-// Handle escape key to close mobile menu
 const handleEscapeKey = (e) => {
   if (e.key === 'Escape' && isMobileMenuOpen.value) {
     toggleMobileMenu();
@@ -229,33 +213,26 @@ const handleEscapeKey = (e) => {
 </script>
 
 <style scoped>
-/* Terminal Theme Variables */
+/* --- Theme Variables & Base Styles (No major changes) --- */
 :root {
+  /* Sync height with App.vue */
+  --navbar-height: 90px;
+
   --terminal-bg: #0d1117;
   --terminal-header: #161b22;
   --terminal-text: #e6edf3;
   --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
   --accent-color: #58a6ff;
   --accent-hover: #1f6feb;
 }
 
-/* Base Styles */
 .navbar-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+  height: var(--navbar-height); /* Set explicit height */
   transition: all 0.3s ease;
 }
 
@@ -264,59 +241,40 @@ const handleEscapeKey = (e) => {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   font-family: 'Fira Code', 'Courier New', monospace;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .navbar-container.scrolled .terminal-navbar {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
-/* Terminal Header */
+/* --- Terminal Header (No major changes) --- */
 .terminal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 1rem;
+  flex-shrink: 0;
 }
+.terminal-buttons { display: flex; gap: 0.5rem; }
+.terminal-button { width: 12px; height: 12px; border-radius: 50%; }
+.terminal-button.close { background-color: #ff5f56; }
+.terminal-button.minimize { background-color: #ffbd2e; }
+.terminal-button.maximize { background-color: #27c93f; }
+.terminal-title { color: var(--terminal-text); font-size: 0.8rem; opacity: 0.8; }
 
-.terminal-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.terminal-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.terminal-button.close {
-  background-color: #ff5f56;
-}
-
-.terminal-button.minimize {
-  background-color: #ffbd2e;
-}
-
-.terminal-button.maximize {
-  background-color: #27c93f;
-}
-
-.terminal-title {
-  color: var(--terminal-text);
-  font-size: 0.9rem;
-  opacity: 0.8;
-}
-
-/* Terminal Body */
+/* --- Terminal Body (Mobile-First) --- */
 .terminal-body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
+  flex: 1;
 }
 
-/* Logo Section */
 .logo-section {
   display: flex;
   align-items: center;
@@ -324,110 +282,41 @@ const handleEscapeKey = (e) => {
   cursor: pointer;
   transition: transform 0.3s ease;
 }
-
-.logo-section:hover {
-  transform: scale(1.05);
-}
-
-.logo-wrapper {
-  position: relative;
-}
-
+.logo-section:hover { transform: scale(1.05); }
+.logo-wrapper { position: relative; }
 .profile-img {
-  width: 40px;
-  height: 40px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--accent-color);
 }
-
 .status-indicator {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 12px;
-  height: 12px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background-color: #3fb950;
   border: 2px solid var(--terminal-bg);
 }
-
 .logo-name {
   font-weight: 700;
-  font-size: 1.2rem;
+  /* Fluid font size from 0.8rem to 1.2rem */
+  font-size: clamp(0.8rem, 2vw, 1.2rem);
   color: var(--terminal-text);
 }
 
-/* Desktop Navigation */
-.desktop-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-}
-
-.terminal-prompt {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.prompt-symbol {
-  color: var(--terminal-prompt);
-  font-weight: bold;
-}
-
-.command {
-  color: var(--terminal-text);
-}
-
-.cursor {
-  color: var(--terminal-prompt);
-  animation: blink 1s infinite;
-}
-
-.nav-list {
-  display: flex;
-  list-style: none;
-  gap: 1.5rem;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-link {
-  position: relative;
-  font-weight: 500;
-  color: var(--terminal-text);
-  text-decoration: none;
-  padding: 0.5rem 0;
-  transition: all 0.3s ease;
-}
-
-.nav-link:hover {
-  color: var(--accent-color);
-}
-
-.nav-link.active {
-  color: var(--accent-color);
-  font-weight: 600;
-}
-
-.nav-link.active::before {
-  content: '$ ';
-  color: var(--terminal-prompt);
-}
-
-/* Right Section */
-.right-section {
-  display: flex;
-  align-items: center;
-}
-
+/* --- Navigation (Mobile-First) --- */
+.desktop-nav { display: none; } /* Hidden on mobile */
+.right-section { display: flex; align-items: center; }
 .terminal-command-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   background-color: var(--terminal-header);
   border: 1px solid var(--terminal-prompt);
   border-radius: 4px;
@@ -437,17 +326,10 @@ const handleEscapeKey = (e) => {
   cursor: pointer;
   transition: all 0.3s ease;
 }
+.terminal-command-btn:hover { background-color: var(--terminal-prompt); color: var(--terminal-bg); }
+.command-symbol { font-size: 1.2rem; }
 
-.terminal-command-btn:hover {
-  background-color: var(--terminal-prompt);
-  color: var(--terminal-bg);
-}
-
-.command-symbol {
-  font-size: 1.2rem;
-}
-
-/* Mobile Terminal Menu */
+/* --- Mobile Menu (No major changes, just adjusted padding) --- */
 .mobile-terminal-overlay {
   position: fixed;
   top: 0;
@@ -460,17 +342,12 @@ const handleEscapeKey = (e) => {
   visibility: hidden;
   transition: all 0.3s ease;
 }
-
-.mobile-terminal-overlay.active {
-  opacity: 1;
-  visibility: visible;
-}
-
+.mobile-terminal-overlay.active { opacity: 1; visibility: visible; }
 .mobile-terminal {
   position: absolute;
   top: 0;
   right: 0;
-  width: 80%;
+  width: 85%;
   max-width: 400px;
   height: 100%;
   background-color: var(--terminal-bg);
@@ -480,341 +357,59 @@ const handleEscapeKey = (e) => {
   overflow-y: auto;
   font-family: 'Fira Code', 'Courier New', monospace;
 }
+.mobile-terminal-overlay.active .mobile-terminal { transform: translateX(0); }
 
-.mobile-terminal-overlay.active .mobile-terminal {
-  transform: translateX(0);
+.mobile-terminal-body { padding: 1.5rem; color: var(--terminal-text); }
+
+.file-icon { font-size: 1.2rem; }
+.file-name { font-weight: 500; }
+
+.social-links { display: flex; gap: 1rem; }
+
+.social-name { font-size: 0.8rem; color: var(--terminal-comment); }
+
+/* --- Animations --- */
+@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+.cursor { color: var(--terminal-prompt); animation: blink 1s infinite; }
+
+/* --- Responsive Design (Tablet and Up) --- */
+@media (min-width: 768px) {
+  .terminal-body { padding: 0.75rem 1.5rem; }
+  .profile-img { width: 36px; height: 36px; }
+  .status-indicator { width: 10px; height: 10px; }
+  .terminal-command-btn { width: 36px; height: 36px; }
+  .mobile-terminal-body { padding: 1.75rem; }
 }
 
-.mobile-terminal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
-}
-
-.mobile-terminal-body {
-  padding: 1.5rem;
-  color: var(--terminal-text);
-}
-
-.mobile-logo-section {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.mobile-terminal-prompt {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  margin-bottom: 1rem;
-}
-
-.mobile-nav {
-  margin-bottom: 1.5rem;
-}
-
-.mobile-nav-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.mobile-nav-item {
-  margin-bottom: 0.5rem;
-}
-
-.mobile-nav-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  color: var(--terminal-text);
-  text-decoration: none;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.mobile-nav-link:hover {
-  background-color: var(--terminal-header);
-}
-
-.mobile-nav-link.active {
-  background-color: var(--terminal-header);
-  color: var(--accent-color);
-}
-
-.file-icon {
-  font-size: 1.2rem;
-}
-
-.file-name {
-  font-weight: 500;
-}
-
-.mobile-social-links {
-  margin-bottom: 1.5rem;
-}
-
-.social-links {
-  display: flex;
-  gap: 1rem;
-}
-
-.social-link {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-.social-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: var(--terminal-header);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--terminal-text);
-  transition: all 0.3s ease;
-}
-
-.social-icon:hover {
-  background-color: var(--accent-color);
-  color: white;
-}
-
-.social-name {
-  font-size: 0.8rem;
-  color: var(--terminal-comment);
-}
-
-/* Animations */
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
-}
-
-/* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .terminal-body {
-    padding: 0.75rem 2rem;
-  }
-  
-  .nav-list {
-    gap: 2rem;
-  }
-  
-  .logo-name {
-    font-size: 1.3rem;
-  }
-}
-
-/* Large Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .terminal-body {
-    padding: 0.75rem 1.5rem;
-  }
-}
-
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .terminal-body {
-    padding: 0.75rem 1rem;
-  }
-  
-  .nav-list {
-    gap: 1.2rem;
-  }
-  
-  .logo-name {
-    font-size: 1.1rem;
-  }
-}
-
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .terminal-body {
-    padding: 0.75rem 1rem;
-  }
-  
-  .nav-list {
+/* --- Responsive Design (Desktop and Up) --- */
+@media (min-width: 1024px) {
+  .desktop-nav {
+    display: flex;
+    align-items: center;
     gap: 1rem;
   }
-  
+  .terminal-prompt { display: flex; align-items: center; gap: 0.25rem; }
+  .prompt-symbol { color: var(--terminal-prompt); font-weight: bold; }
+  .command { color: var(--terminal-text); }
+  .nav-list {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+    margin: 0;
+    padding: 0;
+  }
   .nav-link {
-    font-size: 0.9rem;
+    position: relative;
+    font-weight: 500;
+    color: var(--terminal-text);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
   }
+  .nav-link:hover { color: var(--accent-color); }
+  .nav-link.active { color: var(--accent-color); font-weight: 600; }
+  .nav-link.active::before { content: '$ '; color: var(--terminal-prompt); }
   
-  .logo-name {
-    font-size: 1rem;
-  }
-  
-  .profile-img {
-    width: 36px;
-    height: 36px;
-  }
-  
-  .status-indicator {
-    width: 10px;
-    height: 10px;
-  }
-}
-
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .desktop-nav {
-    display: none;
-  }
-  
-  .terminal-body {
-    padding: 0.75rem 1rem;
-  }
-  
-  .logo-name {
-    font-size: 1rem;
-  }
-  
-  .profile-img {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .status-indicator {
-    width: 8px;
-    height: 8px;
-  }
-  
-  .mobile-terminal {
-    width: 85%;
-  }
-}
-
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .desktop-nav {
-    display: none;
-  }
-  
-  .terminal-body {
-    padding: 0.5rem 0.75rem;
-  }
-  
-  .logo-name {
-    font-size: 0.9rem;
-  }
-  
-  .profile-img {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .status-indicator {
-    width: 8px;
-    height: 8px;
-  }
-  
-  .terminal-header {
-    padding: 0.5rem 0.75rem;
-  }
-  
-  .terminal-title {
-    font-size: 0.8rem;
-  }
-  
-  .terminal-command-btn {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .mobile-terminal {
-    width: 90%;
-  }
-  
-  .mobile-terminal-body {
-    padding: 1rem;
-  }
-  
-  .social-icon {
-    width: 36px;
-    height: 36px;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .desktop-nav {
-    display: none;
-  }
-  
-  .terminal-body {
-    padding: 0.5rem;
-  }
-  
-  .logo-name {
-    font-size: 0.8rem;
-  }
-  
-  .profile-img {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .status-indicator {
-    width: 6px;
-    height: 6px;
-  }
-  
-  .terminal-header {
-    padding: 0.4rem 0.5rem;
-  }
-  
-  .terminal-title {
-    font-size: 0.7rem;
-  }
-  
-  .terminal-command-btn {
-    width: 30px;
-    height: 30px;
-  }
-  
-  .mobile-terminal {
-    width: 95%;
-  }
-  
-  .mobile-terminal-body {
-    padding: 0.75rem;
-  }
-  
-  .mobile-logo-section {
-    margin-bottom: 1rem;
-  }
-  
-  .mobile-terminal-prompt {
-    margin-bottom: 0.75rem;
-  }
-  
-  .mobile-nav {
-    margin-bottom: 1rem;
-  }
-  
-  .mobile-social-links {
-    margin-bottom: 1rem;
-  }
-  
-  .social-icon {
-    width: 32px;
-    height: 32px;
-  }
-  
-  .social-name {
-    font-size: 0.7rem;
-  }
+  .right-section { display: none; } /* Hide hamburger on desktop */
 }
 </style>

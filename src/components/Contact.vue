@@ -1,12 +1,18 @@
 <template>
   <section id="contact" class="contact-section">
     <div class="terminal-container">
+      <!-- Terminal Header -->
       <div class="terminal-header">
-        
+        <div class="terminal-buttons">
+          <div class="terminal-button close"></div>
+          <div class="terminal-button minimize"></div>
+          <div class="terminal-button maximize"></div>
+        </div>
         <div class="terminal-title">root@k-space:~# ./connect.sh</div>
       </div>
-      
+
       <div class="terminal-body">
+        <!-- Network Status -->
         <div class="network-status">
           <div class="status-line">
             <span class="status-text">Establishing secure connection...</span>
@@ -16,7 +22,8 @@
             <div class="progress-fill" :style="{ width: connectionProgress + '%' }"></div>
           </div>
         </div>
-        
+
+        <!-- Terminal Tabs -->
         <div class="terminal-tabs">
           <div 
             class="tab" 
@@ -43,7 +50,8 @@
             <span class="tab-text">social</span>
           </div>
         </div>
-        
+
+        <!-- Tab Content -->
         <div class="tab-content">
           <!-- Info Tab -->
           <div v-if="activeTab === 'info'" class="info-tab">
@@ -51,12 +59,12 @@
               <span class="prompt-symbol">$</span>
               <span class="command">cat profile.json</span>
             </div>
-            
+
             <div class="terminal-output">
               <div class="profile-card">
                 <div class="profile-header">
                   <div class="avatar-container">
-                    <img src="/contact.jpg" alt="Kelvin Kamau" class="avatar" />
+                    <img src="/profile.JPG" alt="Kelvin Kamau" class="avatar" />
                     <div class="status-indicator online"></div>
                   </div>
                   <div class="profile-info">
@@ -67,7 +75,7 @@
                     </div>
                   </div>
                 </div>
-                
+
                 <div class="profile-details">
                   <div class="detail-item">
                     <span class="detail-icon">📍</span>
@@ -92,14 +100,14 @@
               </div>
             </div>
           </div>
-          
+
           <!-- Message Tab -->
           <div v-if="activeTab === 'message'" class="message-tab">
             <div class="terminal-prompt">
               <span class="prompt-symbol">$</span>
               <span class="command">./compose_message.sh</span>
             </div>
-            
+
             <div class="terminal-output">
               <div v-if="formStatus === 'success'" class="form-status success">
                 <div class="status-icon">
@@ -127,20 +135,15 @@
                 </div>
               </div>
 
+              <!-- Contact Form -->
               <form
                 v-else
                 ref="contactForm"
-                action="https://formsubmit.co/kamaukelvin077@gmail.com"
-                method="POST"
-                target="formsubmit-iframe"
                 @submit.prevent="handleSubmit"
                 class="contact-form"
               >
-                <!-- Hidden config -->
-                <input type="hidden" name="_captcha" value="false" />
-                <input type="hidden" name="_template" value="table" />
-                
                 <div class="form-grid">
+                  <!-- Name Field -->
                   <div class="form-group">
                     <label for="name" class="form-label">
                       <span class="label-key">name:</span>
@@ -154,7 +157,10 @@
                       required 
                       class="form-input"
                     />
+                    <span v-if="errors.name" class="error-message">{{ errors.name }}</span>
                   </div>
+
+                  <!-- Email Field -->
                   <div class="form-group">
                     <label for="email" class="form-label">
                       <span class="label-key">email:</span>
@@ -168,61 +174,73 @@
                       required 
                       class="form-input"
                     />
+                    <span v-if="errors.email" class="error-message">{{ errors.email }}</span>
+                  </div>
+
+                  <!-- Subject Field -->
+                  <div class="form-group">
+                    <label for="subject" class="form-label">
+                      <span class="label-key">subject:</span>
+                    </label>
+                    <select 
+                      id="subject" 
+                      name="subject" 
+                      v-model="formData.subject" 
+                      required 
+                      class="form-select"
+                    >
+                      <option value="" disabled>Select a subject</option>
+                      <option value="Project Inquiry">Project Inquiry</option>
+                      <option value="Job Opportunity">Job Opportunity</option>
+                      <option value="Collaboration">Collaboration</option>
+                      <option value="Consultation">Consultation</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <span v-if="errors.subject" class="error-message">{{ errors.subject }}</span>
+                  </div>
+
+                  <!-- Message Field -->
+                  <div class="form-group full-width">
+                    <label for="message" class="form-label">
+                      <span class="label-key">message:</span>
+                    </label>
+                    <textarea 
+                      id="message" 
+                      name="message" 
+                      v-model="formData.message"
+                      rows="6" 
+                      placeholder="Tell me about your project..." 
+                      required
+                      class="form-textarea"
+                    ></textarea>
+                    <span v-if="errors.message" class="error-message">{{ errors.message }}</span>
                   </div>
                 </div>
-                
-                <div class="form-group">
-                  <label for="subject" class="form-label">
-                    <span class="label-key">subject:</span>
-                  </label>
-                  <select id="subject" name="subject" v-model="formData.subject" required class="form-select">
-                    <option value="" disabled selected>Select a subject</option>
-                    <option value="Project Inquiry">Project Inquiry</option>
-                    <option value="Job Opportunity">Job Opportunity</option>
-                    <option value="Collaboration">Collaboration</option>
-                    <option value="Consultation">Consultation</option>
-                    <option value="Other">Other</option>
-                  </select>
-                </div>
-                
-                <div class="form-group">
-                  <label for="message" class="form-label">
-                    <span class="label-key">message:</span>
-                  </label>
-                  <textarea 
-                    id="message" 
-                    name="message" 
-                    v-model="formData.message"
-                    rows="6" 
-                    placeholder="Tell me about your project..." 
-                    required
-                    class="form-textarea"
-                  ></textarea>
-                </div>
 
-                <button type="submit" class="submit-btn" :disabled="isSubmitting">
-                  <span v-if="!isSubmitting" class="btn-text">
-                    <span class="btn-icon">📤</span>
-                    <span class="btn-command">send_message()</span>
-                  </span>
-                  <span v-else class="loading">
-                    <span class="loading-spinner"></span>
-                    <span class="loading-text">Transmitting...</span>
-                  </span>
-                </button>
+                <!-- Form Actions -->
+                <div class="form-actions">
+                  <button type="submit" class="submit-btn" :disabled="isSubmitting">
+                    <span v-if="!isSubmitting" class="btn-text">
+                      <span class="btn-icon">📤</span>
+                      <span class="btn-command">send_message()</span>
+                    </span>
+                    <span v-else class="loading">
+                      <span class="loading-spinner"></span>
+                      <span class="loading-text">Transmitting...</span>
+                    </span>
+                  </button>
+                </div>
               </form>
-
-              <iframe name="formsubmit-iframe" style="display: none;"></iframe>
             </div>
           </div>
-          
+
           <!-- Social Tab -->
           <div v-if="activeTab === 'social'" class="social-tab">
             <div class="terminal-prompt">
               <span class="prompt-symbol">$</span>
               <span class="command">ls -la /social/</span>
             </div>
-            
+
             <div class="terminal-output">
               <div class="social-grid">
                 <a href="https://github.com/Njenga993" target="_blank" class="social-card github">
@@ -237,7 +255,7 @@
                     <i class="fas fa-arrow-right"></i>
                   </div>
                 </a>
-                
+
                 <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" class="social-card linkedin">
                   <div class="social-icon">
                     <i class="fab fa-linkedin-in"></i>
@@ -250,8 +268,8 @@
                     <i class="fas fa-arrow-right"></i>
                   </div>
                 </a>
-                
-                <a href="https://x.com/kamau_nje/" target="_blank" class="social-card twitter">
+
+                <a href="https://x.com/kamau_nje" target="_blank" class="social-card twitter">
                   <div class="social-icon">
                     <i class="fab fa-twitter"></i>
                   </div>
@@ -263,7 +281,7 @@
                     <i class="fas fa-arrow-right"></i>
                   </div>
                 </a>
-                
+
                 <a href="mailto:njengak993@gmail.com" class="social-card email">
                   <div class="social-icon">
                     <i class="fas fa-envelope"></i>
@@ -280,7 +298,8 @@
             </div>
           </div>
         </div>
-        
+
+        <!-- Terminal Footer -->
         <div class="terminal-footer">
           <div class="terminal-prompt">
             <span class="prompt-symbol">$</span>
@@ -292,17 +311,25 @@
   </section>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from 'vue';
 
 const activeTab = ref('info');
 const connectionActive = ref(false);
 const connectionProgress = ref(0);
-const formStatus = ref(null); // null, 'success', or 'error'
+const formStatus = ref(null);
 const isSubmitting = ref(false);
 const contactForm = ref(null);
 
 const formData = ref({
+  name: '',
+  email: '',
+  subject: '',
+  message: ''
+});
+
+const errors = ref({
   name: '',
   email: '',
   subject: '',
@@ -320,11 +347,54 @@ onMounted(() => {
   }, 50);
 });
 
+const validateForm = () => {
+  errors.value = {
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  };
+  
+  // Validate name
+  if (!formData.value.name.trim()) {
+    errors.value.name = 'Name is required';
+  } else if (formData.value.name.trim().length < 2) {
+    errors.value.name = 'Name must be at least 2 characters';
+  }
+  
+  // Validate email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!formData.value.email.trim()) {
+    errors.value.email = 'Email is required';
+  } else if (!emailRegex.test(formData.value.email)) {
+    errors.value.email = 'Please enter a valid email';
+  }
+  
+  // Validate subject
+  if (!formData.value.subject) {
+    errors.value.subject = 'Please select a subject';
+  }
+  
+  // Validate message
+  if (!formData.value.message.trim()) {
+    errors.value.message = 'Message is required';
+  } else if (formData.value.message.trim().length < 10) {
+    errors.value.message = 'Message must be at least 10 characters';
+  }
+  
+  return Object.values(errors.value).every(error => !error);
+};
+
 const handleSubmit = async () => {
+  if (!validateForm()) {
+    return;
+  }
+  
   isSubmitting.value = true;
   
   try {
-    // Simulate form submission (replace with actual form submission)
+    // In a real implementation, you would send the form data to your backend
+    // For this example, we'll simulate a submission
     await new Promise(resolve => setTimeout(resolve, 1500));
     
     // Randomly determine success/error for demo (remove in production)
@@ -332,8 +402,10 @@ const handleSubmit = async () => {
     
     if (isSuccess) {
       formStatus.value = 'success';
-      // In production, this would happen after actual form submission
-      contactForm.value.submit();
+      // Reset form after successful submission
+      setTimeout(() => {
+        resetForm();
+      }, 5000);
     } else {
       formStatus.value = 'error';
     }
@@ -352,55 +424,39 @@ const resetForm = () => {
     subject: '',
     message: ''
   };
+  errors.value = {
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  };
 };
 </script>
-
-<style>
-/* Terminal Theme Variables */
-:root {
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --success-color: #3fb950;
-  --error-color: #ff7b72;
-}
-</style>
 
 <style scoped>
 /* Base Section Styles */
 .contact-section {
-  padding: 6rem 2rem;
-  background-color: var(--terminal-bg);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  color: var(--terminal-text);
-  width: 100vw;
-  width: calc(95% + 2rem);
-  margin-left: -2rem;
-  margin-bottom: -2rem;
   position: relative;
-  z-index: 10;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
+  background-color: var(--bg-color);
+  font-family: 'Fira Code', 'Courier New', monospace;
+  color: var(--text-color);
 }
 
+/* Terminal Container */
 .terminal-container {
-  max-width: 900px;
-  margin: 0 auto;
+  width: 100%;
+  max-width: 1000px;
   background-color: var(--terminal-bg);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.8s ease-out;
 }
 
 /* Terminal Header */
@@ -409,7 +465,7 @@ const resetForm = () => {
   align-items: center;
   justify-content: space-between;
   background-color: var(--terminal-header);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
 }
 
 .terminal-buttons {
@@ -437,13 +493,18 @@ const resetForm = () => {
 
 .terminal-title {
   color: var(--terminal-text);
-  font-size: 0.9rem;
+  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
   opacity: 0.8;
+}
+
+/* Terminal Body */
+.terminal-body {
+  padding: 0;
 }
 
 /* Network Status */
 .network-status {
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
 }
@@ -457,7 +518,7 @@ const resetForm = () => {
 
 .status-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .status-indicator {
@@ -491,16 +552,33 @@ const resetForm = () => {
   display: flex;
   background-color: rgba(0, 0, 0, 0.2);
   border-bottom: 1px solid var(--terminal-header);
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--terminal-header) transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.terminal-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.terminal-tabs::-webkit-scrollbar-thumb {
+  background-color: var(--terminal-header);
+  border-radius: 3px;
 }
 
 .tab {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
+  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
   cursor: pointer;
   transition: all 0.3s ease;
   border-bottom: 2px solid transparent;
+  white-space: nowrap;
 }
 
 .tab:hover {
@@ -513,28 +591,25 @@ const resetForm = () => {
 }
 
 .tab-icon {
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.5vw, 1rem);
 }
 
 .tab-text {
   color: var(--terminal-comment);
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
 }
 
 .tab.active .tab-text {
   color: var(--terminal-text);
 }
 
-/* Terminal Body */
-.terminal-body {
-  padding: 0;
-}
-
+/* Tab Content */
 .tab-content {
-  padding: 1.5rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   min-height: 400px;
 }
 
+/* Terminal Prompt */
 .terminal-prompt {
   display: flex;
   align-items: center;
@@ -560,24 +635,19 @@ const resetForm = () => {
   margin-bottom: 1.5rem;
 }
 
-.terminal-footer {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--terminal-header);
-}
-
 /* Profile Card */
 .profile-card {
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
+  border-radius: 8px;
+  padding: clamp(1rem, 2vw, 1.5rem);
   border-left: 4px solid var(--accent-color);
 }
 
 .profile-header {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
 }
 
 .avatar-container {
@@ -585,8 +655,8 @@ const resetForm = () => {
 }
 
 .avatar {
-  width: 80px;
-  height: 80px;
+  width: clamp(70px, 10vw, 80px);
+  height: clamp(70px, 10vw, 80px);
   border-radius: 50%;
   object-fit: cover;
   border: 2px solid var(--accent-color);
@@ -608,7 +678,7 @@ const resetForm = () => {
 }
 
 .profile-name {
-  font-size: 1.5rem;
+  font-size: clamp(1.3rem, 2.5vw, 1.5rem);
   font-weight: bold;
   margin: 0 0 0.5rem 0;
   color: var(--terminal-text);
@@ -625,13 +695,13 @@ const resetForm = () => {
   color: var(--accent-color);
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-size: 0.8rem;
+  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
 }
 
 .profile-details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .detail-item {
@@ -641,16 +711,18 @@ const resetForm = () => {
 }
 
 .detail-icon {
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
 }
 
 .detail-key {
   color: var(--terminal-property);
   margin-right: 0.5rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .detail-value {
   color: var(--terminal-string);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .detail-value.link {
@@ -664,20 +736,26 @@ const resetForm = () => {
 
 /* Contact Form */
 .contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border-left: 4px solid var(--accent-color);
 }
 
 .form-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .form-group {
   display: flex;
   flex-direction: column;
+  margin-bottom: clamp(1rem, 2vw, 1.5rem);
+}
+
+.form-group.full-width {
+  grid-column: 1 / -1;
 }
 
 .form-label {
@@ -689,6 +767,7 @@ const resetForm = () => {
 
 .label-key {
   color: var(--terminal-property);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .form-input, .form-select, .form-textarea {
@@ -698,7 +777,7 @@ const resetForm = () => {
   background-color: rgba(15, 23, 42, 0.7);
   color: var(--terminal-text);
   font-family: 'Fira Code', 'Courier New', monospace;
-  font-size: 1rem;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
   transition: all 0.3s ease;
 }
 
@@ -708,23 +787,26 @@ const resetForm = () => {
   box-shadow: 0 0 0 2px rgba(88, 166, 255, 0.2);
 }
 
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23e6edf3' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658c-0.599.111-.793-.261-.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 1rem center;
-  background-size: 12px;
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
-.form-textarea {
-  min-height: 150px;
-  resize: vertical;
+.error-message {
+  color: var(--error-color);
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+  margin-top: 0.25rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: clamp(1rem, 2vw, 1.5rem);
 }
 
 .submit-btn, .terminal-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   background-color: var(--accent-color);
@@ -735,7 +817,7 @@ const resetForm = () => {
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  align-self: flex-start;
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
 }
 
 .submit-btn:hover:not(:disabled), .terminal-btn:hover {
@@ -749,7 +831,7 @@ const resetForm = () => {
 }
 
 .btn-icon {
-  font-size: 1rem;
+  font-size: clamp(1rem, 1.5vw, 1.2rem);
 }
 
 .btn-command {
@@ -775,20 +857,65 @@ const resetForm = () => {
   color: white;
 }
 
+/* Form Status */
+.form-status {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  border-left: 4px solid var(--accent-color);
+}
+
+.form-status.success {
+  border-left-color: var(--success-color);
+}
+
+.form-status.error {
+  border-left-color: var(--error-color);
+}
+
+.status-icon {
+  font-size: clamp(1.5rem, 2.5vw, 2rem);
+  margin-top: 0.25rem;
+}
+
+.form-status.success .status-icon {
+  color: var(--success-color);
+}
+
+.form-status.error .status-icon {
+  color: var(--error-color);
+}
+
+.status-message h3 {
+  font-size: clamp(1.1rem, 2vw, 1.3rem);
+  margin: 0 0 0.5rem 0;
+  color: var(--terminal-text);
+}
+
+.status-message p {
+  margin: 0;
+  color: var(--terminal-comment);
+  font-size: clamp(0.9rem, 1.2vw, 1rem);
+  line-height: 1.5;
+}
+
 /* Social Grid */
 .social-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .social-card {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.5rem);
   background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
+  border-radius: 8px;
   text-decoration: none;
   transition: all 0.3s ease;
   border-left: 3px solid transparent;
@@ -816,30 +943,15 @@ const resetForm = () => {
 }
 
 .social-icon {
-  width: 40px;
-  height: 40px;
+  width: clamp(40px, 8vw, 48px);
+  height: clamp(40px, 8vw, 48px);
   border-radius: 50%;
   background-color: var(--terminal-header);
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--terminal-text);
-}
-
-.social-card.github .social-icon {
-  background-color: #333;
-}
-
-.social-card.linkedin .social-icon {
-  background-color: #0077b5;
-}
-
-.social-card.twitter .social-icon {
-  background-color: #1da1f2;
-}
-
-.social-card.email .social-icon {
-  background-color: #ea4335;
+  font-size: clamp(1rem, 2vw, 1.2rem);
 }
 
 .social-info {
@@ -847,14 +959,14 @@ const resetForm = () => {
 }
 
 .social-name {
-  font-size: 1rem;
+  font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: bold;
   margin: 0 0 0.25rem 0;
   color: var(--terminal-text);
 }
 
 .social-handle {
-  font-size: 0.9rem;
+  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
   margin: 0;
   color: var(--terminal-comment);
 }
@@ -869,41 +981,24 @@ const resetForm = () => {
   transform: translateX(3px);
 }
 
-/* Form Status */
-.form-status {
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  padding: 1.5rem;
-  border-left: 4px solid var(--accent-color);
-}
-
-.status-icon {
-  font-size: 2rem;
-}
-
-.form-status.success .status-icon {
-  color: var(--success-color);
-}
-
-.form-status.error .status-icon {
-  color: var(--error-color);
-}
-
-.status-message h3 {
-  font-size: 1.3rem;
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-text);
-}
-
-.status-message p {
-  margin: 0 0 1.5rem 0;
-  color: var(--terminal-comment);
+/* Terminal Footer */
+.terminal-footer {
+  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
+  border-top: 1px solid var(--terminal-header);
 }
 
 /* Animations */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
@@ -915,82 +1010,9 @@ const resetForm = () => {
 }
 
 /* Responsive Design */
-/* Extra Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .terminal-container {
-    max-width: 1000px;
-  }
-  
-  .avatar {
-    width: 90px;
-    height: 90px;
-  }
-  
-  .profile-name {
-    font-size: 1.7rem;
-  }
-}
-
-/* Large Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .terminal-container {
-    max-width: 950px;
-  }
-  
-  .avatar {
-    width: 85px;
-    height: 85px;
-  }
-  
-  .profile-name {
-    font-size: 1.6rem;
-  }
-}
-
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .terminal-container {
-    max-width: 900px;
-  }
-  
-  .tab-content {
-    padding: 1.2rem;
-  }
-  
-  .avatar {
-    width: 75px;
-    height: 75px;
-  }
-  
-  .profile-name {
-    font-size: 1.5rem;
-  }
-}
-
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 1rem;
-  }
-  
-  .tab-content {
-    padding: 1rem;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 70px;
-    height: 70px;
-  }
-  
-  .profile-name {
-    font-size: 1.4rem;
+@media (max-width: 992px) {
+  .profile-details {
+    grid-template-columns: 1fr;
   }
   
   .form-grid {
@@ -1002,38 +1024,24 @@ const resetForm = () => {
   }
 }
 
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0 0.5rem;
-  }
-  
-  .tab-content {
-    padding: 0.8rem;
-  }
-  
+@media (max-width: 768px) {
   .profile-header {
     flex-direction: column;
     align-items: center;
     text-align: center;
+    gap: 1rem;
   }
   
-  .avatar {
-    width: 65px;
-    height: 65px;
-  }
-  
-  .profile-name {
-    font-size: 1.3rem;
-  }
-  
-  .form-grid {
+  .profile-details {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
   
-  .social-grid {
-    grid-template-columns: 1fr;
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    text-align: center;
   }
   
   .form-status {
@@ -1044,121 +1052,29 @@ const resetForm = () => {
   }
 }
 
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0;
-  }
-  
-  .tab-content {
-    padding: 0.6rem;
-  }
-  
+@media (max-width: 576px) {
   .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 60px;
-    height: 60px;
+    gap: 0.75rem;
   }
   
   .profile-name {
     font-size: 1.2rem;
   }
   
-  .form-grid {
-    grid-template-columns: 1fr;
+  .profile-details {
+    gap: 0.75rem;
   }
   
-  .social-grid {
-    grid-template-columns: 1fr;
+  .form-group {
+    margin-bottom: 1rem;
   }
   
-  .form-status {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
+  .form-actions {
+    justify-content: center;
   }
   
-  .status-icon {
-    font-size: 1.5rem;
-  }
-  
-  .status-message h3 {
-    font-size: 1.1rem;
-  }
-}
-
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .terminal-container {
-    max-width: 100%;
-    margin: 0;
-  }
-  
-  .tab-content {
-    padding: 0.5rem;
-  }
-  
-  .profile-header {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .avatar {
-    width: 55px;
-    height: 55px;
-  }
-  
-  .profile-name {
-    font-size: 1.1rem;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .social-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .form-status {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 1rem;
-  }
-  
-  .status-icon {
-    font-size: 1.3rem;
-  }
-  
-  .status-message h3 {
-    font-size: 1rem;
-  }
-  
-  .status-message p {
-    font-size: 0.9rem;
-  }
-  
-  .form-input, .form-select, .form-textarea {
-    padding: 0.6rem 0.8rem;
-    font-size: 0.9rem;
-  }
-  
-  .form-textarea {
-    min-height: 120px;
-  }
-  
-  .submit-btn, .terminal-btn {
-    padding: 0.6rem 1rem;
-    font-size: 0.9rem;
+  .social-card {
+    padding: 1rem;
   }
 }
 </style>
