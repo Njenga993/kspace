@@ -1,1427 +1,1224 @@
 <template>
-  <section id="experience" class="experience-section">
-    <div class="terminal-container">
-      <!-- Terminal Header -->
-      <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
+  <section id="experience" class="experience">
+    <div class="exp-container">
+      <!-- Section Header -->
+      <div class="exp-header">
+        <div class="header-badge">
+          <span class="badge-num">03</span>
+          <span class="badge-text">JOURNEY</span>
         </div>
-        <div class="terminal-title">experience@portfolio:~# ./career_log.sh</div>
+        <h2 class="exp-title">
+          Professional <span class="accent">Evolution</span>
+        </h2>
+        <div class="exp-underline"></div>
+        <p class="exp-subtitle">
+          From foundational training to leadership roles — my path in tech
+        </p>
       </div>
-      
-      <!-- Terminal Body -->
-      <div class="terminal-body">
-        <!-- System Info -->
-        <div class="system-info">
-          <div class="info-line">
-            <span class="info-text">System:</span>
-            <span class="info-value">Career Log v2.0.24</span>
-          </div>
-          <div class="info-line">
-            <span class="info-text">Entries:</span>
-            <span class="info-value">{{ experiences.length }}</span>
-          </div>
-          <div class="info-line">
-            <span class="info-text">Total Experience:</span>
-            <span class="info-value">{{ totalYears }}+ years</span>
+
+      <!-- Stats Dashboard -->
+      <div class="stats-dashboard">
+        <div class="stat-card">
+          <div class="stat-icon">⏱️</div>
+          <div class="stat-content">
+            <div class="stat-number">{{ totalYears }}</div>
+            <div class="stat-label">Years of Experience</div>
+            <div class="stat-trend">+{{ totalYears }} since 2021</div>
           </div>
         </div>
-        
-        <!-- Terminal Tabs -->
-        <div class="terminal-tabs">
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'timeline' }" 
-            @click="activeTab = 'timeline'"
-          >
-            <span class="tab-icon">📅</span>
-            <span class="tab-text">timeline</span>
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'skills' }" 
-            @click="activeTab = 'skills'"
-          >
-            <span class="tab-icon">💻</span>
-            <span class="tab-text">skills</span>
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'stats' }" 
-            @click="activeTab = 'stats'"
-          >
-            <span class="tab-icon">📊</span>
-            <span class="tab-text">stats</span>
+        <div class="stat-card">
+          <div class="stat-icon">🚀</div>
+          <div class="stat-content">
+            <div class="stat-number">{{ totalProjects }}+</div>
+            <div class="stat-label">Projects Delivered</div>
+            <div class="stat-trend">100% completion rate</div>
           </div>
         </div>
-        
-        <!-- Filter Command -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">filter --category=</span>
-          <div class="filter-input">
-            <span class="filter-value">{{ activeFilter }}</span>
-            <span class="cursor">_</span>
+        <div class="stat-card">
+          <div class="stat-icon">⚡</div>
+          <div class="stat-content">
+            <div class="stat-number">{{ uniqueSkills }}</div>
+            <div class="stat-label">Technologies Mastered</div>
+            <div class="stat-trend">Continuously learning</div>
           </div>
         </div>
-        
-        <div class="filter-options">
-          <button 
-            v-for="filter in filters" 
-            :key="filter"
-            @click="setActiveFilter(filter)"
-            :class="['filter-option', { active: activeFilter === filter }]"
-          >
-            {{ filter }}
-          </button>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-content">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">Client Retention</div>
+            <div class="stat-trend">Repeat business rate</div>
+          </div>
         </div>
-        
-        <!-- Tab Content -->
-        <div class="tab-content">
-          <!-- Timeline View -->
-          <div v-if="activeTab === 'timeline'" class="timeline-view">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">cat career_history.txt</span>
-            </div>
-            
-            <div class="timeline-container">
-              <div 
-                v-for="(exp, index) in filteredExperiences"
-                :key="exp.id"
-                class="timeline-item"
-                :style="{ '--delay': index * 0.1 + 's' }"
-              >
-                <div class="timeline-date">
-                  <span class="date-year">{{ exp.period.split(' - ')[0] }}</span>
-                  <div class="date-line"></div>
+      </div>
+
+      <!-- Filter Pills -->
+      <div class="exp-filters">
+        <button
+          v-for="filter in filters"
+          :key="filter.value"
+          @click="activeFilter = filter.value"
+          :class="['filter-pill', { active: activeFilter === filter.value }]"
+        >
+          {{ filter.label }}
+          <span class="filter-count">{{ getFilterCount(filter.value) }}</span>
+        </button>
+      </div>
+
+      <!-- Career Timeline -->
+      <div class="career-timeline">
+        <div class="timeline-track">
+          <div
+            v-for="(exp, idx) in filteredExperiences"
+            :key="exp.id"
+            class="timeline-node"
+            :class="{ active: activeTimelineNode === idx }"
+            @click="activeTimelineNode = idx"
+          >
+            <div class="node-year">{{ exp.period.split(" - ")[0] }}</div>
+            <div class="node-dot"></div>
+            <div class="node-line"></div>
+          </div>
+        </div>
+
+        <div class="timeline-content">
+          <transition name="fade-slide" mode="out-in">
+            <div :key="activeTimelineNode" class="exp-card-detailed">
+              <div class="card-header">
+                <div class="header-left">
+                  <div
+                    class="company-logo"
+                    :style="{ background: currentExp.color }"
+                  >
+                    <i :class="getIconClass(currentExp.category)"></i>
+                  </div>
+                  <div class="company-info">
+                    <h3>{{ currentExp.title }}</h3>
+                    <div class="company-meta">
+                      <span class="company-name">{{ currentExp.company }}</span>
+                      <span class="company-period">{{
+                        currentExp.period
+                      }}</span>
+                    </div>
+                  </div>
                 </div>
-                
-                <div class="timeline-content">
-                  <div class="experience-card" @click="toggleDetails(exp.id)">
-                    <div class="card-header">
-                      <div class="card-icon" :style="{ backgroundColor: exp.color }">
-                        <i :class="getIconClass(exp.category)"></i>
-                      </div>
-                      <div class="card-info">
-                        <h3 class="card-title">{{ exp.title }}</h3>
-                        <div class="card-meta">
-                          <span class="card-company">{{ exp.company }}</span>
-                          <span class="card-period">{{ exp.period }}</span>
+                <div class="header-right">
+                  <div
+                    class="exp-badge"
+                    :class="currentExp.category.toLowerCase()"
+                  >
+                    {{ currentExp.category }}
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-body">
+                <p class="exp-description">{{ currentExp.description }}</p>
+
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                  <div
+                    v-for="metric in currentExp.metrics"
+                    :key="metric.label"
+                    class="metric-block"
+                  >
+                    <div class="metric-value">{{ metric.value }}</div>
+                    <div class="metric-label">{{ metric.label }}</div>
+                  </div>
+                </div>
+
+                <!-- Skills Cloud -->
+                <div class="skills-section">
+                  <h4>Skills & Technologies</h4>
+                  <div class="skills-cloud">
+                    <span
+                      v-for="skill in getAllSkills(currentExp)"
+                      :key="skill"
+                      class="skill-item"
+                      :style="{ '--skill-level': getSkillLevel(skill) }"
+                    >
+                      {{ skill }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Key Achievements -->
+                <div class="achievements-section">
+                  <h4>Key Achievements</h4>
+                  <div class="achievements-grid">
+                    <div
+                      v-for="achievement in currentExp.achievements"
+                      :key="achievement"
+                      class="achievement-item"
+                    >
+                      <div class="achievement-marker"></div>
+                      <p>{{ achievement }}</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Challenges Overcome -->
+                <div v-if="currentExp.challenges" class="challenges-section">
+                  <h4>Challenges Overcome</h4>
+                  <div class="challenges-list">
+                    <div
+                      v-for="challenge in currentExp.challenges"
+                      :key="challenge"
+                      class="challenge-item"
+                    >
+                      <i class="fas fa-trophy"></i>
+                      <span>{{ challenge }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footer">
+                <button
+                  class="btn-expand"
+                  @click="toggleDetails(currentExp.id)"
+                >
+                  <i
+                    :class="
+                      isExpanded(currentExp.id) ? 'fas fa-minus' : 'fas fa-plus'
+                    "
+                  ></i>
+                  {{
+                    isExpanded(currentExp.id)
+                      ? "Show Less"
+                      : "Show More Details"
+                  }}
+                </button>
+              </div>
+
+              <!-- Expanded Details -->
+              <transition name="expand">
+                <div v-if="isExpanded(currentExp.id)" class="expanded-content">
+                  <div class="expanded-grid">
+                    <div class="expanded-col">
+                      <h4>Technologies Used</h4>
+                      <div class="tech-stack">
+                        <div
+                          v-for="(
+                            skills, category
+                          ) in currentExp.skillCategories"
+                          :key="category"
+                          class="tech-category"
+                        >
+                          <div class="tech-cat-name">{{ category }}</div>
+                          <div class="tech-items">
+                            <span
+                              v-for="skill in skills"
+                              :key="skill"
+                              class="tech-badge"
+                            >
+                              {{ skill }}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <div class="card-toggle">
-                        <i :class="expandedDetails.includes(exp.id) ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
-                      </div>
                     </div>
-                    
-                    <div class="card-description">
-                      <p>{{ exp.description }}</p>
-                    </div>
-                    
-                    <div v-if="exp.metrics" class="card-metrics">
-                      <div 
-                        v-for="metric in exp.metrics" 
-                        :key="metric.label"
-                        class="metric-item"
-                      >
-                        <span class="metric-value">{{ metric.value }}</span>
-                        <span class="metric-label">{{ metric.label }}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- Expanded Details -->
-                  <div 
-                    v-if="expandedDetails.includes(exp.id)"
-                    class="expanded-details"
-                  >
-                    <div class="terminal-prompt">
-                      <span class="prompt-symbol">$</span>
-                      <span class="command">cat details.txt</span>
-                    </div>
-                    
-                    <div class="details-content">
-                      <div class="detail-section">
-                        <h4>Key Achievements</h4>
-                        <ul>
-                          <li v-for="achievement in exp.achievements" :key="achievement">
-                            {{ achievement }}
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <div class="detail-section">
-                        <h4>Skills Applied</h4>
-                        <div class="skill-tags">
-                          <span 
-                            v-for="(category, categoryName) in exp.skillCategories" 
-                            :key="categoryName"
-                            class="skill-category"
-                          >
-                            <span class="category-name">{{ categoryName }}:</span>
-                            <div class="category-skills">
-                              <span 
-                                v-for="skill in category" 
-                                :key="skill"
-                                class="skill-tag"
-                              >
-                                {{ skill }}
-                              </span>
-                            </div>
-                          </span>
+                    <div class="expanded-col">
+                      <h4>Impact Metrics</h4>
+                      <div class="impact-metrics">
+                        <div
+                          v-for="metric in currentExp.metrics"
+                          :key="metric.label"
+                          class="impact-item"
+                        >
+                          <div class="impact-bar">
+                            <div
+                              class="impact-fill"
+                              :style="{
+                                width: getImpactPercentage(metric.value),
+                              }"
+                            ></div>
+                          </div>
+                          <div class="impact-label">{{ metric.label }}</div>
+                          <div class="impact-value">{{ metric.value }}</div>
                         </div>
                       </div>
-                      
-                      <div v-if="exp.challenges" class="detail-section">
-                        <h4>Challenges Overcome</h4>
-                        <ul>
-                          <li v-for="challenge in exp.challenges" :key="challenge">
-                            {{ challenge }}
-                          </li>
-                        </ul>
-                      </div>
-                      
-                      <div v-if="exp.learnings" class="detail-section">
-                        <h4>Key Learnings</h4>
-                        <ul>
-                          <li v-for="learning in exp.learnings" :key="learning">
-                            {{ learning }}
-                          </li>
-                        </ul>
-                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </transition>
             </div>
-          </div>
-          
-          <!-- Skills View -->
-          <div v-if="activeTab === 'skills'" class="skills-view">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">cat skills_matrix.txt</span>
-            </div>
-            
-            <div class="skills-container">
-              <div 
-                v-for="(category, categoryName) in skillsByCategory" 
-                :key="categoryName"
-                class="skill-category-card"
-              >
-                <div class="category-header">
-                  <h3>{{ categoryName }}</h3>
-                  <span class="skill-count">{{ category.length }} skills</span>
-                </div>
-                
-                <div class="skills-grid">
-                  <div 
-                    v-for="skill in category" 
-                    :key="skill.name"
-                    class="skill-item"
-                    :style="{ '--level': skill.level }"
-                  >
-                    <div class="skill-name">{{ skill.name }}</div>
-                    <div class="skill-level">
-                      <div class="level-bar">
-                        <div class="level-fill"></div>
-                      </div>
-                      <span class="level-text">{{ skill.level }}%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Stats View -->
-          <div v-if="activeTab === 'stats'" class="stats-view">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">./career_stats.sh</span>
-            </div>
-            
-            <div class="stats-container">
-              <div class="stats-overview">
-                <div class="stat-card">
-                  <div class="stat-icon">
-                    <i class="fas fa-briefcase"></i>
-                  </div>
-                  <div class="stat-info">
-                    <span class="stat-value">{{ totalYears }}+</span>
-                    <span class="stat-label">Years Experience</span>
-                  </div>
-                </div>
-                
-                <div class="stat-card">
-                  <div class="stat-icon">
-                    <i class="fas fa-project-diagram"></i>
-                  </div>
-                  <div class="stat-info">
-                    <span class="stat-value">{{ totalProjects }}+</span>
-                    <span class="stat-label">Projects Completed</span>
-                  </div>
-                </div>
-                
-                <div class="stat-card">
-                  <div class="stat-icon">
-                    <i class="fas fa-code"></i>
-                  </div>
-                  <div class="stat-info">
-                    <span class="stat-value">{{ uniqueSkills }}</span>
-                    <span class="stat-label">Unique Skills</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="stats-chart">
-                <h3>Experience Timeline</h3>
-                <div class="timeline-chart">
-                  <div 
-                    v-for="(exp, index) in experiences" 
-                    :key="exp.id"
-                    class="chart-bar"
-                    :style="{ 
-                      height: `${exp.duration / totalYears * 100}%`,
-                      backgroundColor: exp.color,
-                      left: `${(index / experiences.length) * 100}%`,
-                      width: `${90 / experiences.length}%`
-                    }"
-                  >
-                    <div class="bar-tooltip">
-                      <div class="tooltip-title">{{ exp.title }}</div>
-                      <div class="tooltip-company">{{ exp.company }}</div>
-                      <div class="tooltip-period">{{ exp.period }}</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="stats-skills">
-                <h3>Skills Distribution</h3>
-                <div class="skills-chart">
-                  <div 
-                    v-for="(category, categoryName) in skillsByCategory" 
-                    :key="categoryName"
-                    class="skill-bar"
-                  >
-                    <div class="skill-info">
-                      <span class="skill-category-name">{{ categoryName }}</span>
-                      <span class="skill-percentage">{{ Math.round(category.length / uniqueSkills * 100) }}%</span>
-                    </div>
-                    <div class="skill-progress">
-                      <div 
-                        class="skill-progress-fill"
-                        :style="{ width: `${category.length / uniqueSkills * 100}%` }"
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          </transition>
         </div>
-        
-        <!-- Terminal Footer -->
-        <div class="terminal-footer">
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command cursor">_</span>
-          </div>
+      </div>
+
+      <!-- Navigation Arrows -->
+      <div class="timeline-nav">
+        <button
+          @click="prevExperience"
+          :disabled="activeTimelineNode === 0"
+          class="nav-arrow"
+        >
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="nav-progress">
+          <div
+            class="progress-bar"
+            :style="{
+              width:
+                ((activeTimelineNode + 1) / filteredExperiences.length) * 100 +
+                '%',
+            }"
+          ></div>
         </div>
+        <button
+          @click="nextExperience"
+          :disabled="activeTimelineNode === filteredExperiences.length - 1"
+          class="nav-arrow"
+        >
+          <i class="fas fa-arrow-right"></i>
+        </button>
       </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
-const activeTab = ref('timeline');
-const activeFilter = ref('All');
-const expandedDetails = ref([]);
+const activeFilter = ref("All");
+const activeTimelineNode = ref(0);
+const expandedItems = ref([]);
 
-const filters = ['All', 'Development', 'Management', 'Internship'];
+const filters = [
+  { label: "All Experiences", value: "All", count: 4 },
+  { label: "Development", value: "Development", count: 3 },
+  { label: "Internship", value: "Internship", count: 1 },
+];
 
 const experiences = [
   {
     id: 1,
-    title: 'Developer & Digital Manager',
-    company: 'Nyakazi Organics',
-    type: 'Full-time',
-    period: '2024 - Present',
+    title: "Developer & Digital Manager",
+    company: "Nyakazi Organics",
+    period: "2024 - Present",
     duration: 1,
-    category: 'Development',
-    color: '#3b82f6',
-    description: 'Led digital transformation initiatives for an organic food company, overseeing all digital solutions from branding to systems development.',
+    category: "Development",
+    color: "#FF5E00",
+    description:
+      "Leading digital transformation and full-stack development for an organic food company, overseeing all digital solutions from branding to systems development.",
     metrics: [
-      { value: '150%', label: 'Sales Increase' },
-      { value: '40%', label: 'Faster Checkout' },
-      { value: '95+', label: 'Lighthouse Score' }
+      { value: "150%", label: "Sales Increase" },
+      { value: "40%", label: "Faster Checkout" },
+      { value: "95+", label: "Lighthouse Score" },
     ],
     achievements: [
-      'Developed a fully functional POS system using React and Django that reduced checkout times by 40%',
-      'Designed and implemented comprehensive company branding across all digital platforms',
-      'Optimized website performance, achieving 95+ Lighthouse scores across all metrics',
-      'Managed digital marketing campaigns that increased social media engagement by 200%',
-      'Conducted farmer training sessions on digital tools adoption, improving productivity by 30%'
+      "Developed a fully functional POS system using React and Django that reduced checkout times by 40%",
+      "Designed and implemented comprehensive company branding across all digital platforms",
+      "Optimized website performance, achieving 95+ Lighthouse scores across all metrics",
+      "Managed digital marketing campaigns that increased social media engagement by 200%",
     ],
     skillCategories: {
-      'Frontend': ['React', 'JavaScript', 'CSS3', 'HTML5'],
-      'Backend': ['Django', 'Python', 'PostgreSQL'],
-      'Design': ['Figma', 'Branding', 'UI/UX'],
-      'Marketing': ['SEO', 'Digital Marketing', 'Analytics']
+      Frontend: ["React", "JavaScript", "CSS3", "HTML5", "TypeScript"],
+      Backend: ["Django", "Python", "PostgreSQL", "REST APIs"],
+      Design: ["Figma", "Branding", "UI/UX", "Responsive Design"],
     },
     challenges: [
-      'Integrating legacy systems with modern POS solution',
-      'Training non-technical staff on digital tools',
-      'Balancing performance with feature-rich functionality'
+      "Integrating legacy systems with modern POS solution while maintaining data integrity",
+      "Training non-technical staff on digital tools and workflows",
+      "Balancing multiple projects with competing deadlines",
     ],
-    learnings: [
-      'Importance of user-centered design in business applications',
-      'Effective change management in traditional industries',
-      'Scaling digital solutions for growing businesses'
-    ],
-    portfolio: 'https://nyakazi.org/'
   },
   {
     id: 2,
-    title: 'Junior Developer',
-    company: 'Desiderata Consultancy',
-    type: 'Full-time',
-    period: '2023 - 2024',
+    title: "Junior Developer",
+    company: "Desiderata Consultancy",
+    period: "2023 - 2024",
     duration: 1,
-    category: 'Development',
-    color: '#06d6a0',
-    description: 'Built solutions for diverse client needs across multiple industries with a focus on web applications and data visualization.',
+    category: "Development",
+    color: "#06d6a0",
+    description:
+      "Built solutions for diverse client needs across multiple industries with a focus on web applications and data visualization.",
     metrics: [
-      { value: '15+', label: 'Projects' },
-      { value: '100%', label: 'Client Satisfaction' },
-      { value: '60%', label: 'Performance Boost' }
+      { value: "15+", label: "Projects" },
+      { value: "100%", label: "Client Satisfaction" },
+      { value: "60%", label: "Performance Boost" },
     ],
     achievements: [
-      'Created responsive UI layouts for corporate clients using modern CSS techniques and frameworks',
-      'Developed Laravel-based admin dashboards with complex data visualization and reporting features',
-      'Implemented RESTful APIs that improved system integration efficiency by 35%',
-      'Reduced average page load times by 60% through strategic performance optimization',
-      'Mentored 2 junior interns on frontend development best practices and code quality'
+      "Created responsive UI layouts for corporate clients using modern CSS techniques",
+      "Developed Laravel-based admin dashboards with complex data visualization",
+      "Implemented RESTful APIs that improved system integration efficiency by 35%",
+      "Reduced average page load times by 60% through strategic performance optimization",
     ],
     skillCategories: {
-      'Backend': ['Laravel', 'PHP', 'MySQL'],
-      'Frontend': ['JavaScript', 'Bootstrap', 'jQuery'],
-      'Data': ['Chart.js', 'Data Visualization'],
-      'Tools': ['Git', 'API Development']
+      Backend: ["Laravel", "PHP", "MySQL", "API Development"],
+      Frontend: ["JavaScript", "Bootstrap", "jQuery", "AJAX"],
+      Data: ["Chart.js", "DataTables", "Excel Integration"],
     },
     challenges: [
-      'Working with diverse client requirements and tight deadlines',
-      'Optimizing performance for data-heavy applications',
-      'Maintaining code quality across multiple projects'
+      "Working with diverse client requirements and tight deadlines simultaneously",
+      "Optimizing performance for data-heavy applications with large datasets",
+      "Ensuring cross-browser compatibility for legacy systems",
     ],
-    learnings: [
-      'Client communication and requirement gathering skills',
-      'Importance of scalable architecture design',
-      'Effective code review and mentoring techniques'
-    ]
   },
   {
     id: 3,
-    title: 'Frontend Developer',
-    company: 'Techlungs Technology',
-    type: 'Full-time',
-    period: '2022 - 2023',
+    title: "Frontend Developer",
+    company: "Techlungs Technology",
+    period: "2022 - 2023",
     duration: 1,
-    category: 'Development',
-    color: '#f72585',
-    description: 'Specialized in creating engaging frontend experiences for SaaS products and high-conversion marketing sites.',
+    category: "Development",
+    color: "#f72585",
+    description:
+      "Specialized in creating engaging frontend experiences for SaaS products and high-conversion marketing sites.",
     metrics: [
-      { value: '20+', label: 'Landing Pages' },
-      { value: '8%', label: 'Conversion Rate' },
-      { value: '45%', label: 'Bundle Reduction' }
+      { value: "20+", label: "Landing Pages" },
+      { value: "8%", label: "Conversion Rate" },
+      { value: "45%", label: "Bundle Reduction" },
     ],
     achievements: [
-      'Built 20+ high-converting landing pages with conversion rates reaching up to 8%',
-      'Implemented smooth animations and micro-interactions that improved user engagement by 40%',
-      'Collaborated with UX designers to create comprehensive design systems for consistent UI',
-      'Reduced CSS bundle size by 45% through strategic optimization and code splitting',
-      'Introduced automated testing pipeline that reduced production bugs by 30%'
+      "Built 20+ high-converting landing pages with conversion rates reaching up to 8%",
+      "Implemented smooth animations and micro-interactions that improved user engagement by 40%",
+      "Reduced CSS bundle size by 45% through strategic optimization and code splitting",
+      "Collaborated with designers to create reusable component library",
     ],
     skillCategories: {
-      'Frontend': ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design'],
-      'Animation': ['GSAP', 'CSS Animations'],
-      'Design': ['UI/UX', 'Design Systems'],
-      'Testing': ['Jest', 'Automated Testing']
+      Frontend: ["HTML5", "CSS3", "JavaScript", "GSAP", "SASS"],
+      Tools: ["Webpack", "Git", "Figma", "Chrome DevTools"],
+      Design: ["UI/UX", "Design Systems", "Responsive Design", "Animation"],
     },
     challenges: [
-      'Balancing rich animations with performance requirements',
-      'Creating consistent design systems across multiple projects',
-      'Optimizing for various devices and browsers'
+      "Balancing rich animations with performance requirements",
+      "Maintaining consistency across multiple landing pages",
     ],
-    learnings: [
-      'Advanced CSS optimization techniques',
-      'User behavior analysis and conversion optimization',
-      'Importance of performance in user experience'
-    ]
   },
   {
     id: 4,
-    title: 'ICT Intern',
-    company: 'KNLS & Immigration Department',
-    type: 'Internship',
-    period: '2021 - 2022',
+    title: "ICT Intern",
+    company: "KNLS & Immigration Dept",
+    period: "2021 - 2022",
     duration: 1,
-    category: 'Internship',
-    color: '#fb8500',
-    description: 'Gained foundational IT experience across two government departments, working with diverse technology stacks and systems.',
+    category: "Internship",
+    color: "#fb8500",
+    description:
+      "Gained foundational IT experience across two government departments, working with diverse technology stacks and legacy systems.",
     metrics: [
-      { value: '15+', label: 'Hours Saved Weekly' },
-      { value: '50+', label: 'Staff Supported' },
-      { value: '2', label: 'Departments' }
+      { value: "15+", label: "Hours Saved Weekly" },
+      { value: "50+", label: "Staff Supported" },
     ],
     achievements: [
-      'Automated catalog update processes, saving 15+ hours of manual work weekly',
-      'Documented comprehensive network infrastructure for future upgrade planning',
-      'Assisted in migrating critical legacy systems to modern, secure platforms',
-      'Provided technical support to 50+ staff members across multiple departments',
-      'Created detailed training materials for new software implementations and procedures'
+      "Automated catalog update processes, saving 15+ hours of manual work weekly",
+      "Documented comprehensive network infrastructure for future upgrade planning",
+      "Provided technical support to 50+ staff members across multiple departments",
+      "Assisted in migrating legacy data to modern database systems",
     ],
     skillCategories: {
-      'IT Support': ['Technical Support', 'Troubleshooting'],
-      'Systems': ['System Administration', 'Network Documentation'],
-      'Training': ['User Training', 'Documentation'],
-      'Migration': ['Legacy Systems', 'System Migration']
+      "IT Support": [
+        "Technical Support",
+        "Troubleshooting",
+        "Hardware Maintenance",
+      ],
+      Systems: [
+        "Network Documentation",
+        "Data Migration",
+        "System Administration",
+      ],
+      Software: ["MS Office", "Database Management", "Ticketing Systems"],
     },
     challenges: [
-      'Working with outdated legacy systems and limited resources',
-      'Training non-technical staff on new technologies',
-      'Ensuring data security during system migrations'
+      "Working with outdated legacy systems and limited resources",
+      "Adapting to strict government protocols and procedures",
     ],
-    learnings: [
-      'Fundamentals of IT infrastructure and support',
-      'Importance of documentation in system maintenance',
-      'Effective communication with non-technical users'
-    ]
-  }
+  },
 ];
 
+const currentExp = computed(
+  () => filteredExperiences.value[activeTimelineNode.value],
+);
+
 const filteredExperiences = computed(() => {
-  if (activeFilter.value === 'All') return experiences;
-  return experiences.filter(exp => exp.category === activeFilter.value);
+  if (activeFilter.value === "All") return experiences;
+  return experiences.filter((e) => e.category === activeFilter.value);
 });
 
 const totalYears = computed(() => {
-  return new Date().getFullYear() - 2021;
+  const startYear = 2021;
+  const currentYear = new Date().getFullYear();
+  return currentYear - startYear;
 });
 
 const totalProjects = computed(() => {
   return experiences.reduce((total, exp) => {
-    const projectCount = exp.metrics?.find(m => m.label.includes('Project'))?.value;
-    return total + (projectCount ? parseInt(projectCount) : 5);
+    const projectMetric = exp.metrics.find(
+      (m) => m.label.includes("Project") || m.label === "Projects",
+    );
+    if (projectMetric) {
+      const value = parseInt(projectMetric.value);
+      return total + (isNaN(value) ? 5 : value);
+    }
+    return total + 5;
   }, 0);
 });
 
 const uniqueSkills = computed(() => {
-  const allSkills = new Set();
-  experiences.forEach(exp => {
-    Object.values(exp.skillCategories).forEach(category => {
-      category.forEach(skill => allSkills.add(skill));
+  const skillsSet = new Set();
+  experiences.forEach((exp) => {
+    Object.values(exp.skillCategories).forEach((category) => {
+      category.forEach((skill) => skillsSet.add(skill));
     });
   });
-  return allSkills.size;
+  return skillsSet.size;
 });
 
-const skillsByCategory = computed(() => {
-  const skills = {};
-  
-  experiences.forEach(exp => {
-    Object.entries(exp.skillCategories).forEach(([categoryName, categorySkills]) => {
-      if (!skills[categoryName]) {
-        skills[categoryName] = [];
-      }
-      
-      categorySkills.forEach(skill => {
-        const existingSkill = skills[categoryName].find(s => s.name === skill);
-        if (existingSkill) {
-          existingSkill.frequency++;
-          existingSkill.level = Math.min(100, existingSkill.level + 10);
-        } else {
-          skills[categoryName].push({
-            name: skill,
-            frequency: 1,
-            level: 50 + Math.floor(Math.random() * 40)
-          });
-        }
-      });
-    });
-  });
-  
-  // Sort skills by frequency and then by level
-  Object.keys(skills).forEach(category => {
-    skills[category].sort((a, b) => {
-      if (a.frequency !== b.frequency) return b.frequency - a.frequency;
-      return b.level - a.level;
-    });
-  });
-  
-  return skills;
-});
+const getFilterCount = (filter) => {
+  if (filter === "All") return experiences.length;
+  return experiences.filter((e) => e.category === filter).length;
+};
 
-const setActiveFilter = (filter) => {
-  activeFilter.value = filter;
+const getAllSkills = (exp) => {
+  const skills = [];
+  Object.values(exp.skillCategories).forEach((category) => {
+    skills.push(...category);
+  });
+  return skills.slice(0, 8);
+};
+
+const getSkillLevel = (skill) => {
+  const levels = {
+    React: 95,
+    JavaScript: 90,
+    Python: 85,
+    Django: 85,
+    TypeScript: 80,
+    HTML5: 95,
+    CSS3: 90,
+    PHP: 80,
+  };
+  return levels[skill] || 75;
+};
+
+const getImpactPercentage = (value) => {
+  const num = parseInt(value);
+  if (value.includes("%")) return Math.min(num, 100);
+  if (num > 100) return 100;
+  return num;
+};
+
+const prevExperience = () => {
+  if (activeTimelineNode.value > 0) {
+    activeTimelineNode.value--;
+  }
+};
+
+const nextExperience = () => {
+  if (activeTimelineNode.value < filteredExperiences.value.length - 1) {
+    activeTimelineNode.value++;
+  }
 };
 
 const toggleDetails = (id) => {
-  const index = expandedDetails.value.indexOf(id);
+  const index = expandedItems.value.indexOf(id);
   if (index > -1) {
-    expandedDetails.value.splice(index, 1);
+    expandedItems.value.splice(index, 1);
   } else {
-    expandedDetails.value.push(id);
+    expandedItems.value.push(id);
   }
 };
 
+const isExpanded = (id) => {
+  return expandedItems.value.includes(id);
+};
+
 const getIconClass = (category) => {
-  switch (category) {
-    case 'Development': return 'fas fa-code';
-    case 'Management': return 'fas fa-briefcase';
-    case 'Internship': return 'fas fa-graduation-cap';
-    default: return 'fas fa-briefcase';
-  }
+  return category === "Development" ? "fas fa-code" : "fas fa-graduation-cap";
 };
 </script>
 
 <style scoped>
-/* Base Section Styles */
-.experience-section {
+.experience {
+  padding: 5rem 2rem;
+  background: var(--bg-secondary);
   position: relative;
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
-  background-color: var(--bg-color);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  color: var(--text-color);
-}
-
-/* Terminal Container */
-.terminal-container {
-  width: 100%;
-  max-width: 1400px;
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.8s ease-out;
 }
 
-/* Terminal Header */
-.terminal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--terminal-header);
-  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
+.exp-container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-.terminal-buttons {
-  display: flex;
-  gap: 0.5rem;
+/* Header Styles */
+.exp-header {
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
-.terminal-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.terminal-button.close {
-  background-color: #ff5f56;
-}
-
-.terminal-button.minimize {
-  background-color: #ffbd2e;
-}
-
-.terminal-button.maximize {
-  background-color: #27c93f;
-}
-
-.terminal-title {
-  color: var(--terminal-text);
-  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-  opacity: 0.8;
-}
-
-/* Terminal Body */
-.terminal-body {
-  padding: 0;
-}
-
-/* System Info */
-.system-info {
-  display: flex;
-  justify-content: space-between;
-  padding: clamp(0.75rem, 1.5vw, 1rem);
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid var(--terminal-header);
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.info-line {
-  display: flex;
+.header-badge {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.info-text {
-  color: var(--terminal-comment);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.info-value {
-  color: var(--terminal-string);
-  font-weight: bold;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-/* Terminal Tabs */
-.terminal-tabs {
-  display: flex;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid var(--terminal-header);
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--terminal-header) transparent;
-}
-
-.terminal-tabs::-webkit-scrollbar {
-  height: 6px;
-}
-
-.terminal-tabs::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.terminal-tabs::-webkit-scrollbar-thumb {
-  background-color: var(--terminal-header);
-  border-radius: 3px;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-}
-
-.tab:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.tab.active {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom-color: var(--accent-color);
-}
-
-.tab-icon {
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
-}
-
-.tab-text {
-  color: var(--terminal-comment);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.tab.active .tab-text {
-  color: var(--terminal-text);
-}
-
-/* Terminal Prompt */
-.terminal-prompt {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: 0;
-}
-
-.prompt-symbol {
-  color: var(--terminal-prompt);
-  font-weight: bold;
-}
-
-.command {
-  color: var(--terminal-text);
-}
-
-.cursor {
-  color: var(--terminal-prompt);
-  animation: blink 1s infinite;
-}
-
-/* Filter Options */
-.filter-input {
-  display: flex;
-  align-items: center;
-}
-
-.filter-value {
-  color: var(--terminal-string);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
-
-.filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0 clamp(1rem, 2vw, 1.5rem) clamp(0.75rem, 1.5vw, 1rem);
-}
-
-.filter-option {
   padding: 0.25rem 0.75rem;
-  background-color: transparent;
-  border: 1px solid var(--terminal-text);
-  border-radius: 4px;
-  color: var(--terminal-text);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  margin-bottom: 1.5rem;
 }
 
-.filter-option:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.badge-num {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
 }
 
-.filter-option.active {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+.badge-text {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
 }
 
-/* Tab Content */
-.tab-content {
-  padding: clamp(1rem, 2vw, 1.5rem);
-  min-height: 400px;
-}
-
-/* Timeline View */
-.timeline-container {
-  position: relative;
-  margin-top: 1rem;
-}
-
-.timeline-item {
-  display: flex;
-  margin-bottom: clamp(1.5rem, 3vw, 2rem);
-  animation: fadeIn 0.5s ease-out var(--delay) both;
-}
-
-.timeline-date {
-  width: clamp(100px, 10vw, 120px);
-  flex-shrink: 0;
-  padding-right: clamp(0.75rem, 1.5vw, 1rem);
-  text-align: right;
-  position: relative;
-}
-
-.date-year {
-  display: block;
-  color: var(--accent-color);
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-}
-
-.date-line {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 2px;
-  height: 100%;
-  background-color: var(--terminal-header);
-}
-
-.timeline-content {
-  flex: 1;
-  padding-left: clamp(1.5rem, 3vw, 2rem);
-  position: relative;
-}
-
-.timeline-content::before {
-  content: '';
-  position: absolute;
-  left: -6px;
-  top: 0;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: var(--accent-color);
-  border: 2px solid var(--terminal-bg);
-}
-
-.experience-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
+.exp-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-white);
   margin-bottom: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
 }
 
-.experience-card:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
+.exp-title .accent {
+  color: var(--accent);
+}
+
+.exp-underline {
+  width: 60px;
+  height: 2px;
+  background: var(--accent);
+  margin: 0 auto 1rem;
+}
+
+.exp-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Stats Dashboard */
+.stats-dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s;
+}
+
+.stat-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 2rem;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin: 0.25rem 0;
+}
+
+.stat-trend {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+}
+
+/* Filter Pills */
+.exp-filters {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.filter-pill {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.filter-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+}
+
+.filter-count {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.1rem 0.4rem;
+  border-radius: 20px;
+  font-size: 0.65rem;
+}
+
+/* Career Timeline */
+.career-timeline {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.timeline-track {
+  display: flex;
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.timeline-node {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s;
+}
+
+.timeline-node:hover {
+  background: rgba(255, 94, 0, 0.05);
+}
+
+.timeline-node.active {
+  background: var(--bg-card);
+}
+
+.node-year {
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+}
+
+.timeline-node.active .node-year {
+  color: var(--accent);
+}
+
+.node-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border-default);
+  margin: 0 auto;
+  transition: all 0.3s;
+}
+
+.timeline-node.active .node-dot {
+  background: var(--accent);
+  transform: scale(1.3);
+}
+
+.node-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: transparent;
+  transition: all 0.3s;
+}
+
+.timeline-node.active .node-line {
+  background: var(--accent);
+}
+
+/* Timeline Content */
+.timeline-content {
+  padding: 2rem;
+}
+
+.exp-card-detailed {
+  animation: slideIn 0.4s ease;
 }
 
 .card-header {
   display: flex;
-  align-items: center;
-  gap: clamp(0.75rem, 1.5vw, 1rem);
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-dark);
 }
 
-.card-icon {
-  width: clamp(40px, 8vw, 48px);
-  height: clamp(40px, 8vw, 48px);
-  border-radius: 50%;
+.header-left {
+  display: flex;
+  gap: 1rem;
+}
+
+.company-logo {
+  width: 50px;
+  height: 50px;
+  border-radius: 2px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: 1.2rem;
+  color: #000;
 }
 
-.card-info {
-  flex: 1;
+.company-info h3 {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.25rem;
 }
 
-.card-title {
-  font-size: clamp(1.1rem, 2vw, 1.3rem);
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-text);
-}
-
-.card-meta {
+.company-meta {
   display: flex;
-  flex-wrap: wrap;
   gap: 1rem;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
+  font-size: 0.8rem;
 }
 
-.card-toggle {
-  color: var(--terminal-comment);
-  transition: color 0.3s ease;
+.company-name {
+  color: var(--text-muted);
 }
 
-.experience-card:hover .card-toggle {
-  color: var(--accent-color);
+.company-period {
+  color: var(--accent);
+  font-weight: 600;
 }
 
-.card-description {
-  margin-bottom: 1rem;
-  color: var(--terminal-comment);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  line-height: 1.5;
+.exp-badge {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
-.card-metrics {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.exp-badge.development {
+  background: rgba(255, 94, 0, 0.2);
+  color: var(--accent);
 }
 
-.metric-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 6px;
-  transition: transform 0.3s ease;
+.exp-badge.internship {
+  background: rgba(251, 133, 0, 0.2);
+  color: #fb8500;
 }
 
-.metric-item:hover {
-  transform: translateY(-2px);
-}
-
-.metric-value {
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-  font-weight: bold;
-  color: var(--accent-color);
-}
-
-.metric-label {
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
-  color: var(--terminal-comment);
-}
-
-/* Expanded Details */
-.expanded-details {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  margin-top: 1rem;
-  animation: slideDown 0.3s ease-out;
-}
-
-.detail-section {
+.exp-description {
+  color: var(--text-muted);
+  line-height: 1.6;
   margin-bottom: 1.5rem;
 }
 
-.detail-section:last-child {
-  margin-bottom: 0;
-}
-
-.detail-section h4 {
-  margin: 0 0 1rem 0;
-  color: var(--accent-color);
-  font-size: clamp(1rem, 1.8vw, 1.1rem);
-}
-
-.detail-section ul {
-  margin: 0;
-  padding-left: 1.5rem;
-  color: var(--terminal-comment);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
-
-.detail-section li {
-  margin-bottom: 0.5rem;
-}
-
-.skill-tags {
-  display: flex;
-  flex-direction: column;
+/* Metrics Grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
-.skill-category {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.metric-block {
+  text-align: center;
+  padding: 1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-dark);
 }
 
-.category-name {
-  color: var(--terminal-property);
-  font-weight: bold;
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
+.metric-value {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
 }
 
-.category-skills {
+.metric-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Skills Section */
+.skills-section,
+.achievements-section,
+.challenges-section {
+  margin-bottom: 1.5rem;
+}
+
+.skills-section h4,
+.achievements-section h4,
+.challenges-section h4 {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.skills-cloud {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-left: 1rem;
-}
-
-.skill-tag {
-  background-color: rgba(88, 166, 255, 0.2);
-  color: var(--accent-color);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-/* Skills View */
-.skills-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin-top: 1rem;
-}
-
-.skill-category-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  transition: transform 0.3s ease;
-}
-
-.skill-category-card:hover {
-  transform: translateY(-3px);
-}
-
-.category-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.category-header h3 {
-  margin: 0;
-  color: var(--accent-color);
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-}
-
-.skill-count {
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
-}
-
-.skills-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 }
 
 .skill-item {
+  padding: 0.3rem 0.8rem;
+  background: var(--bg-elevated);
+  color: var(--text-silver);
+  font-size: 0.8rem;
+  transition: all 0.3s;
+  cursor: default;
+}
+
+.skill-item:hover {
+  background: var(--accent);
+  color: #000;
+  transform: translateY(-2px);
+}
+
+/* Achievements */
+.achievements-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.achievement-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.achievement-marker {
+  width: 6px;
+  height: 6px;
+  background: var(--accent);
+  margin-top: 0.5rem;
+  flex-shrink: 0;
+}
+
+.achievement-item p {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Challenges */
+.challenges-list {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.skill-name {
-  font-weight: bold;
-  color: var(--terminal-text);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
-
-.skill-level {
+.challenge-item {
   display: flex;
   align-items: center;
+  gap: 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.challenge-item i {
+  color: var(--accent);
+  font-size: 0.8rem;
+}
+
+/* Card Footer */
+.card-footer {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-dark);
+}
+
+.btn-expand {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  padding: 0.5rem 1rem;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-expand:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Expanded Content */
+.expanded-content {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-dark);
+}
+
+.expanded-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.expanded-col h4 {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 1rem;
+}
+
+.tech-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.tech-category {
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
-.level-bar {
-  flex: 1;
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
+.tech-cat-name {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-silver);
 }
 
-.level-fill {
-  height: 100%;
-  width: var(--level);
-  background-color: var(--accent-color);
+.tech-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.level-text {
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
-  color: var(--terminal-comment);
-  min-width: 40px;
-  text-align: right;
+.tech-badge {
+  padding: 0.2rem 0.6rem;
+  background: var(--bg-elevated);
+  font-size: 0.7rem;
+  color: var(--text-muted);
 }
 
-/* Stats View */
-.stats-container {
-  margin-top: 1rem;
+.impact-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-.stats-overview {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: 2rem;
-}
-
-.stat-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
+.impact-item {
   display: flex;
   align-items: center;
   gap: 1rem;
-  transition: transform 0.3s ease;
 }
 
-.stat-card:hover {
-  transform: translateY(-3px);
+.impact-bar {
+  flex: 1;
+  height: 4px;
+  background: var(--border-dark);
+  overflow: hidden;
 }
 
-.stat-icon {
-  width: clamp(40px, 8vw, 48px);
-  height: clamp(40px, 8vw, 48px);
-  border-radius: 50%;
-  background-color: var(--accent-color);
+.impact-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.5s ease;
+}
+
+.impact-label {
+  font-size: 0.7rem;
+  color: var(--text-dim);
+  min-width: 80px;
+}
+
+.impact-value {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  min-width: 50px;
+}
+
+/* Timeline Navigation */
+.timeline-nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
-  font-size: clamp(1rem, 2vw, 1.2rem);
-}
-
-.stat-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-value {
-  font-size: clamp(1.3rem, 2.5vw, 1.5rem);
-  font-weight: bold;
-  color: var(--accent-color);
-}
-
-.stat-label {
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
-}
-
-.stats-chart {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: 2rem;
-}
-
-.stats-chart h3 {
-  margin: 0 0 1rem 0;
-  color: var(--accent-color);
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-}
-
-.timeline-chart {
-  position: relative;
-  height: 200px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.chart-bar {
-  position: absolute;
-  bottom: 0;
-  border-radius: 4px 4px 0 0;
-  transition: all 0.3s ease;
-}
-
-.chart-bar:hover {
-  opacity: 0.8;
-}
-
-.bar-tooltip {
-  position: absolute;
-  bottom: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: var(--terminal-bg);
-  border: 1px solid var(--terminal-header);
-  border-radius: 4px;
-  padding: 0.5rem;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 10;
-}
-
-.chart-bar:hover .bar-tooltip {
-  opacity: 1;
-}
-
-.tooltip-title {
-  font-weight: bold;
-  color: var(--terminal-text);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.tooltip-company {
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
-}
-
-.tooltip-period {
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
-  color: var(--terminal-comment);
-}
-
-.stats-skills {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
-}
-
-.stats-skills h3 {
-  margin: 0 0 1rem 0;
-  color: var(--accent-color);
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-}
-
-.skills-chart {
-  display: flex;
-  flex-direction: column;
   gap: 1rem;
 }
 
-.skill-bar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.nav-arrow {
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s;
 }
 
-.skill-info {
-  display: flex;
-  justify-content: space-between;
+.nav-arrow:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.skill-category-name {
-  color: var(--terminal-text);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
+.nav-arrow:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
 }
 
-.skill-percentage {
-  color: var(--accent-color);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
-
-.skill-progress {
-  height: 8px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 4px;
+.nav-progress {
+  flex: 1;
+  max-width: 200px;
+  height: 2px;
+  background: var(--border-dark);
   overflow: hidden;
 }
 
-.skill-progress-fill {
+.progress-bar {
   height: 100%;
-  background-color: var(--accent-color);
-}
-
-/* Terminal Footer */
-.terminal-footer {
-  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
-  border-top: 1px solid var(--terminal-header);
+  background: var(--accent);
+  transition: width 0.3s ease;
 }
 
 /* Animations */
-@keyframes slideUp {
+@keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(20px);
+    transform: translateX(20px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
 }
 
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    max-height: 0;
-  }
-  to {
-    opacity: 1;
-    max-height: 1000px;
-  }
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
 }
 
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
 }
 
-/* Responsive Design */
-@media (max-width: 992px) {
-  .timeline-item {
-    flex-direction: column;
+.expand-enter-active,
+.expand-leave-active {
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.expand-enter-from,
+.expand-leave-to {
+  opacity: 0;
+  max-height: 0;
+}
+
+.expand-enter-to,
+.expand-leave-from {
+  max-height: 800px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .stats-dashboard {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  .timeline-date {
-    width: 100%;
-    text-align: left;
-    padding-right: 0;
-    padding-bottom: 0.5rem;
-  }
-  
-  .date-line {
-    top: auto;
-    bottom: 0;
-    right: auto;
-    left: 0;
-    width: 100%;
-    height: 2px;
-  }
-  
-  .timeline-content {
-    padding-left: 0;
-    padding-top: 1rem;
-  }
-  
-  .timeline-content::before {
-    display: none;
+
+  .expanded-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 }
 
 @media (max-width: 768px) {
-  .tab-content {
+  .experience {
+    padding: 3rem 1rem;
+  }
+
+  .exp-title {
+    font-size: 1.8rem;
+  }
+
+  .stats-dashboard {
+    grid-template-columns: 1fr;
+  }
+
+  .exp-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-pill {
+    justify-content: center;
+  }
+
+  .timeline-track {
+    overflow-x: auto;
+  }
+
+  .timeline-node {
+    min-width: 100px;
+  }
+
+  .timeline-content {
     padding: 1rem;
   }
-  
-  .system-info {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
+
   .card-header {
     flex-direction: column;
-    align-items: flex-start;
+    gap: 1rem;
   }
-  
-  .card-meta {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
-  .card-metrics {
-    flex-direction: column;
-  }
-  
-  .stats-overview {
-    grid-template-columns: 1fr;
-  }
-  
-  .skills-container {
-    grid-template-columns: 1fr;
-  }
-}
 
-@media (max-width: 480px) {
-  .tab-content {
-    padding: 0.8rem;
+  .metrics-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .experience-card {
-    padding: 1rem;
+
+  .expanded-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .expanded-details {
-    padding: 1rem;
-  }
-  
-  .skill-category-card {
-    padding: 1rem;
-  }
-  
-  .stat-card {
-    padding: 1rem;
-  }
-  
-  .stats-chart, .stats-skills {
-    padding: 1rem;
-  }
-  
-  .category-skills {
-    margin-left: 0;
-  }
-  
-  .skill-tags {
-    gap: 0.75rem;
+
+  .timeline-nav {
+    margin-top: 1rem;
   }
 }
 </style>

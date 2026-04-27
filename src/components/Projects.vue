@@ -1,1304 +1,1019 @@
 <template>
-  <section id="projects" class="projects-section">
-    <div class="terminal-container">
-      <!-- Terminal Header -->
-      <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
+  <section id="projects" class="projects">
+    <div class="projects-container">
+      <!-- Section Header -->
+      <div class="projects-header">
+        <div class="header-badge">
+          <span class="badge-num">04</span>
+          <span class="badge-text">PORTFOLIO</span>
         </div>
-        <div class="terminal-title">projects@portfolio:~# ./explore.sh</div>
+        <h2 class="projects-title">
+          Featured <span class="accent">Work</span>
+        </h2>
+        <div class="projects-underline"></div>
+        <p class="projects-subtitle">
+          A collection of projects showcasing my expertise in building modern
+          web applications
+        </p>
       </div>
-      
-      <!-- Terminal Body -->
-      <div class="terminal-body">
-        <!-- System Info -->
-        <div class="system-info">
-          <div class="info-line">
-            <span class="info-text">System:</span>
-            <span class="info-value">Portfolio v2.0.24</span>
-          </div>
-          <div class="info-line">
-            <span class="info-text">Directory:</span>
-            <span class="info-value">~/projects</span>
-          </div>
-          <div class="info-line">
-            <span class="info-text">Total Projects:</span>
-            <span class="info-value">{{ projects.length }}</span>
-          </div>
-        </div>
-        
-        <!-- Terminal Tabs -->
-        <div class="terminal-tabs">
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'grid' }" 
-            @click="activeTab = 'grid'"
-          >
-            <span class="tab-icon">📁</span>
-            <span class="tab-text">grid</span>
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'list' }" 
-            @click="activeTab = 'list'"
-          >
-            <span class="tab-icon">📋</span>
-            <span class="tab-text">list</span>
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'code' }" 
-            @click="activeTab = 'code'"
-          >
-            <span class="tab-icon">💻</span>
-            <span class="tab-text">code</span>
-          </div>
-        </div>
-        
-        <!-- Filter Command -->
-        <div class="terminal-prompt">
-          <span class="prompt-symbol">$</span>
-          <span class="command">filter --category=</span>
-          <div class="filter-input">
-            <span class="filter-value">{{ activeFilter }}</span>
-            <span class="cursor">_</span>
-          </div>
-        </div>
-        
-        <div class="filter-options">
-          <button 
-            v-for="category in categories" 
-            :key="category"
-            @click="activeFilter = category"
-            :class="['filter-option', { active: activeFilter === category }]"
-          >
-            {{ category }}
-          </button>
-        </div>
-        
-        <!-- Tab Content -->
-        <div class="tab-content">
-          <!-- Grid View -->
-          <div v-if="activeTab === 'grid'" class="grid-view">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">ls -la projects/</span>
+
+      <!-- Category Pills -->
+      <div class="category-pills">
+        <button
+          v-for="cat in categories"
+          :key="cat"
+          :class="['pill', { active: activeFilter === cat }]"
+          @click="activeFilter = cat"
+        >
+          {{ cat }}
+          <span class="pill-count">{{ getProjectCount(cat) }}</span>
+        </button>
+      </div>
+
+      <!-- Project Cards Grid -->
+      <div class="projects-grid">
+        <div
+          v-for="(project, idx) in paginatedProjects"
+          :key="project.title"
+          class="project-card"
+          :style="{ transitionDelay: idx * 0.05 + 's' }"
+          @click="openProjectDetails(project)"
+        >
+          <!-- Card Media -->
+          <div class="card-media">
+            <img :src="project.image" :alt="project.title" />
+            <div class="media-overlay">
+              <div class="overlay-content">
+                <span class="view-project">View Project</span>
+                <span class="project-category">{{ project.category }}</span>
+              </div>
             </div>
-            
-            <div class="projects-grid">
-              <div
-                v-for="(project, index) in paginatedProjects"
-                :key="index"
-                class="project-card"
-                :style="{ '--delay': index * 0.1 + 's' }"
-                @click="openProjectDetails(project)"
+            <div class="card-badge" :class="project.status">
+              {{ project.status === "live" ? "Live" : "In Development" }}
+            </div>
+          </div>
+
+          <!-- Card Body -->
+          <div class="card-body">
+            <h3 class="project-title">{{ project.title }}</h3>
+            <p class="project-description">{{ project.description }}</p>
+
+            <!-- Tech Stack -->
+            <div class="tech-stack">
+              <span
+                v-for="tech in project.tech.slice(0, 4)"
+                :key="tech"
+                class="tech-chip"
               >
-                <div class="project-header">
-                  <div class="project-icon">
-                    <i class="fas fa-folder"></i>
-                  </div>
-                  <div class="project-info">
-                    <h3 class="project-name">{{ project.title }}</h3>
-                    <div class="project-meta">
-                      <span class="project-size">{{ project.size || '2.5MB' }}</span>
-                      <span class="project-date">{{ project.date || '2024-01-15' }}</span>
-                    </div>
-                  </div>
-                  <div class="project-status" :class="project.status">
-                    <span class="status-dot"></span>
-                  </div>
-                </div>
-                
-                <div class="project-preview">
-                  <img :src="project.image" :alt="project.title" class="project-image" />
-                  <div class="project-overlay">
-                    <div class="overlay-content">
-                      <h4>{{ project.title }}</h4>
-                      <p>{{ project.description }}</p>
-                      <div class="tech-tags">
-                        <span v-for="tech in project.tech.slice(0, 3)" :key="tech" class="tech-tag">
-                          {{ tech }}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="project-actions">
-                  <a :href="project.github" target="_blank" class="action-btn">
-                    <i class="fab fa-github"></i>
-                  </a>
-                  <a v-if="project.demo !== '#'" :href="project.demo" target="_blank" class="action-btn">
-                    <i class="fas fa-external-link-alt"></i>
-                  </a>
-                </div>
-              </div>
+                {{ tech }}
+              </span>
+              <span v-if="project.tech.length > 4" class="tech-chip more">
+                +{{ project.tech.length - 4 }}
+              </span>
             </div>
-          </div>
-          
-          <!-- List View -->
-          <div v-if="activeTab === 'list'" class="list-view">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">cat projects.txt</span>
-            </div>
-            
-            <div class="projects-list">
-              <div
-                v-for="(project, index) in paginatedProjects"
-                :key="index"
-                class="list-item"
-                :style="{ '--delay': index * 0.05 + 's' }"
-                @click="openProjectDetails(project)"
+
+            <!-- Action Buttons -->
+            <div class="card-actions">
+              <a
+                :href="project.github"
+                target="_blank"
+                class="action-link github"
+                @click.stop
               >
-                <div class="list-icon">
-                  <i class="fas fa-file-code"></i>
-                </div>
-                <div class="list-content">
-                  <h3 class="list-title">{{ project.title }}</h3>
-                  <p class="list-description">{{ project.description }}</p>
-                  <div class="list-meta">
-                    <div class="tech-list">
-                      <span v-for="tech in project.tech.slice(0, 4)" :key="tech" class="tech-item">
-                        {{ tech }}
-                      </span>
-                    </div>
-                    <div class="list-status" :class="project.status">
-                      {{ project.status === 'live' ? 'Live' : 'Development' }}
-                    </div>
-                  </div>
-                </div>
-                <div class="list-actions">
-                  <a :href="project.github" target="_blank" class="action-btn">
-                    <i class="fab fa-github"></i>
-                  </a>
-                  <a v-if="project.demo !== '#'" :href="project.demo" target="_blank" class="action-btn">
-                    <i class="fas fa-external-link-alt"></i>
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Code View -->
-          <div v-if="activeTab === 'code'" class="code-view">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">cat project_details.json</span>
-            </div>
-            
-            <div class="code-container">
-              <div class="code-line">
-                <span class="line-number">01</span>
-                <span class="code-content">
-                  <span class="code-bracket">{</span>
-                </span>
-              </div>
-              
-              <div
-                v-for="(project, index) in paginatedProjects"
-                :key="index"
-                class="code-project"
-                :style="{ '--delay': index * 0.1 + 's' }"
-                @click="openProjectDetails(project)"
+                <i class="fab fa-github"></i>
+                <span>Code</span>
+              </a>
+              <a
+                v-if="project.demo !== '#'"
+                :href="project.demo"
+                target="_blank"
+                class="action-link demo"
+                @click.stop
               >
-                <div class="code-line">
-                  <span class="line-number">{{ String(index * 10 + 2).padStart(2, '0') }}</span>
-                  <span class="code-content">
-                    <span class="code-property">"{{ project.title.replace(/\s+/g, '') }}":</span>
-                    <span class="code-bracket">{</span>
-                  </span>
-                </div>
-                
-                <div class="code-line">
-                  <span class="line-number">{{ String(index * 10 + 3).padStart(2, '0') }}</span>
-                  <span class="code-content">
-                    <span class="code-property">"title":</span>
-                    <span class="code-string">"{{ project.title }}"</span>,
-                  </span>
-                </div>
-                
-                <div class="code-line">
-                  <span class="line-number">{{ String(index * 10 + 4).padStart(2, '0') }}</span>
-                  <span class="code-content">
-                    <span class="code-property">"description":</span>
-                    <span class="code-string">"{{ project.description }}"</span>,
-                  </span>
-                </div>
-                
-                <div class="code-line">
-                  <span class="line-number">{{ String(index * 10 + 5).padStart(2, '0') }}</span>
-                  <span class="code-content">
-                    <span class="code-property">"techStack":</span>
-                    <span class="code-bracket">[</span>
-                    <span class="tech-stack">
-                      <span 
-                        v-for="(tech, i) in project.tech" 
-                        :key="i"
-                        class="tech-item"
-                      >
-                        <span class="code-string">"{{ tech }}"</span>
-                        <span v-if="i < project.tech.length - 1" class="code-punctuation">,</span>
-                      </span>
-                    </span>
-                    <span class="code-bracket">]</span>,
-                  </span>
-                </div>
-                
-                <div class="code-line">
-                  <span class="line-number">{{ String(index * 10 + 6).padStart(2, '0') }}</span>
-                  <span class="code-content">
-                    <span class="code-property">"status":</span>
-                    <span class="code-string">"{{ project.status }}"</span>,
-                  </span>
-                </div>
-                
-                <div class="code-line">
-                  <span class="line-number">{{ String(index * 10 + 7).padStart(2, '0') }}</span>
-                  <span class="code-content">
-                    <span class="code-property">"links":</span>
-                    <span class="code-bracket">{</span>
-                    <span class="code-property">"github":</span>
-                    <a :href="project.github" target="_blank" class="code-link">
-                      <span class="code-string">"{{ project.github }}"</span>
-                    </a>,
-                    <span class="code-property">"demo":</span>
-                    <a v-if="project.demo !== '#'" :href="project.demo" target="_blank" class="code-link">
-                      <span class="code-string">"{{ project.demo }}"</span>
-                    </a>
-                    <span v-else class="code-string">"null"</span>
-                    <span class="code-bracket">}</span>,
-                  </span>
-                </div>
-                
-                <div class="code-line">
-                  <span class="line-number">{{ String(index * 10 + 8).padStart(2, '0') }}</span>
-                  <span class="code-content">
-                    <span class="code-bracket">}</span>
-                    <span v-if="index < paginatedProjects.length - 1" class="code-punctuation">,</span>
-                  </span>
-                </div>
-              </div>
-              
-              <div class="code-line">
-                <span class="line-number">{{ String(paginatedProjects.length * 10 + 2).padStart(2, '0') }}</span>
-                <span class="code-content">
-                  <span class="code-bracket">}</span>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Pagination -->
-        <div class="pagination">
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">navigate --page=</span>
-          </div>
-          
-          <div class="pagination-controls">
-            <button 
-              @click="currentPage > 1 ? currentPage-- : null" 
-              :disabled="currentPage === 1"
-              class="pagination-btn"
-            >
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            
-            <div class="page-numbers">
-              <button 
-                v-for="page in totalPages" 
-                :key="page"
-                @click="currentPage = page"
-                :class="['page-number', { active: currentPage === page }]"
+                <i class="fas fa-external-link-alt"></i>
+                <span>Demo</span>
+              </a>
+              <button
+                class="action-link details"
+                @click.stop="openProjectDetails(project)"
               >
-                {{ page }}
+                <i class="fas fa-info-circle"></i>
+                <span>Details</span>
               </button>
             </div>
-            
-            <button 
-              @click="currentPage < totalPages ? currentPage++ : null" 
-              :disabled="currentPage === totalPages"
-              class="pagination-btn"
-            >
-              <i class="fas fa-chevron-right"></i>
-            </button>
-          </div>
-          
-          <div class="pagination-info">
-            <span class="code-comment">// Showing {{ (currentPage - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage * itemsPerPage, filteredProjects.length) }} of {{ filteredProjects.length }} projects</span>
           </div>
         </div>
-        
-        <!-- Terminal Footer -->
-        <div class="terminal-footer">
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command cursor">_</span>
-          </div>
+      </div>
+
+      <!-- Pagination -->
+      <div class="pagination" v-if="totalPages > 1">
+        <button
+          @click="currentPage--"
+          :disabled="currentPage === 1"
+          class="page-prev"
+        >
+          <i class="fas fa-chevron-left"></i>
+          <span>Previous</span>
+        </button>
+
+        <div class="page-numbers">
+          <button
+            v-for="page in displayedPages"
+            :key="page"
+            @click="currentPage = page"
+            :class="[
+              'page-number',
+              { active: currentPage === page, dots: page === '...' },
+            ]"
+            :disabled="page === '...'"
+          >
+            {{ page }}
+          </button>
+        </div>
+
+        <button
+          @click="currentPage++"
+          :disabled="currentPage === totalPages"
+          class="page-next"
+        >
+          <span>Next</span>
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- View All Link -->
+      <div class="view-all" v-if="filteredProjects.length > itemsPerPage">
+        <button
+          @click="showAllProjects = !showAllProjects"
+          class="view-all-btn"
+        >
+          <span>{{ showAllProjects ? "Show Less" : "View All Projects" }}</span>
+          <i
+            :class="
+              showAllProjects ? 'fas fa-chevron-up' : 'fas fa-chevron-down'
+            "
+          ></i>
+        </button>
+      </div>
+
+      <!-- Stats Section -->
+      <div class="project-stats">
+        <div class="stat-item">
+          <div class="stat-number">{{ totalProjects }}</div>
+          <div class="stat-label">Total Projects</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">{{ liveProjects }}</div>
+          <div class="stat-label">Live Sites</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-number">{{ totalTechStacks }}</div>
+          <div class="stat-label">Technologies</div>
         </div>
       </div>
     </div>
-    
-    <!-- Project Details Modal -->
-    <div v-if="selectedProject" class="project-modal" @click="closeProjectDetails">
-      <div class="modal-content" @click.stop>
-        <div class="modal-header">
-          <h2>{{ selectedProject.title }}</h2>
-          <button @click="closeProjectDetails" class="close-button">&times;</button>
-        </div>
-        
-        <div class="modal-body">
-          <div class="modal-image">
+
+    <!-- Project Modal -->
+    <transition name="modal">
+      <div v-if="selectedProject" class="modal" @click="closeProjectDetails">
+        <div class="modal-container" @click.stop>
+          <div class="modal-image-section">
             <img :src="selectedProject.image" :alt="selectedProject.title" />
+            <div class="modal-status" :class="selectedProject.status">
+              {{ selectedProject.status === "live" ? "LIVE" : "DEVELOPMENT" }}
+            </div>
           </div>
-          
-          <div class="modal-details">
-            <div class="detail-section">
-              <h3>Description</h3>
+
+          <div class="modal-content-section">
+            <div class="modal-header">
+              <div>
+                <h2>{{ selectedProject.title }}</h2>
+                <div class="modal-category">{{ selectedProject.category }}</div>
+              </div>
+              <button class="modal-close" @click="closeProjectDetails">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+
+            <div class="modal-description">
               <p>{{ selectedProject.description }}</p>
             </div>
-            
-            <div class="detail-section">
-              <h3>Technologies Used</h3>
+
+            <div class="modal-tech">
+              <h4>Technologies Used</h4>
               <div class="tech-list">
-                <span v-for="tech in selectedProject.tech" :key="tech" class="tech-tag">
+                <span
+                  v-for="tech in selectedProject.tech"
+                  :key="tech"
+                  class="tech-item"
+                >
                   {{ tech }}
                 </span>
               </div>
             </div>
-            
-            <div v-if="selectedProject.features" class="detail-section">
-              <h3>Features</h3>
+
+            <div v-if="selectedProject.features" class="modal-features">
+              <h4>Key Features</h4>
               <ul>
-                <li v-for="feature in selectedProject.features" :key="feature">{{ feature }}</li>
+                <li v-for="feature in selectedProject.features" :key="feature">
+                  <i class="fas fa-check"></i>
+                  <span>{{ feature }}</span>
+                </li>
               </ul>
             </div>
-            
-            <div class="detail-section">
-              <h3>Project Links</h3>
-              <div class="project-links">
-                <a :href="selectedProject.github" target="_blank" class="link-btn">
-                  <i class="fab fa-github"></i>
-                  <span>View Code</span>
-                </a>
-                <a v-if="selectedProject.demo !== '#'" :href="selectedProject.demo" target="_blank" class="link-btn">
-                  <i class="fas fa-external-link-alt"></i>
-                  <span>Live Demo</span>
-                </a>
-              </div>
+
+            <div class="modal-links">
+              <a
+                :href="selectedProject.github"
+                target="_blank"
+                class="modal-link primary"
+              >
+                <i class="fab fa-github"></i>
+                View Source
+              </a>
+              <a
+                v-if="selectedProject.demo !== '#'"
+                :href="selectedProject.demo"
+                target="_blank"
+                class="modal-link secondary"
+              >
+                <i class="fas fa-external-link-alt"></i>
+                Live Demo
+              </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+import { ref, computed } from "vue";
 
-const activeTab = ref('grid');
-const activeFilter = ref('All');
+const activeFilter = ref("All");
 const currentPage = ref(1);
-const itemsPerPage = 6;
+const itemsPerPage = ref(6);
+const showAllProjects = ref(false);
 const selectedProject = ref(null);
 
-const categories = ['All', 'Web Development', 'E-commerce', 'Full Stack', 'Frontend'];
+const emit = defineEmits(["scrollToContact"]);
+
+const categories = [
+  "All",
+  "Web Development",
+  "E-commerce",
+  "Full Stack",
+  "Frontend",
+];
 
 const projects = [
   {
-    title: 'Seed Savers Network Kenya Website',
-    description: 'A dynamic and responsive website for Seed Savers Network Kenya, designed to promote seed sovereignty, showcase programs, events, resources, and facilitate community engagement.',
-    tech: ['HTML5', 'TypeScript', 'JavaScript', 'React.js', 'Vite', 'Responsive Design'],
-    category: 'Web Development',
-    github: 'https://github.com/Njenga993/SeedSavers',
-    demo: 'https://njenga993.github.io/SeedSavers/',
-    image: import.meta.env.BASE_URL + 'ssn.PNG',
-    status: 'live',
-    size: '3.2MB',
-    date: '2024-03-15',
+    title: "Seed Savers Network Kenya",
+    description:
+      "Dynamic website promoting seed sovereignty and community engagement with modern UI/UX principles and responsive design.",
+    tech: ["HTML5", "TypeScript", "React.js", "Vite", "TailwindCSS"],
+    category: "Web Development",
+    github: "https://github.com/Njenga993/SeedSavers",
+    demo: "https://njenga993.github.io/SeedSavers/",
+    image: import.meta.env.BASE_URL + "ssn.PNG",
+    status: "live",
     features: [
-      'Program & Project Pages',
-      'News & Events Section',
-      'Resource Library with Downloads',
-      'Donation Functionality',
-      'Contact & Regional Office Details',
-      'Responsive & Mobile-First Design'
-    ]
+      "Program & Project Pages",
+      "News & Events Section",
+      "Resource Library",
+      "Donation Functionality",
+      "Responsive Design",
+      "SEO Optimized",
+    ],
   },
   {
-    title: 'INOFO Africa Website',
-    description: 'A modern and responsive information website for INOFO Africa, aligned with INOFOs global identity.',
-    tech: ['HTML5', 'Typescript', 'JavaScript', 'React.js', 'Responsive Design'],
-    category: 'Web Development',
-    github: 'https://github.com/Njenga993/INOFO-Africa-',
-    demo: 'https://njenga993.github.io/INOFO-Africa-/',
-    image: import.meta.env.BASE_URL + 'inofo-africa.PNG',
-    status: 'live',
-    size: '2.8MB',
-    date: '2024-02-20',
-    features: ['Organizational Info Pages', 'Membership Form', 'Responsive Layout', 'Multilingual Structure Ready']
+    title: "INOFO Africa",
+    description:
+      "Modern information website aligned with global identity featuring clean architecture and performance optimization.",
+    tech: ["HTML5", "TypeScript", "React.js", "CSS3"],
+    category: "Web Development",
+    github: "https://github.com/Njenga993/INOFO-Africa-",
+    demo: "https://njenga993.github.io/INOFO-Africa-/",
+    image: import.meta.env.BASE_URL + "inofo-africa.PNG",
+    status: "live",
+    features: [
+      "Organizational Info Pages",
+      "Membership Form",
+      "Responsive Layout",
+      "Performance Optimized",
+    ],
   },
   {
-    title: 'Greania Build Website',
-    description: 'A clean, professional website developed for Greania Build, a construction and interior design company.',
-    tech: ['HTML5', 'Typescript', 'JavaScript', 'React.js', 'Responsive Design'],
-    category: 'Web Development',
-    github: 'https://github.com/Njenga993/greania-build',
-    demo: 'https://njenga993.github.io/greania-build/',
-    image: import.meta.env.BASE_URL + 'greania-build.PNG',
-    status: 'live',
-    size: '2.5MB',
-    date: '2024-01-10',
-    features: ['Services Showcase', 'Project Gallery', 'Contact Form', 'Responsive Layout']
+    title: "Greania Build",
+    description:
+      "Professional construction and interior design company website with stunning visuals and smooth animations.",
+    tech: ["HTML5", "TypeScript", "React.js", "Framer Motion"],
+    category: "Web Development",
+    github: "https://github.com/Njenga993/greania-build",
+    demo: "https://njenga993.github.io/greania-build/",
+    image: import.meta.env.BASE_URL + "greania-build.PNG",
+    status: "live",
+    features: [
+      "Services Showcase",
+      "Project Gallery",
+      "Contact Form",
+      "Animations",
+    ],
   },
   {
-    title: 'Nyakazi Organics Ecommerce',
-    description: 'A comprehensive e-commerce platform for organic products featuring seamless shopping experience.',
-    tech: ['React.js', 'JavaScript', 'CSS3', 'HTML5', 'Responsive Design'],
-    category: 'E-commerce',
-    github: 'https://github.com/Njenga993/nyakazi-ecommerce-',
-    demo: 'https://njenga993.github.io/nyakazi-ecommerce-/',
-    image: import.meta.env.BASE_URL + 'Nyakazi-ecommerce.PNG',
-    status: 'live',
-    size: '4.1MB',
-    date: '2023-12-05',
-    features: ['Product Catalog', 'Shopping Cart', 'Order Management', 'Mobile Responsive']
+    title: "Nyakazi Organics Ecommerce",
+    description:
+      "Comprehensive e-commerce platform with seamless shopping experience, secure payments, and inventory management.",
+    tech: ["React.js", "JavaScript", "CSS3", "Redux"],
+    category: "E-commerce",
+    github: "https://github.com/Njenga993/nyakazi-ecommerce-",
+    demo: "https://njenga993.github.io/nyakazi-ecommerce-/",
+    image: import.meta.env.BASE_URL + "Nyakazi-ecommerce.PNG",
+    status: "live",
+    features: [
+      "Product Catalog",
+      "Shopping Cart",
+      "Order Management",
+      "User Auth",
+    ],
   },
   {
-    title: 'Nyakazi Corporate Website',
-    description: 'Professional corporate website for Nyakazi Organics showcasing company values, products, and services.',
-    tech: ['HTML5', 'CSS3', 'JavaScript', 'Responsive Design', 'SEO'],
-    category: 'Web Development',
-    github: 'https://github.com/Njenga993/nyakazi',
-    demo: 'https://nyakazi.org',
-    image: import.meta.env.BASE_URL + 'Nyakazi.png',
-    status: 'live',
-    size: '2.3MB',
-    date: '2023-11-15',
-    features: ['Company Portfolio', 'Contact Forms', 'SEO Optimized', 'Fast Loading']
+    title: "Nyakazi Corporate",
+    description:
+      "Corporate website showcasing company values, products, and services with elegant design and analytics integration.",
+    tech: ["HTML5", "CSS3", "JavaScript", "SEO"],
+    category: "Web Development",
+    github: "https://github.com/Njenga993/nyakazi",
+    demo: "https://nyakazi.org",
+    image: import.meta.env.BASE_URL + "Nyakazi.png",
+    status: "live",
+    features: [
+      "Company Portfolio",
+      "Contact Forms",
+      "SEO Optimized",
+      "Analytics",
+    ],
   },
   {
-    title: 'Desiderata Consultancy',
-    description: 'Professional consultancy firm website featuring service portfolios, client testimonials, and integrated contact systems.',
-    tech: ['HTML5', 'CSS3', 'JavaScript', 'UX Design', 'Google Maps API'],
-    category: 'Web Development',
-    github: 'https://github.com/Njenga993/Firm-Desiderata',
-    demo: 'https://desiderataconsultancyfirm.com/',
-    image: import.meta.env.BASE_URL + 'Desiderata.png',
-    status: 'live',
-    size: '3.5MB',
-    date: '2023-10-20',
-    features: ['Service Showcase', 'Contact Integration', 'Maps Integration', 'Professional Design']
+    title: "Desiderata Consultancy",
+    description:
+      "Professional consultancy firm website with service portfolios, client testimonials, and location integration.",
+    tech: ["HTML5", "CSS3", "JavaScript", "Google Maps API"],
+    category: "Web Development",
+    github: "https://github.com/Njenga993/Firm-Desiderata",
+    demo: "https://desiderataconsultancyfirm.com/",
+    image: import.meta.env.BASE_URL + "Desiderata.png",
+    status: "live",
+    features: ["Service Showcase", "Contact Integration", "Maps Integration"],
   },
   {
-    title: 'SaleHub POS System',
-    description: 'Full-featured Point of Sale system with comprehensive inventory management, sales tracking, and detailed reporting.',
-    tech: ['React', 'TypeScript', 'Django', 'PostgreSQL', 'REST API'],
-    category: 'Full Stack',
-    github: 'https://github.com/Njenga993/pos-project',
-    demo: '#',
-    image: import.meta.env.BASE_URL + 'salehubPOS.png',
-    status: 'development',
-    size: '5.2MB',
-    date: '2023-09-10',
-    features: ['Inventory Management', 'Sales Analytics', 'User Authentication', 'Real-time Updates']
+    title: "SaleHub POS System",
+    description:
+      "Full-featured Point of Sale system with inventory management, sales analytics, and real-time reporting.",
+    tech: ["React", "TypeScript", "Django", "PostgreSQL"],
+    category: "Full Stack",
+    github: "https://github.com/Njenga993/pos-project",
+    demo: "#",
+    image: import.meta.env.BASE_URL + "salehubPOS.png",
+    status: "development",
+    features: [
+      "Inventory Management",
+      "Sales Analytics",
+      "User Authentication",
+      "Real-time Updates",
+    ],
   },
   {
-    title: 'React Portfolio Website',
-    description: 'Modern portfolio website built with React showcasing professional experience, skills, and projects.',
-    tech: ['React', 'TypeScript', 'Framer Motion', 'Responsive Design', 'CSS3'],
-    category: 'Frontend',
-    github: 'https://github.com/Njenga993/Portfolio-',
-    demo: 'https://njenga993.github.io/Portfolio-/',
-    image: import.meta.env.BASE_URL + 'React_Portfolio.PNG',
-    status: 'live',
-    size: '2.7MB',
-    date: '2023-08-15',
-    features: ['Interactive Animations', 'Project Showcase', 'Skills Display', 'Contact Integration']
+    title: "React Portfolio",
+    description:
+      "Modern portfolio website showcasing professional experience and projects with interactive animations.",
+    tech: ["React", "TypeScript", "Framer Motion", "CSS3"],
+    category: "Frontend",
+    github: "https://github.com/Njenga993/Portfolio-",
+    demo: "https://njenga993.github.io/Portfolio-/",
+    image: import.meta.env.BASE_URL + "React_Portfolio.PNG",
+    status: "live",
+    features: ["Interactive Animations", "Project Showcase", "Skills Display"],
   },
   {
-    title: 'Techlungs Technology',
-    description: 'Dynamic landing page for Techlungs Technology featuring smooth GSAP animations and interactive elements.',
-    tech: ['HTML5', 'CSS3', 'JavaScript', 'GSAP', 'UI/UX Design'],
-    category: 'Frontend',
-    github: 'https://github.com/Njenga993/Techlungs',
-    demo: 'https://techlungs.co.ke/',
-    image: import.meta.env.BASE_URL + 'Techlungs.png',
-    status: 'live',
-    size: '3.8MB',
-    date: '2023-07-20',
-    features: ['GSAP Animations', 'Interactive UI', 'Modern Design', 'Performance Optimized']
-  }
+    title: "Techlungs Technology",
+    description:
+      "Dynamic landing page with smooth GSAP animations and interactive UI components for high engagement.",
+    tech: ["HTML5", "CSS3", "JavaScript", "GSAP"],
+    category: "Frontend",
+    github: "https://github.com/Njenga993/Techlungs",
+    demo: "https://techlungs.co.ke/",
+    image: import.meta.env.BASE_URL + "Techlungs.png",
+    status: "live",
+    features: ["GSAP Animations", "Interactive UI", "Performance Optimized"],
+  },
 ];
 
 const filteredProjects = computed(() => {
-  if (activeFilter.value === 'All') {
-    return projects;
-  }
-  return projects.filter(project => project.category === activeFilter.value);
-});
+  let filtered =
+    activeFilter.value === "All"
+      ? projects
+      : projects.filter((p) => p.category === activeFilter.value);
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredProjects.value.length / itemsPerPage);
+  if (!showAllProjects.value) {
+    filtered = filtered.slice(0, itemsPerPage.value);
+  }
+
+  return filtered;
 });
 
 const paginatedProjects = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  return filteredProjects.value.slice(startIndex, endIndex);
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredProjects.value.slice(start, end);
 });
+
+const totalPages = computed(() =>
+  Math.ceil(filteredProjects.value.length / itemsPerPage.value),
+);
+
+const displayedPages = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
+  const pages = [];
+
+  if (total <= 7) {
+    for (let i = 1; i <= total; i++) pages.push(i);
+  } else {
+    if (current <= 3) {
+      pages.push(1, 2, 3, 4, "...", total);
+    } else if (current >= total - 2) {
+      pages.push(1, "...", total - 3, total - 2, total - 1, total);
+    } else {
+      pages.push(1, "...", current - 1, current, current + 1, "...", total);
+    }
+  }
+  return pages;
+});
+
+const totalProjects = computed(() => projects.length);
+const liveProjects = computed(
+  () => projects.filter((p) => p.status === "live").length,
+);
+const totalTechStacks = computed(() => {
+  const techSet = new Set();
+  projects.forEach((p) => p.tech.forEach((t) => techSet.add(t)));
+  return techSet.size;
+});
+
+const getProjectCount = (category) => {
+  if (category === "All") return projects.length;
+  return projects.filter((p) => p.category === category).length;
+};
 
 const openProjectDetails = (project) => {
   selectedProject.value = project;
-  document.body.style.overflow = 'hidden';
+  document.body.style.overflow = "hidden";
 };
 
 const closeProjectDetails = () => {
   selectedProject.value = null;
-  document.body.style.overflow = '';
+  document.body.style.overflow = "";
 };
 </script>
 
 <style scoped>
-/* Base Section Styles */
-.projects-section {
-  position: relative;
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
-  background-color: var(--bg-color);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  color: var(--text-color);
+.projects {
+  padding: 5rem 2rem;
+  background: var(--bg-secondary);
 }
 
-/* Terminal Container */
-.terminal-container {
-  width: 100%;
-  max-width: 1400px;
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.8s ease-out;
+.projects-container {
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Terminal Header */
-.terminal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--terminal-header);
-  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
+/* Header Styles */
+.projects-header {
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
-.terminal-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.terminal-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.terminal-button.close {
-  background-color: #ff5f56;
-}
-
-.terminal-button.minimize {
-  background-color: #ffbd2e;
-}
-
-.terminal-button.maximize {
-  background-color: #27c93f;
-}
-
-.terminal-title {
-  color: var(--terminal-text);
-  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-  opacity: 0.8;
-}
-
-/* Terminal Body */
-.terminal-body {
-  padding: 0;
-}
-
-/* System Info */
-.system-info {
-  display: flex;
-  justify-content: space-between;
-  padding: clamp(0.75rem, 1.5vw, 1rem);
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid var(--terminal-header);
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.info-line {
-  display: flex;
+.header-badge {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-}
-
-.info-text {
-  color: var(--terminal-comment);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.info-value {
-  color: var(--terminal-string);
-  font-weight: bold;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-/* Terminal Tabs */
-.terminal-tabs {
-  display: flex;
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom: 1px solid var(--terminal-header);
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--terminal-header) transparent;
-}
-
-.terminal-tabs::-webkit-scrollbar {
-  height: 6px;
-}
-
-.terminal-tabs::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.terminal-tabs::-webkit-scrollbar-thumb {
-  background-color: var(--terminal-header);
-  border-radius: 3px;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-}
-
-.tab:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.tab.active {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-bottom-color: var(--accent-color);
-}
-
-.tab-icon {
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
-}
-
-.tab-text {
-  color: var(--terminal-comment);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.tab.active .tab-text {
-  color: var(--terminal-text);
-}
-
-/* Terminal Prompt */
-.terminal-prompt {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: 0;
-}
-
-.prompt-symbol {
-  color: var(--terminal-prompt);
-  font-weight: bold;
-}
-
-.command {
-  color: var(--terminal-text);
-}
-
-.cursor {
-  color: var(--terminal-prompt);
-  animation: blink 1s infinite;
-}
-
-/* Filter Options */
-.filter-input {
-  display: flex;
-  align-items: center;
-}
-
-.filter-value {
-  color: var(--terminal-string);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
-
-.filter-options {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0 clamp(1rem, 2vw, 1.5rem) clamp(0.75rem, 1.5vw, 1rem);
-}
-
-.filter-option {
   padding: 0.25rem 0.75rem;
-  background-color: transparent;
-  border: 1px solid var(--terminal-text);
-  border-radius: 4px;
-  color: var(--terminal-text);
-  font-family: 'Fira Code', 'Courier New', monospace;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  margin-bottom: 1.5rem;
+}
+
+.badge-num {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.badge-text {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.projects-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-white);
+  margin-bottom: 1rem;
+}
+
+.projects-title .accent {
+  color: var(--accent);
+}
+
+.projects-underline {
+  width: 60px;
+  height: 2px;
+  background: var(--accent);
+  margin: 0 auto 1rem;
+}
+
+.projects-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* Category Pills */
+.category-pills {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 3rem;
+}
+
+.pill {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.filter-option:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.filter-option.active {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
+.pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
 }
 
-/* Tab Content */
-.tab-content {
-  padding: clamp(1rem, 2vw, 1.5rem);
-  min-height: 400px;
+.pill-count {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.1rem 0.4rem;
+  border-radius: 10px;
+  font-size: 0.65rem;
 }
 
-/* Grid View */
+/* Projects Grid */
 .projects-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin-top: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
 }
 
 .project-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  animation: fadeIn 0.5s ease-out var(--delay) both;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  transition: all 0.3s;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .project-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  border-color: var(--accent);
+  transform: translateY(-4px);
 }
 
-.project-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.project-icon {
-  width: clamp(40px, 8vw, 48px);
-  height: clamp(40px, 8vw, 48px);
-  border-radius: 50%;
-  background-color: var(--terminal-header);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-color);
-  font-size: clamp(1rem, 2vw, 1.2rem);
-}
-
-.project-info {
-  flex: 1;
-}
-
-.project-name {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: bold;
-  margin: 0 0 0.25rem 0;
-  color: var(--terminal-text);
-}
-
-.project-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
-}
-
-.project-status {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.project-status.live {
-  background-color: #3fb950;
-}
-
-.project-status.development {
-  background-color: #ff922b;
-}
-
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: white;
-}
-
-.project-preview {
+/* Card Media */
+.card-media {
   position: relative;
-  height: clamp(180px, 30vw, 220px);
+  height: 220px;
   overflow: hidden;
+  background: var(--bg-elevated);
 }
 
-.project-image {
+.card-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.3s ease;
+  filter: grayscale(100%);
+  transition: all 0.5s;
 }
 
-.project-card:hover .project-image {
+.project-card:hover .card-media img {
+  filter: grayscale(0%);
   transform: scale(1.05);
 }
 
-.project-overlay {
+.media-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  inset: 0;
+  background: rgba(255, 94, 0, 0.9);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s;
 }
 
-.project-card:hover .project-overlay {
+.project-card:hover .media-overlay {
   opacity: 1;
 }
 
 .overlay-content {
-  padding: 1rem;
   text-align: center;
-  max-width: 90%;
 }
 
-.overlay-content h4 {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-text);
+.view-project {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #000;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
 }
 
-.overlay-content p {
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  margin: 0 0 1rem 0;
-  color: var(--terminal-comment);
+.project-category {
+  font-size: 0.65rem;
+  color: #000;
+  opacity: 0.8;
 }
 
-.tech-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
+.card-badge {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(0, 0, 0, 0.85);
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-white);
+  border-left: 2px solid;
 }
 
-.tech-tag {
-  background-color: rgba(88, 166, 255, 0.2);
-  color: var(--accent-color);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
+.card-badge.live {
+  border-left-color: #22c55e;
 }
 
-.project-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+.card-badge.development {
+  border-left-color: #f59e0b;
 }
 
-.action-btn {
-  width: clamp(32px, 6vw, 36px);
-  height: clamp(32px, 6vw, 36px);
-  border-radius: 50%;
-  background-color: var(--terminal-header);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--terminal-text);
-  text-decoration: none;
-  transition: all 0.3s ease;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
+/* Card Body */
+.card-body {
+  padding: 1.25rem;
 }
 
-.action-btn:hover {
-  background-color: var(--accent-color);
-  color: white;
-  transform: translateY(-3px);
+.project-title {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.5rem;
 }
 
-/* List View */
-.projects-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.list-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  animation: fadeIn 0.5s ease-out var(--delay) both;
-  cursor: pointer;
-}
-
-.list-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateX(5px);
-}
-
-.list-icon {
-  width: clamp(40px, 8vw, 48px);
-  height: clamp(40px, 8vw, 48px);
-  border-radius: 50%;
-  background-color: var(--terminal-header);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--accent-color);
-  font-size: clamp(1rem, 2vw, 1.2rem);
-}
-
-.list-content {
-  flex: 1;
-}
-
-.list-title {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  font-weight: bold;
-  margin: 0 0 0.25rem 0;
-  color: var(--terminal-text);
-}
-
-.list-description {
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-comment);
-}
-
-.list-meta {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.tech-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-}
-
-.tech-item {
-  background-color: rgba(88, 166, 255, 0.2);
-  color: var(--accent-color);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
-}
-
-.list-status {
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
-  font-weight: bold;
-}
-
-.list-status.live {
-  background-color: rgba(63, 185, 80, 0.2);
-  color: #3fb950;
-}
-
-.list-status.development {
-  background-color: rgba(255, 146, 43, 0.2);
-  color: #ff922b;
-}
-
-.list-actions {
-  display: flex;
-  gap: 0.5rem;
-}
-
-/* Code View */
-.code-container {
-  background-color: rgba(0, 0, 0, 0.2);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  margin-top: 1rem;
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--terminal-header) transparent;
-}
-
-.code-container::-webkit-scrollbar {
-  height: 8px;
-}
-
-.code-container::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.code-container::-webkit-scrollbar-thumb {
-  background-color: var(--terminal-header);
-  border-radius: 4px;
-}
-
-.code-line {
-  display: flex;
-  margin-bottom: 0.25rem;
-}
-
-.line-number {
-  width: clamp(25px, 4vw, 30px);
-  color: var(--terminal-line-number);
-  text-align: right;
-  margin-right: clamp(0.75rem, 1.5vw, 1rem);
-  user-select: none;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.code-content {
-  flex: 1;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.code-project {
+.project-description {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
   margin-bottom: 1rem;
+  display: -webkit-box;
+  --webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.code-bracket { color: var(--terminal-text); }
-.code-property { color: var(--terminal-property); }
-.code-string { color: var(--terminal-string); }
-.code-punctuation { color: var(--terminal-text); }
-.code-link {
-  color: var(--terminal-string);
-  text-decoration: underline;
-}
-
+/* Tech Stack */
 .tech-stack {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tech-chip {
+  padding: 0.2rem 0.6rem;
+  background: var(--bg-elevated);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.tech-chip.more {
+  background: var(--accent);
+  color: #000;
+}
+
+/* Card Actions */
+.card-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.action-link.details {
+  background: transparent;
 }
 
 /* Pagination */
 .pagination {
-  margin-top: clamp(1.5rem, 3vw, 2rem);
-  padding: 0 clamp(1rem, 2vw, 1.5rem);
-}
-
-.pagination-controls {
   display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
 }
 
-.pagination-btn {
-  width: clamp(32px, 6vw, 36px);
-  height: clamp(32px, 6vw, 36px);
-  border-radius: 50%;
-  background-color: var(--terminal-header);
-  display: flex;
+.page-prev,
+.page-next {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  color: var(--terminal-text);
-  border: none;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  transition: all 0.2s;
 }
 
-.pagination-btn:hover:not(:disabled) {
-  background-color: var(--accent-color);
-  color: white;
+.page-prev:hover:not(:disabled),
+.page-next:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.pagination-btn:disabled {
-  opacity: 0.5;
+.page-prev:disabled,
+.page-next:disabled {
+  opacity: 0.3;
   cursor: not-allowed;
 }
 
 .page-numbers {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
 .page-number {
-  width: clamp(32px, 6vw, 36px);
-  height: clamp(32px, 6vw, 36px);
-  border-radius: 50%;
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--terminal-text);
-  border: 1px solid var(--terminal-text);
-  font-family: 'Fira Code', 'Courier New', monospace;
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+  transition: all 0.2s;
 }
 
-.page-number:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.page-number:hover:not(.dots):not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .page-number.active {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  color: white;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
 }
 
-.pagination-info {
+.page-number.dots {
+  border: none;
+  cursor: default;
+}
+
+/* View All */
+.view-all {
   text-align: center;
-  color: var(--terminal-comment);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+  margin-bottom: 3rem;
 }
 
-/* Terminal Footer */
-.terminal-footer {
-  padding: clamp(0.75rem, 1.5vw, 1rem) clamp(1rem, 2vw, 1.5rem);
-  border-top: 1px solid var(--terminal-header);
+.view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-/* Project Modal */
-.project-modal {
+.view-all-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Project Stats */
+.project-stats {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 40px;
+  background: var(--border-default);
+}
+
+/* Modal */
+.modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: 2rem;
 }
 
-.modal-content {
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
+.modal-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
   max-width: 900px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  animation: modalFadeIn 0.3s ease;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.modal-image-section {
+  position: relative;
+  background: var(--bg-elevated);
+}
+
+.modal-image-section img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.modal-status {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(0, 0, 0, 0.85);
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--text-white);
+}
+
+.modal-status.live {
+  border-left: 2px solid #22c55e;
+}
+
+.modal-status.development {
+  border-left: 2px solid #f59e0b;
+}
+
+.modal-content-section {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .modal-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border-bottom: 1px solid var(--terminal-header);
+  align-items: flex-start;
 }
 
 .modal-header h2 {
-  margin: 0;
-  color: var(--terminal-text);
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.25rem;
 }
 
-.close-button {
+.modal-category {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  background: rgba(255, 94, 0, 0.15);
+  color: var(--accent);
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.modal-close {
   background: none;
   border: none;
-  color: var(--terminal-text);
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  color: var(--text-muted);
+  font-size: 1.2rem;
   cursor: pointer;
-  padding: 0;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.modal-body {
-  padding: clamp(1rem, 2vw, 1.5rem);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
+.modal-close:hover {
+  color: var(--accent);
 }
 
-.modal-image {
-  border-radius: 8px;
-  overflow: hidden;
+.modal-description p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.85rem;
 }
 
-.modal-image img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-
-.modal-details {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.detail-section h3 {
-  margin: 0 0 0.5rem 0;
-  color: var(--accent-color);
-  font-size: clamp(1rem, 1.8vw, 1.2rem);
-}
-
-.detail-section p {
-  margin: 0;
-  color: var(--terminal-comment);
-  font-size: clamp(0.9rem, 1.3vw, 1rem);
-  line-height: 1.5;
-}
-
-.detail-section ul {
-  margin: 0;
-  padding-left: 1.5rem;
-  color: var(--terminal-comment);
-  font-size: clamp(0.9rem, 1.3vw, 1rem);
+.modal-tech h4,
+.modal-features h4 {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
 }
 
 .tech-list {
@@ -1307,174 +1022,143 @@ const closeProjectDetails = () => {
   gap: 0.5rem;
 }
 
-.project-links {
-  display: flex;
-  gap: 1rem;
+.tech-item {
+  padding: 0.2rem 0.6rem;
+  background: var(--bg-elevated);
+  font-size: 0.7rem;
+  color: var(--text-silver);
 }
 
-.link-btn {
+.modal-features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modal-features li {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: var(--accent-color);
-  color: white;
-  border-radius: 4px;
+  padding: 0.4rem 0;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.modal-features li i {
+  color: var(--accent);
+  font-size: 0.7rem;
+}
+
+.modal-links {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.modal-link {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.7rem;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
   text-decoration: none;
-  transition: all 0.3s ease;
-  font-size: clamp(0.9rem, 1.3vw, 1rem);
+  transition: all 0.2s;
 }
 
-.link-btn:hover {
-  background-color: var(--accent-hover);
-  transform: translateY(-2px);
+.modal-link.primary {
+  background: var(--accent);
+  color: #000;
 }
 
-/* Animations */
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.modal-link.primary:hover {
+  background: var(--accent-hover);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+.modal-link.secondary {
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-silver);
 }
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.modal-link.secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+/* Transitions */
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
   .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
   }
-}
 
-@media (max-width: 992px) {
-  .projects-grid {
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  }
-  
-  .modal-body {
+  .modal-container {
     grid-template-columns: 1fr;
+  }
+
+  .modal-image-section {
+    height: 250px;
   }
 }
 
 @media (max-width: 768px) {
+  .projects {
+    padding: 3rem 1rem;
+  }
+
+  .projects-title {
+    font-size: 1.8rem;
+  }
+
   .projects-grid {
     grid-template-columns: 1fr;
+  }
+
+  .pagination {
+    flex-wrap: wrap;
+  }
+
+  .project-stats {
+    flex-direction: column;
     gap: 1rem;
   }
-  
-  .project-card {
-    border-radius: 8px;
+
+  .stat-divider {
+    width: 60px;
+    height: 1px;
   }
-  
-  .project-header {
-    padding: 1rem;
+
+  .page-prev span,
+  .page-next span {
+    display: none;
   }
-  
-  .project-actions {
-    padding: 1rem;
+
+  .page-prev,
+  .page-next {
+    padding: 0.5rem;
   }
-  
-  .list-item {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-  
-  .list-meta {
-    flex-direction: column;
-    align-items: flex-start;
+
+  .category-pills {
     gap: 0.5rem;
   }
-  
-  .list-actions {
-    align-self: flex-end;
-  }
-  
-  .modal-body {
-    padding: 1rem;
-  }
-}
 
-@media (max-width: 576px) {
-  .project-card {
-    border-radius: 8px;
-  }
-  
-  .project-header {
-    padding: 0.75rem;
-  }
-  
-  .project-actions {
-    padding: 0.75rem;
-  }
-  
-  .project-name {
-    font-size: 1rem;
-  }
-  
-  .overlay-content h4 {
-    font-size: 1rem;
-  }
-  
-  .overlay-content p {
-    font-size: 0.8rem;
-  }
-  
-  .list-title {
-    font-size: 1rem;
-  }
-  
-  .list-description {
-    font-size: 0.8rem;
-  }
-  
-  .modal-body {
-    padding: 0.75rem;
-  }
-  
-  .detail-section h3 {
-    font-size: 1rem;
-  }
-  
-  .detail-section p {
-    font-size: 0.8rem;
-  }
-  
-  .tech-tag {
+  .pill {
+    padding: 0.4rem 1rem;
     font-size: 0.7rem;
-  }
-  
-  .pagination-controls {
-    flex-wrap: wrap;
-  }
-  
-  .page-numbers {
-    flex-wrap: wrap;
-    justify-content: center;
   }
 }
 </style>

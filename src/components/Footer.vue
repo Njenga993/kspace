@@ -1,778 +1,527 @@
 <template>
-  <footer id="footer" class="footer-section">
-    <div class="terminal-container">
-      <!-- Terminal Header -->
-      <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
+  <footer id="footer" class="footer">
+    <div class="footer-container">
+      <!-- Main Footer Content -->
+      <div class="footer-grid">
+        <!-- Brand Section -->
+        <div class="footer-brand">
+          <div class="brand-avatar">
+            <img src="/profile.JPG" alt="Kelvin Kamau" />
+            <div class="avatar-status"></div>
+          </div>
+          <div class="brand-info">
+            <h3 class="brand-name">KELVIN KAMAU</h3>
+            <p class="brand-role">FULL STACK DEVELOPER</p>
+            <div class="brand-stats">
+              <div class="stat-item">
+                <span class="stat-label">UPTIME</span>
+                <span class="stat-value">{{ uptime }}</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-label">VERSION</span>
+                <span class="stat-value">2.0.24</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="terminal-title">system@portfolio:~# ./footer.sh</div>
+
+        <!-- Navigation Section -->
+        <div class="footer-section">
+          <h4 class="section-title">NAVIGATION</h4>
+          <ul class="nav-links">
+            <li v-for="link in navLinks" :key="link.id">
+              <a
+                :href="`#${link.id}`"
+                @click="scrollToSection(link.id)"
+                class="nav-link"
+              >
+                <span class="link-marker"></span>
+                {{ link.text }}
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Connect Section -->
+        <div class="footer-section">
+          <h4 class="section-title">CONNECT</h4>
+          <div class="social-links">
+            <a
+              v-for="social in socialLinks"
+              :key="social.id"
+              :href="social.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="social-link"
+              :class="social.id"
+            >
+              <i :class="social.icon"></i>
+              <span>{{ social.name }}</span>
+              <i class="fas fa-external-link-alt external-icon"></i>
+            </a>
+          </div>
+          <div class="contact-info">
+            <div class="contact-row">
+              <i class="fas fa-envelope"></i>
+              <div class="contact-detail">
+                <span class="contact-label">EMAIL</span>
+                <a href="mailto:njengak993@gmail.com">njengak993@gmail.com</a>
+              </div>
+            </div>
+            <div class="contact-row">
+              <i class="fas fa-map-marker-alt"></i>
+              <div class="contact-detail">
+                <span class="contact-label">LOCATION</span>
+                <span>Nairobi, Kenya</span>
+              </div>
+            </div>
+            <div class="contact-row">
+              <i class="fas fa-clock"></i>
+              <div class="contact-detail">
+                <span class="contact-label">TIMEZONE</span>
+                <span>EAT (UTC+3)</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      
-      <!-- Terminal Body -->
-      <div class="terminal-body">
-        <!-- System Status -->
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <div class="copyright">
+          <i class="far fa-copyright"></i>
+          <span
+            >{{ new Date().getFullYear() }} Kelvin Kamau. All rights
+            reserved.</span
+          >
+        </div>
         <div class="system-status">
-          <div class="status-line">
-            <span class="status-text">System Status:</span>
-            <span class="status-value online">Online</span>
-          </div>
-          <div class="status-line">
-            <span class="status-text">Uptime:</span>
-            <span class="status-value">{{ uptime }}</span>
-          </div>
-          <div class="status-line">
-            <span class="status-text">Version:</span>
-            <span class="status-value">v2.0.24</span>
-          </div>
-        </div>
-        
-        <!-- Terminal Tabs -->
-        <div class="terminal-tabs">
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'about' }" 
-            @click="activeTab = 'about'"
-          >
-            <span class="tab-icon">ℹ️</span>
-            <span class="tab-text">about</span>
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'navigation' }" 
-            @click="activeTab = 'navigation'"
-          >
-            <span class="tab-icon">🧭</span>
-            <span class="tab-text">navigation</span>
-          </div>
-          <div 
-            class="tab" 
-            :class="{ active: activeTab === 'connect' }" 
-            @click="activeTab = 'connect'"
-          >
-            <span class="tab-icon">🔗</span>
-            <span class="tab-text">connect</span>
-          </div>
-        </div>
-        
-        <!-- Tab Content -->
-        <div class="tab-content">
-          <!-- About Tab -->
-          <div v-if="activeTab === 'about'" class="about-tab">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">cat profile.json</span>
-            </div>
-            
-            <div class="terminal-output">
-              <div class="profile-card">
-                <div class="profile-header">
-                  <div class="avatar-container">
-                    <img src="/profile.JPG" alt="Kelvin Kamau" class="avatar" />
-                    <div class="status-indicator online"></div>
-                  </div>
-                  <div class="profile-info">
-                    <h2 class="profile-name">Kelvin Kamau</h2>
-                    <div class="profile-tags">
-                      <span class="tag">Full Stack Developer</span>
-                      <span class="tag">UI/UX Engineer</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div class="profile-stats">
-                  <div class="stat-item">
-                    <span class="stat-number">5+</span>
-                    <span class="stat-label">Years Experience</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-number">50+</span>
-                    <span class="stat-label">Projects Completed</span>
-                  </div>
-                  <div class="stat-item">
-                    <span class="stat-number">100%</span>
-                    <span class="stat-label">Client Satisfaction</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Navigation Tab -->
-          <div v-if="activeTab === 'navigation'" class="navigation-tab">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">ls -la /navigation/</span>
-            </div>
-            
-            <div class="terminal-output">
-              <div class="nav-grid">
-                <a 
-                  v-for="link in navLinks" 
-                  :key="link.id"
-                  :href="`#${link.id}`" 
-                  class="nav-item"
-                  @click="scrollToSection(link.id)"
-                >
-                  <div class="nav-icon">
-                    <i :class="link.icon"></i>
-                  </div>
-                  <div class="nav-info">
-                    <h3 class="nav-title">{{ link.text }}</h3>
-                    <p class="nav-description">{{ link.description }}</p>
-                  </div>
-                  <div class="nav-arrow">
-                    <i class="fas fa-arrow-right"></i>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Connect Tab -->
-          <div v-if="activeTab === 'connect'" class="connect-tab">
-            <div class="terminal-prompt">
-              <span class="prompt-symbol">$</span>
-              <span class="command">git remote -v</span>
-            </div>
-            
-            <div class="terminal-output">
-              <div class="connect-grid">
-                <div class="connect-item">
-                  <h3 class="connect-title">Contact Information</h3>
-                  <div class="contact-list">
-                    <div class="contact-item">
-                      <span class="contact-icon">📧</span>
-                      <span class="contact-value">njengak993@gmail.com</span>
-                    </div>
-                  </div>
-                  <div class="contact-item">
-                      <span class="contact-icon">📍</span>
-                      <span class="contact-value">Nairobi, Kenya</span>
-                    </div>
-                  </div>
-                  <div class="contact-item">
-                      <span class="contact-icon">📱</span>
-                      <span class="contact-value">+254 703 642 280</span>
-                    </div>
-                </div>
-                
-                <div class="social-links">
-                  <a 
-                    v-for="social in socialLinks" 
-                    :key="social.id"
-                    :href="social.url" 
-                    target="_blank" 
-                    class="social-link"
-                  >
-                    <div class="social-icon">
-                      <i :class="social.icon"></i>
-                    </div>
-                    <div class="social-info">
-                      <h4 class="social-name">{{ social.name }}</h4>
-                      <p class="social-handle">{{ social.handle }}</p>
-                    </div>
-                  </a>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Terminal Footer -->
-        <div class="terminal-footer">
-          <div class="footer-info">
-            <span class="copyright">© {{ new Date().getFullYear() }} Kelvin Kamau</span>
-            <span class="separator">|</span>
-            <span class="build-info">Build: v2.0.24</span>
-          </div>
-          
-          <div class="footer-links">
-            <a href="#" class="footer-link">Privacy</a>
-            <span class="separator">|</span>
-            <a href="#" class="footer-link">Terms</a>
-          </div>
-          
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command cursor">_</span>
-          </div>
+          <div class="status-indicator"></div>
+          <span>System Online</span>
+          <div class="status-separator"></div>
+          <span>Last deployed: {{ lastDeployed }}</span>
         </div>
       </div>
-      
-      <!-- Back to Top Button -->
-      <button 
-        v-show="showBackToTop" 
-        @click="scrollToTop" 
+    </div>
+
+    <!-- Back to Top Button -->
+    <transition name="fade-up">
+      <button
+        v-show="showBackToTop"
+        @click="scrollToTop"
         class="back-to-top"
         aria-label="Back to top"
       >
         <i class="fas fa-arrow-up"></i>
       </button>
-    </div>
+    </transition>
   </footer>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted } from "vue";
 
-const activeTab = ref('about');
-const uptime = ref('0d 0h 0m 0s');
+const uptime = ref("0d 0h 0m");
 const showBackToTop = ref(false);
+const lastDeployed = ref("");
 
 const navLinks = [
-  { id: 'about', text: 'About', icon: 'fas fa-user', description: 'Learn more about my background and skills.' },
-  { id: 'skills', text: 'Skills', icon: 'fas fa-code', description: 'Explore my technical expertise and proficiencies.' },
-  { id: 'experience', text: 'Experience', icon: 'fas fa-briefcase', description: 'View my professional journey and work history.' },
-  { id: 'projects', text: 'Projects', icon: 'fas fa-folder-open', description: 'Check out my portfolio of work.' },
-  { id: 'contact', text: 'Contact', icon: 'fas fa-envelope', description: 'Get in touch with me for opportunities.' }
+  { id: "about", text: "About" },
+  { id: "skills", text: "Skills" },
+  { id: "experience", text: "Experience" },
+  { id: "projects", text: "Projects" },
+  { id: "clients", text: "Clients" },
+  { id: "contact", text: "Contact" },
 ];
 
 const socialLinks = [
-  { id: 'github', name: 'GitHub', icon: 'fab fa-github', url: 'https://github.com/Njenga993' },
-  { id: 'linkedin', name: 'LinkedIn', icon: 'fab fa-linkedin-in', url: 'https://www.linkedin.com/in/kelvin-kamau-788160277/' },
-  { id: 'twitter', name: 'Twitter', icon: 'fab fa-twitter', url: 'https://x.com/kamau_nje' },
-  { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
+  {
+    id: "github",
+    name: "GitHub",
+    icon: "fab fa-github",
+    url: "https://github.com/Njenga993",
+  },
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    icon: "fab fa-linkedin-in",
+    url: "https://www.linkedin.com/in/kelvin-kamau-788160277/",
+  },
+  {
+    id: "twitter",
+    name: "Twitter",
+    icon: "fab fa-twitter",
+    url: "https://x.com/kamau_nje",
+  },
 ];
 
 let uptimeInterval;
 
 const updateUptime = () => {
+  const startDate = new Date("2024-01-01");
   const now = new Date();
-  const startTime = new Date('2023-01-01T00:00:00:00');
-  const elapsed = now - startTime;
-  const days = Math.floor(elapsed / (1000 * 60 * 60 * 24)); // milliseconds in a day
-  
-  const hours = Math.floor((elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const elapsed = now - startDate;
+
+  const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
+  const hours = Math.floor(
+    (elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+  );
   const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-  
+
   uptime.value = `${days}d ${hours}h ${minutes}m`;
 };
 
+const setLastDeployed = () => {
+  const date = new Date();
+  const formatted = date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+  lastDeployed.value = formatted;
+};
+
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+};
+
+const scrollToSection = (id) => {
+  const element = document.getElementById(id);
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" });
+  }
 };
 
 const checkScroll = () => {
-  showBackToTop.value = window.scrollY > 300;
+  showBackToTop.value = window.scrollY > 400;
 };
 
 onMounted(() => {
-  uptimeInterval = setInterval(updateUptime, 60000); // Update every minute
   updateUptime();
-  
-  window.addEventListener('scroll', checkScroll);
+  uptimeInterval = setInterval(updateUptime, 60000);
+  setLastDeployed();
+  window.addEventListener("scroll", checkScroll);
 });
 
 onUnmounted(() => {
-  clearInterval(uptimeInterval);
-  window.removeEventListener('scroll', checkScroll);
+  if (uptimeInterval) clearInterval(uptimeInterval);
+  window.removeEventListener("scroll", checkScroll);
 });
 </script>
 
-<style>
-/* Using the same theme variables as other components */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #1a202c;
-  --secondary-text: #4a5568;
-  --accent-color: #3182ce;
-  --accent-hover: #2c5282;
-  --terminal-bg: #1e1e1e;
-  --terminal-header: #323232;
-  --terminal-text: #d4d4d4;
-  --terminal-prompt: #4ec9b0;
-  --terminal-keyword: #569cd6;
-  --terminal-string: #ce9178;
-  --terminal-comment: #6a9955;
-  --terminal-function: #dcdcaa;
-  --terminal-variable: #9cdcfe;
-  --terminal-property: #9cdcfe;
-  --terminal-boolean: #569cd6;
-  --terminal-class: #4ec9b0;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #858585;
-}
-
-.dark-theme {
-  --bg-color: #0d1117;
-  --text-color: #f0f6fc;
-  --secondary-text: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-}
-</style>
-
 <style scoped>
-/* Base Footer Styles */
-.footer-section {
+.footer {
   position: relative;
-  width: 100%;
-  background-color: var(--bg-color);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  color: var(--text-color);
-  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
+  padding: 3rem 2rem 1.5rem;
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-dark);
 }
 
-/* Terminal Container */
-.terminal-container {
-  width: 100%;
+.footer-container {
   max-width: 1200px;
   margin: 0 auto;
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.8s ease-out;
 }
 
-/* Terminal Styles */
-.terminal-header {
+/* Footer Grid */
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1.8fr;
+  gap: 3rem;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+/* Brand Section */
+.footer-brand {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--terminal-header);
-  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
-}
-
-.terminal-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.terminal-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.terminal-button.close {
-  background-color: #ff5f56;
-}
-
-.terminal-button.minimize {
-  background-color: #ffbd2e;
-}
-
-.terminal-button.maximize {
-  background-color: #27c93f;
-}
-
-.terminal-title {
-  color: var(--terminal-text);
-  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-  opacity: 0.8;
-}
-
-/* Terminal Body */
-.terminal-body {
-  padding: 0;
-}
-
-/* System Status */
-.system-status {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  background-color: rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid var(--terminal-header);
-}
-
-.status-line {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-
-.status-text {
-  color: var(--terminal-comment);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
-
-.status-value {
-  color: var(--terminal-string);
-  font-weight: bold;
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-}
-
-.status-value.online {
-  color: var(--terminal-prompt);
-}
-
-/* Terminal Tabs */
-.terminal-tabs {
-  display: flex;
-  background-color: rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid var(--terminal-header);
-  overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--terminal-header) transparent;
-}
-
-.terminal-tabs::-webkit-scrollbar {
-  height: 6px;
-}
-
-.terminal-tabs::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.terminal-tabs::-webkit-scrollbar-thumb {
-  background-color: var(--terminal-header);
-  border-radius: 3px;
-}
-
-.tab {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem clamp(0.75rem, 1.5vw, 1rem);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border-bottom: 2px solid transparent;
-  white-space: nowrap;
-}
-
-.tab:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.tab.active {
-  background-color: rgba(0, 0, 0, 0.1);
-  border-bottom-color: var(--accent-color);
-}
-
-.tab-icon {
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
-}
-
-.tab-text {
-  color: var(--terminal-comment);
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-}
-
-.tab.active .tab-text {
-  color: var(--terminal-text);
-}
-
-/* Tab Content */
-.tab-content {
-  padding: clamp(1rem, 2vw, 1.5rem);
-  min-height: 300px;
-}
-
-.terminal-prompt {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.prompt-symbol {
-  color: var(--terminal-prompt);
-  font-weight: bold;
-}
-
-.command {
-  color: var(--terminal-text);
-}
-
-.cursor {
-  color: var(--terminal-prompt);
-  animation: blink 1s infinite;
-}
-
-.terminal-output {
-  margin-bottom: 1.5rem;
-}
-
-/* Profile Card */
-.profile-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  padding: clamp(1rem, 2vw, 1.5rem);
-  border-left: 4px solid var(--accent-color);
-}
-
-.profile-header {
-  display: flex;
-  align-items: center;
   gap: 1rem;
-  margin-bottom: 1.5rem;
 }
 
-.avatar-container {
+.brand-avatar {
   position: relative;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
 }
 
-.avatar {
-  width: clamp(70px, 10vw, 80px);
-  height: clamp(70px, 10vw, 80px);
+.brand-avatar img {
+  width: 100%;
+  height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--accent);
+  filter: grayscale(100%);
+  transition: filter 0.3s;
 }
 
-.status-indicator {
+.brand-avatar:hover img {
+  filter: grayscale(0%);
+}
+
+.avatar-status {
   position: absolute;
-  bottom: 5px;
-  right: 5px;
-  width: 16px;
-  height: 16px;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  background: #22c55e;
   border-radius: 50%;
-  background-color: var(--terminal-prompt);
-  border: 2px solid var(--terminal-bg);
+  border: 2px solid var(--bg-primary);
+  animation: pulse 2s ease-in-out infinite;
 }
 
-.profile-info {
+.brand-info {
   flex: 1;
 }
 
-.profile-name {
-  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-text);
+.brand-name {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-white);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
 }
 
-.profile-tags {
+.brand-role {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.75rem;
+}
+
+.brand-stats {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag {
-  background-color: rgba(88, 166, 255, 0.2);
-  color: var(--accent-color);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
-  font-size: clamp(0.7rem, 1.2vw, 0.8rem);
-}
-
-.profile-stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+  align-items: center;
+  gap: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  padding: 0.5rem 0.75rem;
+  width: fit-content;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.stat-number {
-  font-size: clamp(1.5rem, 2.5vw, 1.5rem);
-  font-weight: bold;
-  color: var(--terminal-string);
+  gap: 0.15rem;
 }
 
 .stat-label {
-  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
 }
 
-/* Navigation Tab */
-.nav-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
+.stat-value {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-silver);
 }
 
-.nav-item {
+.stat-divider {
+  width: 1px;
+  height: 20px;
+  background: var(--border-default);
+}
+
+/* Footer Section */
+.footer-section {
   display: flex;
-  align-items: center;
-  padding: 1rem;
-  border-radius: 4px;
-  transition: all 0.3s ease;
-}
-
-.nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
-}
-
-.nav-icon {
-  font-size: clamp(1rem, 1.5vw, 1rem);
-  color: var(--accent-color);
-}
-
-.nav-info {
-  flex: 1;
-  text-align: left;
-}
-
-.nav-title {
-  font-size: clamp(1rem, 1.5vw, 1rem);
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-text);
-}
-
-.nav-description {
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
-  margin-top: 0.25rem;
-}
-
-.nav-arrow {
-  color: var(--terminal-comment);
-  transition: all 0.3s ease;
-}
-
-.nav-item:hover .nav-arrow {
-  color: var(--accent-color);
-  transform: translateX(3px);
-}
-
-/* Connect Tab */
-.connect-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  flex-direction: column;
   gap: 1rem;
 }
 
-.connect-item {
+.section-title {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.25rem;
+}
+
+/* Navigation Links */
+.nav-links {
+  list-style: none;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
 
-.connect-title {
-  font-size: clamp(1rem, 1.5vw, 1rem);
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-text);
-}
-
-.contact-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.contact-item {
-  display: flex;
+.nav-link {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  padding: 0.2rem 0;
 }
 
-.contact-icon {
-  font-size: clamp(1rem, 1.5vw, 1rem);
-  color: var(--accent-color);
+.link-marker {
+  width: 4px;
+  height: 4px;
+  background: var(--border-default);
+  transition: all 0.2s;
 }
 
-.contact-value {
-  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
-  color: var(--terminal-string);
+.nav-link:hover {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+.nav-link:hover .link-marker {
+  background: var(--accent);
+  width: 8px;
 }
 
 /* Social Links */
 .social-links {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .social-link {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  border-radius: 4px;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
   text-decoration: none;
-  transition: all 0.3s ease;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.social-link i:first-child {
+  width: 20px;
+  font-size: 1rem;
+}
+
+.external-icon {
+  margin-left: auto;
+  font-size: 0.7rem;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
 
 .social-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateX(4px);
 }
 
-.social-icon {
-  width: clamp(40px, 8vw, 48px);
-  height: clamp(40px, 8vw, 48px);
-  border-radius: 50%;
-  background-color: var(--terminal-header);
+.social-link:hover .external-icon {
+  opacity: 1;
+}
+
+.social-link.github:hover {
+  border-left: 3px solid #333;
+}
+.social-link.linkedin:hover {
+  border-left: 3px solid #0077b5;
+}
+.social-link.twitter:hover {
+  border-left: 3px solid #1da1f2;
+}
+
+/* Contact Info */
+.contact-info {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--terminal-text);
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
-.social-name {
-  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
-  font-weight: bold;
-  margin: 0 0 0.25rem 0;
-  color: var(--terminal-text);
+.contact-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
 }
 
-.social-handle {
-  font-size: clamp(0.8rem, 1.2vw, 0.8rem);
-  color: var(--terminal-comment);
+.contact-row > i {
+  width: 16px;
+  color: var(--accent);
+  font-size: 0.85rem;
+  margin-top: 0.1rem;
 }
 
-/* Terminal Footer */
-.terminal-footer {
+.contact-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.contact-label {
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+}
+
+.contact-detail span,
+.contact-detail a {
+  font-size: 0.8rem;
+  color: var(--text-silver);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.contact-detail a:hover {
+  color: var(--accent);
+}
+
+/* Footer Bottom */
+.footer-bottom {
   display: flex;
   justify-content: space-between;
-  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
-  background-color: var(--terminal-header);
-  border-top: 1px solid var(--terminal-header);
-}
-
-.footer-info {
-  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: var(--terminal-comment);
-  font-size: clamp(0.9rem, 1.2vw, 0.9rem);
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 0.5rem;
 }
 
 .copyright {
-  color: var(--terminal-text);
-}
-
-.build-info {
-  color: var(--terminal-string);
-}
-
-.separator {
-  color: var(--terminal-comment);
-  opacity: 0.7;
-}
-
-.footer-links {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
 }
 
-.footer-link {
-  color: var(--terminal-string);
-  text-decoration: none;
-  transition: color 0.3s ease;
+.copyright i {
+  font-size: 0.7rem;
 }
 
-.footer-link:hover {
-  color: var(--accent-color);
+.system-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: var(--text-dim);
+}
+
+.status-indicator {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.status-separator {
+  width: 1px;
+  height: 12px;
+  background: var(--border-default);
 }
 
 /* Back to Top Button */
@@ -780,184 +529,154 @@ onUnmounted(() => {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: var(--accent-color);
-  color: white;
+  width: 44px;
+  height: 44px;
+  background: var(--accent);
   border: none;
+  color: #000;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateY(20px);
-  transition: all 0.3s ease;
-  z-index: 1000;
+  font-size: 1rem;
+  transition: all 0.3s;
+  z-index: 900;
 }
 
-.back-to-top.show {
-  opacity: 1;
+.back-to-top:hover {
+  background: var(--accent-hover);
+  transform: translateY(-4px);
+}
+
+.back-to-top:active {
   transform: translateY(0);
 }
 
 /* Animations */
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
+@keyframes pulse {
+  0%,
+  100% {
     opacity: 1;
-    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.4;
   }
 }
 
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+.fade-up-enter-active,
+.fade-up-leave-active {
+  transition: all 0.3s ease;
 }
 
-/* Responsive Design */
-/* Large Desktop (1200px and up) */
-@media (min-width: 1200px) {
-  .footer-section {
-    padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
-  }
-  
-  .terminal-container {
-    max-width: 1100px;
-  }
-  
-  .profile-name {
-    font-size: clamp(1.3rem, 2.5vw, 1.5rem);
-  }
-  
-  .profile-stats {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.fade-up-enter-from {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .footer-section {
-    padding: clamp(1.5rem, 3vw, 3rem);
+.fade-up-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
   }
-  
-  .terminal-container {
-    max-width: 1000px;
-  }
-  
-  .profile-name {
-    font-size: 1.2rem;
+
+  .footer-brand {
+    grid-column: span 2;
   }
 }
 
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .footer-section {
-    padding: clamp(1.5rem, 3vw, 2.5rem);
+@media (max-width: 768px) {
+  .footer {
+    padding: 2rem 1.5rem 1rem;
   }
-  
-  .terminal-container {
-    max-width: 100%;
-  }
-  
-  .profile-name {
-    font-size: 1.1rem;
-  }
-  
-  .profile-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .nav-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  .connect-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
 
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .footer-section {
-    padding: clamp(1rem, 3vw, 2rem);
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
-  
-  .terminal-container {
-    max-width: 100%;
+
+  .footer-brand {
+    grid-column: span 1;
   }
-  
-  .profile-header {
+
+  .brand-stats {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footer-bottom {
     flex-direction: column;
-    align-items: center;
-    gap: 1rem;
+    text-align: center;
   }
-  
-  .profile-name {
-    font-size: 1rem;
-  }
-  
-  .profile-stats {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
 
-/* Mobile Portrait (480px to 575px) */
-@media (max-width: 575px) {
-  .footer-section {
-    padding: clamp(1rem, 3vw, 1.5rem);
+  .system-status {
+    justify-content: center;
   }
-  
-  .terminal-container {
-    max-width: 100%;
-  }
-  
-  .profile-header {
-    gap: 0.75rem;
-  }
-  
-  .profile-name {
-    font-size: 0.9rem;
-  }
-  
-  .profile-stats {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-}
 
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .footer-section {
-    padding: clamp(1rem, 3vw, 1rem);
+  .copyright {
+    justify-content: center;
   }
-  
-  .terminal-container {
-    max-width: 100%;
-  }
-  
-  .profile-header {
-    gap: 0.5rem;
-  }
-  
-  .profile-name {
-    font-size: 0.8rem;
-  }
-  
-  .profile-stats {
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  
+
   .back-to-top {
     bottom: 1rem;
     right: 1rem;
     width: 40px;
     height: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .footer-brand {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .brand-avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .brand-stats {
+    justify-content: center;
+  }
+
+  .brand-name {
+    font-size: 1rem;
+  }
+
+  .social-link {
+    padding: 0.5rem;
+  }
+
+  .social-link span {
+    display: none;
+  }
+
+  .social-link i:first-child {
+    margin: 0;
+  }
+
+  .external-icon {
+    margin-left: 0;
+  }
+
+  .contact-row {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .contact-row > i {
+    width: auto;
   }
 }
 </style>

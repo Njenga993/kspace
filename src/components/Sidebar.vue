@@ -1,130 +1,157 @@
-<!-- src/components/Sidebar.vue -->
 <template>
-  <!-- No changes to your excellent <template> structure -->
-  <div class="navbar-container" :class="{ 'scrolled': isScrolled }">
-    <div class="terminal-navbar">
-      <div class="terminal-header">
-        <div class="terminal-buttons">
-          <div class="terminal-button close"></div>
-          <div class="terminal-button minimize"></div>
-          <div class="terminal-button maximize"></div>
+  <div class="navbar" :class="{ scrolled: isScrolled }">
+    <div class="navbar-inner">
+      <!-- Logo -->
+      <div class="logo" @click="scrollToTop">
+        <div class="logo-mark">
+          <div class="mark-avatar">
+            <img src="/profile.JPG" alt="Kelvin Kamau" />
+          </div>
+          <div class="mark-bracket mark-bracket-tl"></div>
+          <div class="mark-bracket mark-bracket-br"></div>
+          <div class="mark-status"></div>
         </div>
-        <div class="terminal-title">navigation@k-space:~</div>
       </div>
-      
-      <div class="terminal-body">
-        <!-- Logo Section -->
-        <div class="logo-section" @click="scrollToTop">
-          <div class="logo-wrapper">
-            <img src="/profile.JPG" alt="Profile" class="profile-img" />
-            <div class="status-indicator online"></div>
-          </div>
-          <span class="logo-name">K-SPACE $Terminal</span>
-        </div>
 
-        <!-- Desktop Navigation -->
-        <nav class="desktop-nav">
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">navigate</span>
-            <span class="cursor">_</span>
-          </div>
-          <ul class="nav-list">
-            <li v-for="link in navLinks" :key="link.id" class="nav-item">
-              <a 
-                :href="`#${link.id}`" 
-                @click="navigateToSection(link.id)"
-                :class="{ 'active': activeSection === link.id }"
-                class="nav-link"
-              >
-                {{ link.text }}
-              </a>
-            </li>
-          </ul>
-        </nav>
+      <!-- Desktop Nav -->
+      <nav class="desktop-nav">
+        <a
+          v-for="(link, idx) in navLinks"
+          :key="link.id"
+          :href="`#${link.id}`"
+          @click="navigateToSection(link.id)"
+          :class="{ active: activeSection === link.id }"
+          class="nav-link"
+        >
+          <span class="nav-idx">{{ String(idx + 1).padStart(2, "0") }}</span>
+          <span class="nav-text">{{ link.text }}</span>
+        </a>
+      </nav>
 
-        <!-- Right Section -->
-        <div class="right-section">
-          <button 
-            class="terminal-command-btn" 
-            @click="toggleMobileMenu"
-            :class="{ 'active': isMobileMenuOpen }"
-            aria-label="Toggle terminal menu"
-          >
-            <span class="command-symbol">&gt;</span>
-          </button>
-        </div>
+      <!-- CTA + Hamburger -->
+      <div class="nav-right">
+        <a
+          href="#contact"
+          class="nav-cta"
+          @click.prevent="navigateToSection('contact')"
+        >
+          <span>HIRE ME</span>
+        </a>
+        <button
+          class="menu-toggle"
+          @click="toggleMobileMenu"
+          :class="{ open: isMobileMenuOpen }"
+          aria-label="Toggle menu"
+        >
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
 
-    <!-- Mobile Terminal Menu -->
-    <div class="mobile-terminal-overlay" :class="{ 'active': isMobileMenuOpen }" @click="toggleMobileMenu">
-      <div class="mobile-terminal" @click.stop>
-        <div class="mobile-terminal-header">
-          <div class="terminal-buttons">
-            <div class="terminal-button close"></div>
-            <div class="terminal-button minimize"></div>
-            <div class="terminal-button maximize"></div>
+    <!-- Accent Line -->
+    <div class="nav-accent-line"></div>
+
+    <!-- Mobile Menu -->
+    <div
+      class="mobile-overlay"
+      :class="{ active: isMobileMenuOpen }"
+      @click="toggleMobileMenu"
+    >
+      <div class="mobile-panel" @click.stop>
+        <!-- Mobile Top -->
+        <div class="mobile-top">
+          <div class="mobile-logo">
+            <div class="mark-avatar small">
+              <img src="/profile.JPG" alt="Kelvin Kamau" />
+            </div>
+            <div>
+              <div class="mobile-name">KELVIN KAMAU</div>
+              <div class="mobile-role">Full Stack Developer</div>
+            </div>
           </div>
-          <div class="terminal-title">mobile@k-space:~</div>
+          <button
+            class="mobile-close"
+            @click="toggleMobileMenu"
+            aria-label="Close"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
         </div>
-        
-        <div class="mobile-terminal-body">
-          <div class="mobile-logo-section">
-            <div class="logo-wrapper">
-              <img src="/profile.JPG" alt="Profile" class="profile-img" />
-              <div class="status-indicator online"></div>
-            </div>
-            <span class="logo-name">K-SPACE</span>
-          </div>
-          
-          <div class="mobile-terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">ls -la</span>
-          </div>
-          
-          <nav class="mobile-nav">
-            <ul class="mobile-nav-list">
-              <li v-for="link in navLinks" :key="link.id" class="mobile-nav-item">
-                <a 
-                  :href="`#${link.id}`" 
-                  @click="navigateToSection(link.id)"
-                  :class="{ 'active': activeSection === link.id }"
-                  class="mobile-nav-link"
-                >
-                  <span class="file-icon">📁</span>
-                  <span class="file-name">{{ link.text }}</span>
-                </a>
-              </li>
-            </ul>
-          </nav>
-          
-          <div class="mobile-terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">cat social_links.txt</span>
-          </div>
-          
-          <div class="mobile-social-links">
-            <div class="social-links">
-              <a 
-                v-for="social in socialLinks" 
-                :key="social.id"
-                :href="social.url" 
-                target="_blank" 
-                :aria-label="social.name"
-                class="social-link"
+
+        <!-- Mobile Nav -->
+        <nav class="mobile-nav">
+          <a
+            v-for="(link, idx) in navLinks"
+            :key="link.id"
+            :href="`#${link.id}`"
+            @click="navigateToSection(link.id)"
+            :class="{ active: activeSection === link.id }"
+            class="mobile-link"
+          >
+            <span class="ml-idx">{{ String(idx + 1).padStart(2, "0") }}</span>
+            <span class="ml-text">{{ link.text }}</span>
+            <span class="ml-arrow">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
               >
-                <div class="social-icon">
-                  <i :class="social.icon"></i>
-                </div>
-                <span class="social-name">{{ social.name }}</span>
-              </a>
-            </div>
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </span>
+          </a>
+        </nav>
+
+        <!-- Mobile CTA -->
+        <div class="mobile-cta-wrap">
+          <a
+            href="#contact"
+            class="mobile-cta"
+            @click.prevent="navigateToSection('contact')"
+          >
+            <span>HIRE ME</span>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </a>
+        </div>
+
+        <!-- Mobile Footer -->
+        <div class="mobile-footer">
+          <div class="mobile-socials">
+            <a
+              v-for="social in socialLinks"
+              :key="social.id"
+              :href="social.url"
+              target="_blank"
+              :aria-label="social.name"
+              class="mobile-social"
+            >
+              <i :class="social.icon"></i>
+            </a>
           </div>
-          
-          <div class="mobile-terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command cursor">_</span>
+          <div class="mobile-available">
+            <span class="avail-dot"></span>
+            <span>Available for opportunities</span>
           </div>
         </div>
       </div>
@@ -133,283 +160,623 @@
 </template>
 
 <script setup>
-// No changes to your excellent <script setup> logic
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from "vue";
 
 const navLinks = [
-  { id: 'about', text: 'About' },
-  { id: 'skills', text: 'Skills' },
-  { id: 'experience', text: 'Experience' },
-  { id: 'projects', text: 'Projects' },
-  { id: 'contact', text: 'Contact' }
+  { id: "about", text: "ABOUT" },
+  { id: "skills", text: "SKILLS" },
+  { id: "experience", text: "EXPERIENCE" },
+  { id: "projects", text: "PROJECTS" },
+  { id: "contact", text: "CONTACT" },
 ];
 
 const socialLinks = [
-  { id: 'github', name: 'GitHub', icon: 'fab fa-github', url: 'https://github.com/Njenga993' },
-  { id: 'linkedin', name: 'LinkedIn', icon: 'fab fa-linkedin-in', url: 'https://www.linkedin.com/in/kelvin-kamau-788160277/' },
-  { id: 'email', name: 'Email', icon: 'fas fa-envelope', url: 'mailto:njengak993@gmail.com' }
+  {
+    id: "github",
+    name: "GitHub",
+    icon: "fab fa-github",
+    url: "https://github.com/Njenga993",
+  },
+  {
+    id: "linkedin",
+    name: "LinkedIn",
+    icon: "fab fa-linkedin-in",
+    url: "https://www.linkedin.com/in/kelvin-kamau-788160277/",
+  },
+  {
+    id: "email",
+    name: "Email",
+    icon: "fas fa-envelope",
+    url: "mailto:njengak993@gmail.com",
+  },
 ];
 
 const isScrolled = ref(false);
-const activeSection = ref('');
+const activeSection = ref("");
 const isMobileMenuOpen = ref(false);
 
 onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
+  window.addEventListener("scroll", handleScroll);
   handleScroll();
-  document.addEventListener('keydown', handleEscapeKey);
+  document.addEventListener("keydown", handleEscape);
 });
 
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll);
-  document.removeEventListener('keydown', handleEscapeKey);
-  document.body.style.overflow = '';
+  window.removeEventListener("scroll", handleScroll);
+  document.removeEventListener("keydown", handleEscape);
+  document.body.style.overflow = "";
 });
 
 const handleScroll = () => {
-  isScrolled.value = window.scrollY > 50;
-  const sections = navLinks.map(link => document.getElementById(link.id));
-  let currentSection = '';
-  sections.forEach(section => {
-    if (!section) return;
-    const rect = section.getBoundingClientRect();
-    if (rect.top <= 150 && rect.bottom >= 150) {
-      currentSection = section.id;
-    }
+  isScrolled.value = window.scrollY > 30;
+  const sections = navLinks.map((l) => document.getElementById(l.id));
+  let current = "";
+  sections.forEach((s) => {
+    if (!s) return;
+    const r = s.getBoundingClientRect();
+    if (r.top <= 120 && r.bottom >= 120) current = s.id;
   });
-  if (currentSection && currentSection !== activeSection.value) {
-    activeSection.value = currentSection;
-  }
+  if (current) activeSection.value = current;
 };
 
-const navigateToSection = (sectionId) => {
-  const element = document.getElementById(sectionId);
-  if (element) {
-    element.scrollIntoView({ behavior: 'smooth' });
-    activeSection.value = sectionId;
-    isMobileMenuOpen.value = false;
-  }
+const navigateToSection = (id) => {
+  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  activeSection.value = id;
+  isMobileMenuOpen.value = false;
 };
 
 const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  activeSection.value = '';
+  window.scrollTo({ top: 0, behavior: "smooth" });
+  activeSection.value = "";
 };
 
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
-  if (isMobileMenuOpen.value) {
-    document.body.style.overflow = 'hidden';
-  } else {
-    document.body.style.overflow = '';
-  }
+  document.body.style.overflow = isMobileMenuOpen.value ? "hidden" : "";
 };
 
-const handleEscapeKey = (e) => {
-  if (e.key === 'Escape' && isMobileMenuOpen.value) {
-    toggleMobileMenu();
-  }
+const handleEscape = (e) => {
+  if (e.key === "Escape" && isMobileMenuOpen.value) toggleMobileMenu();
 };
 </script>
 
 <style scoped>
-/* --- Theme Variables & Base Styles (No major changes) --- */
-:root {
-  /* Sync height with App.vue */
-  --navbar-height: 90px;
-
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-}
-
-.navbar-container {
+.navbar {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  height: var(--navbar-height); /* Set explicit height */
-  transition: all 0.3s ease;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.terminal-navbar {
-  background-color: var(--terminal-bg);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  font-family: 'Fira Code', 'Courier New', monospace;
+.navbar-inner {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: var(--nav-height);
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+/* ========== Accent Line ========== */
+.nav-accent-line {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.navbar.scrolled .nav-accent-line {
+  transform: scaleX(1);
+}
+
+/* ========== Logo Mark ========== */
+.logo {
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.logo-mark {
+  position: relative;
+  width: 42px;
+  height: 42px;
+}
+
+.mark-avatar {
+  width: 100%;
   height: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  filter: grayscale(100%) contrast(1.15);
+  transition: filter 0.4s;
+}
+
+.logo:hover .mark-avatar {
+  filter: grayscale(0%) contrast(1);
+}
+
+.mark-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.mark-bracket {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+}
+
+.mark-bracket-tl {
+  top: -2px;
+  left: -2px;
+  border-top: 2px solid var(--accent);
+  border-left: 2px solid var(--accent);
+}
+
+.mark-bracket-br {
+  bottom: -2px;
+  right: -2px;
+  border-bottom: 2px solid var(--accent);
+  border-right: 2px solid var(--accent);
+}
+
+.mark-status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  background: #22c55e;
+  border-radius: 50%;
+  border: 2px solid var(--bg-primary);
+  transition: border-color 0.3s;
+}
+
+.navbar.scrolled .mark-status {
+  border-color: rgba(0, 0, 0, 0.92);
+}
+
+/* ========== Desktop Nav ========== */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 0.85rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.nav-idx {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  transition: color 0.2s;
+  min-width: 14px;
+}
+
+.nav-text {
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  transition: color 0.2s;
+}
+
+.nav-link:hover .nav-text {
+  color: var(--text-silver);
+}
+
+.nav-link:hover .nav-idx {
+  color: var(--text-dim);
+}
+
+.nav-link.active .nav-text {
+  color: var(--accent);
+}
+
+.nav-link.active .nav-idx {
+  color: var(--accent);
+}
+
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0.85rem;
+  right: 0.85rem;
+  height: 2px;
+  background: var(--accent);
+}
+
+/* ========== Right Section ========== */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nav-cta {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.45rem 1.1rem;
+  background: var(--accent);
+  color: #000;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-cta::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 100%
+  );
+  transform: translateX(-100%);
+  transition: transform 0.5s;
+}
+
+.nav-cta:hover::before {
+  transform: translateX(100%);
+}
+
+.nav-cta:hover {
+  box-shadow: 0 0 20px rgba(255, 94, 0, 0.3);
+}
+
+/* ========== Hamburger ========== */
+.menu-toggle {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: 1px solid var(--border-dark);
+  cursor: pointer;
+  padding: 8px;
+  transition: border-color 0.2s;
+}
+
+.menu-toggle:hover {
+  border-color: var(--accent);
+}
+
+.menu-toggle span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text-silver);
+  transition: all 0.3s;
+  border-radius: 1px;
+}
+
+.menu-toggle.open {
+  border-color: var(--accent);
+}
+
+.menu-toggle.open span:nth-child(1) {
+  transform: rotate(45deg) translate(4.5px, 4.5px);
+  background: var(--accent);
+}
+.menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+.menu-toggle.open span:nth-child(3) {
+  transform: rotate(-45deg) translate(4.5px, -4.5px);
+  background: var(--accent);
+}
+
+/* ========== Mobile Overlay ========== */
+.mobile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s;
+}
+
+.mobile-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-panel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 90%;
+  max-width: 420px;
+  height: 100%;
+  background: var(--bg-primary);
+  border-left: 1px solid var(--border-dark);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
   flex-direction: column;
 }
 
-.navbar-container.scrolled .terminal-navbar {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+.mobile-overlay.active .mobile-panel {
+  transform: translateX(0);
 }
 
-/* --- Terminal Header (No major changes) --- */
-.terminal-header {
+/* Mobile Top */
+.mobile-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--terminal-header);
-  padding: 0.25rem 1rem;
-  flex-shrink: 0;
-}
-.terminal-buttons { display: flex; gap: 0.5rem; }
-.terminal-button { width: 12px; height: 12px; border-radius: 50%; }
-.terminal-button.close { background-color: #ff5f56; }
-.terminal-button.minimize { background-color: #ffbd2e; }
-.terminal-button.maximize { background-color: #27c93f; }
-.terminal-title { color: var(--terminal-text); font-size: 0.8rem; opacity: 0.8; }
-
-/* --- Terminal Body (Mobile-First) --- */
-.terminal-body {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0.5rem 1rem;
-  flex: 1;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--border-dark);
 }
 
-.logo-section {
+.mobile-logo {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-.logo-section:hover { transform: scale(1.05); }
-.logo-wrapper { position: relative; }
-.profile-img {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--accent-color);
-}
-.status-indicator {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #3fb950;
-  border: 2px solid var(--terminal-bg);
-}
-.logo-name {
-  font-weight: 700;
-  /* Fluid font size from 0.8rem to 1.2rem */
-  font-size: clamp(0.8rem, 2vw, 1.2rem);
-  color: var(--terminal-text);
 }
 
-/* --- Navigation (Mobile-First) --- */
-.desktop-nav { display: none; } /* Hidden on mobile */
-.right-section { display: flex; align-items: center; }
-.terminal-command-btn {
+.mark-avatar.small {
+  width: 40px;
+  height: 40px;
+}
+
+.mobile-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-white);
+  letter-spacing: 0.06em;
+}
+
+.mobile-role {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.mobile-close {
+  background: none;
+  border: 1px solid var(--border-dark);
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 6px;
+  display: flex;
+  transition: all 0.2s;
+}
+
+.mobile-close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Mobile Nav */
+.mobile-nav {
+  flex: 1;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mobile-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem;
+  text-decoration: none;
+  transition: all 0.2s;
+  border-left: 2px solid var(--border-dark);
+}
+
+.mobile-link:hover {
+  background: var(--bg-card);
+  border-left-color: var(--border-default);
+}
+
+.mobile-link.active {
+  background: var(--accent-dim);
+  border-left-color: var(--accent);
+}
+
+.ml-idx {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.05em;
+  min-width: 20px;
+  transition: color 0.2s;
+}
+
+.mobile-link.active .ml-idx {
+  color: var(--accent);
+}
+
+.ml-text {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-silver);
+  letter-spacing: 0.06em;
+  flex: 1;
+  transition: color 0.2s;
+}
+
+.mobile-link:hover .ml-text {
+  color: var(--text-white);
+}
+
+.mobile-link.active .ml-text {
+  color: var(--accent);
+}
+
+.ml-arrow {
+  color: var(--text-dim);
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: all 0.25s;
+  display: flex;
+}
+
+.mobile-link:hover .ml-arrow,
+.mobile-link.active .ml-arrow {
+  opacity: 1;
+  transform: translateX(0);
+  color: var(--accent);
+}
+
+/* Mobile CTA */
+.mobile-cta-wrap {
+  padding: 0 1rem;
+}
+
+.mobile-cta {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  background-color: var(--terminal-header);
-  border: 1px solid var(--terminal-prompt);
-  border-radius: 4px;
-  color: var(--terminal-prompt);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-.terminal-command-btn:hover { background-color: var(--terminal-prompt); color: var(--terminal-bg); }
-.command-symbol { font-size: 1.2rem; }
-
-/* --- Mobile Menu (No major changes, just adjusted padding) --- */
-.mobile-terminal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.3s ease;
-}
-.mobile-terminal-overlay.active { opacity: 1; visibility: visible; }
-.mobile-terminal {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 85%;
-  max-width: 400px;
-  height: 100%;
-  background-color: var(--terminal-bg);
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-  transform: translateX(100%);
-  transition: transform 0.3s ease;
-  overflow-y: auto;
-  font-family: 'Fira Code', 'Courier New', monospace;
-}
-.mobile-terminal-overlay.active .mobile-terminal { transform: translateX(0); }
-
-.mobile-terminal-body { padding: 1.5rem; color: var(--terminal-text); }
-
-.file-icon { font-size: 1.2rem; }
-.file-name { font-weight: 500; }
-
-.social-links { display: flex; gap: 1rem; }
-
-.social-name { font-size: 0.8rem; color: var(--terminal-comment); }
-
-/* --- Animations --- */
-@keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
-.cursor { color: var(--terminal-prompt); animation: blink 1s infinite; }
-
-/* --- Responsive Design (Tablet and Up) --- */
-@media (min-width: 768px) {
-  .terminal-body { padding: 0.75rem 1.5rem; }
-  .profile-img { width: 36px; height: 36px; }
-  .status-indicator { width: 10px; height: 10px; }
-  .terminal-command-btn { width: 36px; height: 36px; }
-  .mobile-terminal-body { padding: 1.75rem; }
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--accent);
+  color: #000;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-decoration: none;
+  transition: all 0.25s;
 }
 
-/* --- Responsive Design (Desktop and Up) --- */
-@media (min-width: 1024px) {
+.mobile-cta:hover {
+  box-shadow: 0 0 24px rgba(255, 94, 0, 0.3);
+}
+
+/* Mobile Footer */
+.mobile-footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--border-dark);
+  margin-top: auto;
+}
+
+.mobile-socials {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mobile-social {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-dark);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  transition: all 0.2s;
+}
+
+.mobile-social:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 12px rgba(255, 94, 0, 0.1);
+}
+
+.mobile-available {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.avail-dot {
+  width: 7px;
+  height: 7px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  flex-shrink: 0;
+}
+
+/* ========== Animations ========== */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 900px) {
   .desktop-nav {
+    display: none;
+  }
+  .nav-cta {
+    display: none;
+  }
+  .menu-toggle {
     display: flex;
-    align-items: center;
-    gap: 1rem;
   }
-  .terminal-prompt { display: flex; align-items: center; gap: 0.25rem; }
-  .prompt-symbol { color: var(--terminal-prompt); font-weight: bold; }
-  .command { color: var(--terminal-text); }
-  .nav-list {
-    display: flex;
-    list-style: none;
-    gap: 1.5rem;
-    margin: 0;
-    padding: 0;
+  .navbar-inner {
+    padding: 0 1.25rem;
   }
-  .nav-link {
-    position: relative;
-    font-weight: 500;
-    color: var(--terminal-text);
-    text-decoration: none;
-    padding: 0.5rem 0;
-    transition: all 0.3s ease;
+}
+
+@media (max-width: 480px) {
+  .navbar-inner {
+    padding: 0 1rem;
   }
-  .nav-link:hover { color: var(--accent-color); }
-  .nav-link.active { color: var(--accent-color); font-weight: 600; }
-  .nav-link.active::before { content: '$ '; color: var(--terminal-prompt); }
-  
-  .right-section { display: none; } /* Hide hamburger on desktop */
+  .mobile-panel {
+    width: 100%;
+    max-width: none;
+  }
+  .mobile-top {
+    padding: 1rem;
+  }
+  .mobile-nav {
+    padding: 1rem 0.75rem;
+  }
+  .mobile-link {
+    padding: 0.85rem 0.75rem;
+  }
+  .ml-text {
+    font-size: 1rem;
+  }
 }
 </style>

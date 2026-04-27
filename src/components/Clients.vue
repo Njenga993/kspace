@@ -1,664 +1,1158 @@
 <template>
-  <section id="clients" class="clients-section">
+  <section id="clients" class="clients">
     <div class="clients-container">
-      <!-- Terminal Window for Clients -->
-      <div class="clients-terminal">
-        <div class="terminal-header">
-          <div class="terminal-buttons">
-            <div class="terminal-button close"></div>
-            <div class="terminal-button minimize"></div>
-            <div class="terminal-button maximize"></div>
-          </div>
-          <div class="terminal-title">clients_database --list</div>
+      <!-- Section Header -->
+      <div class="clients-header">
+        <div class="header-badge">
+          <span class="badge-num">05</span>
+          <span class="badge-text">PARTNERS</span>
         </div>
-        
-        <div class="terminal-body">
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command">ls -la /clients/</span>
+        <h2 class="clients-title">
+          Trusted By <span class="accent">Industry Leaders</span>
+        </h2>
+        <div class="clients-underline"></div>
+        <p class="clients-subtitle">
+          Collaborating with innovative companies to deliver exceptional digital
+          solutions
+        </p>
+      </div>
+
+      <!-- Stats Dashboard -->
+      <div class="stats-showcase">
+        <div class="stat-block">
+          <div class="stat-icon">
+            <i class="fas fa-handshake"></i>
           </div>
-          
-          <div class="terminal-output">
-            <div class="client-stats">
-              <div class="stat-item">
-                <span class="stat-key">total_clients:</span>
-                <span class="stat-value">{{ clients.length }}</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-key">satisfaction_rate:</span>
-                <span class="stat-value">100%</span>
-              </div>
-              <div class="stat-item">
-                <span class="stat-key">status:</span>
-                <span class="stat-value success">Active Partnerships</span>
+          <div class="stat-info">
+            <div class="stat-number">{{ clients.length }}</div>
+            <div class="stat-label">HAPPY CLIENTS</div>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-icon">
+            <i class="fas fa-star"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">100%</div>
+            <div class="stat-label">SATISFACTION</div>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-icon">
+            <i class="fas fa-sync-alt"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">{{ getRetentionRate }}%</div>
+            <div class="stat-label">RETENTION RATE</div>
+          </div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-icon">
+            <i class="fas fa-building"></i>
+          </div>
+          <div class="stat-info">
+            <div class="stat-number">{{ uniqueIndustries }}</div>
+            <div class="stat-label">INDUSTRIES</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Client Categories Filter -->
+      <div class="client-filters">
+        <button
+          v-for="industry in industries"
+          :key="industry"
+          @click="activeIndustry = industry"
+          :class="['filter-chip', { active: activeIndustry === industry }]"
+        >
+          {{ industry }}
+          <span class="filter-count">{{ getIndustryCount(industry) }}</span>
+        </button>
+      </div>
+
+      <!-- Client Showcase Grid -->
+      <div class="client-showcase">
+        <div
+          v-for="(client, idx) in filteredClients"
+          :key="client.name"
+          class="client-card"
+          :style="{ animationDelay: idx * 0.05 + 's' }"
+          @click="openClientModal(client)"
+        >
+          <div class="card-front">
+            <div class="logo-container">
+              <img :src="client.logo" :alt="client.name" class="client-logo" />
+            </div>
+            <div class="card-info">
+              <h3>{{ client.name }}</h3>
+              <span class="industry-badge">{{ client.industry }}</span>
+            </div>
+          </div>
+          <div class="card-back">
+            <div class="project-preview">
+              <i class="fas fa-folder-open"></i>
+              <span>{{ client.project }}</span>
+              <small>{{ client.year }}</small>
+            </div>
+            <div class="tech-stack">
+              <i class="fas fa-code"></i>
+              <span
+                >{{ client.technologies.slice(0, 3).join(", ")
+                }}{{ client.technologies.length > 3 ? "..." : "" }}</span
+              >
+            </div>
+            <button class="view-btn">VIEW DETAILS →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Testimonial Section -->
+      <div class="testimonial-section" v-if="testimonials.length">
+        <div class="testimonial-header">
+          <h3>Client Testimonials</h3>
+          <div class="testimonial-nav">
+            <button
+              @click="prevTestimonial"
+              :disabled="currentTestimonial === 0"
+              class="nav-btn"
+            >
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button
+              @click="nextTestimonial"
+              :disabled="currentTestimonial === testimonials.length - 1"
+              class="nav-btn"
+            >
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="testimonial-carousel">
+          <transition name="fade" mode="out-in">
+            <div :key="currentTestimonial" class="testimonial-card">
+              <div class="quote-mark">“</div>
+              <p class="testimonial-text">
+                {{ testimonials[currentTestimonial].text }}
+              </p>
+              <div class="testimonial-author">
+                <div class="author-info">
+                  <strong>{{ testimonials[currentTestimonial].author }}</strong>
+                  <span
+                    >{{ testimonials[currentTestimonial].position }},
+                    {{ testimonials[currentTestimonial].company }}</span
+                  >
+                </div>
+                <div class="rating">
+                  <i
+                    v-for="i in 5"
+                    :key="i"
+                    class="fas fa-star"
+                    :class="{
+                      filled: i <= testimonials[currentTestimonial].rating,
+                    }"
+                  ></i>
+                </div>
               </div>
             </div>
-            
-            <div class="terminal-separator"></div>
-            
-            <div class="client-grid" ref="clientGrid">
-              <div 
-                v-for="(client, index) in clients" 
-                :key="index" 
-                class="client-card"
-                :style="`animation-delay: ${index * 0.1}s`"
-                @click="showClientDetails(client)"
-              >
-                <div class="client-logo-container">
-                  <img 
-                    :src="client.logo" 
-                    :alt="client.name" 
-                    class="client-logo"
-                    :class="{ 'grayscale': grayscaleLogos }"
-                  />
-                  <div class="client-overlay">
-                    <div class="client-info">
-                      <h3 class="client-name">{{ client.name }}</h3>
-                      <p class="client-industry">{{ client.industry }}</p>
-                    </div>
+          </transition>
+        </div>
+        <div class="testimonial-dots">
+          <button
+            v-for="(_, idx) in testimonials"
+            :key="idx"
+            @click="currentTestimonial = idx"
+            :class="['dot', { active: currentTestimonial === idx }]"
+          ></button>
+        </div>
+      </div>
+
+      <!-- Call to Action -->
+      <div class="clients-cta">
+        <div class="cta-content">
+          <p>Ready to join our list of satisfied clients?</p>
+          <button class="cta-button" @click="$emit('scrollToContact')">
+            START YOUR PROJECT
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Enhanced Client Modal -->
+    <transition name="modal">
+      <div v-if="selectedClient" class="modal" @click="closeClientModal">
+        <div class="modal-window" @click.stop>
+          <div class="modal-header">
+            <div class="modal-logo">
+              <img :src="selectedClient.logo" :alt="selectedClient.name" />
+            </div>
+            <div class="modal-title">
+              <h2>{{ selectedClient.name }}</h2>
+              <span class="modal-industry">{{ selectedClient.industry }}</span>
+            </div>
+            <button class="modal-close" @click="closeClientModal">×</button>
+          </div>
+
+          <div class="modal-body">
+            <div class="project-overview">
+              <h4>PROJECT OVERVIEW</h4>
+              <p>{{ selectedClient.description }}</p>
+            </div>
+
+            <div class="project-details-grid">
+              <div class="detail-item">
+                <i class="fas fa-briefcase"></i>
+                <div>
+                  <label>PROJECT</label>
+                  <span>{{ selectedClient.project }}</span>
+                </div>
+              </div>
+              <div class="detail-item">
+                <i class="fas fa-calendar"></i>
+                <div>
+                  <label>YEAR</label>
+                  <span>{{ selectedClient.year }}</span>
+                </div>
+              </div>
+              <div class="detail-item full-width">
+                <i class="fas fa-microchip"></i>
+                <div>
+                  <label>TECHNOLOGIES</label>
+                  <div class="tech-tags">
+                    <span
+                      v-for="tech in selectedClient.technologies"
+                      :key="tech"
+                      class="tech-tag"
+                    >
+                      {{ tech }}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-            
-            <div class="terminal-separator"></div>
-            
-            <div class="terminal-actions">
-              <button @click="toggleGrayscale" class="terminal-button-secondary">
-                <span>{{ grayscaleLogos ? 'Show Colors' : 'Show Grayscale' }}</span>
-              </button>
-              <button @click="shuffleClients" class="terminal-button-primary">
-                <span>Shuffle Clients</span>
-              </button>
+
+            <div
+              class="key-features"
+              v-if="getClientFeatures(selectedClient.name).length"
+            >
+              <h4>KEY DELIVERABLES</h4>
+              <ul class="features-list">
+                <li
+                  v-for="feature in getClientFeatures(selectedClient.name)"
+                  :key="feature"
+                >
+                  <i class="fas fa-check"></i>
+                  {{ feature }}
+                </li>
+              </ul>
             </div>
-          </div>
-          
-          <div class="terminal-prompt">
-            <span class="prompt-symbol">$</span>
-            <span class="command typing-animation">./show_clients.sh</span>
-            <span class="cursor">_</span>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Client Details Modal -->
-      <div v-if="selectedClient" class="client-modal" @click="closeClientDetails">
-        <div class="modal-content" @click.stop>
-          <div class="modal-header">
-            <h2>{{ selectedClient.name }}</h2>
-            <button @click="closeClientDetails" class="close-button">&times;</button>
-          </div>
-          <div class="modal-body">
-            <div class="modal-logo">
-              <img :src="selectedClient.logo" :alt="selectedClient.name" />
-            </div>
-            <div class="modal-details">
-              <div class="detail-item">
-                <span class="detail-key">Industry:</span>
-                <span class="detail-value">{{ selectedClient.industry }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-key">Project:</span>
-                <span class="detail-value">{{ selectedClient.project }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-key">Year:</span>
-                <span class="detail-value">{{ selectedClient.year }}</span>
-              </div>
-              <div class="detail-item">
-                <span class="detail-key">Technologies:</span>
-                <span class="detail-value">{{ selectedClient.technologies.join(', ') }}</span>
-              </div>
-              <p class="detail-description">{{ selectedClient.description }}</p>
+
+            <div class="modal-actions">
+              <button class="action-btn" @click="closeClientModal">
+                CLOSE
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </transition>
   </section>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, computed } from "vue";
+
+const emit = defineEmits(["scrollToContact"]);
+
+const activeIndustry = ref("All");
+const selectedClient = ref(null);
+const currentTestimonial = ref(0);
 
 const clients = ref([
   {
-    name: 'SEED SAVERS NETWORK KENYA',
-    industry: 'Agriculture',
-    logo: './SSN.JPG',
-    project: 'Web Application Development',
-    year: '2025',
-    technologies: ['REACT', 'javaScript', 'CSS', 'HTML'],
-    description: 'Developed a comprehensive web application for SEED SAVERS NETWORK KENYA to manage seed distribution, farmer networks, and agricultural resources across Kenya.'
+    name: "SEED SAVERS NETWORK KENYA",
+    industry: "Agriculture",
+    logo: "./SSN.JPG",
+    project: "Web Application Development",
+    year: "2025",
+    technologies: ["REACT", "JavaScript", "CSS", "HTML"],
+    description:
+      "Developed a comprehensive web application to manage seed distribution, farmer networks, and agricultural resources across Kenya. The platform streamlined operations and improved accessibility for farmers nationwide.",
   },
   {
-    name: 'INOFO Africa',
-    industry: 'Agriculture',
-    logo: './inofo.JPG',
-    project: 'Portfolio Website',
-    year: '2025',
-    technologies: ['REACT', 'Typescript', 'CSS', 'HTML'],
-    description: 'Created a modern portfolio website for INOFO Africa to showcase their agricultural projects and initiatives.'
+    name: "INOFO Africa",
+    industry: "Agriculture",
+    logo: "./inofo.JPG",
+    project: "Portfolio Website",
+    year: "2025",
+    technologies: ["REACT", "TypeScript", "CSS", "HTML"],
+    description:
+      "Created a modern, responsive portfolio website to showcase agricultural projects and initiatives, enhancing their online presence and stakeholder engagement.",
   },
   {
-    name: 'GREANIA BUILD SOLUTIONS',
-    industry: 'Construction Industry',
-    logo: './Greania.JPG',
-    project: 'Portfolio Website',
-    year: '2025',
-    technologies: ['REACT', 'Typescript', 'CSS', 'HTML'],
-    description: 'Built a professional portfolio website for GREANIA BUILD SOLUTIONS to highlight their construction projects and services.'
+    name: "GREANIA BUILD SOLUTIONS",
+    industry: "Construction",
+    logo: "./Greania.JPG",
+    project: "Portfolio Website",
+    year: "2025",
+    technologies: ["REACT", "TypeScript", "CSS", "HTML"],
+    description:
+      "Built a professional portfolio website highlighting construction projects and services, resulting in increased client inquiries and project leads.",
   },
   {
-    name: 'NYAKAZI ORGANICS',
-    industry: 'Organic Products',
-    logo: './Nyakazi.png',
-    project: 'E-commerce Platform',
-    year: '2024',
-    technologies: ['REACT', 'Django', 'PostgreSQL'],
-    description: 'Developed a full-featured e-commerce platform for NYAKAZI ORGANICS to sell organic products online with a seamless shopping experience.'
+    name: "NYAKAZI ORGANICS",
+    industry: "Organic Products",
+    logo: "./Nyakazi.png",
+    project: "E-commerce Platform",
+    year: "2024",
+    technologies: ["REACT", "Django", "PostgreSQL"],
+    description:
+      "Developed a full-featured e-commerce platform with seamless shopping experience, secure payments, and inventory management. The platform boosted online sales by 150%.",
   },
   {
-    name: 'POINT OF SALE',
-    industry: 'Retail Technology',
-    logo: './salehubPOS.png',
-    project: 'Internal POS System',
-    year: '2024',
-    technologies: ['Next.js', 'Stripe', 'Sanity'],
-    description: 'Created a point of sale system for retail businesses to manage inventory, sales, and customer relationships.'
+    name: "SALEHUB POS",
+    industry: "Retail Technology",
+    logo: "./salehubPOS.png",
+    project: "Internal POS System",
+    year: "2024",
+    technologies: ["React", "Django", "PostgreSQL"],
+    description:
+      "Created a comprehensive point of sale system to manage inventory, sales tracking, customer relationships, and real-time analytics.",
   },
   {
-    name: 'K-SPACE TECH SOLUTIONS',
-    industry: 'IT Services',
-    logo: './terminal.JPG',
-    project: 'Personal Portfolio',
-    year: '2023',
-    technologies: ['VUE', 'Typescript', 'CSS', 'HTML'],
-    description: 'Designed and developed a personal portfolio website to showcase technical skills and projects.'
-  }
+    name: "K-SPACE TECH SOLUTIONS",
+    industry: "IT Services",
+    logo: "./terminal.JPG",
+    project: "Personal Portfolio",
+    year: "2023",
+    technologies: ["VUE", "TypeScript", "CSS", "HTML"],
+    description:
+      "Designed and developed a modern portfolio website showcasing technical expertise and project work, increasing professional visibility.",
+  },
 ]);
 
-const selectedClient = ref(null);
-const grayscaleLogos = ref(true);
-const clientGrid = ref(null);
+const testimonials = [
+  {
+    text: "Kelvin delivered an exceptional e-commerce platform that exceeded our expectations. His attention to detail and technical expertise transformed our online presence.",
+    author: "Sarah Mwangi",
+    position: "CEO",
+    company: "Nyakazi Organics",
+    rating: 5,
+  },
+  {
+    text: "Working with Kelvin was a pleasure. He understood our requirements perfectly and delivered a solution that has significantly improved our operations.",
+    author: "John Kariuki",
+    position: "Project Manager",
+    company: "Seed Savers Network",
+    rating: 5,
+  },
+  {
+    text: "Professional, timely, and highly skilled. The website Kelvin built for us has received outstanding feedback from our clients and partners.",
+    author: "Mary Wanjiku",
+    position: "Director",
+    company: "Greania Build Solutions",
+    rating: 5,
+  },
+];
 
-onMounted(() => {
-  // Add animation to client cards when they come into view
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1 });
-
-  if (clientGrid.value) {
-    const cards = clientGrid.value.querySelectorAll('.client-card');
-    cards.forEach(card => observer.observe(card));
-  }
+const industries = computed(() => {
+  const ind = ["All", ...new Set(clients.value.map((c) => c.industry))];
+  return ind;
 });
 
-function showClientDetails(client) {
+const filteredClients = computed(() => {
+  if (activeIndustry.value === "All") return clients.value;
+  return clients.value.filter((c) => c.industry === activeIndustry.value);
+});
+
+const uniqueIndustries = computed(() => {
+  return new Set(clients.value.map((c) => c.industry)).size;
+});
+
+const getRetentionRate = computed(() => {
+  return 85;
+});
+
+const getIndustryCount = (industry) => {
+  if (industry === "All") return clients.value.length;
+  return clients.value.filter((c) => c.industry === industry).length;
+};
+
+const getClientFeatures = (clientName) => {
+  const features = {
+    "SEED SAVERS NETWORK KENYA": [
+      "Farmer registration and management system",
+      "Seed distribution tracking dashboard",
+      "Real-time inventory management",
+      "Automated reporting and analytics",
+    ],
+    "NYAKAZI ORGANICS": [
+      "Secure payment gateway integration",
+      "Product catalog management",
+      "Order tracking system",
+      "Customer account dashboard",
+    ],
+    "GREANIA BUILD SOLUTIONS": [
+      "Project portfolio gallery",
+      "Service inquiry system",
+      "Client testimonial section",
+      "Contact form with map integration",
+    ],
+  };
+  return (
+    features[clientName] || [
+      "Responsive design across all devices",
+      "Performance optimized architecture",
+      "SEO-friendly implementation",
+      "Ongoing maintenance and support",
+    ]
+  );
+};
+
+const openClientModal = (client) => {
   selectedClient.value = client;
-  document.body.style.overflow = 'hidden';
-}
+  document.body.style.overflow = "hidden";
+};
 
-function closeClientDetails() {
+const closeClientModal = () => {
   selectedClient.value = null;
-  document.body.style.overflow = '';
-}
+  document.body.style.overflow = "";
+};
 
-function toggleGrayscale() {
-  grayscaleLogos.value = !grayscaleLogos.value;
-}
+const prevTestimonial = () => {
+  if (currentTestimonial.value > 0) {
+    currentTestimonial.value--;
+  }
+};
 
-function shuffleClients() {
-  // Shuffle the clients array
-  const shuffled = [...clients.value];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+const nextTestimonial = () => {
+  if (currentTestimonial.value < testimonials.length - 1) {
+    currentTestimonial.value++;
   }
-  clients.value = shuffled;
-  
-  // Re-add animation class
-  if (clientGrid.value) {
-    const cards = clientGrid.value.querySelectorAll('.client-card');
-    cards.forEach((card, index) => {
-      card.style.animationDelay = `${index * 0.1}s`;
-      card.classList.remove('visible');
-      setTimeout(() => card.classList.add('visible'), 10);
-    });
-  }
-}
+};
 </script>
 
-<style>
-/* Using the same theme variables as other components */
-:root {
-  --bg-color: #ffffff;
-  --text-color: #1a202c;
-  --secondary-text: #4a5568;
-  --accent-color: #3182ce;
-  --accent-hover: #2c5282;
-  --terminal-bg: #1e1e1e;
-  --terminal-header: #323232;
-  --terminal-text: #d4d4d4;
-  --terminal-prompt: #4ec9b0;
-  --terminal-keyword: #569cd6;
-  --terminal-string: #ce9178;
-  --terminal-comment: #6a9955;
-  --terminal-function: #dcdcaa;
-  --terminal-variable: #9cdcfe;
-  --terminal-property: #9cdcfe;
-  --terminal-boolean: #569cd6;
-  --terminal-class: #4ec9b0;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #858585;
-}
-
-.dark-theme {
-  --bg-color: #0d1117;
-  --text-color: #f0f6fc;
-  --secondary-text: #8b949e;
-  --accent-color: #58a6ff;
-  --accent-hover: #1f6feb;
-  --terminal-bg: #0d1117;
-  --terminal-header: #161b22;
-  --terminal-text: #e6edf3;
-  --terminal-prompt: #3fb950;
-  --terminal-keyword: #ff7b72;
-  --terminal-string: #a5d6ff;
-  --terminal-comment: #8b949e;
-  --terminal-function: #d2a8ff;
-  --terminal-variable: #79c0ff;
-  --terminal-property: #ffa657;
-  --terminal-boolean: #ff7b72;
-  --terminal-class: #3fb950;
-  --terminal-parameter: #ffa657;
-  --terminal-line-number: #30363d;
-}
-</style>
-
 <style scoped>
-/* Base Section Styles */
-.clients-section {
+.clients {
+  padding: 5rem 2rem;
+  background: var(--bg-secondary);
   position: relative;
-  min-height: 100vh;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: clamp(2rem, 5vw, 4rem) clamp(1rem, 3vw, 2rem);
-  background-color: var(--bg-color);
-  font-family: 'Fira Code', 'Courier New', monospace;
-  color: var(--text-color);
 }
 
-/* Terminal Container */
 .clients-container {
-  width: 100%;
-  max-width: 1400px;
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.8s ease-out;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
-/* Terminal Styles */
-.clients-terminal {
-  width: 100%;
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  animation: slideUp 0.8s ease-out;
+/* Header Styles */
+.clients-header {
+  text-align: center;
+  margin-bottom: 3rem;
 }
 
-.terminal-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background-color: var(--terminal-header);
-  padding: 0.75rem clamp(1rem, 2vw, 1.5rem);
-}
-
-.terminal-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.terminal-button {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.terminal-button.close {
-  background-color: #ff5f56;
-}
-
-.terminal-button.minimize {
-  background-color: #ffbd2e;
-}
-
-.terminal-button.maximize {
-  background-color: #27c93f;
-}
-
-.terminal-title {
-  color: var(--terminal-text);
-  font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-  opacity: 0.8;
-}
-
-.terminal-body {
-  padding: 0;
-}
-
-/* Terminal Elements */
-.terminal-prompt {
-  display: flex;
+.header-badge {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1rem;
-  padding: 0 clamp(1rem, 2vw, 1.5rem);
-}
-
-.prompt-symbol {
-  color: var(--terminal-prompt);
-  font-weight: bold;
-}
-
-.command {
-  color: var(--terminal-text);
-}
-
-.cursor {
-  color: var(--terminal-prompt);
-  animation: blink 1s infinite;
-}
-
-.typing-animation {
-  overflow: hidden;
-  white-space: nowrap;
-  border-right: 2px solid var(--terminal-prompt);
-  animation: typing 3s steps(20, end) infinite;
-}
-
-.terminal-output {
+  padding: 0.25rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
   margin-bottom: 1.5rem;
 }
 
-/* Client Stats */
-.client-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+.badge-num {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.badge-text {
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+
+.clients-title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-white);
   margin-bottom: 1rem;
 }
 
-.stat-item {
+.clients-title .accent {
+  color: var(--accent);
+}
+
+.clients-underline {
+  width: 60px;
+  height: 2px;
+  background: var(--accent);
+  margin: 0 auto 1rem;
+}
+
+.clients-subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* Stats Showcase */
+.stats-showcase {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.stat-block {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  padding: 1.5rem;
   display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: all 0.3s;
+}
+
+.stat-block:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 94, 0, 0.1);
+  color: var(--accent);
+  font-size: 1.5rem;
+}
+
+.stat-info {
+  flex: 1;
+}
+
+.stat-number {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  letter-spacing: 0.08em;
+}
+
+/* Client Filters */
+.client-filters {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.filter-chip {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-.stat-key {
-  color: var(--terminal-property);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
+.filter-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.stat-value {
-  color: var(--terminal-string);
-  font-weight: bold;
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
+.filter-chip.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
 }
 
-.stat-value.success {
-  color: var(--terminal-prompt);
+.filter-count {
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.1rem 0.4rem;
+  font-size: 0.65rem;
+  font-weight: 600;
 }
 
-.terminal-separator {
-  height: 1px;
-  background-color: var(--terminal-header);
-  margin: 0 0 1rem 0;
-}
-
-/* Client Grid */
-.client-grid {
+/* Client Showcase */
+.client-showcase {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: clamp(1rem, 2vw, 1.5rem);
-  margin-bottom: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
 }
 
 .client-card {
-  background-color: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.client-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-.client-card.visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.client-logo-container {
   position: relative;
+  height: 280px;
+  perspective: 1000px;
+  cursor: pointer;
+}
+
+.card-front,
+.card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  transition: transform 0.6s ease;
+}
+
+.card-front {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  z-index: 2;
+}
+
+.client-card:hover .card-front {
+  transform: rotateY(180deg);
+}
+
+.card-back {
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  transform: rotateY(180deg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 1.5rem;
+  gap: 1rem;
+}
+
+.client-card:hover .card-back {
+  transform: rotateY(0);
+}
+
+.logo-container {
+  width: 100%;
   height: 120px;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  margin-bottom: 1rem;
 }
 
 .client-logo {
   max-width: 80%;
-  max-height: 80%;
+  max-height: 100px;
   object-fit: contain;
-  transition: all 0.3s ease;
-}
-
-.client-logo.grayscale {
-  filter: grayscale(100%);
+  filter: grayscale(100%) contrast(1.1);
+  transition: filter 0.3s;
 }
 
 .client-card:hover .client-logo {
-  transform: scale(1.05);
+  filter: grayscale(0%);
 }
 
-.client-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.client-card:hover .client-overlay {
-  opacity: 1;
-}
-
-.client-info {
+.card-info {
   text-align: center;
-  padding: 1rem;
 }
 
-.client-name {
-  font-size: clamp(1rem, 1.5vw, 1.2rem);
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
-  color: var(--terminal-text);
+.card-info h3 {
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.5rem;
 }
 
-.client-industry {
-  font-size: clamp(0.8rem, 1.2vw, 0.9rem);
-  color: var(--terminal-comment);
-  margin: 0;
+.industry-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: rgba(255, 94, 0, 0.15);
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
 }
 
-/* Terminal Actions */
-.terminal-actions {
+.project-preview {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.25rem;
+  align-items: center;
+  text-align: center;
 }
 
-.terminal-button-primary, .terminal-button-secondary {
-  display: inline-flex;
+.project-preview i {
+  font-size: 1.5rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+
+.project-preview span {
+  font-size: 0.8rem;
+  color: var(--text-silver);
+  font-weight: 600;
+}
+
+.project-preview small {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.tech-stack {
+  display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1rem;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
-  font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  justify-content: center;
+  padding: 0.5rem;
+  background: var(--bg-elevated);
 }
 
-.terminal-button-primary {
-  background-color: var(--accent-color);
-  color: white;
-  border: 1px solid var(--accent-color);
+.tech-stack i {
+  color: var(--accent);
 }
 
-.terminal-button-primary:hover {
-  background-color: var(--accent-hover);
+.view-btn {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  padding: 0.6rem;
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.view-btn:hover {
+  background: var(--accent);
+  color: #000;
+}
+
+/* Testimonial Section */
+.testimonial-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  padding: 2rem;
+  margin-bottom: 3rem;
+}
+
+.testimonial-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-dark);
+}
+
+.testimonial-header h3 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-white);
+  letter-spacing: 0.1em;
+}
+
+.testimonial-nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.nav-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.testimonial-card {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.quote-mark {
+  font-size: 4rem;
+  color: var(--accent);
+  font-family: Georgia, serif;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  opacity: 0.5;
+}
+
+.testimonial-text {
+  color: var(--text-silver);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.testimonial-author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-dark);
+}
+
+.author-info {
+  text-align: left;
+}
+
+.author-info strong {
+  display: block;
+  color: var(--text-white);
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.author-info span {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+}
+
+.rating i {
+  color: #ffc107;
+  font-size: 0.8rem;
+  margin: 0 1px;
+}
+
+.rating i.filled {
+  color: #ffc107;
+}
+
+.rating i:not(.filled) {
+  color: var(--border-dark);
+}
+
+.testimonial-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  background: var(--border-default);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: var(--accent);
+  width: 20px;
+  border-radius: 2px;
+}
+
+/* CTA Section */
+.clients-cta {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  padding: 2rem;
+  text-align: center;
+}
+
+.cta-content p {
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+.cta-button {
+  padding: 0.75rem 2rem;
+  background: var(--accent);
+  border: none;
+  color: #000;
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.cta-button:hover {
+  background: var(--accent-hover);
   transform: translateY(-2px);
 }
 
-.terminal-button-secondary {
-  background-color: transparent;
-  color: var(--terminal-text);
-  border: 1px solid var(--terminal-text);
+.cta-button i {
+  margin-left: 0.5rem;
+  transition: transform 0.3s;
 }
 
-.terminal-button-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+.cta-button:hover i {
+  transform: translateX(4px);
 }
 
-/* Client Details Modal */
-.client-modal {
+/* Modal */
+.modal {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: 2rem;
 }
 
-.modal-content {
-  background-color: var(--terminal-bg);
-  border-radius: 8px;
-  max-width: 900px;
+.modal-window {
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  max-width: 800px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
-  animation: modalFadeIn 0.3s ease;
 }
 
 .modal-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--terminal-header);
-}
-
-.modal-header h2 {
-  margin: 0;
-  color: var(--terminal-text);
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
-}
-
-.close-button {
-  background: none;
-  border: none;
-  color: var(--terminal-text);
-  font-size: clamp(1.2rem, 2vw, 1.5rem);
-  cursor: pointer;
-  padding: 0;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-body {
+  gap: 1rem;
   padding: 1.5rem;
-  display: flex;
-  gap: 2rem;
+  border-bottom: 1px solid var(--border-dark);
+  position: relative;
 }
 
 .modal-logo {
-  flex: 1;
+  width: 70px;
+  height: 70px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.5rem;
 }
 
 .modal-logo img {
   max-width: 100%;
-  max-height: 200px;
+  max-height: 100%;
   object-fit: contain;
+  filter: grayscale(100%);
 }
 
-.modal-details {
-  flex: 2;
+.modal-title h2 {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.25rem;
+}
+
+.modal-industry {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  background: rgba(255, 94, 0, 0.15);
+  color: var(--accent);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close:hover {
+  color: var(--accent);
+}
+
+.modal-body {
+  padding: 1.5rem;
+}
+
+.project-overview {
+  margin-bottom: 1.5rem;
+}
+
+.project-overview h4 {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.project-overview p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-size: 0.85rem;
+}
+
+.project-details-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .detail-item {
   display: flex;
-  margin-bottom: 1rem;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background: var(--bg-elevated);
+  border-left: 2px solid var(--accent);
 }
 
-.detail-key {
-  color: var(--terminal-property);
-  margin-right: 0.5rem;
-  min-width: 100px;
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
+.detail-item.full-width {
+  grid-column: span 2;
 }
 
-.detail-value {
-  color: var(--terminal-string);
-  font-size: clamp(0.9rem, 1.2vw, 1rem);
+.detail-item i {
+  color: var(--accent);
+  font-size: 1rem;
+  margin-top: 0.1rem;
 }
 
-.detail-description {
-  margin-top: 1rem;
-  color: var(--terminal-comment);
-  font-style: italic;
-  line-height: 1.5;
+.detail-item label {
+  display: block;
+  font-size: 0.6rem;
+  color: var(--text-dim);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.25rem;
+}
+
+.detail-item span {
+  font-size: 0.8rem;
+  color: var(--text-silver);
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.tech-tag {
+  padding: 0.15rem 0.5rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-default);
+  font-size: 0.65rem;
+  color: var(--text-muted);
+}
+
+.key-features {
+  margin-bottom: 1.5rem;
+}
+
+.key-features h4 {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.features-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+
+.features-list li {
+  padding: 0.4rem;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--bg-elevated);
+}
+
+.features-list li i {
+  color: var(--accent);
+  font-size: 0.7rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-dark);
+}
+
+.action-btn {
+  padding: 0.6rem 1.5rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.action-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* Animations */
-@keyframes slideUp {
+@keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(20px);
@@ -669,182 +1163,97 @@ function shuffleClients() {
   }
 }
 
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+.client-card {
+  animation: fadeIn 0.5s ease-out both;
 }
 
-@keyframes typing {
-  from { width: 0; }
-  to { width: 100%; }
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
 
-@keyframes modalFadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.9);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
-/* Responsive Design */
-/* Large Desktop (1400px and up) */
-@media (min-width: 1400px) {
-  .client-grid {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.modal-enter-active,
+.modal-leave-active {
+  transition: opacity 0.3s;
 }
 
-/* Desktop (1200px to 1399px) */
-@media (min-width: 1200px) and (max-width: 1399px) {
-  .client-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.modal-enter-from,
+.modal-leave-to {
+  opacity: 0;
 }
 
-/* Desktop (992px to 1199px) */
-@media (min-width: 992px) and (max-width: 1199px) {
-  .client-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-/* Tablet (768px to 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .clients-section {
-    padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 3vw, 2rem);
-  }
-  
-  .client-grid {
+/* Responsive */
+@media (max-width: 1024px) {
+  .stats-showcase {
     grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
   }
-  
-  .client-card {
-    padding: 1rem;
-  }
-  
-  .client-logo-container {
-    height: 100px;
-  }
-  
-  .modal-body {
-    flex-direction: column;
-    gap: 1.5rem;
+
+  .features-list {
+    grid-template-columns: 1fr;
   }
 }
 
-/* Mobile Landscape (576px to 767px) */
-@media (min-width: 576px) and (max-width: 767px) {
-  .clients-section {
-    padding: clamp(1.5rem, 3vw, 2.5rem) clamp(1rem, 3vw, 2rem);
+@media (max-width: 768px) {
+  .clients {
+    padding: 3rem 1rem;
   }
-  
-  .client-grid {
+
+  .clients-title {
+    font-size: 1.8rem;
+  }
+
+  .stats-showcase {
     grid-template-columns: repeat(2, 1fr);
-    gap: 0.8rem;
   }
-  
-  .client-card {
-    padding: 0.8rem;
-  }
-  
-  .client-logo-container {
-    height: 80px;
-  }
-  
-  .terminal-actions {
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-}
 
-/* Mobile Portrait (480px to 575px) */
-@media (min-width: 480px) and (max-width: 575px) {
-  .clients-section {
-    padding: clamp(1.5rem, 3vw, 2rem) clamp(1rem, 3vw, 1.5rem);
-  }
-  
-  .client-grid {
+  .client-showcase {
     grid-template-columns: 1fr;
-    gap: 0.8rem;
   }
-  
-  .client-card {
-    padding: 0.6rem;
-  }
-  
-  .client-logo-container {
-    height: 70px;
-  }
-  
-  .terminal-actions {
-    flex-direction: column;
-    gap: 0.8rem;
-  }
-  
-  .modal-body {
-    flex-direction: column;
-    gap: 1rem;
-  }
-}
 
-/* Small Mobile (320px to 479px) */
-@media (max-width: 479px) {
-  .clients-section {
-    padding: clamp(1rem, 3vw, 1.5rem) clamp(0.8rem, 3vw, 1rem);
-  }
-  
-  .client-grid {
-    grid-template-columns: 1fr;
-    gap: 0.6rem;
-  }
-  
-  .client-card {
-    padding: 0.5rem;
-  }
-  
-  .client-logo-container {
-    height: 60px;
-  }
-  
-  .terminal-actions {
+  .testimonial-author {
     flex-direction: column;
-    gap: 0.6rem;
+    text-align: center;
   }
-  
-  .modal-body {
-    flex-direction: column;
-    gap: 0.8rem;
+
+  .author-info {
+    text-align: center;
   }
-  
+
   .modal-header {
-    padding: 0.8rem 1rem;
-  }
-  
-  .modal-header h2 {
-    font-size: 1.1rem;
-  }
-  
-  .detail-item {
     flex-direction: column;
-    margin-bottom: 0.8rem;
+    text-align: center;
   }
-  
-  .detail-key {
-    min-width: 80px;
-    font-size: 0.8rem;
+
+  .project-details-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .detail-value {
-    font-size: 0.8rem;
+
+  .detail-item.full-width {
+    grid-column: span 1;
   }
-  
-  .detail-description {
-    font-size: 0.8rem;
+}
+
+@media (max-width: 480px) {
+  .stats-showcase {
+    grid-template-columns: 1fr;
+  }
+
+  .client-filters {
+    gap: 0.5rem;
+  }
+
+  .filter-chip {
+    font-size: 0.65rem;
+    padding: 0.4rem 1rem;
+  }
+
+  .features-list {
+    grid-template-columns: 1fr;
   }
 }
 </style>
