@@ -3,245 +3,275 @@
     <div class="projects-container">
       <!-- Section Header -->
       <div class="projects-header">
-        <div class="header-badge">
-          <span class="badge-num">04</span>
-          <span class="badge-text">PORTFOLIO</span>
+        <div class="header-left">
+          <span class="section-tag">04 — PORTFOLIO</span>
+          <h2 class="projects-title">
+            FEATURED <span class="accent">WORK</span>
+          </h2>
         </div>
-        <h2 class="projects-title">
-          Featured <span class="accent">Work</span>
-        </h2>
-        <div class="projects-underline"></div>
-        <p class="projects-subtitle">
-          A collection of projects showcasing my expertise in building modern
-          web applications
-        </p>
+        <div class="header-right">
+          <span class="total-count"
+            >{{ String(projects.length).padStart(2, "0") }} PROJECTS</span
+          >
+          <span class="live-count"
+            >{{ String(liveProjects).padStart(2, "0") }} LIVE</span
+          >
+        </div>
       </div>
 
-      <!-- Category Pills -->
-      <div class="category-pills">
+      <!-- Category Filter -->
+      <div class="filter-row">
         <button
           v-for="cat in categories"
-          :key="cat"
-          :class="['pill', { active: activeFilter === cat }]"
-          @click="activeFilter = cat"
+          :key="cat.label"
+          :class="['pill', { active: activeFilter === cat.label }]"
+          @click="setFilter(cat.label)"
         >
-          {{ cat }}
-          <span class="pill-count">{{ getProjectCount(cat) }}</span>
+          {{ cat.label }}
+          <span class="pill-count">{{
+            String(cat.count).padStart(2, "0")
+          }}</span>
         </button>
       </div>
 
-      <!-- Project Cards Grid -->
-      <div class="projects-grid">
-        <div
-          v-for="(project, idx) in paginatedProjects"
-          :key="project.title"
-          class="project-card"
-          :style="{ transitionDelay: idx * 0.05 + 's' }"
-          @click="openProjectDetails(project)"
-        >
-          <!-- Card Media -->
-          <div class="card-media">
-            <img :src="project.image" :alt="project.title" />
-            <div class="media-overlay">
-              <div class="overlay-content">
-                <span class="view-project">View Project</span>
-                <span class="project-category">{{ project.category }}</span>
+      <!-- EDITORIAL GRID -->
+      <div class="editorial-layout" v-if="filteredProjects.length > 0">
+        <!-- FEATURED LEAD STORY -->
+        <div class="lead-story" @click="openDrawer(filteredProjects[0])">
+          <div class="lead-image">
+            <div class="accent-strip"></div>
+            <img
+              :src="filteredProjects[0].image"
+              :alt="filteredProjects[0].title"
+              class="lead-img"
+            />
+            <div class="lead-img-overlay"></div>
+            <span class="case-num"
+              >CASE — {{ String(1).padStart(3, "0") }}</span
+            >
+          </div>
+          <div class="lead-details">
+            <div class="lead-top">
+              <div class="lead-category">
+                {{ filteredProjects[0].category }}
+              </div>
+              <div class="lead-title">{{ filteredProjects[0].title }}</div>
+              <p class="lead-desc">{{ filteredProjects[0].description }}</p>
+              <div class="tech-row">
+                <span
+                  v-for="tech in filteredProjects[0].tech.slice(0, 3)"
+                  :key="tech"
+                  class="chip"
+                  >{{ tech }}</span
+                >
+                <span
+                  v-if="filteredProjects[0].tech.length > 3"
+                  class="chip accent-chip"
+                >
+                  +{{ filteredProjects[0].tech.length - 3 }}
+                </span>
               </div>
             </div>
-            <div class="card-badge" :class="project.status">
-              {{ project.status === "live" ? "Live" : "In Development" }}
-            </div>
-          </div>
-
-          <!-- Card Body -->
-          <div class="card-body">
-            <h3 class="project-title">{{ project.title }}</h3>
-            <p class="project-description">{{ project.description }}</p>
-
-            <!-- Tech Stack -->
-            <div class="tech-stack">
-              <span
-                v-for="tech in project.tech.slice(0, 4)"
-                :key="tech"
-                class="tech-chip"
-              >
-                {{ tech }}
-              </span>
-              <span v-if="project.tech.length > 4" class="tech-chip more">
-                +{{ project.tech.length - 4 }}
-              </span>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="card-actions">
-              <a
-                :href="project.github"
-                target="_blank"
-                class="action-link github"
-                @click.stop
-              >
-                <i class="fab fa-github"></i>
-                <span>Code</span>
-              </a>
-              <a
-                v-if="project.demo !== '#'"
-                :href="project.demo"
-                target="_blank"
-                class="action-link demo"
-                @click.stop
-              >
-                <i class="fas fa-external-link-alt"></i>
-                <span>Demo</span>
-              </a>
-              <button
-                class="action-link details"
-                @click.stop="openProjectDetails(project)"
-              >
-                <i class="fas fa-info-circle"></i>
-                <span>Details</span>
-              </button>
+            <div class="lead-bottom">
+              <div class="status-stamp" :class="filteredProjects[0].status">
+                <span class="status-dot"></span>
+                {{
+                  filteredProjects[0].status === "live"
+                    ? "LIVE DEPLOYMENT"
+                    : "IN DEVELOPMENT"
+                }}
+              </div>
+              <div class="lead-actions">
+                <a
+                  :href="filteredProjects[0].github"
+                  target="_blank"
+                  class="act-btn"
+                  @click.stop
+                  >SOURCE</a
+                >
+                <a
+                  v-if="filteredProjects[0].demo !== '#'"
+                  :href="filteredProjects[0].demo"
+                  target="_blank"
+                  class="act-btn primary"
+                  @click.stop
+                  >VIEW PROJECT</a
+                >
+                <button
+                  class="act-btn"
+                  @click.stop="openDrawer(filteredProjects[0])"
+                >
+                  DETAILS
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Pagination -->
-      <div class="pagination" v-if="totalPages > 1">
-        <button
-          @click="currentPage--"
-          :disabled="currentPage === 1"
-          class="page-prev"
-        >
-          <i class="fas fa-chevron-left"></i>
-          <span>Previous</span>
-        </button>
-
-        <div class="page-numbers">
-          <button
-            v-for="page in displayedPages"
-            :key="page"
-            @click="currentPage = page"
-            :class="[
-              'page-number',
-              { active: currentPage === page, dots: page === '...' },
-            ]"
-            :disabled="page === '...'"
+        <!-- SIDE COLUMN INDEX -->
+        <div class="side-column" v-if="filteredProjects.length > 1">
+          <div
+            v-for="(project, idx) in filteredProjects.slice(1, 4)"
+            :key="project.title"
+            class="index-card"
+            @click="openDrawer(project)"
           >
-            {{ page }}
-          </button>
+            <div class="index-top">
+              <span class="case-num-sm"
+                >CASE — {{ String(idx + 2).padStart(3, "0") }}</span
+              >
+              <span class="status-badge" :class="project.status">{{
+                project.status === "live" ? "LIVE" : "DEV"
+              }}</span>
+            </div>
+            <div class="index-title">{{ project.title }}</div>
+            <div class="index-tech">
+              <span
+                v-for="tech in project.tech.slice(0, 2)"
+                :key="tech"
+                class="chip sm"
+                >{{ tech }}</span
+              >
+            </div>
+            <div class="index-footer">{{ project.category }}</div>
+          </div>
         </div>
-
-        <button
-          @click="currentPage++"
-          :disabled="currentPage === totalPages"
-          class="page-next"
-        >
-          <span>Next</span>
-          <i class="fas fa-chevron-right"></i>
-        </button>
       </div>
 
-      <!-- View All Link -->
-      <div class="view-all" v-if="filteredProjects.length > itemsPerPage">
-        <button
-          @click="showAllProjects = !showAllProjects"
-          class="view-all-btn"
+      <!-- UNIFORM BOTTOM GRID -->
+      <div class="bottom-grid" v-if="filteredProjects.length > 4">
+        <div
+          v-for="(project, idx) in filteredProjects.slice(4)"
+          :key="project.title"
+          class="grid-card"
+          @click="openDrawer(project)"
         >
-          <span>{{ showAllProjects ? "Show Less" : "View All Projects" }}</span>
-          <i
-            :class="
-              showAllProjects ? 'fas fa-chevron-up' : 'fas fa-chevron-down'
-            "
-          ></i>
-        </button>
+          <div class="grid-img-wrap">
+            <img :src="project.image" :alt="project.title" class="grid-img" />
+            <div class="grid-img-overlay">
+              <span class="overlay-text">VIEW CASE</span>
+            </div>
+          </div>
+          <div class="grid-body">
+            <div class="grid-meta">
+              <span class="case-num-sm"
+                >CASE — {{ String(idx + 5).padStart(3, "0") }}</span
+              >
+              <span class="status-badge" :class="project.status">{{
+                project.status === "live" ? "LIVE" : "DEV"
+              }}</span>
+            </div>
+            <div class="grid-title">{{ project.title }}</div>
+            <div class="grid-chips">
+              <span
+                v-for="tech in project.tech.slice(0, 3)"
+                :key="tech"
+                class="chip sm"
+                >{{ tech }}</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
 
-      <!-- Stats Section -->
-      <div class="project-stats">
+      <!-- Empty State -->
+      <div v-if="filteredProjects.length === 0" class="empty-state">
+        <span class="empty-text">NO CASES IN THIS CATEGORY</span>
+      </div>
+
+      <!-- Stats Bar -->
+      <div class="stats-bar">
         <div class="stat-item">
-          <div class="stat-number">{{ totalProjects }}</div>
-          <div class="stat-label">Total Projects</div>
+          <div class="stat-num">{{ totalProjects }}</div>
+          <div class="stat-label">TOTAL PROJECTS</div>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-          <div class="stat-number">{{ liveProjects }}</div>
-          <div class="stat-label">Live Sites</div>
+          <div class="stat-num">{{ liveProjects }}</div>
+          <div class="stat-label">LIVE SITES</div>
         </div>
         <div class="stat-divider"></div>
         <div class="stat-item">
-          <div class="stat-number">{{ totalTechStacks }}</div>
-          <div class="stat-label">Technologies</div>
+          <div class="stat-num">{{ totalTechStacks }}</div>
+          <div class="stat-label">TECHNOLOGIES</div>
         </div>
       </div>
     </div>
 
-    <!-- Project Modal -->
-    <transition name="modal">
-      <div v-if="selectedProject" class="modal" @click="closeProjectDetails">
-        <div class="modal-container" @click.stop>
-          <div class="modal-image-section">
-            <img :src="selectedProject.image" :alt="selectedProject.title" />
-            <div class="modal-status" :class="selectedProject.status">
-              {{ selectedProject.status === "live" ? "LIVE" : "DEVELOPMENT" }}
+    <!-- SIDE DRAWER -->
+    <transition name="drawer">
+      <div v-if="activeProject" class="drawer-backdrop" @click="closeDrawer">
+        <div class="drawer-panel" @click.stop>
+          <!-- Drawer Header -->
+          <div class="drawer-head">
+            <div>
+              <span class="drawer-case"
+                >CASE — {{ getCaseNum(activeProject) }}</span
+              >
+              <div class="drawer-category">{{ activeProject.category }}</div>
+            </div>
+            <button class="drawer-close" @click="closeDrawer">
+              <span>✕</span> CLOSE
+            </button>
+          </div>
+
+          <!-- Drawer Image -->
+          <div class="drawer-image-wrap">
+            <img
+              :src="activeProject.image"
+              :alt="activeProject.title"
+              class="drawer-img"
+            />
+            <div class="drawer-status" :class="activeProject.status">
+              {{ activeProject.status === "live" ? "LIVE" : "IN DEVELOPMENT" }}
             </div>
           </div>
 
-          <div class="modal-content-section">
-            <div class="modal-header">
-              <div>
-                <h2>{{ selectedProject.title }}</h2>
-                <div class="modal-category">{{ selectedProject.category }}</div>
-              </div>
-              <button class="modal-close" @click="closeProjectDetails">
-                <i class="fas fa-times"></i>
-              </button>
-            </div>
+          <!-- Drawer Content -->
+          <div class="drawer-content">
+            <h2 class="drawer-title">{{ activeProject.title }}</h2>
+            <p class="drawer-desc">{{ activeProject.description }}</p>
 
-            <div class="modal-description">
-              <p>{{ selectedProject.description }}</p>
-            </div>
-
-            <div class="modal-tech">
-              <h4>Technologies Used</h4>
-              <div class="tech-list">
+            <div class="drawer-section">
+              <div class="drawer-section-label">TECHNOLOGIES</div>
+              <div class="drawer-tech">
                 <span
-                  v-for="tech in selectedProject.tech"
+                  v-for="tech in activeProject.tech"
                   :key="tech"
-                  class="tech-item"
+                  class="drawer-chip"
+                  >{{ tech }}</span
                 >
-                  {{ tech }}
-                </span>
               </div>
             </div>
 
-            <div v-if="selectedProject.features" class="modal-features">
-              <h4>Key Features</h4>
-              <ul>
-                <li v-for="feature in selectedProject.features" :key="feature">
-                  <i class="fas fa-check"></i>
-                  <span>{{ feature }}</span>
+            <div class="drawer-section" v-if="activeProject.features">
+              <div class="drawer-section-label">KEY FEATURES</div>
+              <ul class="feature-list">
+                <li
+                  v-for="feat in activeProject.features"
+                  :key="feat"
+                  class="feature-item"
+                >
+                  <span class="feat-bullet">—</span>
+                  <span>{{ feat }}</span>
                 </li>
               </ul>
             </div>
 
-            <div class="modal-links">
+            <div class="drawer-actions">
               <a
-                :href="selectedProject.github"
+                :href="activeProject.github"
                 target="_blank"
-                class="modal-link primary"
+                class="drawer-btn primary"
+                >SOURCE CODE</a
               >
-                <i class="fab fa-github"></i>
-                View Source
-              </a>
               <a
-                v-if="selectedProject.demo !== '#'"
-                :href="selectedProject.demo"
+                v-if="activeProject.demo !== '#'"
+                :href="activeProject.demo"
                 target="_blank"
-                class="modal-link secondary"
+                class="drawer-btn secondary"
+                >LIVE DEMO</a
               >
-                <i class="fas fa-external-link-alt"></i>
-                Live Demo
-              </a>
             </div>
           </div>
         </div>
@@ -254,20 +284,7 @@
 import { ref, computed } from "vue";
 
 const activeFilter = ref("All");
-const currentPage = ref(1);
-const itemsPerPage = ref(6);
-const showAllProjects = ref(false);
-const selectedProject = ref(null);
-
-const emit = defineEmits(["scrollToContact"]);
-
-const categories = [
-  "All",
-  "Web Development",
-  "E-commerce",
-  "Full Stack",
-  "Frontend",
-];
+const activeProject = ref(null);
 
 const projects = [
   {
@@ -412,753 +429,814 @@ const projects = [
   },
 ];
 
-const filteredProjects = computed(() => {
-  let filtered =
-    activeFilter.value === "All"
-      ? projects
-      : projects.filter((p) => p.category === activeFilter.value);
+const allCategories = [
+  "All",
+  "Web Development",
+  "E-commerce",
+  "Full Stack",
+  "Frontend",
+];
 
-  if (!showAllProjects.value) {
-    filtered = filtered.slice(0, itemsPerPage.value);
-  }
-
-  return filtered;
-});
-
-const paginatedProjects = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredProjects.value.slice(start, end);
-});
-
-const totalPages = computed(() =>
-  Math.ceil(filteredProjects.value.length / itemsPerPage.value),
+const categories = computed(() =>
+  allCategories.map((label) => ({
+    label,
+    count:
+      label === "All"
+        ? projects.length
+        : projects.filter((p) => p.category === label).length,
+  })),
 );
 
-const displayedPages = computed(() => {
-  const total = totalPages.value;
-  const current = currentPage.value;
-  const pages = [];
-
-  if (total <= 7) {
-    for (let i = 1; i <= total; i++) pages.push(i);
-  } else {
-    if (current <= 3) {
-      pages.push(1, 2, 3, 4, "...", total);
-    } else if (current >= total - 2) {
-      pages.push(1, "...", total - 3, total - 2, total - 1, total);
-    } else {
-      pages.push(1, "...", current - 1, current, current + 1, "...", total);
-    }
-  }
-  return pages;
-});
+const filteredProjects = computed(() =>
+  activeFilter.value === "All"
+    ? projects
+    : projects.filter((p) => p.category === activeFilter.value),
+);
 
 const totalProjects = computed(() => projects.length);
 const liveProjects = computed(
   () => projects.filter((p) => p.status === "live").length,
 );
 const totalTechStacks = computed(() => {
-  const techSet = new Set();
-  projects.forEach((p) => p.tech.forEach((t) => techSet.add(t)));
-  return techSet.size;
+  const s = new Set();
+  projects.forEach((p) => p.tech.forEach((t) => s.add(t)));
+  return s.size;
 });
 
-const getProjectCount = (category) => {
-  if (category === "All") return projects.length;
-  return projects.filter((p) => p.category === category).length;
+const getCaseNum = (project) => {
+  const idx = filteredProjects.value.findIndex(
+    (p) => p.title === project.title,
+  );
+  return String(idx + 1).padStart(3, "0");
 };
 
-const openProjectDetails = (project) => {
-  selectedProject.value = project;
+const setFilter = (cat) => {
+  activeFilter.value = cat;
+  activeProject.value = null;
+};
+
+const openDrawer = (project) => {
+  activeProject.value = project;
   document.body.style.overflow = "hidden";
 };
 
-const closeProjectDetails = () => {
-  selectedProject.value = null;
+const closeDrawer = () => {
+  activeProject.value = null;
   document.body.style.overflow = "";
 };
 </script>
 
 <style scoped>
+/* ── BASE ── */
 .projects {
   padding: 5rem 2rem;
   background: var(--bg-secondary);
+  position: relative;
 }
-
 .projects-container {
   max-width: 1200px;
   margin: 0 auto;
 }
 
-/* Header Styles */
+/* ── HEADER ── */
 .projects-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-default);
+  padding-bottom: 1.25rem;
   margin-bottom: 1.5rem;
 }
-
-.badge-num {
+.section-tag {
+  display: block;
   font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
   color: var(--accent);
+  margin-bottom: 0.4rem;
 }
-
-.badge-text {
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-}
-
 .projects-title {
   font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-size: 2.2rem;
+  font-weight: 900;
   color: var(--text-white);
-  margin-bottom: 1rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
-
 .projects-title .accent {
   color: var(--accent);
 }
-
-.projects-underline {
-  width: 60px;
-  height: 2px;
-  background: var(--accent);
-  margin: 0 auto 1rem;
+.header-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.2rem;
 }
-
-.projects-subtitle {
+.total-count,
+.live-count {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
   color: var(--text-muted);
-  font-size: 0.9rem;
-  max-width: 600px;
-  margin: 0 auto;
+}
+.live-count {
+  color: var(--accent);
 }
 
-/* Category Pills */
-.category-pills {
+/* ── FILTER ── */
+.filter-row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin-bottom: 3rem;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
 }
-
 .pill {
-  padding: 0.5rem 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.9rem;
   background: transparent;
   border: 1px solid var(--border-default);
   color: var(--text-muted);
   font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
   cursor: pointer;
-  transition: all 0.3s;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
+  transition: all 0.2s;
 }
-
 .pill:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
-
 .pill.active {
   background: var(--accent);
   border-color: var(--accent);
   color: #000;
+  font-weight: 700;
 }
-
 .pill-count {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.1rem 0.4rem;
-  border-radius: 10px;
-  font-size: 0.65rem;
+  opacity: 0.6;
+  font-size: 0.55rem;
 }
 
-/* Projects Grid */
-.projects-grid {
+/* ── EDITORIAL GRID ── */
+.editorial-layout {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
-  margin-bottom: 3rem;
-}
-
-.project-card {
-  background: var(--bg-card);
+  grid-template-columns: 1fr 280px;
+  gap: 1px;
+  background: var(--border-dark);
   border: 1px solid var(--border-dark);
-  transition: all 0.3s;
+  margin-bottom: 1px;
+}
+
+/* LEAD STORY */
+.lead-story {
+  display: grid;
+  grid-template-columns: 55% 45%;
+  background: var(--bg-card);
   cursor: pointer;
-  overflow: hidden;
+  transition: background 0.2s;
+}
+.lead-story:hover {
+  background: #161616;
 }
 
-.project-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-4px);
-}
-
-/* Card Media */
-.card-media {
+.lead-image {
   position: relative;
-  height: 220px;
+  min-height: 300px;
   overflow: hidden;
   background: var(--bg-elevated);
 }
-
-.card-media img {
+.accent-strip {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--accent);
+  z-index: 2;
+}
+.lead-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   filter: grayscale(100%);
-  transition: all 0.5s;
+  transition:
+    filter 0.5s,
+    transform 0.5s;
+}
+.lead-story:hover .lead-img {
+  filter: grayscale(0%);
+  transform: scale(1.04);
+}
+.lead-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.25);
+  transition: opacity 0.3s;
+}
+.lead-story:hover .lead-img-overlay {
+  opacity: 0;
+}
+.case-num {
+  position: absolute;
+  bottom: 0.75rem;
+  left: 0.75rem;
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  z-index: 3;
 }
 
-.project-card:hover .card-media img {
+.lead-details {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-left: 1px solid var(--border-dark);
+}
+.lead-category {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--border-dark);
+  padding-bottom: 0.6rem;
+  margin-bottom: 0.75rem;
+}
+.lead-title {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--text-white);
+  line-height: 1.25;
+  margin-bottom: 0.6rem;
+}
+.lead-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 0.85rem;
+}
+.tech-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-bottom: 0.85rem;
+}
+.chip {
+  padding: 0.15rem 0.5rem;
+  background: var(--bg-elevated);
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+.chip.sm {
+  font-size: 0.5rem;
+  padding: 0.1rem 0.4rem;
+}
+.accent-chip {
+  background: var(--accent);
+  color: #000;
+  font-weight: 700;
+}
+
+.status-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+}
+.status-stamp.live {
+  color: #22c55e;
+}
+.status-stamp.development {
+  color: #f59e0b;
+}
+.status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+}
+.status-stamp.live .status-dot {
+  background: #22c55e;
+}
+.status-stamp.development .status-dot {
+  background: #f59e0b;
+}
+
+.lead-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+.act-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border-default);
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.act-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.act-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 700;
+}
+.act-btn.primary:hover {
+  opacity: 0.88;
+}
+
+/* SIDE COLUMN */
+.side-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  background: var(--border-dark);
+  border-left: 1px solid var(--border-dark);
+}
+.index-card {
+  flex: 1;
+  background: var(--bg-card);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  transition: all 0.2s;
+}
+.index-card:hover {
+  background: #161616;
+  border-left-color: var(--accent);
+}
+.index-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.case-num-sm {
+  font-family: var(--font-heading);
+  font-size: 0.5rem;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+}
+.status-badge {
+  font-family: var(--font-heading);
+  font-size: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 0.1rem 0.4rem;
+}
+.status-badge.live {
+  color: #22c55e;
+  border: 1px solid #22c55e33;
+}
+.status-badge.development {
+  color: #f59e0b;
+  border: 1px solid #f59e0b33;
+}
+
+.index-title {
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-white);
+  line-height: 1.3;
+}
+.index-tech {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+.index-footer {
+  font-family: var(--font-heading);
+  font-size: 0.5rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  margin-top: auto;
+  border-top: 1px solid var(--border-dark);
+  padding-top: 0.4rem;
+}
+
+/* ── BOTTOM UNIFORM GRID ── */
+.bottom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1px;
+  background: var(--border-dark);
+  border: 1px solid var(--border-dark);
+  border-top: none;
+  margin-bottom: 1px;
+}
+.grid-card {
+  background: var(--bg-card);
+  cursor: pointer;
+  overflow: hidden;
+  transition: background 0.2s;
+}
+.grid-card:hover {
+  background: #161616;
+}
+.grid-img-wrap {
+  position: relative;
+  height: 140px;
+  overflow: hidden;
+  background: var(--bg-elevated);
+}
+.grid-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(100%);
+  transition:
+    filter 0.4s,
+    transform 0.4s;
+}
+.grid-card:hover .grid-img {
   filter: grayscale(0%);
   transform: scale(1.05);
 }
-
-.media-overlay {
+.grid-img-overlay {
   position: absolute;
   inset: 0;
-  background: rgba(255, 94, 0, 0.9);
+  background: rgba(255, 94, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   opacity: 0;
   transition: opacity 0.3s;
 }
-
-.project-card:hover .media-overlay {
+.grid-card:hover .grid-img-overlay {
   opacity: 1;
 }
-
-.overlay-content {
-  text-align: center;
-}
-
-.view-project {
-  display: block;
+.overlay-text {
   font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: #000;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-}
-
-.project-category {
   font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
   color: #000;
-  opacity: 0.8;
 }
-
-.card-badge {
-  position: absolute;
-  top: 0.75rem;
-  right: 0.75rem;
-  padding: 0.25rem 0.75rem;
-  background: rgba(0, 0, 0, 0.85);
+.grid-body {
+  padding: 0.85rem;
+}
+.grid-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+.grid-title {
   font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-white);
-  border-left: 2px solid;
-}
-
-.card-badge.live {
-  border-left-color: #22c55e;
-}
-
-.card-badge.development {
-  border-left-color: #f59e0b;
-}
-
-/* Card Body */
-.card-body {
-  padding: 1.25rem;
-}
-
-.project-title {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 0.5rem;
-}
-
-.project-description {
   font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-  margin-bottom: 1rem;
-  display: -webkit-box;
-  --webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.4rem;
 }
-
-/* Tech Stack */
-.tech-stack {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-}
-
-.tech-chip {
-  padding: 0.2rem 0.6rem;
-  background: var(--bg-elevated);
-  font-size: 0.65rem;
-  color: var(--text-muted);
-}
-
-.tech-chip.more {
-  background: var(--accent);
-  color: #000;
-}
-
-/* Card Actions */
-.card-actions {
-  display: flex;
-  gap: 0.75rem;
-}
-
-.action-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  background: transparent;
-  border: 1px solid var(--border-default);
-  font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.action-link:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.action-link.details {
-  background: transparent;
-}
-
-/* Pagination */
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-}
-
-.page-prev,
-.page-next {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: transparent;
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.page-prev:hover:not(:disabled),
-.page-next:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.page-prev:disabled,
-.page-next:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.page-numbers {
+.grid-chips {
   display: flex;
   gap: 0.25rem;
+  flex-wrap: wrap;
 }
 
-.page-number {
-  width: 36px;
-  height: 36px;
-  background: transparent;
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.page-number:hover:not(.dots):not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.page-number.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-}
-
-.page-number.dots {
-  border: none;
-  cursor: default;
-}
-
-/* View All */
-.view-all {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.view-all-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.view-all-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Project Stats */
-.project-stats {
+/* ── EMPTY STATE ── */
+.empty-state {
   display: flex;
-  justify-content: center;
   align-items: center;
-  gap: 2rem;
-  padding: 1.5rem;
+  justify-content: center;
+  padding: 3rem;
+  border: 1px solid var(--border-dark);
   background: var(--bg-card);
-  border: 1px solid var(--border-default);
+  margin-bottom: 1px;
+}
+.empty-text {
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
 }
 
+/* ── STATS BAR ── */
+.stats-bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1px solid var(--border-dark);
+  margin-top: 2rem;
+}
 .stat-item {
+  padding: 1.2rem 2rem;
   text-align: center;
 }
-
-.stat-number {
+.stat-num {
   font-family: var(--font-heading);
   font-size: 1.8rem;
-  font-weight: 800;
+  font-weight: 900;
   color: var(--accent);
+  line-height: 1;
 }
-
 .stat-label {
-  font-size: 0.65rem;
+  font-family: var(--font-heading);
+  font-size: 0.5rem;
   color: var(--text-muted);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   margin-top: 0.25rem;
 }
-
 .stat-divider {
   width: 1px;
   height: 40px;
   background: var(--border-default);
 }
 
-/* Modal */
-.modal {
+/* ── DRAWER ── */
+.drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: rgba(0, 0, 0, 0.7);
   z-index: 1000;
-  padding: 2rem;
+  display: flex;
+  justify-content: flex-end;
 }
-
-.modal-container {
+.drawer-panel {
+  width: 420px;
+  max-width: 95vw;
+  height: 100%;
   background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  max-width: 900px;
-  width: 100%;
-  max-height: 90vh;
+  border-left: 2px solid var(--accent);
+  display: flex;
+  flex-direction: column;
   overflow-y: auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+}
+.drawer-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-default);
+  position: sticky;
+  top: 0;
+  background: var(--bg-card);
+  z-index: 2;
+}
+.drawer-case {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  color: var(--accent);
+  letter-spacing: 0.15em;
+  margin-bottom: 0.25rem;
+}
+.drawer-category {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+}
+.drawer-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  background: transparent;
+  border: 1px solid var(--border-default);
+  color: var(--text-muted);
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+.drawer-close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.modal-image-section {
+.drawer-image-wrap {
   position: relative;
+  height: 220px;
+  overflow: hidden;
   background: var(--bg-elevated);
 }
-
-.modal-image-section img {
+.drawer-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
-
-.modal-status {
+.drawer-status {
   position: absolute;
   top: 1rem;
   left: 1rem;
   padding: 0.25rem 0.75rem;
   background: rgba(0, 0, 0, 0.85);
   font-family: var(--font-heading);
-  font-size: 0.6rem;
+  font-size: 0.55rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
-  color: var(--text-white);
+  letter-spacing: 0.12em;
+  border-left: 2px solid;
+}
+.drawer-status.live {
+  color: #22c55e;
+  border-left-color: #22c55e;
+}
+.drawer-status.development {
+  color: #f59e0b;
+  border-left-color: #f59e0b;
 }
 
-.modal-status.live {
-  border-left: 2px solid #22c55e;
-}
-
-.modal-status.development {
-  border-left: 2px solid #f59e0b;
-}
-
-.modal-content-section {
+.drawer-content {
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
-
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.modal-header h2 {
+.drawer-title {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 800;
   color: var(--text-white);
-  margin-bottom: 0.25rem;
+  line-height: 1.2;
 }
-
-.modal-category {
-  display: inline-block;
-  padding: 0.2rem 0.5rem;
-  background: rgba(255, 94, 0, 0.15);
-  color: var(--accent);
-  font-size: 0.65rem;
-  font-weight: 600;
-}
-
-.modal-close {
-  background: none;
-  border: none;
+.drawer-desc {
+  font-size: 0.8rem;
   color: var(--text-muted);
-  font-size: 1.2rem;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
+  line-height: 1.7;
+}
+.drawer-section {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-
-.modal-close:hover {
-  color: var(--accent);
-}
-
-.modal-description p {
-  color: var(--text-muted);
-  line-height: 1.6;
-  font-size: 0.85rem;
-}
-
-.modal-tech h4,
-.modal-features h4 {
+.drawer-section-label {
   font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
   color: var(--accent);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-dark);
+  padding-bottom: 0.4rem;
 }
-
-.tech-list {
+.drawer-tech {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
-
-.tech-item {
+.drawer-chip {
   padding: 0.2rem 0.6rem;
   background: var(--bg-elevated);
-  font-size: 0.7rem;
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
   color: var(--text-silver);
 }
-
-.modal-features ul {
+.feature-list {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
-
-.modal-features li {
+.feature-item {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0;
+  gap: 0.6rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
-  font-size: 0.8rem;
 }
-
-.modal-features li i {
+.feat-bullet {
   color: var(--accent);
-  font-size: 0.7rem;
+  font-weight: 700;
 }
-
-.modal-links {
+.drawer-actions {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-top: 0.5rem;
 }
-
-.modal-link {
+.drawer-btn {
   flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.7rem;
+  padding: 0.65rem;
   font-family: var(--font-heading);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-decoration: none;
   transition: all 0.2s;
+  cursor: pointer;
 }
-
-.modal-link.primary {
+.drawer-btn.primary {
   background: var(--accent);
   color: #000;
+  border: 1px solid var(--accent);
 }
-
-.modal-link.primary:hover {
-  background: var(--accent-hover);
+.drawer-btn.primary:hover {
+  opacity: 0.88;
 }
-
-.modal-link.secondary {
+.drawer-btn.secondary {
   background: transparent;
   border: 1px solid var(--border-default);
   color: var(--text-silver);
 }
-
-.modal-link.secondary:hover {
+.drawer-btn.secondary:hover {
   border-color: var(--accent);
   color: var(--accent);
 }
 
-/* Transitions */
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s;
+/* ── TRANSITIONS ── */
+.drawer-enter-active,
+.drawer-leave-active {
+  transition: opacity 0.25s;
 }
-
-.modal-enter-from,
-.modal-leave-to {
+.drawer-enter-active .drawer-panel,
+.drawer-leave-active .drawer-panel {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.drawer-enter-from {
   opacity: 0;
 }
+.drawer-leave-to {
+  opacity: 0;
+}
+.drawer-enter-from .drawer-panel {
+  transform: translateX(100%);
+}
+.drawer-leave-to .drawer-panel {
+  transform: translateX(100%);
+}
 
-/* Responsive */
-@media (max-width: 1024px) {
-  .projects-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .modal-container {
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .editorial-layout {
     grid-template-columns: 1fr;
   }
-
-  .modal-image-section {
-    height: 250px;
+  .side-column {
+    flex-direction: row;
+    border-left: none;
+    border-top: 1px solid var(--border-dark);
+  }
+  .index-card {
+    flex: 1;
+    min-width: 0;
+  }
+  .lead-story {
+    grid-template-columns: 1fr;
+  }
+  .lead-image {
+    min-height: 200px;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 640px) {
   .projects {
     padding: 3rem 1rem;
   }
-
   .projects-title {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
-
-  .projects-grid {
+  .side-column {
+    flex-direction: column;
+  }
+  .stats-bar {
     grid-template-columns: 1fr;
   }
-
-  .pagination {
-    flex-wrap: wrap;
-  }
-
-  .project-stats {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
   .stat-divider {
-    width: 60px;
+    width: 40px;
     height: 1px;
+    margin: 0 auto;
   }
-
-  .page-prev span,
-  .page-next span {
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+  .drawer-panel {
+    width: 100%;
+    border-left: none;
+    border-top: 2px solid var(--accent);
+  }
+  .drawer-backdrop {
+    align-items: flex-end;
+  }
+  .header-right {
     display: none;
-  }
-
-  .page-prev,
-  .page-next {
-    padding: 0.5rem;
-  }
-
-  .category-pills {
-    gap: 0.5rem;
-  }
-
-  .pill {
-    padding: 0.4rem 1rem;
-    font-size: 0.7rem;
   }
 }
 </style>
