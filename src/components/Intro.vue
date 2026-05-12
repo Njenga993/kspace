@@ -67,7 +67,7 @@
           <div class="visual-watermark">03</div>
           <div class="visual-frame">
             <div class="frame-inner">
-              <img src="/heroimage.png" alt="Kelvin Kamau" />
+              <img src="/kay.jpg" alt="Kelvin Kamau" />
               <div class="frame-gradient"></div>
             </div>
             <div class="frame-border"></div>
