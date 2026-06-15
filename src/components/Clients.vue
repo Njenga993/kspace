@@ -1,256 +1,189 @@
 <template>
-  <section id="clients" class="clients">
+  <section id="clients" class="clients-premium">
     <div class="clients-container">
-      <!-- Section Header -->
-      <div class="clients-header">
-        <div class="header-badge">
-          <span class="badge-num">05</span>
-          <span class="badge-text">PARTNERS</span>
+      <!-- Top Bar - Matching hero status bar -->
+      <div class="clients-topbar">
+        <div class="topbar-id">
+          <span class="id-dot"></span>
+          <span class="id-text">PARTNERS</span>
         </div>
-        <h2 class="clients-title">
-          Trusted By <span class="accent">Industry Leaders</span>
-        </h2>
-        <div class="clients-underline"></div>
-        <p class="clients-subtitle">
-          Collaborating with innovative companies to deliver exceptional digital
-          solutions
-        </p>
-      </div>
-
-      <!-- Stats Dashboard -->
-      <div class="stats-showcase">
-        <div class="stat-block">
-          <div class="stat-icon">
-            <i class="fas fa-handshake"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ clients.length }}</div>
-            <div class="stat-label">HAPPY CLIENTS</div>
-          </div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-icon">
-            <i class="fas fa-star"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">100%</div>
-            <div class="stat-label">SATISFACTION</div>
-          </div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-icon">
-            <i class="fas fa-sync-alt"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ getRetentionRate }}%</div>
-            <div class="stat-label">RETENTION RATE</div>
-          </div>
-        </div>
-        <div class="stat-block">
-          <div class="stat-icon">
-            <i class="fas fa-building"></i>
-          </div>
-          <div class="stat-info">
-            <div class="stat-number">{{ uniqueIndustries }}</div>
-            <div class="stat-label">INDUSTRIES</div>
-          </div>
+        <div class="topbar-status">
+          <span class="status-dot"></span>
+          <span class="status-text">{{ clients.length }} COLLABORATIONS</span>
         </div>
       </div>
 
-      <!-- Client Categories Filter -->
-      <div class="client-filters">
-        <button
-          v-for="industry in industries"
-          :key="industry"
-          @click="activeIndustry = industry"
-          :class="['filter-chip', { active: activeIndustry === industry }]"
-        >
-          {{ industry }}
-          <span class="filter-count">{{ getIndustryCount(industry) }}</span>
-        </button>
-      </div>
+      <!-- Main Content -->
+      <div class="clients-main">
+        <!-- Left: Typography Block - Matching hero left side -->
+        <div class="clients-type">
+          <h2 class="clients-headline">
+            <span class="t-line">Trusted By</span>
+            <span class="t-line t-outline">Industry</span>
+            <span class="t-line t-accent">Leaders</span>
+          </h2>
 
-      <!-- Client Showcase Grid -->
-      <div class="client-showcase">
-        <div
-          v-for="(client, idx) in filteredClients"
-          :key="client.name"
-          class="client-card"
-          :style="{ animationDelay: idx * 0.05 + 's' }"
-          @click="openClientModal(client)"
-        >
-          <div class="card-front">
-            <div class="logo-container">
-              <img :src="client.logo" :alt="client.name" class="client-logo" />
-            </div>
-            <div class="card-info">
-              <h3>{{ client.name }}</h3>
-              <span class="industry-badge">{{ client.industry }}</span>
-            </div>
-          </div>
-          <div class="card-back">
-            <div class="project-preview">
-              <i class="fas fa-folder-open"></i>
-              <span>{{ client.project }}</span>
-              <small>{{ client.year }}</small>
-            </div>
-            <div class="tech-stack">
-              <i class="fas fa-code"></i>
-              <span
-                >{{ client.technologies.slice(0, 3).join(", ")
-                }}{{ client.technologies.length > 3 ? "..." : "" }}</span
-              >
-            </div>
-            <button class="view-btn">VIEW DETAILS →</button>
-          </div>
-        </div>
-      </div>
+          <p class="clients-desc">
+            Collaborating with innovative companies across diverse sectors 
+            to deliver exceptional digital solutions that drive results.
+          </p>
 
-      <!-- Testimonial Section -->
-      <div class="testimonial-section" v-if="testimonials.length">
-        <div class="testimonial-header">
-          <h3>Client Testimonials</h3>
-          <div class="testimonial-nav">
+          <!-- Industry Filters - Matching hero badge style -->
+          <div class="industry-filters">
             <button
-              @click="prevTestimonial"
-              :disabled="currentTestimonial === 0"
-              class="nav-btn"
+              v-for="industry in industries"
+              :key="industry"
+              :class="['filter-badge', { active: activeIndustry === industry }]"
+              @click="activeIndustry = industry"
             >
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <button
-              @click="nextTestimonial"
-              :disabled="currentTestimonial === testimonials.length - 1"
-              class="nav-btn"
-            >
-              <i class="fas fa-chevron-right"></i>
+              {{ industry }}
+              <span class="filter-count">{{ getIndustryCount(industry) }}</span>
             </button>
           </div>
         </div>
-        <div class="testimonial-carousel">
-          <transition name="fade" mode="out-in">
+
+        <!-- Right: Testimonial Showcase - Matching hero right showcase -->
+        <div class="clients-showcase">
+          <!-- Terminal-style testimonial header -->
+          <div class="testimonial-terminal">
+            <div class="terminal-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="terminal-content">
+              <div class="code-line">
+                <span class="prompt">~/testimonials $</span>
+                <span>cat client-feedback.txt</span>
+              </div>
+              <div class="code-line">
+                <span class="prompt">></span>
+                <span class="accent-text">{{ testimonials[currentTestimonial].company }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial Content -->
+          <transition name="testimonial-fade" mode="out-in">
             <div :key="currentTestimonial" class="testimonial-card">
-              <div class="quote-mark">“</div>
+              <div class="quote-mark">"</div>
               <p class="testimonial-text">
                 {{ testimonials[currentTestimonial].text }}
               </p>
               <div class="testimonial-author">
                 <div class="author-info">
                   <strong>{{ testimonials[currentTestimonial].author }}</strong>
-                  <span
-                    >{{ testimonials[currentTestimonial].position }},
-                    {{ testimonials[currentTestimonial].company }}</span
-                  >
+                  <span>{{ testimonials[currentTestimonial].position }}, {{ testimonials[currentTestimonial].company }}</span>
                 </div>
-                <div class="rating">
-                  <i
-                    v-for="i in 5"
-                    :key="i"
-                    class="fas fa-star"
-                    :class="{
-                      filled: i <= testimonials[currentTestimonial].rating,
-                    }"
-                  ></i>
+                <div class="author-rating">
+                  <i v-for="i in 5" :key="i" class="fas fa-star" :class="{ filled: i <= testimonials[currentTestimonial].rating }"></i>
                 </div>
               </div>
             </div>
           </transition>
-        </div>
-        <div class="testimonial-dots">
-          <button
-            v-for="(_, idx) in testimonials"
-            :key="idx"
-            @click="currentTestimonial = idx"
-            :class="['dot', { active: currentTestimonial === idx }]"
-          ></button>
+
+          <!-- Testimonial Navigation -->
+          <div class="testimonial-nav">
+            <button @click="prevTestimonial" :disabled="currentTestimonial === 0" class="tn-btn">
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="tn-dots">
+              <span
+                v-for="(_, idx) in testimonials"
+                :key="idx"
+                :class="['tn-dot', { active: currentTestimonial === idx }]"
+                @click="currentTestimonial = idx"
+              ></span>
+            </div>
+            <button @click="nextTestimonial" :disabled="currentTestimonial === testimonials.length - 1" class="tn-btn">
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Call to Action -->
-      <div class="clients-cta">
-        <div class="cta-content">
-          <p>Ready to join our list of satisfied clients?</p>
-          <button class="cta-button" @click="$emit('scrollToContact')">
-            START YOUR PROJECT
+      <!-- Client Grid -->
+      <div class="client-grid">
+        <div
+          v-for="(client, idx) in filteredClients"
+          :key="client.name"
+          class="client-card"
+          @click="openClientModal(client)"
+        >
+          <div class="client-logo-wrap">
+            <img :src="client.logo" :alt="client.name" class="client-logo" />
+          </div>
+          <div class="client-info">
+            <span class="client-name">{{ client.name }}</span>
+            <span class="client-project">{{ client.project }}</span>
+          </div>
+          <div class="client-hover">
+            <span>VIEW DETAILS</span>
             <i class="fas fa-arrow-right"></i>
-          </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Bar - Matching hero trust stats -->
+      <div class="clients-bottombar">
+        <div class="bottom-stats">
+          <div class="b-stat">
+            <span class="b-stat-num">{{ clients.length }}</span>
+            <span class="b-stat-label">CLIENTS</span>
+          </div>
+          <span class="b-stat-sep">/</span>
+          <div class="b-stat">
+            <span class="b-stat-num">100%</span>
+            <span class="b-stat-label">SATISFACTION</span>
+          </div>
+          <span class="b-stat-sep">/</span>
+          <div class="b-stat">
+            <span class="b-stat-num">{{ uniqueIndustries }}</span>
+            <span class="b-stat-label">INDUSTRIES</span>
+          </div>
+        </div>
+        <div class="bottom-scroll">
+          <span class="scroll-label">PARTNERS</span>
+          <div class="scroll-track">
+            <div class="scroll-thumb"></div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Enhanced Client Modal -->
+    <!-- Client Modal -->
     <transition name="modal">
-      <div v-if="selectedClient" class="modal" @click="closeClientModal">
-        <div class="modal-window" @click.stop>
+      <div v-if="selectedClient" class="client-modal" @click="closeClientModal">
+        <div class="modal-panel" @click.stop>
           <div class="modal-header">
-            <div class="modal-logo">
+            <div class="mh-logo">
               <img :src="selectedClient.logo" :alt="selectedClient.name" />
             </div>
-            <div class="modal-title">
-              <h2>{{ selectedClient.name }}</h2>
-              <span class="modal-industry">{{ selectedClient.industry }}</span>
-            </div>
-            <button class="modal-close" @click="closeClientModal">×</button>
+            <button class="mh-close" @click="closeClientModal">
+              <i class="fas fa-times"></i>
+            </button>
           </div>
-
           <div class="modal-body">
-            <div class="project-overview">
-              <h4>PROJECT OVERVIEW</h4>
-              <p>{{ selectedClient.description }}</p>
+            <h3 class="mb-title">{{ selectedClient.name }}</h3>
+            <div class="mb-meta">
+              <span class="mbm-industry">{{ selectedClient.industry }}</span>
+              <span class="mbm-year">{{ selectedClient.year }}</span>
             </div>
-
-            <div class="project-details-grid">
-              <div class="detail-item">
-                <i class="fas fa-briefcase"></i>
-                <div>
-                  <label>PROJECT</label>
-                  <span>{{ selectedClient.project }}</span>
-                </div>
-              </div>
-              <div class="detail-item">
-                <i class="fas fa-calendar"></i>
-                <div>
-                  <label>YEAR</label>
-                  <span>{{ selectedClient.year }}</span>
-                </div>
-              </div>
-              <div class="detail-item full-width">
-                <i class="fas fa-microchip"></i>
-                <div>
-                  <label>TECHNOLOGIES</label>
-                  <div class="tech-tags">
-                    <span
-                      v-for="tech in selectedClient.technologies"
-                      :key="tech"
-                      class="tech-tag"
-                    >
-                      {{ tech }}
-                    </span>
-                  </div>
-                </div>
+            <p class="mb-desc">{{ selectedClient.description }}</p>
+            
+            <div class="mb-section">
+              <h4 class="mbs-label">TECHNOLOGIES</h4>
+              <div class="mbs-tags">
+                <span v-for="tech in selectedClient.technologies" :key="tech" class="mbst-tag">{{ tech }}</span>
               </div>
             </div>
 
-            <div
-              class="key-features"
-              v-if="getClientFeatures(selectedClient.name).length"
-            >
-              <h4>KEY DELIVERABLES</h4>
-              <ul class="features-list">
-                <li
-                  v-for="feature in getClientFeatures(selectedClient.name)"
-                  :key="feature"
-                >
-                  <i class="fas fa-check"></i>
-                  {{ feature }}
-                </li>
-              </ul>
-            </div>
-
-            <div class="modal-actions">
-              <button class="action-btn" @click="closeClientModal">
-                CLOSE
-              </button>
+            <div class="mb-section">
+              <h4 class="mbs-label">DELIVERABLES</h4>
+              <div class="mbs-features">
+                <div v-for="feature in getClientFeatures(selectedClient.name)" :key="feature" class="mbsf-item">
+                  <span class="mbsfi-marker"></span>
+                  <span>{{ feature }}</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -261,8 +194,6 @@
 
 <script setup>
 import { ref, computed } from "vue";
-
-const emit = defineEmits(["scrollToContact"]);
 
 const activeIndustry = ref("All");
 const selectedClient = ref(null);
@@ -276,8 +207,7 @@ const clients = ref([
     project: "Web Application Development",
     year: "2025",
     technologies: ["REACT", "JavaScript", "CSS", "HTML"],
-    description:
-      "Developed a comprehensive web application to manage seed distribution, farmer networks, and agricultural resources across Kenya. The platform streamlined operations and improved accessibility for farmers nationwide.",
+    description: "Developed a comprehensive web application to manage seed distribution, farmer networks, and agricultural resources across Kenya. The platform streamlined operations and improved accessibility for farmers nationwide.",
   },
   {
     name: "INOFO Africa",
@@ -286,8 +216,7 @@ const clients = ref([
     project: "Portfolio Website",
     year: "2025",
     technologies: ["REACT", "TypeScript", "CSS", "HTML"],
-    description:
-      "Created a modern, responsive portfolio website to showcase agricultural projects and initiatives, enhancing their online presence and stakeholder engagement.",
+    description: "Created a modern, responsive portfolio website to showcase agricultural projects and initiatives, enhancing their online presence and stakeholder engagement.",
   },
   {
     name: "GREANIA BUILD SOLUTIONS",
@@ -296,8 +225,7 @@ const clients = ref([
     project: "Portfolio Website",
     year: "2025",
     technologies: ["REACT", "TypeScript", "CSS", "HTML"],
-    description:
-      "Built a professional portfolio website highlighting construction projects and services, resulting in increased client inquiries and project leads.",
+    description: "Built a professional portfolio website highlighting construction projects and services, resulting in increased client inquiries and project leads.",
   },
   {
     name: "NYAKAZI ORGANICS",
@@ -306,8 +234,7 @@ const clients = ref([
     project: "E-commerce Platform",
     year: "2024",
     technologies: ["REACT", "Django", "PostgreSQL"],
-    description:
-      "Developed a full-featured e-commerce platform with seamless shopping experience, secure payments, and inventory management. The platform boosted online sales by 150%.",
+    description: "Developed a full-featured e-commerce platform with seamless shopping experience, secure payments, and inventory management. The platform boosted online sales by 150%.",
   },
   {
     name: "SALEHUB POS",
@@ -316,8 +243,7 @@ const clients = ref([
     project: "Internal POS System",
     year: "2024",
     technologies: ["React", "Django", "PostgreSQL"],
-    description:
-      "Created a comprehensive point of sale system to manage inventory, sales tracking, customer relationships, and real-time analytics.",
+    description: "Created a comprehensive point of sale system to manage inventory, sales tracking, customer relationships, and real-time analytics.",
   },
   {
     name: "K-SPACE TECH SOLUTIONS",
@@ -326,8 +252,7 @@ const clients = ref([
     project: "Personal Portfolio",
     year: "2023",
     technologies: ["VUE", "TypeScript", "CSS", "HTML"],
-    description:
-      "Designed and developed a modern portfolio website showcasing technical expertise and project work, increasing professional visibility.",
+    description: "Designed and developed a modern portfolio website showcasing technical expertise and project work, increasing professional visibility.",
   },
 ]);
 
@@ -355,23 +280,14 @@ const testimonials = [
   },
 ];
 
-const industries = computed(() => {
-  const ind = ["All", ...new Set(clients.value.map((c) => c.industry))];
-  return ind;
-});
+const industries = computed(() => ["All", ...new Set(clients.value.map((c) => c.industry))]);
 
 const filteredClients = computed(() => {
   if (activeIndustry.value === "All") return clients.value;
   return clients.value.filter((c) => c.industry === activeIndustry.value);
 });
 
-const uniqueIndustries = computed(() => {
-  return new Set(clients.value.map((c) => c.industry)).size;
-});
-
-const getRetentionRate = computed(() => {
-  return 85;
-});
+const uniqueIndustries = computed(() => new Set(clients.value.map((c) => c.industry)).size);
 
 const getIndustryCount = (industry) => {
   if (industry === "All") return clients.value.length;
@@ -399,14 +315,12 @@ const getClientFeatures = (clientName) => {
       "Contact form with map integration",
     ],
   };
-  return (
-    features[clientName] || [
-      "Responsive design across all devices",
-      "Performance optimized architecture",
-      "SEO-friendly implementation",
-      "Ongoing maintenance and support",
-    ]
-  );
+  return features[clientName] || [
+    "Responsive design across all devices",
+    "Performance optimized architecture",
+    "SEO-friendly implementation",
+    "Ongoing maintenance and support",
+  ];
 };
 
 const openClientModal = (client) => {
@@ -420,247 +334,419 @@ const closeClientModal = () => {
 };
 
 const prevTestimonial = () => {
-  if (currentTestimonial.value > 0) {
-    currentTestimonial.value--;
-  }
+  if (currentTestimonial.value > 0) currentTestimonial.value--;
 };
 
 const nextTestimonial = () => {
-  if (currentTestimonial.value < testimonials.length - 1) {
-    currentTestimonial.value++;
-  }
+  if (currentTestimonial.value < testimonials.length - 1) currentTestimonial.value++;
 };
 </script>
 
 <style scoped>
-.clients {
-  padding: 5rem 2rem;
-  background: var(--bg-secondary);
-  position: relative;
+/* ==============================
+   SECTION - Matching hero card style
+   ============================== */
+.clients-premium {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem;
 }
 
 .clients-container {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Header Styles */
-.clients-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  margin-bottom: 1.5rem;
-}
-
-.badge-num {
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.badge-text {
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-}
-
-.clients-title {
-  font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--text-white);
-  margin-bottom: 1rem;
-}
-
-.clients-title .accent {
-  color: var(--accent);
-}
-
-.clients-underline {
-  width: 60px;
-  height: 2px;
-  background: var(--accent);
-  margin: 0 auto 1rem;
-}
-
-.clients-subtitle {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Stats Showcase */
-.stats-showcase {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-bottom: 3rem;
-}
-
-.stat-block {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  padding: 1.5rem;
+  background: var(--bg-primary, #0b0f13);
+  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
+  border-radius: 2.5rem;
+  padding: 2.5rem 3rem;
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  transition: all 0.3s;
+  flex-direction: column;
+  gap: 3rem;
+  box-shadow: var(--shadow-card, 0 18px 35px -12px rgba(0, 0, 0, 0.6));
 }
 
-.stat-block:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-}
-
-.stat-icon {
-  width: 48px;
-  height: 48px;
+/* ==============================
+   TOP BAR - Matching hero status bar
+   ============================== */
+.clients-topbar {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  background: rgba(255, 94, 0, 0.1);
-  color: var(--accent);
-  font-size: 1.5rem;
-}
-
-.stat-info {
-  flex: 1;
-}
-
-.stat-number {
-  font-family: var(--font-heading);
-  font-size: 1.8rem;
-  font-weight: 800;
-  color: var(--accent);
-  line-height: 1;
-}
-
-.stat-label {
-  font-size: 0.65rem;
-  color: var(--text-muted);
-  margin-top: 0.25rem;
-  letter-spacing: 0.08em;
-}
-
-/* Client Filters */
-.client-filters {
-  display: flex;
-  justify-content: center;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  margin-bottom: 2rem;
+  gap: 1.25rem;
 }
 
-.filter-chip {
-  padding: 0.5rem 1.25rem;
-  background: transparent;
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
+.topbar-id {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.id-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent, #c9a23b);
+  border-radius: 50%;
+}
+
+.id-text {
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: 0.65rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.3s;
+  color: var(--text-muted, #7b8694);
+  letter-spacing: 0.2em;
+}
+
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--border-default, rgba(201, 162, 59, 0.25));
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent, #c9a23b);
+  border-radius: 50%;
+}
+
+.status-text {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: var(--text-silver, #b0b8c1);
+  letter-spacing: 0.15em;
+}
+
+/* ==============================
+   MAIN - Matching hero split layout
+   ============================== */
+.clients-main {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* ==============================
+   LEFT: TYPOGRAPHY - Matching hero left side
+   ============================== */
+.clients-type {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.clients-headline {
+  margin: 0;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.t-line {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  color: var(--text-white, #f0f2f5);
+}
+
+.t-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text-white);
+  paint-order: stroke fill;
+}
+
+.t-accent {
+  color: var(--accent, #c9a23b);
+}
+
+.clients-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  max-width: 480px;
+  margin: 0;
+}
+
+/* Industry Filters - Matching hero badge style */
+.industry-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.filter-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  background: var(--bg-card, #141a20);
+  border: 1px solid var(--border-dark);
+  border-radius: 2rem;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-silver);
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-.filter-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+.filter-badge:hover {
+  border-color: var(--accent, #c9a23b);
+  background: #1e262e;
 }
 
-.filter-chip.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
+.filter-badge.active {
+  background: var(--accent, #c9a23b);
+  border-color: var(--accent, #c9a23b);
+  color: #0b0f13;
+  font-weight: 600;
 }
 
 .filter-count {
-  background: rgba(0, 0, 0, 0.2);
-  padding: 0.1rem 0.4rem;
-  font-size: 0.65rem;
-  font-weight: 600;
+  font-size: 0.55rem;
+  opacity: 0.7;
 }
 
-/* Client Showcase */
-.client-showcase {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 3rem;
+/* ==============================
+   RIGHT: TESTIMONIAL - Matching hero right showcase
+   ============================== */
+.clients-showcase {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
 }
 
-.client-card {
-  position: relative;
-  height: 280px;
-  perspective: 1000px;
-  cursor: pointer;
-}
-
-.card-front,
-.card-back {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  backface-visibility: hidden;
-  transition: transform 0.6s ease;
-}
-
-.card-front {
-  background: var(--bg-card);
+/* Terminal - Matching hero terminal */
+.testimonial-terminal {
+  background: #0a0e12;
   border: 1px solid var(--border-dark);
+  border-radius: 1.5rem;
+  padding: 1.4rem 1.4rem 1rem;
+  box-shadow: var(--shadow-sm, 0 8px 18px rgba(0, 0, 0, 0.4));
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  color: #b0bec5;
+  transition: box-shadow 0.3s, border-color 0.2s;
+}
+
+.testimonial-terminal:hover {
+  border-color: var(--border-light, rgba(201, 162, 59, 0.45));
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.7);
+}
+
+.terminal-dots {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem;
-  z-index: 2;
-}
-
-.client-card:hover .card-front {
-  transform: rotateY(180deg);
-}
-
-.card-back {
-  background: var(--bg-card);
-  border: 1px solid var(--accent);
-  transform: rotateY(180deg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.5rem;
-  gap: 1rem;
-}
-
-.client-card:hover .card-back {
-  transform: rotateY(0);
-}
-
-.logo-container {
-  width: 100%;
-  height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 8px;
   margin-bottom: 1rem;
 }
 
+.terminal-dots span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #3a3f47;
+}
+
+.terminal-dots span:nth-child(1) { background: #ff5f56; }
+.terminal-dots span:nth-child(2) { background: #ffbd2e; }
+.terminal-dots span:nth-child(3) { background: #27c93f; }
+
+.terminal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.code-line {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+}
+
+.prompt {
+  color: var(--accent, #c9a23b);
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.accent-text {
+  color: var(--accent, #c9a23b);
+  font-weight: 600;
+}
+
+/* Testimonial Card */
+.testimonial-fade-enter-active,
+.testimonial-fade-leave-active {
+  transition: all 0.22s ease;
+}
+
+.testimonial-fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.testimonial-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.testimonial-card {
+  background: var(--bg-card, #141a20);
+  border: 1px solid var(--border-dark);
+  border-radius: 1.2rem;
+  padding: 1.5rem;
+  transition: all 0.25s;
+}
+
+.testimonial-card:hover {
+  border-color: var(--accent, #c9a23b);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5);
+}
+
+.quote-mark {
+  font-size: 3rem;
+  color: var(--accent, #c9a23b);
+  font-family: Georgia, serif;
+  line-height: 0.5;
+  margin-bottom: 0.75rem;
+  opacity: 0.6;
+}
+
+.testimonial-text {
+  font-size: 0.88rem;
+  color: var(--text-silver);
+  line-height: 1.7;
+  margin: 0 0 1.25rem;
+}
+
+.testimonial-author {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-dark);
+  gap: 1rem;
+}
+
+.author-info strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin-bottom: 0.15rem;
+}
+
+.author-info span {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+.author-rating i {
+  font-size: 0.7rem;
+  color: var(--border-dark);
+  margin: 0 1px;
+}
+
+.author-rating i.filled {
+  color: var(--accent, #c9a23b);
+}
+
+/* Testimonial Navigation */
+.testimonial-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.25rem;
+}
+
+.tn-btn {
+  width: 36px;
+  height: 36px;
+  background: none;
+  border: 1px solid var(--border-dark);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  transition: all 0.25s ease;
+}
+
+.tn-btn:hover:not(:disabled) {
+  border-color: var(--accent, #c9a23b);
+  color: var(--accent, #c9a23b);
+}
+
+.tn-btn:disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.tn-dots {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.tn-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.tn-dot.active {
+  background: var(--accent, #c9a23b);
+  box-shadow: 0 0 6px rgba(201, 162, 59, 0.4);
+  transform: scale(1.4);
+}
+
+/* ==============================
+   CLIENT GRID - Matching hero stat cards
+   ============================== */
+.client-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.75rem;
+}
+
+.client-card {
+  background: var(--bg-card, #141a20);
+  border: 1px solid var(--border-dark);
+  border-radius: 1.2rem;
+  padding: 1.25rem;
+  cursor: pointer;
+  transition: all 0.25s;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.client-card:hover {
+  border-color: var(--accent, #c9a23b);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5);
+}
+
+.client-logo-wrap {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .client-logo {
-  max-width: 80%;
-  max-height: 100px;
+  max-width: 70%;
+  max-height: 50px;
   object-fit: contain;
   filter: grayscale(100%) contrast(1.1);
   transition: filter 0.3s;
@@ -670,279 +756,153 @@ const nextTestimonial = () => {
   filter: grayscale(0%);
 }
 
-.card-info {
+.client-info {
   text-align: center;
 }
 
-.card-info h3 {
+.client-name {
+  display: block;
   font-family: var(--font-heading);
-  font-size: 0.9rem;
+  font-size: 0.65rem;
   font-weight: 700;
   color: var(--text-white);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.04em;
 }
 
-.industry-badge {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  background: rgba(255, 94, 0, 0.15);
-  color: var(--accent);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
+.client-project {
+  font-size: 0.58rem;
+  color: var(--text-dim);
 }
 
-.project-preview {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-  align-items: center;
-  text-align: center;
-}
-
-.project-preview i {
-  font-size: 1.5rem;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-
-.project-preview span {
-  font-size: 0.8rem;
-  color: var(--text-silver);
-  font-weight: 600;
-}
-
-.project-preview small {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.tech-stack {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  justify-content: center;
+.client-hover {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
   padding: 0.5rem;
-  background: var(--bg-elevated);
-}
-
-.tech-stack i {
-  color: var(--accent);
-}
-
-.view-btn {
-  background: transparent;
-  border: 1px solid var(--accent);
-  color: var(--accent);
-  padding: 0.6rem;
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.view-btn:hover {
-  background: var(--accent);
-  color: #000;
-}
-
-/* Testimonial Section */
-.testimonial-section {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  padding: 2rem;
-  margin-bottom: 3rem;
-}
-
-.testimonial-header {
+  background: var(--accent, #c9a23b);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-dark);
-}
-
-.testimonial-header h3 {
+  justify-content: center;
+  gap: 0.4rem;
   font-family: var(--font-heading);
-  font-size: 1rem;
+  font-size: 0.55rem;
   font-weight: 700;
-  color: var(--text-white);
-  letter-spacing: 0.1em;
+  color: #0b0f13;
+  transform: translateY(100%);
+  transition: transform 0.3s ease;
 }
 
-.testimonial-nav {
+.client-card:hover .client-hover {
+  transform: translateY(0);
+}
+
+/* ==============================
+   BOTTOM BAR - Matching hero trust stats
+   ============================== */
+.clients-bottombar {
   display: flex;
-  gap: 0.5rem;
-}
-
-.nav-btn {
-  width: 32px;
-  height: 32px;
-  background: transparent;
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.nav-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.nav-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-}
-
-.testimonial-card {
-  text-align: center;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.quote-mark {
-  font-size: 4rem;
-  color: var(--accent);
-  font-family: Georgia, serif;
-  line-height: 1;
-  margin-bottom: 0.5rem;
-  opacity: 0.5;
-}
-
-.testimonial-text {
-  color: var(--text-silver);
-  font-size: 1rem;
-  line-height: 1.7;
-  margin-bottom: 1.5rem;
-}
-
-.testimonial-author {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
-  padding-top: 1rem;
+  gap: 1.5rem;
+  padding-top: 1.8rem;
   border-top: 1px solid var(--border-dark);
 }
 
-.author-info {
-  text-align: left;
-}
-
-.author-info strong {
-  display: block;
-  color: var(--text-white);
-  font-size: 0.9rem;
-  margin-bottom: 0.25rem;
-}
-
-.author-info span {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  letter-spacing: 0.03em;
-}
-
-.rating i {
-  color: #ffc107;
-  font-size: 0.8rem;
-  margin: 0 1px;
-}
-
-.rating i.filled {
-  color: #ffc107;
-}
-
-.rating i:not(.filled) {
-  color: var(--border-dark);
-}
-
-.testimonial-dots {
+.bottom-stats {
   display: flex;
-  justify-content: center;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.b-stat {
+  display: flex;
+  align-items: baseline;
   gap: 0.5rem;
-  margin-top: 1.5rem;
 }
 
-.dot {
-  width: 6px;
-  height: 6px;
-  background: var(--border-default);
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  transition: all 0.3s;
+.b-stat-num {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent, #c9a23b);
+  letter-spacing: -0.01em;
 }
 
-.dot.active {
-  background: var(--accent);
-  width: 20px;
-  border-radius: 2px;
+.b-stat-label {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-dim, #5a6572);
+  letter-spacing: 0.1em;
 }
 
-/* CTA Section */
-.clients-cta {
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  padding: 2rem;
-  text-align: center;
-}
-
-.cta-content p {
-  color: var(--text-muted);
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-}
-
-.cta-button {
-  padding: 0.75rem 2rem;
-  background: var(--accent);
-  border: none;
-  color: #000;
+.b-stat-sep {
+  color: var(--border-default);
   font-family: var(--font-heading);
   font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: all 0.3s;
+  font-weight: 300;
+  margin: 0 0.15rem;
 }
 
-.cta-button:hover {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
+.bottom-scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-.cta-button i {
-  margin-left: 0.5rem;
-  transition: transform 0.3s;
+.scroll-label {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-dim);
+  letter-spacing: 0.2em;
 }
 
-.cta-button:hover i {
-  transform: translateX(4px);
+.scroll-track {
+  width: 1px;
+  height: 32px;
+  background: var(--border-dark);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Modal */
-.modal {
+.scroll-thumb {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50%;
+  background: var(--accent, #c9a23b);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(300%); }
+}
+
+/* ==============================
+   MODAL
+   ============================== */
+.client-modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.95);
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
   padding: 2rem;
 }
 
-.modal-window {
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  max-width: 800px;
+.modal-panel {
+  background: var(--bg-primary, #0b0f13);
+  border: 1px solid rgba(201, 162, 59, 0.2);
+  max-width: 550px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
@@ -951,235 +911,145 @@ const nextTestimonial = () => {
 .modal-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
+  justify-content: space-between;
+  padding: 1.25rem 1.5rem;
   border-bottom: 1px solid var(--border-dark);
-  position: relative;
 }
 
-.modal-logo {
-  width: 70px;
-  height: 70px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-default);
+.mh-logo {
+  width: 80px;
+  height: 50px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.5rem;
 }
 
-.modal-logo img {
+.mh-logo img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
   filter: grayscale(100%);
 }
 
-.modal-title h2 {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 0.25rem;
-}
-
-.modal-industry {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  background: rgba(255, 94, 0, 0.15);
-  color: var(--accent);
-  font-size: 0.65rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.5rem;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
+.mh-close {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  background: none;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.3s ease;
 }
 
-.modal-close:hover {
-  color: var(--accent);
+.mh-close:hover {
+  border-color: var(--accent, #c9a23b);
+  color: var(--accent, #c9a23b);
 }
 
 .modal-body {
   padding: 1.5rem;
 }
 
-.project-overview {
-  margin-bottom: 1.5rem;
-}
-
-.project-overview h4 {
+.mb-title {
   font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-white);
+  margin: 0 0 0.5rem;
 }
 
-.project-overview p {
+.mb-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.mbm-industry {
+  font-size: 0.6rem;
+  color: var(--accent, #c9a23b);
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid rgba(201, 162, 59, 0.2);
+}
+
+.mbm-year {
+  font-size: 0.65rem;
+  color: var(--text-dim);
+}
+
+.mb-desc {
+  font-size: 0.85rem;
   color: var(--text-muted);
   line-height: 1.6;
-  font-size: 0.85rem;
+  margin: 0 0 1.25rem;
 }
 
-.project-details-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+.mb-section {
+  margin-bottom: 1.25rem;
 }
 
-.detail-item {
+.mbs-label {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: var(--accent, #c9a23b);
+  letter-spacing: 0.1em;
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mbs-tags {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  padding: 0.75rem;
-  background: var(--bg-elevated);
-  border-left: 2px solid var(--accent);
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 
-.detail-item.full-width {
-  grid-column: span 2;
-}
-
-.detail-item i {
-  color: var(--accent);
-  font-size: 1rem;
-  margin-top: 0.1rem;
-}
-
-.detail-item label {
-  display: block;
-  font-size: 0.6rem;
-  color: var(--text-dim);
-  letter-spacing: 0.08em;
-  margin-bottom: 0.25rem;
-}
-
-.detail-item span {
-  font-size: 0.8rem;
+.mbst-tag {
+  padding: 0.3rem 0.55rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.65rem;
   color: var(--text-silver);
 }
 
-.tech-tags {
+.mbs-features {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-top: 0.25rem;
-}
-
-.tech-tag {
-  padding: 0.15rem 0.5rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  font-size: 0.65rem;
-  color: var(--text-muted);
-}
-
-.key-features {
-  margin-bottom: 1.5rem;
-}
-
-.key-features h4 {
-  font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-}
-
-.features-list {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  flex-direction: column;
   gap: 0.5rem;
 }
 
-.features-list li {
-  padding: 0.4rem;
-  color: var(--text-muted);
-  font-size: 0.75rem;
+.mbsf-item {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--bg-elevated);
+  align-items: flex-start;
+  gap: 0.6rem;
 }
 
-.features-list li i {
-  color: var(--accent);
-  font-size: 0.7rem;
+.mbsfi-marker {
+  width: 4px;
+  height: 4px;
+  background: var(--accent, #c9a23b);
+  margin-top: 0.5rem;
+  flex-shrink: 0;
 }
 
-.modal-actions {
-  display: flex;
-  justify-content: flex-end;
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-dark);
-}
-
-.action-btn {
-  padding: 0.6rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border-default);
+.mbsf-item span:last-child {
+  font-size: 0.78rem;
   color: var(--text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  cursor: pointer;
-  transition: all 0.3s;
+  line-height: 1.4;
 }
 
-.action-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-/* Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.client-card {
-  animation: fadeIn 0.5s ease-out both;
-}
-
-.fade-enter-active,
-.fade-leave-active {
+/* Modal Transitions */
+.modal-enter-active,
+.modal-leave-active {
   transition: opacity 0.3s ease;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s;
+.modal-enter-active .modal-panel,
+.modal-leave-active .modal-panel {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .modal-enter-from,
@@ -1187,73 +1057,80 @@ const nextTestimonial = () => {
   opacity: 0;
 }
 
-/* Responsive */
+.modal-enter-from .modal-panel {
+  transform: scale(0.95) translateY(15px);
+}
+
+.modal-leave-to .modal-panel {
+  transform: scale(0.95) translateY(15px);
+}
+
+/* ==============================
+   RESPONSIVE
+   ============================== */
 @media (max-width: 1024px) {
-  .stats-showcase {
-    grid-template-columns: repeat(2, 1fr);
+  .clients-main {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
 
-  .features-list {
-    grid-template-columns: 1fr;
+  .clients-premium {
+    padding: 2rem 2rem;
+  }
+
+  .clients-container {
+    padding: 2rem 2rem;
+  }
+
+  .client-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   }
 }
 
 @media (max-width: 768px) {
-  .clients {
-    padding: 3rem 1rem;
+  .clients-premium {
+    padding: 1.5rem;
   }
 
-  .clients-title {
-    font-size: 1.8rem;
+  .clients-container {
+    padding: 2rem 1.5rem;
+    border-radius: 2rem;
   }
 
-  .stats-showcase {
-    grid-template-columns: repeat(2, 1fr);
+  .t-line {
+    font-size: clamp(2rem, 7vw, 3rem);
   }
 
-  .client-showcase {
-    grid-template-columns: 1fr;
+  .t-outline {
+    -webkit-text-stroke-width: 1px;
   }
 
-  .testimonial-author {
+  .clients-bottombar {
     flex-direction: column;
-    text-align: center;
+    align-items: flex-start;
   }
 
-  .author-info {
-    text-align: center;
-  }
-
-  .modal-header {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .project-details-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .detail-item.full-width {
-    grid-column: span 1;
+  .bottom-scroll {
+    display: none;
   }
 }
 
 @media (max-width: 480px) {
-  .stats-showcase {
-    grid-template-columns: 1fr;
+  .clients-premium {
+    padding: 1rem;
   }
 
-  .client-filters {
-    gap: 0.5rem;
+  .clients-container {
+    padding: 1.5rem 1.25rem;
+    border-radius: 1.5rem;
   }
 
-  .filter-chip {
-    font-size: 0.65rem;
-    padding: 0.4rem 1rem;
+  .t-line {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
   }
 
-  .features-list {
-    grid-template-columns: 1fr;
+  .client-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 </style>

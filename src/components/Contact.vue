@@ -1,151 +1,107 @@
 <template>
-  <section id="contact" class="contact">
+  <section id="contact" class="contact-premium">
     <div class="contact-container">
-      <!-- Section Header -->
-      <div class="contact-header">
-        <div class="header-badge">
-          <span class="badge-num">06</span>
-          <span class="badge-text">CONNECT</span>
+      <!-- Top Bar - Matching hero status bar -->
+      <div class="contact-topbar">
+        <div class="topbar-id">
+          <span class="id-dot"></span>
+          <span class="id-text">CONNECT</span>
         </div>
-        <h2 class="contact-title">
-          Let's Work <span class="accent">Together</span>
-        </h2>
-        <div class="contact-underline"></div>
-        <p class="contact-subtitle">
-          Have a project in mind? Reach out and let's create something
-          exceptional
-        </p>
-      </div>
-
-      <!-- Status Indicator -->
-      <div class="status-panel">
-        <div class="status-row">
-          <div class="status-label">
-            <i class="fas fa-plug"></i>
-            <span>CONNECTION STATUS</span>
-          </div>
-          <div class="status-indicator" :class="{ active: connectionActive }">
-            <span class="status-dot"></span>
-            <span>{{ connectionActive ? "ONLINE" : "CONNECTING..." }}</span>
-          </div>
-        </div>
-        <div class="status-progress">
-          <div class="progress-track">
-            <div
-              class="progress-fill"
-              :style="{ width: connectionProgress + '%' }"
-            ></div>
-          </div>
+        <div class="topbar-status">
+          <span class="status-dot"></span>
+          <span class="status-text">AVAILABLE FOR WORK</span>
         </div>
       </div>
 
-      <!-- Tab Navigation -->
-      <div class="tab-navigation">
-        <button
-          v-for="tab in tabs"
-          :key="tab.id"
-          :class="['tab-button', { active: activeTab === tab.id }]"
-          @click="activeTab = tab.id"
-        >
-          <i :class="tab.icon"></i>
-          <span>{{ tab.label }}</span>
-          <div class="tab-indicator"></div>
-        </button>
-      </div>
+      <!-- Main Content -->
+      <div class="contact-main">
+        <!-- Left: Typography Block - Matching hero left side -->
+        <div class="contact-type">
+          <h2 class="contact-headline">
+            <span class="t-line">Let's Build</span>
+            <span class="t-line t-outline">Something</span>
+            <span class="t-line t-accent">Great</span>
+          </h2>
 
-      <!-- Tab Content -->
-      <div class="tab-content">
-        <!-- Info Tab -->
-        <transition name="fade" mode="out-in">
-          <div v-if="activeTab === 'info'" key="info" class="info-panel">
-            <div class="profile-section">
-              <div class="profile-image">
-                <img src="/profile.JPG" alt="Kelvin Kamau" />
-                <div class="profile-status"></div>
-              </div>
-              <div class="profile-details">
-                <h3>KELVIN KAMAU</h3>
-                <div class="profile-tags">
-                  <span>FULL STACK DEVELOPER</span>
-                  <span>UI ENGINEER</span>
-                </div>
-              </div>
-            </div>
+          <p class="contact-desc">
+            Have a project in mind? Reach out and let's create something 
+            exceptional together. I respond within 24 hours.
+          </p>
 
-            <div class="contact-details">
-              <div class="detail-row">
-                <div class="detail-icon">
-                  <i class="fas fa-map-marker-alt"></i>
-                </div>
-                <div class="detail-content">
-                  <label>LOCATION</label>
-                  <span>Nairobi, Kenya</span>
-                </div>
+          <!-- Contact Methods - Matching hero badge style -->
+          <div class="contact-methods">
+            <a href="mailto:njengak993@gmail.com" class="method-card">
+              <span class="method-icon"><i class="fas fa-envelope"></i></span>
+              <div class="method-info">
+                <span class="method-label">EMAIL</span>
+                <span class="method-value">njengak993@gmail.com</span>
               </div>
-              <div class="detail-row">
-                <div class="detail-icon">
-                  <i class="fas fa-envelope"></i>
-                </div>
-                <div class="detail-content">
-                  <label>EMAIL</label>
-                  <a href="mailto:njengak993@gmail.com">njengak993@gmail.com</a>
-                </div>
+            </a>
+            <a href="tel:+254703642280" class="method-card">
+              <span class="method-icon"><i class="fas fa-phone-alt"></i></span>
+              <div class="method-info">
+                <span class="method-label">PHONE</span>
+                <span class="method-value">+254 703 642 280</span>
               </div>
-              <div class="detail-row">
-                <div class="detail-icon">
-                  <i class="fas fa-phone-alt"></i>
-                </div>
-                <div class="detail-content">
-                  <label>PHONE</label>
-                  <a href="tel:+254703642280">+254 703 642 280</a>
-                </div>
+            </a>
+            <div class="method-card">
+              <span class="method-icon"><i class="fas fa-map-marker-alt"></i></span>
+              <div class="method-info">
+                <span class="method-label">LOCATION</span>
+                <span class="method-value">Nairobi, Kenya</span>
               </div>
-              <div class="detail-row">
-                <div class="detail-icon">
-                  <i class="fas fa-clock"></i>
-                </div>
-                <div class="detail-content">
-                  <label>AVAILABILITY</label>
-                  <span>Monday - Friday, 9:00 - 18:00 EAT</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="availability-note">
-              <i class="fas fa-bolt"></i>
-              <span>Response time: within 24 hours</span>
             </div>
           </div>
 
-          <!-- Message Tab -->
-          <div
-            v-else-if="activeTab === 'message'"
-            key="message"
-            class="message-panel"
-          >
-            <div v-if="formStatus === 'success'" class="form-feedback success">
-              <i class="fas fa-check-circle"></i>
-              <div class="feedback-content">
-                <h4>Message Delivered</h4>
-                <p>Thank you for reaching out. I'll respond within 24 hours.</p>
-                <button @click="resetForm" class="feedback-btn">
-                  SEND ANOTHER MESSAGE
-                </button>
+          <!-- Social Links - Matching hero bottom socials -->
+          <div class="contact-socials">
+            <a href="https://github.com/Njenga993" target="_blank" rel="noopener" aria-label="GitHub">
+              <i class="fab fa-github"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="https://x.com/kamau_nje" target="_blank" rel="noopener" aria-label="Twitter">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right: Contact Form - Matching hero right showcase -->
+        <div class="contact-form-wrap">
+          <!-- Status Terminal -->
+          <div class="form-terminal">
+            <div class="terminal-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="terminal-content">
+              <div class="code-line">
+                <span class="prompt">~/connect $</span>
+                <span>init-contact --secure</span>
+              </div>
+              <div class="code-line">
+                <span class="prompt">></span>
+                <span class="accent-text">{{ formStatus === 'success' ? 'Message delivered successfully' : 'Ready to receive your message...' }}</span>
               </div>
             </div>
+          </div>
 
-            <div v-else-if="formStatus === 'error'" class="form-feedback error">
-              <i class="fas fa-exclamation-triangle"></i>
-              <div class="feedback-content">
-                <h4>Transmission Failed</h4>
-                <p>Please try again or contact me directly via email.</p>
-                <button @click="resetForm" class="feedback-btn">RETRY</button>
+          <!-- Form or Success State -->
+          <transition name="form-fade" mode="out-in">
+            <div v-if="formStatus === 'success'" key="success" class="form-success">
+              <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
               </div>
+              <h3 class="success-title">Message Delivered</h3>
+              <p class="success-desc">Thank you for reaching out. I'll respond within 24 hours.</p>
+              <button @click="resetForm" class="success-btn">
+                SEND ANOTHER MESSAGE
+              </button>
             </div>
 
-            <form v-else @submit.prevent="handleSubmit" class="contact-form">
+            <form v-else key="form" @submit.prevent="handleSubmit" class="contact-form">
               <div class="form-row">
-                <div class="form-field">
+                <div class="form-group">
                   <label>NAME *</label>
                   <input
                     type="text"
@@ -153,11 +109,9 @@
                     placeholder="John Doe"
                     :class="{ error: errors.name }"
                   />
-                  <span class="field-error" v-if="errors.name">{{
-                    errors.name
-                  }}</span>
+                  <span class="field-error" v-if="errors.name">{{ errors.name }}</span>
                 </div>
-                <div class="form-field">
+                <div class="form-group">
                   <label>EMAIL *</label>
                   <input
                     type="email"
@@ -165,18 +119,13 @@
                     placeholder="john@example.com"
                     :class="{ error: errors.email }"
                   />
-                  <span class="field-error" v-if="errors.email">{{
-                    errors.email
-                  }}</span>
+                  <span class="field-error" v-if="errors.email">{{ errors.email }}</span>
                 </div>
               </div>
 
-              <div class="form-field">
+              <div class="form-group">
                 <label>SUBJECT *</label>
-                <select
-                  v-model="formData.subject"
-                  :class="{ error: errors.subject }"
-                >
+                <select v-model="formData.subject" :class="{ error: errors.subject }">
                   <option value="" disabled>Select a subject</option>
                   <option value="Project Inquiry">Project Inquiry</option>
                   <option value="Job Opportunity">Job Opportunity</option>
@@ -184,12 +133,10 @@
                   <option value="Consultation">Consultation</option>
                   <option value="Other">Other</option>
                 </select>
-                <span class="field-error" v-if="errors.subject">{{
-                  errors.subject
-                }}</span>
+                <span class="field-error" v-if="errors.subject">{{ errors.subject }}</span>
               </div>
 
-              <div class="form-field">
+              <div class="form-group">
                 <label>MESSAGE *</label>
                 <textarea
                   v-model="formData.message"
@@ -197,122 +144,55 @@
                   placeholder="Tell me about your project..."
                   :class="{ error: errors.message }"
                 ></textarea>
-                <span class="field-error" v-if="errors.message">{{
-                  errors.message
-                }}</span>
+                <span class="field-error" v-if="errors.message">{{ errors.message }}</span>
               </div>
 
-              <button
-                type="submit"
-                class="submit-button"
-                :disabled="isSubmitting"
-              >
+              <button type="submit" class="form-submit" :disabled="isSubmitting">
                 <span v-if="!isSubmitting">
-                  <i class="fas fa-paper-plane"></i>
-                  SEND MESSAGE
+                  <span class="btn-idx">01</span>
+                  <span class="btn-label">SEND MESSAGE</span>
+                  <span class="btn-arrow"><i class="fas fa-paper-plane"></i></span>
                 </span>
                 <span v-else class="submitting">
-                  <i class="fas fa-spinner fa-pulse"></i>
-                  SENDING...
+                  <i class="fas fa-spinner fa-pulse"></i> SENDING...
                 </span>
               </button>
             </form>
-          </div>
-
-          <!-- Social Tab -->
-          <div
-            v-else-if="activeTab === 'social'"
-            key="social"
-            class="social-panel"
-          >
-            <div class="social-links">
-              <a
-                href="https://github.com/Njenga993"
-                target="_blank"
-                rel="noopener"
-                class="social-link github"
-              >
-                <div class="social-icon">
-                  <i class="fab fa-github"></i>
-                </div>
-                <div class="social-info">
-                  <h4>GitHub</h4>
-                  <p>github.com/Njenga993</p>
-                </div>
-                <i class="fas fa-external-link-alt link-icon"></i>
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/kelvin-kamau-788160277/"
-                target="_blank"
-                rel="noopener"
-                class="social-link linkedin"
-              >
-                <div class="social-icon">
-                  <i class="fab fa-linkedin-in"></i>
-                </div>
-                <div class="social-info">
-                  <h4>LinkedIn</h4>
-                  <p>kelvin-kamau</p>
-                </div>
-                <i class="fas fa-external-link-alt link-icon"></i>
-              </a>
-
-              <a
-                href="https://x.com/kamau_nje"
-                target="_blank"
-                rel="noopener"
-                class="social-link twitter"
-              >
-                <div class="social-icon">
-                  <i class="fab fa-twitter"></i>
-                </div>
-                <div class="social-info">
-                  <h4>Twitter</h4>
-                  <p>@kamau_nje</p>
-                </div>
-                <i class="fas fa-external-link-alt link-icon"></i>
-              </a>
-
-              <a href="mailto:njengak993@gmail.com" class="social-link email">
-                <div class="social-icon">
-                  <i class="fas fa-envelope"></i>
-                </div>
-                <div class="social-info">
-                  <h4>Email</h4>
-                  <p>njengak993@gmail.com</p>
-                </div>
-                <i class="fas fa-arrow-right link-icon"></i>
-              </a>
-            </div>
-
-            <div class="social-note">
-              <i class="fas fa-shield-alt"></i>
-              <span>All social links open in a new tab</span>
-            </div>
-          </div>
-        </transition>
+          </transition>
+        </div>
       </div>
 
-      <!-- Footer Note -->
+      <!-- Bottom Bar - Matching hero trust stats -->
+      <div class="contact-bottombar">
+        <div class="bottom-stats">
+          <div class="b-stat">
+            <span class="b-stat-num">24h</span>
+            <span class="b-stat-label">RESPONSE</span>
+          </div>
+          <span class="b-stat-sep">/</span>
+          <div class="b-stat">
+            <span class="b-stat-num">100%</span>
+            <span class="b-stat-label">COMMITTED</span>
+          </div>
+          <span class="b-stat-sep">/</span>
+          <div class="b-stat">
+            <span class="b-stat-num">EAT</span>
+            <span class="b-stat-label">UTC+3</span>
+          </div>
+        </div>
+        <div class="bottom-copyright">
+          <span>{{ new Date().getFullYear() }} Kelvin Kamau</span>
+        </div>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref } from "vue";
 
-const activeTab = ref("info");
-const connectionActive = ref(false);
-const connectionProgress = ref(0);
 const formStatus = ref(null);
 const isSubmitting = ref(false);
-
-const tabs = [
-  { id: "info", label: "INFO", icon: "fas fa-user" },
-  { id: "message", label: "MESSAGE", icon: "fas fa-envelope" },
-  { id: "social", label: "SOCIAL", icon: "fas fa-share-alt" },
-];
 
 const formData = ref({
   name: "",
@@ -326,22 +206,6 @@ const errors = ref({
   email: "",
   subject: "",
   message: "",
-});
-
-let progressInterval = null;
-
-onMounted(() => {
-  progressInterval = setInterval(() => {
-    connectionProgress.value += 5;
-    if (connectionProgress.value >= 100) {
-      clearInterval(progressInterval);
-      connectionActive.value = true;
-    }
-  }, 50);
-});
-
-onUnmounted(() => {
-  if (progressInterval) clearInterval(progressInterval);
 });
 
 const validateForm = () => {
@@ -383,15 +247,10 @@ const validateForm = () => {
 
 const handleSubmit = async () => {
   if (!validateForm()) return;
-
   isSubmitting.value = true;
-
   try {
     await new Promise((resolve) => setTimeout(resolve, 1500));
     formStatus.value = "success";
-    setTimeout(() => {
-      resetForm();
-    }, 3000);
   } catch (error) {
     formStatus.value = "error";
   } finally {
@@ -401,418 +260,305 @@ const handleSubmit = async () => {
 
 const resetForm = () => {
   formStatus.value = null;
-  formData.value = {
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  };
-  errors.value = {
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  };
+  formData.value = { name: "", email: "", subject: "", message: "" };
+  errors.value = { name: "", email: "", subject: "", message: "" };
 };
 </script>
 
 <style scoped>
-.contact {
-  padding: 5rem 2rem;
-  background: var(--bg-primary);
-  position: relative;
+/* ==============================
+   SECTION - Matching hero card style
+   ============================== */
+.contact-premium {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 2.5rem 3rem;
 }
 
 .contact-container {
-  max-width: 800px;
-  margin: 0 auto;
+  background: var(--bg-primary, #0b0f13);
+  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
+  border-radius: 2.5rem;
+  padding: 2.5rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  box-shadow: var(--shadow-card, 0 18px 35px -12px rgba(0, 0, 0, 0.6));
 }
 
-/* Header Styles */
-.contact-header {
-  text-align: center;
-  margin-bottom: 3rem;
-}
-
-.header-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  margin-bottom: 1.5rem;
-}
-
-.badge-num {
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.badge-text {
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-}
-
-.contact-title {
-  font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: var(--text-white);
-  margin-bottom: 1rem;
-}
-
-.contact-title .accent {
-  color: var(--accent);
-}
-
-.contact-underline {
-  width: 60px;
-  height: 2px;
-  background: var(--accent);
-  margin: 0 auto 1rem;
-}
-
-.contact-subtitle {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Status Panel */
-.status-panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-}
-
-.status-row {
+/* ==============================
+   TOP BAR - Matching hero status bar
+   ============================== */
+.contact-topbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 1.25rem;
 }
 
-.status-label {
+.topbar-id {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
+  gap: 0.75rem;
+}
+
+.id-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent, #c9a23b);
+  border-radius: 50%;
+}
+
+.id-text {
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: 0.65rem;
   font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
+  color: var(--text-muted, #7b8694);
+  letter-spacing: 0.2em;
 }
 
-.status-label i {
-  color: var(--accent);
-  font-size: 0.8rem;
-}
-
-.status-indicator {
+.topbar-status {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: #ef4444;
-}
-
-.status-indicator.active {
-  color: #22c55e;
+  gap: 0.6rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid rgba(34, 197, 94, 0.2);
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: currentColor;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.status-indicator.active .status-dot {
-  animation: none;
-}
-
-.progress-track {
-  height: 2px;
-  background: var(--bg-elevated);
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.3s ease;
-}
-
-/* Tab Navigation */
-.tab-navigation {
-  display: flex;
-  border-bottom: 1px solid var(--border-dark);
-  margin-bottom: 1.5rem;
-}
-
-.tab-button {
-  flex: 1;
-  background: transparent;
-  border: none;
-  padding: 0.75rem 1rem;
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-  cursor: pointer;
-  position: relative;
-  transition: color 0.3s;
-}
-
-.tab-button i {
-  margin-right: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.tab-button:hover {
-  color: var(--text-silver);
-}
-
-.tab-button.active {
-  color: var(--accent);
-}
-
-.tab-indicator {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transition: transform 0.3s;
-}
-
-.tab-button.active .tab-indicator {
-  transform: scaleX(1);
-}
-
-/* Tab Content */
-.tab-content {
-  min-height: 450px;
-}
-
-/* Info Panel */
-.info-panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  padding: 1.5rem;
-}
-
-.profile-section {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  padding-bottom: 1.5rem;
-  margin-bottom: 1.5rem;
-  border-bottom: 1px solid var(--border-dark);
-}
-
-.profile-image {
-  position: relative;
-  flex-shrink: 0;
-}
-
-.profile-image img {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 2px solid var(--accent);
-  filter: grayscale(100%);
-  transition: filter 0.3s;
-}
-
-.profile-image:hover img {
-  filter: grayscale(0%);
-}
-
-.profile-status {
-  position: absolute;
-  bottom: 4px;
-  right: 4px;
-  width: 12px;
-  height: 12px;
+  width: 6px;
+  height: 6px;
   background: #22c55e;
   border-radius: 50%;
-  border: 2px solid var(--bg-card);
+  animation: softPulse 2s infinite;
 }
 
-.profile-details h3 {
+.status-text {
   font-family: var(--font-heading);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 0.5rem;
-}
-
-.profile-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.profile-tags span {
-  padding: 0.25rem 0.6rem;
-  background: rgba(255, 94, 0, 0.15);
-  color: var(--accent);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
-  letter-spacing: 0.05em;
+  color: #22c55e;
+  letter-spacing: 0.15em;
 }
 
-.contact-details {
+/* ==============================
+   MAIN - Matching hero split layout
+   ============================== */
+.contact-main {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+/* ==============================
+   LEFT: TYPOGRAPHY - Matching hero left side
+   ============================== */
+.contact-type {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: 1.75rem;
 }
 
-.detail-row {
+.contact-headline {
+  margin: 0;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.t-line {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: clamp(2.5rem, 5vw, 4.5rem);
+  font-weight: 800;
+  color: var(--text-white, #f0f2f5);
+}
+
+.t-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--text-white);
+  paint-order: stroke fill;
+}
+
+.t-accent {
+  color: var(--accent, #c9a23b);
+}
+
+.contact-desc {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.75;
+  max-width: 480px;
+  margin: 0;
+}
+
+/* Contact Methods - Matching hero stat cards */
+.contact-methods {
   display: flex;
-  align-items: flex-start;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.detail-icon {
-  width: 32px;
-  height: 32px;
-  background: rgba(255, 94, 0, 0.1);
+.method-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--bg-card, #141a20);
+  border: 1px solid var(--border-dark);
+  border-radius: 1.2rem;
+  text-decoration: none;
+  transition: all 0.25s;
+}
+
+a.method-card:hover {
+  border-color: var(--accent, #c9a23b);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5);
+}
+
+.method-icon {
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--accent);
+  background: rgba(201, 162, 59, 0.08);
+  border: 1px solid var(--border-default, rgba(201, 162, 59, 0.25));
+  color: var(--accent, #c9a23b);
   font-size: 0.9rem;
   flex-shrink: 0;
 }
 
-.detail-content {
-  flex: 1;
+.method-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
 }
 
-.detail-content label {
-  display: block;
+.method-label {
   font-family: var(--font-heading);
-  font-size: 0.65rem;
+  font-size: 0.5rem;
   font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.25rem;
+  color: var(--text-dim, #5a6572);
+  letter-spacing: 0.15em;
 }
 
-.detail-content span,
-.detail-content a {
-  color: var(--text-silver);
-  font-size: 0.85rem;
-  text-decoration: none;
-  transition: color 0.2s;
+.method-value {
+  font-size: 0.78rem;
+  color: var(--text-silver, #b0b8c1);
 }
 
-.detail-content a:hover {
-  color: var(--accent);
+/* Social Links - Matching hero bottom socials */
+.contact-socials {
+  display: flex;
+  gap: 0.6rem;
 }
 
-.availability-note {
+.contact-socials a {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--bg-elevated);
-  border-left: 2px solid var(--accent);
-}
-
-.availability-note i {
-  color: var(--accent);
-  font-size: 0.9rem;
-}
-
-.availability-note span {
+  justify-content: center;
   color: var(--text-muted);
-  font-size: 0.75rem;
-}
-
-/* Message Panel */
-.message-panel {
-  background: var(--bg-card);
+  text-decoration: none;
   border: 1px solid var(--border-dark);
-  padding: 1.5rem;
-}
-
-.form-feedback {
-  display: flex;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: var(--bg-elevated);
-  border-left: 3px solid;
-}
-
-.form-feedback.success {
-  border-left-color: #22c55e;
-}
-
-.form-feedback.error {
-  border-left-color: #ef4444;
-}
-
-.form-feedback i {
-  font-size: 2rem;
-}
-
-.form-feedback.success i {
-  color: #22c55e;
-}
-
-.form-feedback.error i {
-  color: #ef4444;
-}
-
-.feedback-content h4 {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 0.5rem;
-}
-
-.feedback-content p {
-  color: var(--text-muted);
   font-size: 0.85rem;
+  transition: all 0.3s ease;
+}
+
+.contact-socials a:hover {
+  color: var(--accent, #c9a23b);
+  border-color: var(--accent, #c9a23b);
+  transform: translateY(-2px);
+}
+
+/* ==============================
+   RIGHT: FORM - Matching hero right showcase
+   ============================== */
+.contact-form-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* Terminal - Matching hero terminal */
+.form-terminal {
+  background: #0a0e12;
+  border: 1px solid var(--border-dark);
+  border-radius: 1.5rem;
+  padding: 1.4rem 1.4rem 1rem;
+  box-shadow: var(--shadow-sm, 0 8px 18px rgba(0, 0, 0, 0.4));
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  color: #b0bec5;
+  transition: box-shadow 0.3s, border-color 0.2s;
+}
+
+.form-terminal:hover {
+  border-color: var(--border-light, rgba(201, 162, 59, 0.45));
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.7);
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 8px;
   margin-bottom: 1rem;
 }
 
-.feedback-btn {
-  background: transparent;
-  border: 1px solid var(--border-default);
-  padding: 0.5rem 1rem;
-  color: var(--text-silver);
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
+.terminal-dots span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: #3a3f47;
+}
+
+.terminal-dots span:nth-child(1) { background: #ff5f56; }
+.terminal-dots span:nth-child(2) { background: #ffbd2e; }
+.terminal-dots span:nth-child(3) { background: #27c93f; }
+
+.terminal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.code-line {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.78rem;
+}
+
+.prompt {
+  color: var(--accent, #c9a23b);
   font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.3s;
+  flex-shrink: 0;
 }
 
-.feedback-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+.accent-text {
+  color: var(--accent, #c9a23b);
+  font-weight: 600;
 }
 
+/* Form Fade Transition */
+.form-fade-enter-active,
+.form-fade-leave-active {
+  transition: all 0.22s ease;
+}
+
+.form-fade-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.form-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* Contact Form */
 .contact-form {
   display: flex;
   flex-direction: column;
@@ -825,264 +571,290 @@ const resetForm = () => {
   gap: 1rem;
 }
 
-.form-field {
+.form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
-.form-field label {
+.form-group label {
   font-family: var(--font-heading);
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 600;
   color: var(--text-dim);
   letter-spacing: 0.1em;
 }
 
-.form-field input,
-.form-field select,
-.form-field textarea {
-  padding: 0.65rem 0.85rem;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-default);
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 0.7rem 0.85rem;
+  background: var(--bg-card, #141a20);
+  border: 1px solid var(--border-dark);
+  border-radius: 0.8rem;
   color: var(--text-white);
-  font-family: var(--font-body);
-  font-size: 0.85rem;
+  font-family: var(--font-heading);
+  font-size: 0.82rem;
   transition: all 0.3s;
-}
-
-.form-field input:focus,
-.form-field select:focus,
-.form-field textarea:focus {
   outline: none;
-  border-color: var(--accent);
 }
 
-.form-field input.error,
-.form-field select.error,
-.form-field textarea.error {
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent, #c9a23b);
+}
+
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
   border-color: #ef4444;
 }
 
+.form-group select {
+  cursor: pointer;
+}
+
+.form-group select option {
+  background: var(--bg-card);
+  color: var(--text-white);
+}
+
 .field-error {
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   color: #ef4444;
 }
 
-.submit-button {
-  display: flex;
+/* Submit Button - Matching hero button style */
+.form-submit {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.85rem;
-  background: var(--accent);
+  gap: 0.9rem;
+  padding: 0.85rem 0;
+  background: none;
   border: none;
-  color: #000;
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  border-bottom: 2px solid var(--accent, #c9a23b);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.35s ease;
+  width: fit-content;
   margin-top: 0.5rem;
 }
 
-.submit-button:hover:not(:disabled) {
-  background: var(--accent-hover);
-  transform: translateY(-2px);
+.form-submit:hover:not(:disabled) {
+  border-bottom-color: #dbb24a;
 }
 
-.submit-button:disabled {
-  opacity: 0.6;
+.form-submit:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.btn-idx {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: var(--accent, #c9a23b);
+  letter-spacing: 0.05em;
+}
+
+.btn-label {
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-white);
+  letter-spacing: 0.08em;
+}
+
+.btn-arrow {
+  display: flex;
+  align-items: center;
+  color: var(--accent, #c9a23b);
+  font-size: 0.75rem;
+  transition: transform 0.35s ease;
+}
+
+.form-submit:hover .btn-arrow {
+  transform: translateX(4px);
 }
 
 .submitting {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: var(--accent, #c9a23b);
+  font-family: var(--font-heading);
+  font-size: 0.78rem;
+  font-weight: 700;
 }
 
-/* Social Panel */
-.social-panel {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  padding: 1.5rem;
-}
-
-.social-links {
+/* Success State */
+.form-success {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-bottom: 1.5rem;
-}
-
-.social-link {
-  display: flex;
   align-items: center;
+  text-align: center;
   gap: 1rem;
-  padding: 1rem;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-dark);
-  text-decoration: none;
-  transition: all 0.3s;
+  padding: 2rem;
 }
 
-.social-link:hover {
-  border-color: var(--accent);
-  transform: translateX(4px);
+.success-icon {
+  font-size: 3rem;
+  color: #22c55e;
 }
 
-.social-icon {
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 94, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 2px;
-  color: var(--accent);
-  font-size: 1.2rem;
-}
-
-.social-info {
-  flex: 1;
-}
-
-.social-info h4 {
+.success-title {
   font-family: var(--font-heading);
-  font-size: 0.9rem;
+  font-size: 1.3rem;
   font-weight: 700;
   color: var(--text-white);
-  margin-bottom: 0.25rem;
+  margin: 0;
 }
 
-.social-info p {
-  font-size: 0.75rem;
+.success-desc {
+  font-size: 0.88rem;
   color: var(--text-muted);
+  margin: 0;
 }
 
-.link-icon {
-  color: var(--text-dim);
-  font-size: 0.8rem;
-  transition: all 0.3s;
+.success-btn {
+  padding: 0.6rem 1.25rem;
+  background: none;
+  border: 1px solid var(--border-default);
+  border-radius: 2rem;
+  font-family: var(--font-heading);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-silver);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 0.5rem;
 }
 
-.social-link:hover .link-icon {
-  color: var(--accent);
-  transform: translateX(3px);
+.success-btn:hover {
+  border-color: var(--accent, #c9a23b);
+  color: var(--accent, #c9a23b);
 }
 
-.social-note {
+/* ==============================
+   BOTTOM BAR - Matching hero trust stats
+   ============================== */
+.contact-bottombar {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background: var(--bg-elevated);
-  border-left: 2px solid var(--accent);
-}
-
-.social-note i {
-  color: var(--accent);
-  font-size: 0.9rem;
-}
-
-.social-note span {
-  color: var(--text-muted);
-  font-size: 0.75rem;
-}
-
-/* Contact Footer */
-.contact-footer {
-  text-align: center;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding-top: 1.8rem;
   border-top: 1px solid var(--border-dark);
 }
 
-.contact-footer p {
+.bottom-stats {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.b-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.b-stat-num {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--accent, #c9a23b);
+  letter-spacing: -0.01em;
+}
+
+.b-stat-label {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-dim, #5a6572);
+  letter-spacing: 0.1em;
+}
+
+.b-stat-sep {
+  color: var(--border-default);
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 300;
+  margin: 0 0.15rem;
+}
+
+.bottom-copyright {
+  font-size: 0.65rem;
   color: var(--text-dim);
-  font-size: 0.7rem;
-  letter-spacing: 0.05em;
 }
 
-/* Animations */
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
+/* ==============================
+   ANIMATIONS
+   ============================== */
+@keyframes softPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
+}
+
+/* ==============================
+   RESPONSIVE
+   ============================== */
+@media (max-width: 1024px) {
+  .contact-main {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
   }
-  50% {
-    opacity: 0.4;
+
+  .contact-premium {
+    padding: 2rem 2rem;
+  }
+
+  .contact-container {
+    padding: 2rem 2rem;
   }
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-/* Responsive */
 @media (max-width: 768px) {
-  .contact {
-    padding: 3rem 1rem;
+  .contact-premium {
+    padding: 1.5rem;
   }
 
-  .contact-title {
-    font-size: 1.8rem;
+  .contact-container {
+    padding: 2rem 1.5rem;
+    border-radius: 2rem;
+  }
+
+  .t-line {
+    font-size: clamp(2rem, 7vw, 3rem);
+  }
+
+  .t-outline {
+    -webkit-text-stroke-width: 1px;
   }
 
   .form-row {
     grid-template-columns: 1fr;
   }
 
-  .profile-section {
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .profile-tags {
-    justify-content: center;
-  }
-
-  .detail-row {
+  .contact-bottombar {
     flex-direction: column;
     align-items: flex-start;
-  }
-
-  .detail-icon {
-    margin-bottom: 0.5rem;
-  }
-
-  .tab-button span {
-    display: none;
-  }
-
-  .tab-button i {
-    margin-right: 0;
-    font-size: 1.1rem;
   }
 }
 
 @media (max-width: 480px) {
-  .status-row {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
+  .contact-premium {
+    padding: 1rem;
   }
 
-  .form-feedback {
-    flex-direction: column;
-    text-align: center;
+  .contact-container {
+    padding: 1.5rem 1.25rem;
+    border-radius: 1.5rem;
   }
 
-  .form-feedback i {
-    margin: 0 auto;
+  .t-line {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
   }
 }
 </style>

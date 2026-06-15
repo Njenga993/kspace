@@ -1,9 +1,21 @@
 <template>
   <footer id="footer" class="footer">
     <div class="footer-container">
-      <!-- Main Footer Content -->
+      <!-- Top Bar - Matching hero status bar -->
+      <div class="footer-topbar">
+        <div class="topbar-id">
+          <span class="id-dot"></span>
+          <span class="id-text">KELVIN KAMAU</span>
+        </div>
+        <div class="topbar-status">
+          <span class="status-dot"></span>
+          <span class="status-text">SYSTEM OPERATIONAL</span>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
       <div class="footer-grid">
-        <!-- Brand Section -->
+        <!-- Column 1: Brand -->
         <div class="footer-brand">
           <div class="brand-avatar">
             <img src="/profile.JPG" alt="Kelvin Kamau" />
@@ -12,21 +24,13 @@
           <div class="brand-info">
             <h3 class="brand-name">KELVIN KAMAU</h3>
             <p class="brand-role">FULL STACK DEVELOPER</p>
-            <div class="brand-stats">
-              <div class="stat-item">
-                <span class="stat-label">UPTIME</span>
-                <span class="stat-value">{{ uptime }}</span>
-              </div>
-              <div class="stat-divider"></div>
-              <div class="stat-item">
-                <span class="stat-label">VERSION</span>
-                <span class="stat-value">2.0.24</span>
-              </div>
-            </div>
+            <p class="brand-tagline">
+              Building robust, scalable systems that drive business growth.
+            </p>
           </div>
         </div>
 
-        <!-- Navigation Section -->
+        <!-- Column 2: Navigation -->
         <div class="footer-section">
           <h4 class="section-title">NAVIGATION</h4>
           <ul class="nav-links">
@@ -43,7 +47,7 @@
           </ul>
         </div>
 
-        <!-- Connect Section -->
+        <!-- Column 3: Connect -->
         <div class="footer-section">
           <h4 class="section-title">CONNECT</h4>
           <div class="social-links">
@@ -54,11 +58,9 @@
               target="_blank"
               rel="noopener noreferrer"
               class="social-link"
-              :class="social.id"
             >
               <i :class="social.icon"></i>
               <span>{{ social.name }}</span>
-              <i class="fas fa-external-link-alt external-icon"></i>
             </a>
           </div>
           <div class="contact-info">
@@ -76,36 +78,49 @@
                 <span>Nairobi, Kenya</span>
               </div>
             </div>
-            <div class="contact-row">
-              <i class="fas fa-clock"></i>
-              <div class="contact-detail">
-                <span class="contact-label">TIMEZONE</span>
-                <span>EAT (UTC+3)</span>
-              </div>
-            </div>
+          </div>
+        </div>
+
+        <!-- Column 4: Expertise - Matching hero badge style -->
+        <div class="footer-section">
+          <h4 class="section-title">EXPERTISE</h4>
+          <div class="expertise-badges">
+            <span class="expertise-badge">Full Stack Development</span>
+            <span class="expertise-badge">SaaS Architecture</span>
+            <span class="expertise-badge">API Design</span>
+            <span class="expertise-badge">Cloud Infrastructure</span>
+            <span class="expertise-badge">Performance Optimization</span>
+            <span class="expertise-badge">System Design</span>
           </div>
         </div>
       </div>
 
-      <!-- Bottom Bar -->
-      <div class="footer-bottom">
-        <div class="copyright">
-          <i class="far fa-copyright"></i>
-          <span
-            >{{ new Date().getFullYear() }} Kelvin Kamau. All rights
-            reserved.</span
-          >
+      <!-- Bottom Bar - Matching hero trust stats -->
+      <div class="footer-bottombar">
+        <div class="bottom-stats">
+          <div class="b-stat">
+            <span class="b-stat-num">03+</span>
+            <span class="b-stat-label">YEARS</span>
+          </div>
+          <span class="b-stat-sep">/</span>
+          <div class="b-stat">
+            <span class="b-stat-num">20+</span>
+            <span class="b-stat-label">PROJECTS</span>
+          </div>
+          <span class="b-stat-sep">/</span>
+          <div class="b-stat">
+            <span class="b-stat-num">100%</span>
+            <span class="b-stat-label">COMMITTED</span>
+          </div>
         </div>
-        <div class="system-status">
-          <div class="status-indicator"></div>
-          <span>System Online</span>
-          <div class="status-separator"></div>
-          <span>Last deployed: {{ lastDeployed }}</span>
+        <div class="bottom-copyright">
+          <i class="far fa-copyright"></i>
+          <span>{{ new Date().getFullYear() }} Kelvin Kamau. All rights reserved.</span>
         </div>
       </div>
     </div>
 
-    <!-- Back to Top Button -->
+    <!-- Back to Top - Matching hero button style -->
     <transition name="fade-up">
       <button
         v-show="showBackToTop"
@@ -122,16 +137,13 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 
-const uptime = ref("0d 0h 0m");
 const showBackToTop = ref(false);
-const lastDeployed = ref("");
 
 const navLinks = [
   { id: "about", text: "About" },
   { id: "skills", text: "Skills" },
   { id: "experience", text: "Experience" },
   { id: "projects", text: "Projects" },
-  { id: "clients", text: "Clients" },
   { id: "contact", text: "Contact" },
 ];
 
@@ -156,32 +168,6 @@ const socialLinks = [
   },
 ];
 
-let uptimeInterval;
-
-const updateUptime = () => {
-  const startDate = new Date("2024-01-01");
-  const now = new Date();
-  const elapsed = now - startDate;
-
-  const days = Math.floor(elapsed / (1000 * 60 * 60 * 24));
-  const hours = Math.floor(
-    (elapsed % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-  );
-  const minutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
-
-  uptime.value = `${days}d ${hours}h ${minutes}m`;
-};
-
-const setLastDeployed = () => {
-  const date = new Date();
-  const formatted = date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-  lastDeployed.value = formatted;
-};
-
 const scrollToTop = () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 };
@@ -198,24 +184,23 @@ const checkScroll = () => {
 };
 
 onMounted(() => {
-  updateUptime();
-  uptimeInterval = setInterval(updateUptime, 60000);
-  setLastDeployed();
   window.addEventListener("scroll", checkScroll);
 });
 
 onUnmounted(() => {
-  if (uptimeInterval) clearInterval(uptimeInterval);
   window.removeEventListener("scroll", checkScroll);
 });
 </script>
 
 <style scoped>
+/* ==============================
+   FOOTER
+   ============================== */
 .footer {
   position: relative;
-  padding: 3rem 2rem 1.5rem;
-  background: var(--bg-primary);
-  border-top: 1px solid var(--border-dark);
+  padding: 2.5rem 2rem 1.5rem;
+  background: var(--bg-primary, #0b0f13);
+  border-top: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
 }
 
 .footer-container {
@@ -223,17 +208,80 @@ onUnmounted(() => {
   margin: 0 auto;
 }
 
-/* Footer Grid */
+/* ==============================
+   TOP BAR - Matching hero status bar
+   ============================== */
+.footer-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
+}
+
+.topbar-id {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.id-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--accent, #c9a23b);
+  border-radius: 50%;
+}
+
+.id-text {
+  font-family: var(--font-heading, 'Inter', sans-serif);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--text-muted, #7b8694);
+  letter-spacing: 0.2em;
+}
+
+.topbar-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid rgba(34, 197, 94, 0.2);
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: #22c55e;
+  border-radius: 50%;
+  animation: softPulse 2s infinite;
+}
+
+.status-text {
+  font-family: var(--font-heading);
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #22c55e;
+  letter-spacing: 0.15em;
+}
+
+/* ==============================
+   FOOTER GRID
+   ============================== */
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1.8fr;
+  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
   gap: 3rem;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border-dark);
+  border-bottom: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
 }
 
-/* Brand Section */
+/* ==============================
+   BRAND SECTION
+   ============================== */
 .footer-brand {
   display: flex;
   gap: 1rem;
@@ -251,7 +299,7 @@ onUnmounted(() => {
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--accent, #c9a23b);
   filter: grayscale(100%);
   transition: filter 0.3s;
 }
@@ -268,8 +316,8 @@ onUnmounted(() => {
   height: 12px;
   background: #22c55e;
   border-radius: 50%;
-  border: 2px solid var(--bg-primary);
-  animation: pulse 2s ease-in-out infinite;
+  border: 2px solid var(--bg-primary, #0b0f13);
+  animation: softPulse 2s infinite;
 }
 
 .brand-info {
@@ -280,7 +328,7 @@ onUnmounted(() => {
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 700;
-  color: var(--text-white);
+  color: var(--text-white, #f0f2f5);
   letter-spacing: 0.08em;
   margin-bottom: 0.25rem;
 }
@@ -289,47 +337,20 @@ onUnmounted(() => {
   font-family: var(--font-heading);
   font-size: 0.7rem;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent, #c9a23b);
   letter-spacing: 0.1em;
   margin-bottom: 0.75rem;
 }
 
-.brand-stats {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  padding: 0.5rem 0.75rem;
-  width: fit-content;
+.brand-tagline {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.stat-label {
-  font-size: 0.6rem;
-  color: var(--text-dim);
-  letter-spacing: 0.08em;
-}
-
-.stat-value {
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-silver);
-}
-
-.stat-divider {
-  width: 1px;
-  height: 20px;
-  background: var(--border-default);
-}
-
-/* Footer Section */
+/* ==============================
+   FOOTER SECTION
+   ============================== */
 .footer-section {
   display: flex;
   flex-direction: column;
@@ -338,11 +359,11 @@ onUnmounted(() => {
 
 .section-title {
   font-family: var(--font-heading);
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.15em;
-  margin-bottom: 0.25rem;
+  color: var(--accent, #c9a23b);
+  letter-spacing: 0.12em;
+  margin: 0;
 }
 
 /* Navigation Links */
@@ -352,6 +373,7 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin: 0;
 }
 
 .nav-link {
@@ -360,7 +382,7 @@ onUnmounted(() => {
   gap: 0.5rem;
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   transition: all 0.2s;
   padding: 0.2rem 0;
 }
@@ -368,70 +390,47 @@ onUnmounted(() => {
 .link-marker {
   width: 4px;
   height: 4px;
-  background: var(--border-default);
+  background: var(--border-default, rgba(201, 162, 59, 0.25));
   transition: all 0.2s;
 }
 
 .nav-link:hover {
-  color: var(--accent);
+  color: var(--accent, #c9a23b);
   transform: translateX(4px);
 }
 
 .nav-link:hover .link-marker {
-  background: var(--accent);
+  background: var(--accent, #c9a23b);
   width: 8px;
 }
 
 /* Social Links */
 .social-links {
   display: flex;
-  flex-direction: column;
   gap: 0.5rem;
 }
 
 .social-link {
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
+  justify-content: center;
+  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
   color: var(--text-muted);
   text-decoration: none;
-  font-size: 0.8rem;
-  transition: all 0.2s;
-}
-
-.social-link i:first-child {
-  width: 20px;
-  font-size: 1rem;
-}
-
-.external-icon {
-  margin-left: auto;
-  font-size: 0.7rem;
-  opacity: 0;
-  transition: opacity 0.2s;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
 }
 
 .social-link:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  transform: translateX(4px);
+  border-color: var(--accent, #c9a23b);
+  color: var(--accent, #c9a23b);
+  transform: translateY(-2px);
 }
 
-.social-link:hover .external-icon {
-  opacity: 1;
-}
-
-.social-link.github:hover {
-  border-left: 3px solid #333;
-}
-.social-link.linkedin:hover {
-  border-left: 3px solid #0077b5;
-}
-.social-link.twitter:hover {
-  border-left: 3px solid #1da1f2;
+.social-link span {
+  display: none;
 }
 
 /* Contact Info */
@@ -439,19 +438,18 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-  margin-top: 0.5rem;
 }
 
 .contact-row {
   display: flex;
   align-items: flex-start;
-  gap: 0.75rem;
+  gap: 0.65rem;
 }
 
 .contact-row > i {
-  width: 16px;
-  color: var(--accent);
-  font-size: 0.85rem;
+  width: 14px;
+  color: var(--accent, #c9a23b);
+  font-size: 0.75rem;
   margin-top: 0.1rem;
 }
 
@@ -459,81 +457,125 @@ onUnmounted(() => {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .contact-label {
-  font-size: 0.6rem;
-  color: var(--text-dim);
+  font-size: 0.55rem;
+  color: var(--text-dim, #5a6572);
   letter-spacing: 0.08em;
 }
 
 .contact-detail span,
 .contact-detail a {
-  font-size: 0.8rem;
-  color: var(--text-silver);
+  font-size: 0.75rem;
+  color: var(--text-silver, #b0b8c1);
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .contact-detail a:hover {
-  color: var(--accent);
+  color: var(--accent, #c9a23b);
 }
 
-/* Footer Bottom */
-.footer-bottom {
+/* ==============================
+   EXPERTISE BADGES - Matching hero badge style
+   ============================== */
+.expertise-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.expertise-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.4rem 0.85rem;
+  background: var(--bg-card, #141a20);
+  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
+  border-radius: 2rem;
+  font-size: 0.65rem;
+  font-weight: 500;
+  color: var(--text-silver);
+  transition: 0.2s;
+}
+
+.expertise-badge:hover {
+  border-color: var(--accent, #c9a23b);
+  background: #1e262e;
+}
+
+/* ==============================
+   BOTTOM BAR - Matching hero trust stats
+   ============================== */
+.footer-bottombar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
-  padding-top: 0.5rem;
 }
 
-.copyright {
+.bottom-stats {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.b-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.b-stat-num {
+  font-family: var(--font-heading);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent, #c9a23b);
+  letter-spacing: -0.01em;
+}
+
+.b-stat-label {
+  font-family: var(--font-heading);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--text-dim, #5a6572);
+  letter-spacing: 0.1em;
+}
+
+.b-stat-sep {
+  color: var(--border-default, rgba(201, 162, 59, 0.25));
+  font-family: var(--font-heading);
+  font-size: 0.75rem;
+  font-weight: 300;
+  margin: 0 0.15rem;
+}
+
+.bottom-copyright {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: var(--text-dim);
 }
 
-.copyright i {
-  font-size: 0.7rem;
+.bottom-copyright i {
+  font-size: 0.65rem;
 }
 
-.system-status {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.7rem;
-  color: var(--text-dim);
-}
-
-.status-indicator {
-  width: 6px;
-  height: 6px;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.status-separator {
-  width: 1px;
-  height: 12px;
-  background: var(--border-default);
-}
-
-/* Back to Top Button */
+/* ==============================
+   BACK TO TOP - Matching hero button
+   ============================== */
 .back-to-top {
   position: fixed;
   bottom: 2rem;
   right: 2rem;
   width: 44px;
   height: 44px;
-  background: var(--accent);
+  background: var(--accent, #c9a23b);
   border: none;
-  color: #000;
+  color: #0b0f13;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -541,26 +583,21 @@ onUnmounted(() => {
   font-size: 1rem;
   transition: all 0.3s;
   z-index: 900;
+  box-shadow: 0 6px 18px rgba(201, 162, 59, 0.2);
 }
 
 .back-to-top:hover {
-  background: var(--accent-hover);
+  background: #dbb24a;
   transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(201, 162, 59, 0.3);
 }
 
-.back-to-top:active {
-  transform: translateY(0);
-}
-
-/* Animations */
-@keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.4;
-  }
+/* ==============================
+   ANIMATIONS
+   ============================== */
+@keyframes softPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.9); }
 }
 
 .fade-up-enter-active,
@@ -578,7 +615,9 @@ onUnmounted(() => {
   transform: translateY(20px);
 }
 
-/* Responsive */
+/* ==============================
+   RESPONSIVE
+   ============================== */
 @media (max-width: 968px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
@@ -604,21 +643,12 @@ onUnmounted(() => {
     grid-column: span 1;
   }
 
-  .brand-stats {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .footer-bottom {
+  .footer-bottombar {
     flex-direction: column;
     text-align: center;
   }
 
-  .system-status {
-    justify-content: center;
-  }
-
-  .copyright {
+  .bottom-stats {
     justify-content: center;
   }
 
@@ -644,39 +674,6 @@ onUnmounted(() => {
   .brand-avatar {
     width: 80px;
     height: 80px;
-  }
-
-  .brand-stats {
-    justify-content: center;
-  }
-
-  .brand-name {
-    font-size: 1rem;
-  }
-
-  .social-link {
-    padding: 0.5rem;
-  }
-
-  .social-link span {
-    display: none;
-  }
-
-  .social-link i:first-child {
-    margin: 0;
-  }
-
-  .external-icon {
-    margin-left: 0;
-  }
-
-  .contact-row {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .contact-row > i {
-    width: auto;
   }
 }
 </style>

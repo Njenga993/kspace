@@ -1,1406 +1,831 @@
 <template>
-  <section id="experience" class="experience">
-    <!-- Dot pattern background (consistent with hero) -->
-    <div class="exp-bg">
-      <div class="exp-dots"></div>
-    </div>
+  <section id="experience" class="exp-section">
+    <div class="exp-card">
 
-    <div class="exp-container">
-      <!-- Section Header -->
-      <div class="exp-header">
-        <div class="header-row">
-          <span class="header-num">03</span>
-          <span class="header-line"></span>
-          <span class="header-label">EXPERIENCE</span>
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-text">Career</span>
         </div>
-        <h2 class="exp-title">
-          Professional<br /><span class="accent">Evolution</span>
-        </h2>
-        <p class="exp-subtitle">
-          From foundational training to leadership roles — my path in tech
-        </p>
-      </div>
-
-      <!-- Stats Strip -->
-      <div class="stats-strip">
-        <div class="ss-item">
-          <span class="ss-val">{{ totalYears }}</span>
-          <span class="ss-label">YEARS</span>
-        </div>
-        <span class="ss-sep">/</span>
-        <div class="ss-item">
-          <span class="ss-val">{{ totalProjects }}+</span>
-          <span class="ss-label">PROJECTS</span>
-        </div>
-        <span class="ss-sep">/</span>
-        <div class="ss-item">
-          <span class="ss-val">{{ uniqueSkills }}</span>
-          <span class="ss-label">TECHNOLOGIES</span>
-        </div>
-        <span class="ss-sep">/</span>
-        <div class="ss-item">
-          <span class="ss-val">100%</span>
-          <span class="ss-label">RETENTION</span>
+        <div class="roles-badge">
+          <i class="fas fa-briefcase"></i>
+          <span>{{ experiences.length }} Roles · {{ totalYears }}+ Years</span>
         </div>
       </div>
 
-      <!-- Filters -->
-      <div class="exp-filters">
-        <button
-          v-for="filter in filters"
-          :key="filter.value"
-          @click="setFilter(filter.value)"
-          :class="['filter-btn', { active: activeFilter === filter.value }]"
-        >
-          {{ filter.label }}
-        </button>
-      </div>
+      <!-- Main grid -->
+      <div class="main-grid">
 
-      <!-- Experience Display: Rail + Content -->
-      <div class="exp-display">
-        <!-- Left: Vertical Rail -->
-        <div class="exp-rail">
-          <div
-            v-for="(exp, idx) in filteredExperiences"
-            :key="exp.id"
-            :class="['rail-node', { active: activeTimelineNode === idx }]"
-            @click="activeTimelineNode = idx"
-          >
-            <div class="rail-year">{{ exp.period.split(" - ")[0] }}</div>
-            <div class="rail-track"></div>
-            <div class="rail-dot"></div>
+        <!-- LEFT: Headline + timeline nav -->
+        <div class="left-col">
+
+          <div class="headline-block">
+            <p class="eyebrow">Professional Journey</p>
+            <h2 class="headline">
+              <span class="hl-solid">Career</span>
+              <span class="hl-outline">Growth</span>
+              <span class="hl-accent">& Impact</span>
+            </h2>
+            <p class="sub-desc">
+              A timeline of evolution — from foundational training to leading
+              digital transformation across multiple industries.
+            </p>
           </div>
+
+          <!-- Timeline selector -->
+          <div class="timeline-nav">
+            <div
+              v-for="(exp, idx) in experiences"
+              :key="exp.id"
+              :class="['tl-item', { active: activeExperience === idx }]"
+              @click="activeExperience = idx"
+            >
+              <div class="tl-marker">
+                <div class="tl-dot" :class="{ current: idx === 0 }"></div>
+                <div class="tl-line" v-if="idx < experiences.length - 1"></div>
+              </div>
+              <div class="tl-body">
+                <div class="tl-top">
+                  <span class="tl-period">{{ exp.period }}</span>
+                  <span v-if="idx === 0" class="tl-current-badge">Current</span>
+                </div>
+                <p class="tl-role">{{ exp.title }}</p>
+                <p class="tl-company">{{ exp.company }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Counter + arrows -->
+          <div class="nav-row">
+            <button
+              class="nav-btn"
+              :disabled="activeExperience === 0"
+              @click="prevExperience"
+              aria-label="Previous"
+            >
+              <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="nav-counter">
+              <span class="nc-current">{{ String(activeExperience + 1).padStart(2, '0') }}</span>
+              <span class="nc-sep">/</span>
+              <span class="nc-total">{{ String(experiences.length).padStart(2, '0') }}</span>
+            </div>
+            <button
+              class="nav-btn"
+              :disabled="activeExperience === experiences.length - 1"
+              @click="nextExperience"
+              aria-label="Next"
+            >
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+
         </div>
 
-        <!-- Right: Content -->
-        <div class="exp-body">
-          <Transition name="slide" mode="out-in">
-            <div :key="currentExp.id" class="exp-file">
-              <!-- File Header -->
-              <div class="file-header">
-                <div class="file-id">
-                  <span class="file-id-num"
-                    >NO.
-                    {{ String(activeTimelineNode + 1).padStart(2, "0") }}</span
-                  >
-                  <span
-                    class="file-id-cat"
-                    :class="currentExp.category.toLowerCase()"
-                  >
-                    {{ currentExp.category }}
-                  </span>
-                </div>
-                <div class="file-period">{{ currentExp.period }}</div>
-              </div>
+        <!-- RIGHT: Detail panel -->
+        <div class="right-col">
+          <Transition name="panel-fade" mode="out-in">
+            <div :key="activeExperience" class="detail-panel">
 
-              <!-- Title Block -->
-              <div class="file-title-block">
-                <div class="ftb-icon" :style="{ background: currentExp.color }">
-                  <i :class="getIconClass(currentExp.category)"></i>
+              <!-- Terminal header -->
+              <div class="terminal-card">
+                <div class="terminal-dots">
+                  <span></span><span></span><span></span>
                 </div>
-                <div>
-                  <h3 class="ftb-role">{{ currentExp.title }}</h3>
-                  <span class="ftb-company">{{ currentExp.company }}</span>
+                <div class="code-line">
+                  <span class="prompt">~/career/{{ currentExp.company.split(' ')[0].toLowerCase() }} $</span>
+                  <span class="cmd">cat role.txt</span>
+                </div>
+                <div class="code-line">
+                  <span class="prompt">></span>
+                  <span class="out-accent">{{ currentExp.title }}</span>
+                </div>
+                <div class="code-line">
+                  <span class="prompt">></span>
+                  <span class="out">{{ currentExp.company }} · {{ currentExp.period }}</span>
                 </div>
               </div>
 
-              <p class="file-desc">{{ currentExp.description }}</p>
-
-              <!-- Metrics -->
-              <div class="file-metrics">
-                <div
-                  v-for="metric in currentExp.metrics"
-                  :key="metric.label"
-                  class="fm-item"
-                >
-                  <span class="fm-val">{{ metric.value }}</span>
-                  <span class="fm-label">{{ metric.label }}</span>
-                </div>
-              </div>
+              <!-- Description -->
+              <p class="role-desc">{{ currentExp.description }}</p>
 
               <!-- Achievements -->
-              <div class="file-section">
-                <div class="fs-title">ACHIEVEMENTS</div>
-                <div class="fs-list">
+              <div class="role-block">
+                <div class="block-header">
+                  <span class="block-dot"></span>
+                  <span class="block-title">Key Achievements</span>
+                </div>
+                <div class="achievements-list">
                   <div
-                    v-for="a in currentExp.achievements"
-                    :key="a"
-                    class="fs-item"
+                    v-for="achievement in currentExp.achievements.slice(0, 3)"
+                    :key="achievement"
+                    class="achievement-item"
                   >
-                    <div class="fs-marker"></div>
-                    <span>{{ a }}</span>
+                    <div class="ach-icon">
+                      <i class="fas fa-check"></i>
+                    </div>
+                    <span>{{ achievement }}</span>
                   </div>
                 </div>
               </div>
 
-              <!-- Skills -->
-              <div class="file-section">
-                <div class="fs-title">SKILLS & TECHNOLOGIES</div>
-                <div class="fs-tags">
+              <!-- Technologies -->
+              <div class="role-block">
+                <div class="block-header">
+                  <span class="block-dot"></span>
+                  <span class="block-title">Technologies Used</span>
+                </div>
+                <div class="tech-pills">
                   <span
-                    v-for="skill in getAllSkills(currentExp)"
+                    v-for="skill in getAllSkills(currentExp).slice(0, 8)"
                     :key="skill"
-                    class="fs-tag"
-                    >{{ skill }}</span
-                  >
+                    class="tech-pill"
+                  >{{ skill }}</span>
                 </div>
               </div>
 
-              <!-- Challenges -->
-              <div v-if="currentExp.challenges" class="file-section">
-                <div class="fs-title">CHALLENGES OVERCOME</div>
-                <div class="fs-list">
-                  <div
-                    v-for="c in currentExp.challenges"
-                    :key="c"
-                    class="fs-item"
-                  >
-                    <i class="fas fa-trophy fs-trophy"></i>
-                    <span>{{ c }}</span>
-                  </div>
-                </div>
+              <!-- Category tag -->
+              <div class="category-tag">
+                <i class="fas fa-tag"></i>
+                {{ currentExp.category }}
               </div>
 
-              <!-- Expand Toggle -->
-              <button class="file-expand" @click="toggleDetails(currentExp.id)">
-                <span class="fe-text">{{
-                  isExpanded(currentExp.id) ? "COLLAPSE" : "FULL REPORT"
-                }}</span>
-                <i
-                  :class="
-                    isExpanded(currentExp.id) ? 'fas fa-minus' : 'fas fa-plus'
-                  "
-                ></i>
-              </button>
-
-              <!-- Expanded Content -->
-              <Transition name="expand">
-                <div v-if="isExpanded(currentExp.id)" class="file-expanded">
-                  <div class="fe-columns">
-                    <div class="fe-col">
-                      <div class="fe-col-title">TECHNOLOGIES USED</div>
-                      <div
-                        v-for="(skills, cat) in currentExp.skillCategories"
-                        :key="cat"
-                        class="fe-cat"
-                      >
-                        <div class="fe-cat-name">{{ cat }}</div>
-                        <div class="fe-cat-tags">
-                          <span
-                            v-for="s in skills"
-                            :key="s"
-                            class="fe-cat-tag"
-                            >{{ s }}</span
-                          >
-                        </div>
-                      </div>
-                    </div>
-                    <div class="fe-col">
-                      <div class="fe-col-title">IMPACT METRICS</div>
-                      <div class="fe-impact">
-                        <div
-                          v-for="metric in currentExp.metrics"
-                          :key="metric.label"
-                          class="fe-impact-row"
-                        >
-                          <div class="fe-impact-label">
-                            {{ metric.label }}
-                          </div>
-                          <div class="fe-impact-bar">
-                            <div
-                              class="fe-impact-fill"
-                              :style="{
-                                width: getImpactPercentage(metric.value),
-                              }"
-                            ></div>
-                          </div>
-                          <div class="fe-impact-val">{{ metric.value }}</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Transition>
             </div>
           </Transition>
         </div>
+
       </div>
 
-      <!-- Navigation -->
-      <div class="exp-nav">
-        <button
-          @click="prevExperience"
-          :disabled="activeTimelineNode === 0"
-          class="en-btn"
-        >
-          <i class="fas fa-arrow-left"></i>
-        </button>
-        <div class="en-counter">
-          <span class="en-current">{{
-            String(activeTimelineNode + 1).padStart(2, "0")
-          }}</span>
-          <span class="en-sep">/</span>
-          <span class="en-total">{{
-            String(filteredExperiences.length).padStart(2, "0")
-          }}</span>
+      <!-- Stats bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number">{{ totalYears }}+</span>
+          <span class="stat-desc">Years</span>
         </div>
-        <button
-          @click="nextExperience"
-          :disabled="activeTimelineNode === filteredExperiences.length - 1"
-          class="en-btn"
-        >
-          <i class="fas fa-arrow-right"></i>
-        </button>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">{{ experiences.length }}</span>
+          <span class="stat-desc">Roles</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">4</span>
+          <span class="stat-desc">Industries</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-desc">Impact</span>
+        </div>
       </div>
+
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue'
 
-const activeFilter = ref("All");
-const activeTimelineNode = ref(0);
-const expandedItems = ref([]);
-
-const filters = [
-  { label: "ALL", value: "All" },
-  { label: "DEVELOPMENT", value: "Development" },
-  { label: "INTERNSHIP", value: "Internship" },
-];
+const activeExperience = ref(0)
 
 const experiences = [
   {
     id: 1,
-    title: "Developer & Digital Manager",
-    company: "Nyakazi Organics",
-    period: "2024 - Present",
-    duration: 1,
-    category: "Development",
-    color: "#FF5E00",
+    title: 'Developer & Digital Manager',
+    company: 'Nyakazi Organics',
+    period: '2024 — Present',
+    category: 'FULL-TIME',
     description:
-      "Leading digital transformation and full-stack development for an organic food company, overseeing all digital solutions from branding to systems development.",
-    metrics: [
-      { value: "150%", label: "Sales Increase" },
-      { value: "40%", label: "Faster Checkout" },
-      { value: "95+", label: "Lighthouse Score" },
-    ],
+      'Leading digital transformation for an organic food company. Built a comprehensive POS system with React & Django, designed cohesive branding across all platforms, and optimized operational workflows.',
     achievements: [
-      "Developed a fully functional POS system using React and Django that reduced checkout times by 40%",
-      "Designed and implemented comprehensive company branding across all digital platforms",
-      "Optimized website performance, achieving 95+ Lighthouse scores across all metrics",
-      "Managed digital marketing campaigns that increased social media engagement by 200%",
+      'Developed POS system reducing checkout times by 40%',
+      'Achieved 95+ Lighthouse performance scores across all pages',
+      'Increased social media engagement by 200% through cohesive digital branding',
     ],
     skillCategories: {
-      Frontend: ["React", "JavaScript", "CSS3", "HTML5", "TypeScript"],
-      Backend: ["Django", "Python", "PostgreSQL", "REST APIs"],
-      Design: ["Figma", "Branding", "UI/UX", "Responsive Design"],
+      Frontend: ['React', 'TypeScript', 'Tailwind CSS'],
+      Backend: ['Django', 'Python', 'PostgreSQL'],
+      Design: ['Figma', 'UI/UX', 'Branding'],
     },
-    challenges: [
-      "Integrating legacy systems with modern POS solution while maintaining data integrity",
-      "Training non-technical staff on digital tools and workflows",
-      "Balancing multiple projects with competing deadlines",
-    ],
   },
   {
     id: 2,
-    title: "Junior Developer",
-    company: "Desiderata Consultancy",
-    period: "2023 - 2024",
-    duration: 1,
-    category: "Development",
-    color: "#06d6a0",
+    title: 'Junior Developer',
+    company: 'Desiderata Consultancy',
+    period: '2023 — 2024',
+    category: 'FULL-TIME',
     description:
-      "Built solutions for diverse client needs across multiple industries with a focus on web applications and data visualization.",
-    metrics: [
-      { value: "15+", label: "Projects" },
-      { value: "100%", label: "Client Satisfaction" },
-      { value: "60%", label: "Performance Boost" },
-    ],
+      'Built enterprise solutions for diverse clients. Created Laravel dashboards with complex data visualisation, implemented RESTful APIs improving integration by 35%, and reduced page load times by 60%.',
     achievements: [
-      "Created responsive UI layouts for corporate clients using modern CSS techniques",
-      "Developed Laravel-based admin dashboards with complex data visualization",
-      "Implemented RESTful APIs that improved system integration efficiency by 35%",
-      "Reduced average page load times by 60% through strategic performance optimization",
+      'Built 15+ client projects across multiple industries',
+      'Reduced page load times by 60% through systematic optimisation',
+      'Improved API integration efficiency by 35%',
     ],
     skillCategories: {
-      Backend: ["Laravel", "PHP", "MySQL", "API Development"],
-      Frontend: ["JavaScript", "Bootstrap", "jQuery", "AJAX"],
-      Data: ["Chart.js", "DataTables", "Excel Integration"],
+      Backend: ['Laravel', 'PHP', 'MySQL'],
+      Frontend: ['JavaScript', 'Bootstrap', 'jQuery'],
+      Data: ['Chart.js', 'DataTables'],
     },
-    challenges: [
-      "Working with diverse client requirements and tight deadlines simultaneously",
-      "Optimizing performance for data-heavy applications with large datasets",
-      "Ensuring cross-browser compatibility for legacy systems",
-    ],
   },
   {
     id: 3,
-    title: "Frontend Developer",
-    company: "Techlungs Technology",
-    period: "2022 - 2023",
-    duration: 1,
-    category: "Development",
-    color: "#f72585",
+    title: 'Frontend Developer',
+    company: 'Techlungs Technology',
+    period: '2022 — 2023',
+    category: 'CONTRACT',
     description:
-      "Specialized in creating engaging frontend experiences for SaaS products and high-conversion marketing sites.",
-    metrics: [
-      { value: "20+", label: "Landing Pages" },
-      { value: "8%", label: "Conversion Rate" },
-      { value: "45%", label: "Bundle Reduction" },
-    ],
+      'Specialised in creating engaging frontend experiences. Built 20+ high-converting landing pages achieving 8% conversion rates, reduced CSS bundle size by 45%, and created a reusable component library.',
     achievements: [
-      "Built 20+ high-converting landing pages with conversion rates reaching up to 8%",
-      "Implemented smooth animations and micro-interactions that improved user engagement by 40%",
-      "Reduced CSS bundle size by 45% through strategic optimization and code splitting",
-      "Collaborated with designers to create reusable component library",
+      'Built 20+ landing pages with 8% average conversion rate',
+      'Reduced CSS bundle size by 45% through systematic refactoring',
+      'Created reusable component library adopted across all projects',
     ],
     skillCategories: {
-      Frontend: ["HTML5", "CSS3", "JavaScript", "GSAP", "SASS"],
-      Tools: ["Webpack", "Git", "Figma", "Chrome DevTools"],
-      Design: ["UI/UX", "Design Systems", "Responsive Design", "Animation"],
+      Frontend: ['HTML5', 'CSS3', 'JavaScript', 'GSAP'],
+      Tools: ['Webpack', 'Git', 'Figma'],
     },
-    challenges: [
-      "Balancing rich animations with performance requirements",
-      "Maintaining consistency across multiple landing pages",
-    ],
   },
   {
     id: 4,
-    title: "ICT Intern",
-    company: "KNLS & Immigration Dept",
-    period: "2021 - 2022",
-    duration: 1,
-    category: "Internship",
-    color: "#fb8500",
+    title: 'ICT Intern',
+    company: 'KNLS & Immigration Dept',
+    period: '2021 — 2022',
+    category: 'INTERNSHIP',
     description:
-      "Gained foundational IT experience across two government departments, working with diverse technology stacks and legacy systems.",
-    metrics: [
-      { value: "15+", label: "Hours Saved Weekly" },
-      { value: "50+", label: "Staff Supported" },
-    ],
+      'Gained foundational IT experience across government departments. Automated manual processes saving 15+ hours weekly, documented network infrastructure, and provided support to 50+ staff members.',
     achievements: [
-      "Automated catalog update processes, saving 15+ hours of manual work weekly",
-      "Documented comprehensive network infrastructure for future upgrade planning",
-      "Provided technical support to 50+ staff members across multiple departments",
-      "Assisted in migrating legacy data to modern database systems",
+      'Automated manual processes saving 15+ hours weekly',
+      'Provided technical support to 50+ staff across departments',
+      'Documented complete network infrastructure for two government bodies',
     ],
     skillCategories: {
-      "IT Support": [
-        "Technical Support",
-        "Troubleshooting",
-        "Hardware Maintenance",
-      ],
-      Systems: [
-        "Network Documentation",
-        "Data Migration",
-        "System Administration",
-      ],
-      Software: ["MS Office", "Database Management", "Ticketing Systems"],
+      Support: ['Technical Support', 'Troubleshooting'],
+      Systems: ['Network Documentation', 'Data Migration'],
+      Software: ['MS Office', 'Database Management'],
     },
-    challenges: [
-      "Working with outdated legacy systems and limited resources",
-      "Adapting to strict government protocols and procedures",
-    ],
   },
-];
+]
 
-const currentExp = computed(
-  () => filteredExperiences.value[activeTimelineNode.value],
-);
-
-const filteredExperiences = computed(() => {
-  if (activeFilter.value === "All") return experiences;
-  return experiences.filter((e) => e.category === activeFilter.value);
-});
-
-const totalYears = computed(() => {
-  const startYear = 2021;
-  const currentYear = new Date().getFullYear();
-  return currentYear - startYear;
-});
-
-const totalProjects = computed(() => {
-  return experiences.reduce((total, exp) => {
-    const projectMetric = exp.metrics.find(
-      (m) => m.label.includes("Project") || m.label === "Projects",
-    );
-    if (projectMetric) {
-      const value = parseInt(projectMetric.value);
-      return total + (isNaN(value) ? 5 : value);
-    }
-    return total + 5;
-  }, 0);
-});
-
-const uniqueSkills = computed(() => {
-  const skillsSet = new Set();
-  experiences.forEach((exp) => {
-    Object.values(exp.skillCategories).forEach((category) => {
-      category.forEach((skill) => skillsSet.add(skill));
-    });
-  });
-  return skillsSet.size;
-});
-
-const setFilter = (val) => {
-  activeFilter.value = val;
-  activeTimelineNode.value = 0;
-};
+const currentExp = computed(() => experiences[activeExperience.value])
+const totalYears  = computed(() => new Date().getFullYear() - 2021)
 
 const getAllSkills = (exp) => {
-  const skills = [];
-  Object.values(exp.skillCategories).forEach((category) => {
-    skills.push(...category);
-  });
-  return skills.slice(0, 8);
-};
+  const skills = []
+  Object.values(exp.skillCategories).forEach((cat) => skills.push(...cat))
+  return skills
+}
 
-const getImpactPercentage = (value) => {
-  const num = parseInt(value);
-  if (value.includes("%")) return Math.min(num, 100) + "%";
-  if (num > 100) return "100%";
-  return num + "%";
-};
-
-const prevExperience = () => {
-  if (activeTimelineNode.value > 0) activeTimelineNode.value--;
-};
-
-const nextExperience = () => {
-  if (activeTimelineNode.value < filteredExperiences.value.length - 1)
-    activeTimelineNode.value++;
-};
-
-const toggleDetails = (id) => {
-  const index = expandedItems.value.indexOf(id);
-  if (index > -1) {
-    expandedItems.value.splice(index, 1);
-  } else {
-    expandedItems.value.push(id);
-  }
-};
-
-const isExpanded = (id) => expandedItems.value.includes(id);
-
-const getIconClass = (category) => {
-  return category === "Development" ? "fas fa-code" : "fas fa-graduation-cap";
-};
+const prevExperience = () => { if (activeExperience.value > 0) activeExperience.value-- }
+const nextExperience = () => { if (activeExperience.value < experiences.length - 1) activeExperience.value++ }
 </script>
 
 <style scoped>
-/* ==============================
-   SECTION
-   ============================== */
-.experience {
+/* ─── Tokens ─────────────────────────────────────────── */
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --accent: #c9a23b;
+  --accent-dim: rgba(201, 162, 59, 0.12);
+  --accent-border: rgba(201, 162, 59, 0.35);
+  --white: #f0f2f5;
+  --silver: #b0b8c1;
+  --muted: #7b8694;
+  --dim: #4a5568;
+  --border: rgba(255, 255, 255, 0.07);
+}
+
+/* ─── Section ────────────────────────────────────────── */
+.exp-section {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 0 2.5rem;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+/* ─── Card ───────────────────────────────────────────── */
+.exp-card {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  padding: 2.2rem 2.8rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
   position: relative;
-  padding: 5rem 2rem;
-  background: var(--bg-primary);
   overflow: hidden;
 }
 
-/* Background dots — same pattern as hero */
-.exp-bg {
+/* ambient glow — left side for experience */
+.exp-card::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  z-index: 0;
+  top: 0;
+  left: 0;
+  width: 40%;
+  height: 100%;
+  background: radial-gradient(ellipse at 15% 35%, rgba(180, 100, 30, 0.13) 0%, transparent 65%);
   pointer-events: none;
 }
 
-.exp-dots {
-  position: absolute;
-  inset: 0;
-  background-image: radial-gradient(var(--border-default) 1px, transparent 1px);
-  background-size: 28px 28px;
-  opacity: 0.08;
-}
-
-.exp-container {
-  position: relative;
-  z-index: 1;
-  max-width: 1060px;
-  margin: 0 auto;
-}
-
-/* ==============================
-   HEADER — LEFT ALIGNED
-   ============================== */
-.exp-header {
-  margin-bottom: 2.5rem;
-}
-
-.header-row {
+/* ─── Top bar ────────────────────────────────────────── */
+.top-bar {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.header-num {
-  font-family: var(--font-heading);
-  font-size: 0.55rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.12em;
-}
-
-.header-line {
-  width: 48px;
-  height: 1px;
-  background: var(--border-default);
-}
-
-.header-label {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.2em;
-}
-
-.exp-title {
-  font-family: var(--font-heading);
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 800;
-  color: var(--text-white);
-  letter-spacing: -0.02em;
-  line-height: 1.05;
-  margin: 0 0 0.75rem;
-}
-
-.exp-title .accent {
-  color: var(--accent);
-}
-
-.exp-subtitle {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin: 0;
-  max-width: 440px;
-}
-
-/* ==============================
-   STATS STRIP — matches hero bottom bar
-   ============================== */
-.stats-strip {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  padding: 1.25rem 0;
-  margin-bottom: 2rem;
-  border-top: 1px solid var(--border-dark);
-  border-bottom: 1px solid var(--border-dark);
-}
-
-.ss-item {
-  display: flex;
-  align-items: baseline;
-  gap: 0.45rem;
-}
-
-.ss-val {
-  font-family: var(--font-heading);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.ss-label {
-  font-family: var(--font-heading);
-  font-size: 0.52rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
-
-.ss-sep {
-  color: var(--border-default);
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 300;
-  margin: 0 0.15rem;
-}
-
-/* ==============================
-   FILTERS — underline style
-   ============================== */
-.exp-filters {
-  display: flex;
-  gap: 2rem;
-  margin-bottom: 2.5rem;
-}
-
-.filter-btn {
-  background: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  padding: 0.5rem 0;
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: var(--text-muted);
-  cursor: pointer;
-  transition: all 0.25s ease;
-}
-
-.filter-btn:hover {
-  color: var(--text-silver);
-}
-
-.filter-btn.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-  font-weight: 600;
-}
-
-/* ==============================
-   DISPLAY — RAIL + CONTENT
-   ============================== */
-.exp-display {
-  display: grid;
-  grid-template-columns: 80px 1fr;
-  gap: 2rem;
-  align-items: start;
-  margin-bottom: 2rem;
-}
-
-/* ==============================
-   VERTICAL RAIL
-   ============================== */
-.exp-rail {
   position: relative;
+  z-index: 2;
+}
+
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.label-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+
+.label-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.roles-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 3rem;
+  font-size: 0.74rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.roles-badge i { font-size: 0.68rem; }
+
+/* ─── Main grid ──────────────────────────────────────── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 3rem;
+  align-items: start;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Left column ────────────────────────────────────── */
+.left-col {
   display: flex;
   flex-direction: column;
-  padding-top: 0.25rem;
+  gap: 1.8rem;
 }
 
-/* Continuous vertical line behind dots */
-.exp-rail::before {
-  content: "";
-  position: absolute;
-  left: 38px;
-  top: 0;
-  bottom: 0;
-  width: 1px;
-  background: var(--border-dark);
-}
+/* Headline */
+.headline-block { display: flex; flex-direction: column; gap: 0.5rem; }
 
-.rail-node {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  cursor: pointer;
-  padding: 0.6rem 0;
-  position: relative;
-}
-
-.rail-year {
-  font-family: var(--font-heading);
-  font-size: 0.62rem;
+.eyebrow {
+  font-size: 0.82rem;
   font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.04em;
-  width: 32px;
-  text-align: right;
-  flex-shrink: 0;
-  transition: color 0.25s;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-.rail-node.active .rail-year {
+.headline {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.hl-solid {
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  color: var(--white);
+}
+
+.hl-outline {
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--white);
+}
+
+.hl-accent {
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 800;
   color: var(--accent);
 }
 
-.rail-track {
-  width: 12px;
-  flex-shrink: 0;
+.sub-desc {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.72;
+  margin: 0.3rem 0 0;
+  max-width: 400px;
 }
 
-.rail-dot {
-  width: 9px;
-  height: 9px;
-  border: 2px solid var(--border-default);
-  background: var(--bg-primary);
+/* ─── Timeline nav ───────────────────────────────────── */
+.timeline-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.tl-item {
+  display: grid;
+  grid-template-columns: 18px 1fr;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.tl-marker {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3px;
+}
+
+.tl-dot {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--border);
   border-radius: 50%;
-  transition: all 0.3s ease;
+  background: #0d1117;
   flex-shrink: 0;
+  transition: all 0.2s ease;
 }
 
-.rail-node.active .rail-dot {
+.tl-dot.current {
   border-color: var(--accent);
   background: var(--accent);
-  transform: scale(1.25);
+  box-shadow: 0 0 8px rgba(201, 162, 59, 0.4);
 }
 
-.rail-node:hover .rail-dot {
-  border-color: var(--accent);
+.tl-item.active .tl-dot:not(.current) {
+  border-color: var(--accent-border);
+  background: var(--accent-dim);
 }
 
-.rail-node:hover .rail-year {
-  color: var(--text-silver);
+.tl-line {
+  width: 1px;
+  flex: 1;
+  background: var(--border);
+  margin: 4px 0;
+  min-height: 28px;
 }
 
-/* ==============================
-   CONTENT BODY
-   ============================== */
-.exp-body {
-  min-height: 400px;
+.tl-body {
+  padding-bottom: 1.3rem;
+  border-left: 2px solid transparent;
+  padding-left: 0.9rem;
+  margin-left: -0.9rem;
+  transition: border-color 0.2s;
 }
 
-/* ==============================
-   FILE CARD — DOSSIER STYLE
-   ============================== */
-.exp-file {
-  border: 1px solid var(--border-dark);
-  padding: 1.75rem;
-  background: var(--bg-card);
+.tl-item.active .tl-body {
+  border-left-color: var(--accent);
 }
 
-/* File header */
-.file-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-dark);
-}
+.tl-item:last-child .tl-body { padding-bottom: 0; }
 
-.file-id {
+.tl-top {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
+  margin-bottom: 0.2rem;
 }
 
-.file-id-num {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-}
-
-.file-id-cat {
-  padding: 0.2rem 0.6rem;
-  font-family: var(--font-heading);
-  font-size: 0.55rem;
+.tl-period {
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
-}
-
-.file-id-cat.development {
-  background: rgba(255, 94, 0, 0.12);
-  color: var(--accent);
-}
-
-.file-id-cat.internship {
-  background: rgba(251, 133, 0, 0.12);
-  color: #fb8500;
-}
-
-.file-period {
-  font-family: var(--font-heading);
-  font-size: 0.72rem;
-  font-weight: 600;
   color: var(--accent);
   letter-spacing: 0.04em;
 }
 
-/* Title block */
-.file-title-block {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.25rem;
+.tl-current-badge {
+  font-size: 0.54rem;
+  font-weight: 700;
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 3rem;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
-.ftb-icon {
-  width: 44px;
-  height: 44px;
+.tl-role {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--white);
+  margin: 0 0 0.12rem;
+  transition: color 0.2s;
+}
+
+.tl-item:hover .tl-role { color: var(--accent); }
+
+.tl-company {
+  font-size: 0.74rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ─── Nav row ────────────────────────────────────────── */
+.nav-row {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.nav-btn {
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.1rem;
-  color: #000;
-  flex-shrink: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.7rem;
+  color: var(--muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.ftb-role {
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: var(--text-white);
-  letter-spacing: 0.02em;
-  margin: 0 0 0.2rem;
-  line-height: 1.2;
+.nav-btn:hover:not(:disabled) {
+  border-color: var(--accent-border);
+  color: var(--accent);
 }
 
-.ftb-company {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
+.nav-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
-/* Description */
-.file-desc {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  line-height: 1.7;
-  margin: 0 0 1.5rem;
-}
-
-/* ==============================
-   METRICS — large accent numbers
-   ============================== */
-.file-metrics {
+.nav-counter {
   display: flex;
-  gap: 1.5rem;
-  margin-bottom: 1.5rem;
-  padding: 1.25rem 0;
-  border-top: 1px solid var(--border-dark);
-  border-bottom: 1px solid var(--border-dark);
-}
-
-.fm-item {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  align-items: baseline;
   gap: 0.3rem;
 }
 
-.fm-val {
-  font-family: var(--font-heading);
-  font-size: 1.75rem;
+.nc-current {
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--accent);
-  line-height: 1;
+  letter-spacing: -0.02em;
 }
 
-.fm-label {
-  font-family: var(--font-heading);
-  font-size: 0.52rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
-  text-align: center;
+.nc-sep {
+  font-size: 0.8rem;
+  color: var(--dim);
 }
 
-/* ==============================
-   FILE SECTIONS (achievements, skills, challenges)
-   ============================== */
-.file-section {
-  margin-bottom: 1.5rem;
+.nc-total {
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--dim);
 }
 
-.file-section:last-of-type {
-  margin-bottom: 1.25rem;
-}
+/* ─── Right column: detail panel ────────────────────── */
+.right-col { position: relative; z-index: 2; }
 
-.fs-title {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.16em;
-  margin-bottom: 0.85rem;
-}
+.panel-fade-enter-active,
+.panel-fade-leave-active { transition: all 0.22s ease; }
+.panel-fade-enter-from   { opacity: 0; transform: translateY(8px); }
+.panel-fade-leave-to     { opacity: 0; transform: translateY(-8px); }
 
-/* List items */
-.fs-list {
+.detail-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 1.5rem;
 }
 
-.fs-item {
+/* Terminal card */
+.terminal-card {
+  background: #080b0e;
+  border: 1px solid var(--border);
+  border-radius: 1.3rem;
+  padding: 1.2rem 1.3rem 1rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  transition: border-color 0.2s;
+}
+
+.terminal-card:hover { border-color: var(--accent-border); }
+
+.terminal-dots {
   display: flex;
-  gap: 0.75rem;
-  align-items: flex-start;
+  gap: 6px;
+  margin-bottom: 0.9rem;
 }
 
-.fs-marker {
+.terminal-dots span { width: 10px; height: 10px; border-radius: 50%; }
+.terminal-dots span:nth-child(1) { background: #ff5f56; }
+.terminal-dots span:nth-child(2) { background: #ffbd2e; }
+.terminal-dots span:nth-child(3) { background: #27c93f; }
+
+.code-line {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.76rem;
+  margin-bottom: 0.42rem;
+  flex-wrap: wrap;
+}
+
+.prompt      { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+.cmd         { color: #b0bec5; }
+.out         { color: var(--silver); opacity: 0.75; }
+.out-accent  { color: var(--accent); font-weight: 600; }
+
+/* Description */
+.role-desc {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Role blocks */
+.role-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.block-dot {
   width: 5px;
   height: 5px;
   background: var(--accent);
-  margin-top: 0.55rem;
+  border-radius: 50%;
   flex-shrink: 0;
 }
 
-.fs-trophy {
+.block-title {
+  font-size: 0.68rem;
+  font-weight: 700;
   color: var(--accent);
-  font-size: 0.72rem;
-  margin-top: 0.3rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* Achievements */
+.achievements-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.achievement-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+}
+
+.ach-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: 50%;
+  color: var(--accent);
+  font-size: 0.55rem;
   flex-shrink: 0;
-  width: 5px;
-  text-align: center;
+  margin-top: 1px;
 }
 
-.fs-item span {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-  line-height: 1.6;
+.achievement-item span {
+  font-size: 0.83rem;
+  color: var(--muted);
+  line-height: 1.58;
 }
 
-/* Skill tags — bordered pills (matches about section) */
-.fs-tags {
+/* Tech pills */
+.tech-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35rem;
+  gap: 0.45rem;
 }
 
-.fs-tag {
-  padding: 0.32rem 0.65rem;
-  border: 1px solid var(--border-dark);
-  font-size: 0.78rem;
-  color: var(--text-silver);
+.tech-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.35rem 0.8rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 3rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--silver);
   transition: all 0.2s;
 }
 
-.fs-tag:hover {
-  border-color: var(--accent);
+.tech-pill:hover {
+  border-color: var(--accent-border);
   color: var(--accent);
+  background: var(--accent-dim);
 }
 
-/* ==============================
-   EXPAND BUTTON
-   ============================== */
-.file-expand {
+/* Category tag */
+.category-tag {
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  background: none;
-  border: none;
-  border-bottom: 1px solid var(--border-default);
-  padding: 0.6rem 0;
-  cursor: pointer;
-  transition: all 0.25s ease;
+  gap: 0.45rem;
+  padding: 0.38rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 3rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--dim);
+  letter-spacing: 0.1em;
+  align-self: flex-start;
 }
 
-.fe-text {
-  font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.12em;
-  transition: color 0.25s;
-}
+.category-tag i { font-size: 0.6rem; }
 
-.file-expand i {
-  font-size: 0.6rem;
-  color: var(--text-dim);
-  transition: color 0.25s;
-}
-
-.file-expand:hover {
-  border-bottom-color: var(--accent);
-}
-
-.file-expand:hover .fe-text,
-.file-expand:hover i {
-  color: var(--accent);
-}
-
-/* ==============================
-   EXPANDED CONTENT
-   ============================== */
-.file-expanded {
-  padding-top: 1.5rem;
-  border-top: 1px solid var(--border-dark);
-  margin-top: 0.25rem;
-}
-
-.fe-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-}
-
-.fe-col-title {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.16em;
-  margin-bottom: 1rem;
-}
-
-.fe-cat {
-  margin-bottom: 1rem;
-}
-
-.fe-cat:last-child {
-  margin-bottom: 0;
-}
-
-.fe-cat-name {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--text-silver);
-  margin-bottom: 0.4rem;
-}
-
-.fe-cat-tags {
+/* ─── Stats bar ──────────────────────────────────────── */
+.stats-bar {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 0.3rem;
+  gap: 1.5rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 2;
 }
 
-.fe-cat-tag {
-  padding: 0.2rem 0.55rem;
-  background: var(--bg-elevated);
-  font-size: 0.72rem;
-  color: var(--text-muted);
-}
-
-/* Impact bars */
-.fe-impact {
+.stat-item {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.12rem;
 }
 
-.fe-impact-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+.stat-number {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-.fe-impact-label {
+.stat-desc {
   font-size: 0.68rem;
-  color: var(--text-dim);
-  min-width: 90px;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 2.2rem;
+  background: var(--border);
   flex-shrink: 0;
 }
 
-.fe-impact-bar {
-  flex: 1;
-  height: 3px;
-  background: var(--border-dark);
-  overflow: hidden;
-}
-
-.fe-impact-fill {
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.6s ease;
-}
-
-.fe-impact-val {
-  font-family: var(--font-heading);
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: var(--accent);
-  min-width: 45px;
-  text-align: right;
-  flex-shrink: 0;
-}
-
-/* ==============================
-   NAVIGATION — counter style
-   ============================== */
-.exp-nav {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1.25rem;
-}
-
-.en-btn {
-  width: 40px;
-  height: 40px;
-  background: none;
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  transition: all 0.25s ease;
-}
-
-.en-btn:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.en-btn:disabled {
-  opacity: 0.2;
-  cursor: not-allowed;
-}
-
-.en-counter {
-  display: flex;
-  align-items: baseline;
-  gap: 0.3rem;
-  min-width: 60px;
-  justify-content: center;
-}
-
-.en-current {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--accent);
-}
-
-.en-sep {
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  color: var(--text-dim);
-  font-weight: 300;
-}
-
-.en-total {
-  font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-dim);
-}
-
-/* ==============================
-   TRANSITIONS
-   ============================== */
-.slide-enter-active,
-.slide-leave-active {
-  transition:
-    opacity 0.22s ease,
-    transform 0.22s ease;
-}
-
-.slide-enter-from {
-  opacity: 0;
-  transform: translateY(12px);
-}
-
-.slide-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
-.expand-enter-active,
-.expand-leave-active {
-  transition:
-    opacity 0.3s ease,
-    max-height 0.35s ease;
-  overflow: hidden;
-}
-
-.expand-enter-from,
-.expand-leave-to {
-  opacity: 0;
-  max-height: 0;
-}
-
-.expand-enter-to,
-.expand-leave-from {
-  max-height: 600px;
-}
-
-/* ==============================
-   REDUCED MOTION
-   ============================== */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ==============================
-   RESPONSIVE — TABLET
-   ============================== */
-@media (max-width: 900px) {
-  .exp-display {
+/* ─── Responsive ─────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .main-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 2rem;
   }
-
-  .exp-rail {
-    flex-direction: row;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-top: 0;
-  }
-
-  .exp-rail::-webkit-scrollbar {
-    display: none;
-  }
-
-  .exp-rail::before {
-    top: 50%;
-    left: 0;
-    right: 0;
-    bottom: auto;
-    width: auto;
-    height: 1px;
-  }
-
-  .rail-node {
-    flex-direction: column;
-    padding: 0.5rem 0.75rem;
-    min-width: 72px;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .rail-year {
-    width: auto;
-    text-align: center;
-    order: 1;
-    font-size: 0.58rem;
-  }
-
-  .rail-track {
-    display: none;
-  }
-
-  .rail-dot {
-    order: 0;
-  }
-
-  .fe-columns {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .file-metrics {
-    gap: 1rem;
-  }
-
-  .fm-val {
-    font-size: 1.4rem;
-  }
+  .sub-desc { max-width: 100%; }
 }
 
-/* ==============================
-   RESPONSIVE — MOBILE
-   ============================== */
 @media (max-width: 768px) {
-  .experience {
-    padding: 3rem 1.25rem;
+  .exp-card {
+    padding: 1.6rem 1.4rem;
+    border-radius: 1.5rem;
+    gap: 1.8rem;
   }
 
-  .exp-title {
-    font-size: clamp(1.8rem, 6vw, 2.5rem);
-  }
-
-  .exp-subtitle {
-    font-size: 0.85rem;
-  }
-
-  .stats-strip {
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .ss-sep {
-    display: none;
-  }
-
-  .ss-item {
-    flex: 0 0 auto;
-    padding-right: 1rem;
-    margin-right: 0.5rem;
-    border-right: 1px solid var(--border-dark);
-  }
-
-  .ss-item:last-child {
-    border-right: none;
-  }
-
-  .ss-val {
-    font-size: 1.1rem;
-  }
-
-  .exp-filters {
-    gap: 1.5rem;
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding-bottom: 0.25rem;
-  }
-
-  .exp-filters::-webkit-scrollbar {
-    display: none;
-  }
-
-  .filter-btn {
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
-
-  .exp-file {
-    padding: 1.25rem;
-  }
-
-  .file-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
-  }
-
-  .file-metrics {
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .fm-item {
-    flex: 0 0 calc(50% - 0.5rem);
+  .hl-solid, .hl-outline, .hl-accent {
+    font-size: clamp(2rem, 7vw, 3rem);
   }
 }
 
-/* ==============================
-   RESPONSIVE — SMALL MOBILE
-   ============================== */
 @media (max-width: 480px) {
-  .experience {
-    padding: 2.5rem 1rem;
-  }
+  .stat-divider { display: none; }
 
-  .exp-file {
-    padding: 1rem;
-  }
-
-  .file-title-block {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.75rem;
-  }
-
-  .ftb-role {
-    font-size: 1.1rem;
-  }
-
-  .file-desc {
-    font-size: 0.85rem;
-  }
-
-  .fm-item {
-    flex: 0 0 100%;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.5rem;
-  }
-
-  .fm-val {
-    font-size: 1.2rem;
-  }
-
-  .fs-item span {
-    font-size: 0.82rem;
-  }
-
-  .fe-impact-row {
-    flex-wrap: wrap;
-    gap: 0.4rem;
-  }
-
-  .fe-impact-label {
-    min-width: auto;
-    width: 100%;
+  .hl-solid, .hl-outline, .hl-accent {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
   }
 }
 </style>

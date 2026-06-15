@@ -1,1283 +1,768 @@
 <template>
-  <section id="skills" class="skills">
-    <div class="skills-container">
-      <!-- Section Header -->
-      <div class="skills-header">
-        <div class="header-badge">
-          <span class="badge-num">02</span>
-          <span class="badge-text">EXPERTISE</span>
-        </div>
-        <h2 class="skills-title">
-          Technical <span class="accent">Arsenal</span>
-        </h2>
-        <div class="skills-underline"></div>
-        <p class="skills-subtitle">
-          A comprehensive toolkit refined through years of building
-          production-ready applications
-        </p>
-      </div>
+  <section id="skills" class="skills-section">
+    <div class="skills-card">
 
-      <!-- Stats Overview -->
-      <div class="skills-stats-grid">
-        <div class="stat-pill">
-          <div class="stat-pill-value">{{ totalSkills }}</div>
-          <div class="stat-pill-label">Technologies</div>
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-text">Expertise</span>
         </div>
-        <div class="stat-pill">
-          <div class="stat-pill-value">{{ skillCategories.length }}</div>
-          <div class="stat-pill-label">Categories</div>
-        </div>
-        <div class="stat-pill">
-          <div class="stat-pill-value">{{ averageLevel.toFixed(1) }}</div>
-          <div class="stat-pill-label">Avg Proficiency</div>
-        </div>
-        <div class="stat-pill highlight">
-          <div class="stat-pill-value">{{ topCategory.title }}</div>
-          <div class="stat-pill-label">Top Category</div>
+        <div class="tech-count-badge">
+          <i class="fas fa-microchip"></i>
+          <span>{{ totalSkills }} Technologies</span>
         </div>
       </div>
 
-      <!-- Main Skills Display -->
-      <div class="skills-display">
-        <!-- Category Navigation -->
-        <div class="skills-navigation">
-          <button
-            v-for="(cat, idx) in skillCategories"
-            :key="cat.title"
-            @click="activeCategory = idx"
-            :class="['nav-category', { active: activeCategory === idx }]"
-          >
-            <i :class="getCategoryIcon(cat.title)"></i>
-            <span>{{ cat.title }}</span>
-            <div
-              class="nav-level"
-              :style="{ width: (cat.level / 5) * 100 + '%' }"
-            ></div>
-          </button>
-        </div>
+      <!-- Main grid -->
+      <div class="main-grid">
 
-        <!-- Category Content -->
-        <div class="skills-content">
-          <transition name="slide-fade" mode="out-in">
-            <div :key="activeCategory" class="category-detail">
-              <!-- Category Header -->
-              <div class="category-header">
-                <div class="category-title-section">
-                  <h3>{{ currentCategory.title }}</h3>
-                  <div class="category-level">
-                    <span>Proficiency</span>
-                    <div class="level-bar">
-                      <div
-                        class="level-fill"
-                        :style="{
-                          width: (currentCategory.level / 5) * 100 + '%',
-                        }"
-                      ></div>
-                    </div>
-                    <span class="level-value"
-                      >{{ currentCategory.level }}/5</span
-                    >
-                  </div>
-                </div>
-                <p class="category-description">
-                  {{ currentCategory.description }}
-                </p>
-              </div>
-
-              <!-- Skills Grid -->
-              <div class="skills-grid">
-                <div
-                  v-for="skill in currentCategory.skills"
-                  :key="skill.name"
-                  class="skill-card"
-                  @click="showSkillDetails(skill)"
-                >
-                  <div class="skill-icon">
-                    <img :src="getSkillIcon(skill.icon)" :alt="skill.name" />
-                  </div>
-                  <div class="skill-info">
-                    <h4>{{ skill.name }}</h4>
-                    <div class="skill-progress">
-                      <div class="progress-track">
-                        <div
-                          class="progress-fill"
-                          :style="{
-                            width: getSkillLevel(skill.name) * 20 + '%',
-                          }"
-                        ></div>
-                      </div>
-                      <span class="progress-value"
-                        >{{ getSkillLevel(skill.name) }}/5</span
-                      >
-                    </div>
-                  </div>
-                  <div class="skill-hover">
-                    <span>View Details</span>
-                    <i class="fas fa-arrow-right"></i>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Related Projects -->
-              <div class="related-projects">
-                <h4>Featured In</h4>
-                <div class="project-tags">
-                  <span
-                    v-for="project in getProjectsForCategory(
-                      currentCategory.title,
-                    )"
-                    :key="project"
-                    class="project-tag"
-                  >
-                    {{ project }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </transition>
-        </div>
-      </div>
-
-      <!-- Alternative: Radar View Toggle -->
-      <div class="view-toggle">
-        <button
-          :class="['toggle-btn', { active: viewMode === 'grid' }]"
-          @click="viewMode = 'grid'"
-        >
-          <i class="fas fa-th"></i> Grid View
-        </button>
-        <button
-          :class="['toggle-btn', { active: viewMode === 'radar' }]"
-          @click="viewMode = 'radar'"
-        >
-          <i class="fas fa-chart-pie"></i> Radar View
-        </button>
-      </div>
-
-      <!-- Radar View -->
-      <transition name="fade">
-        <div v-if="viewMode === 'radar'" class="radar-view">
-          <div class="radar-container">
-            <div class="radar-chart">
-              <div class="radar-grid">
-                <div
-                  class="grid-circle"
-                  v-for="i in 5"
-                  :key="i"
-                  :style="{ transform: `scale(${i * 0.2})` }"
-                ></div>
-                <div
-                  class="radar-axis"
-                  v-for="(cat, idx) in skillCategories"
-                  :key="cat.title"
-                  :style="{ transform: `rotate(${idx * 72}deg)` }"
-                >
-                  <div class="axis-label">{{ cat.title }}</div>
-                </div>
-                <div
-                  class="radar-polygon"
-                  :style="{ clipPath: getRadarPath() }"
-                >
-                  <div class="polygon-fill"></div>
-                </div>
-              </div>
-            </div>
-            <div class="radar-legend">
-              <div
-                v-for="cat in skillCategories"
-                :key="cat.title"
-                class="legend-item"
-              >
-                <div
-                  class="legend-color"
-                  :style="{ background: getCategoryColor(cat.title) }"
-                ></div>
-                <span>{{ cat.title }}</span>
-                <span class="legend-value">{{ cat.level }}/5</span>
-              </div>
-            </div>
+        <!-- LEFT: Headline + category selector -->
+        <div class="left-col">
+          <div class="headline-block">
+            <p class="eyebrow">Technical Mastery</p>
+            <h2 class="headline">
+              <span class="hl-solid">Skills</span>
+              <span class="hl-outline">Built</span>
+              <span class="hl-accent">in Production</span>
+            </h2>
+            <p class="sub-desc">
+              A curated stack refined through years of building production‑ready
+              applications, SaaS platforms, and scalable digital systems.
+            </p>
           </div>
-        </div>
-      </transition>
-    </div>
 
-    <!-- Skill Detail Modal -->
-    <transition name="modal">
-      <div v-if="selectedSkill" class="modal" @click="closeSkillDetails">
-        <div class="modal-content" @click.stop>
-          <div class="modal-header">
-            <div class="modal-icon-large">
-              <img
-                :src="getSkillIcon(selectedSkill.icon)"
-                :alt="selectedSkill.name"
-              />
-            </div>
-            <div class="modal-title">
-              <h2>{{ selectedSkill.name }}</h2>
-              <div class="modal-category">
-                {{ getSkillCategory(selectedSkill.name) }}
-              </div>
-            </div>
-            <button class="modal-close" @click="closeSkillDetails">
-              &times;
+          <!-- Category pill track -->
+          <div class="cat-nav">
+            <button
+              v-for="(cat, idx) in skillCategories"
+              :key="cat.title"
+              :class="['cat-pill', { active: activeCategory === idx }]"
+              @click="activeCategory = idx"
+            >
+              <i :class="cat.icon"></i>
+              {{ cat.title }}
             </button>
           </div>
 
-          <div class="modal-body">
-            <div class="proficiency-section">
-              <div class="proficiency-label">Proficiency Level</div>
-              <div class="proficiency-bar">
-                <div
-                  class="proficiency-fill"
-                  :style="{
-                    width: getSkillLevel(selectedSkill.name) * 20 + '%',
-                  }"
-                ></div>
+          <!-- Active category summary card -->
+          <div class="summary-card">
+            <div class="sc-header">
+              <div class="sc-icon">
+                <i :class="currentCategory.icon"></i>
               </div>
-              <div class="proficiency-stars">
-                <i
+              <div>
+                <p class="sc-title">{{ currentCategory.title }}</p>
+                <p class="sc-desc">{{ currentCategory.description }}</p>
+              </div>
+            </div>
+            <div class="sc-meta">
+              <div class="sc-stat">
+                <span class="sc-num">{{ currentCategory.skills.length }}</span>
+                <span class="sc-label">Technologies</span>
+              </div>
+              <div class="sc-divider"></div>
+              <div class="sc-stat">
+                <span class="sc-num">{{ currentCategory.level }}/5</span>
+                <span class="sc-label">Proficiency</span>
+              </div>
+              <div class="sc-divider"></div>
+              <div class="proficiency-dots">
+                <span
                   v-for="i in 5"
                   :key="i"
-                  :class="[
-                    'fas',
-                    i <= getSkillLevel(selectedSkill.name)
-                      ? 'fa-star'
-                      : 'fa-star-o',
-                  ]"
-                ></i>
-              </div>
-            </div>
-
-            <div class="description-section">
-              <h4>About this skill</h4>
-              <p>{{ getSkillDescription(selectedSkill.name) }}</p>
-            </div>
-
-            <div class="projects-section">
-              <h4>Projects using this skill</h4>
-              <div class="project-list">
-                <span
-                  v-for="project in getProjectsForSkill(selectedSkill.name)"
-                  :key="project"
-                  class="project-badge"
-                >
-                  {{ project }}
-                </span>
-              </div>
-            </div>
-
-            <div
-              class="certification-section"
-              v-if="getCertification(selectedSkill.name)"
-            >
-              <h4>Certification</h4>
-              <div class="cert-badge">
-                <i class="fas fa-certificate"></i>
-                <span>{{ getCertification(selectedSkill.name) }}</span>
+                  :class="['prof-dot', { filled: i <= currentCategory.level }]"
+                ></span>
               </div>
             </div>
           </div>
+
+          <!-- Terminal card -->
+          <div class="terminal-card">
+            <div class="terminal-dots">
+              <span></span><span></span><span></span>
+            </div>
+            <div class="code-line">
+              <span class="prompt">~/skills/{{ currentCategory.title.toLowerCase() }} $</span>
+              <span class="cmd">ls --all</span>
+            </div>
+            <div class="code-line">
+              <span class="prompt">></span>
+              <span class="out">{{ currentCategory.skills.map(s => s.name).join('  ·  ') }}</span>
+            </div>
+            <div class="code-line">
+              <span class="comment"># {{ currentCategory.skills.length }} packages loaded</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Skills grid -->
+        <div class="right-col">
+          <Transition name="panel-fade" mode="out-in">
+            <div :key="activeCategory" class="skills-grid">
+              <div
+                v-for="skill in currentCategory.skills"
+                :key="skill.name"
+                class="skill-card"
+              >
+                <div class="skill-top">
+                  <div class="skill-icon-wrap">
+                    <img
+                      :src="`https://api.iconify.design/${skill.icon}.svg`"
+                      :alt="skill.name"
+                      class="skill-icon"
+                    />
+                  </div>
+                  <span class="skill-name">{{ skill.name }}</span>
+                </div>
+                <div class="skill-bar-wrap">
+                  <div class="skill-bar">
+                    <div
+                      class="skill-fill"
+                      :style="{ width: getSkillLevel(skill.name) * 20 + '%' }"
+                    ></div>
+                  </div>
+                  <div class="skill-dots">
+                    <span
+                      v-for="i in 5"
+                      :key="i"
+                      :class="['sk-dot', { filled: i <= getSkillLevel(skill.name) }]"
+                    ></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Transition>
+        </div>
+
+      </div>
+
+      <!-- Stats bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number">{{ totalSkills }}</span>
+          <span class="stat-desc">Technologies</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">{{ skillCategories.length }}</span>
+          <span class="stat-desc">Domains</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">3+</span>
+          <span class="stat-desc">Years Practice</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-desc">Production Ready</span>
         </div>
       </div>
-    </transition>
+
+    </div>
   </section>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed } from 'vue'
 
-const activeCategory = ref(0);
-const viewMode = ref("grid");
-const selectedSkill = ref(null);
+const activeCategory = ref(0)
 
 const skillCategories = [
   {
-    title: "Frontend",
+    title: 'Frontend',
+    icon: 'fas fa-layer-group',
     level: 5,
-    color: "#FF5E00",
-    description:
-      "Crafting responsive, interactive user interfaces with modern frameworks and vanilla excellence.",
+    description: 'Crafting pixel-perfect, responsive interfaces with modern frameworks.',
     skills: [
-      { name: "Vue.js", icon: "logos:vue" },
-      { name: "React", icon: "logos:react" },
-      { name: "TypeScript", icon: "logos:typescript-icon" },
-      { name: "JavaScript", icon: "logos:javascript" },
-      { name: "HTML5", icon: "logos:html-5" },
-      { name: "CSS3", icon: "logos:css-3" },
-      { name: "Tailwind CSS", icon: "logos:tailwindcss-icon" },
+      { name: 'Vue.js',       icon: 'logos:vue'               },
+      { name: 'React',        icon: 'logos:react'             },
+      { name: 'TypeScript',   icon: 'logos:typescript-icon'   },
+      { name: 'JavaScript',   icon: 'logos:javascript'        },
+      { name: 'HTML5',        icon: 'logos:html-5'            },
+      { name: 'CSS3',         icon: 'logos:css-3'             },
+      { name: 'Tailwind CSS', icon: 'logos:tailwindcss-icon'  },
     ],
   },
   {
-    title: "Backend",
+    title: 'Backend',
+    icon: 'fas fa-server',
     level: 4,
-    color: "#06d6a0",
-    description:
-      "Building scalable, secure server-side architectures and RESTful APIs.",
+    description: 'Building scalable APIs and robust server-side architectures.',
     skills: [
-      { name: "Django", icon: "logos:django-icon" },
-      { name: "Python", icon: "logos:python" },
-      { name: "Node.js", icon: "logos:nodejs-icon" },
-      { name: "FastAPI", icon: "logos:fastapi" },
-      { name: "Flask", icon: "logos:flask" },
-      { name: "GraphQL", icon: "logos:graphql" },
-      { name: "REST APIs", icon: "lucide:api" },
-      { name: "PHP Laravel", icon: "logos:laravel" },
-      { name: "Express.js", icon: "skill-icons:expressjs-dark" },
+      { name: 'Django',      icon: 'logos:django-icon'            },
+      { name: 'Python',      icon: 'logos:python'                 },
+      { name: 'Node.js',     icon: 'logos:nodejs-icon'            },
+      { name: 'Express.js',  icon: 'skill-icons:expressjs-dark'   },
+      { name: 'PHP Laravel', icon: 'logos:laravel'                },
+      { name: 'REST APIs',   icon: 'lucide:api'                   },
     ],
   },
   {
-    title: "Database",
+    title: 'Database',
+    icon: 'fas fa-database',
     level: 4,
-    color: "#f72585",
-    description:
-      "Designing efficient data structures and optimizing query performance.",
+    description: 'Designing efficient schemas and optimizing query performance.',
     skills: [
-      { name: "MySQL", icon: "logos:mysql-icon" },
-      { name: "PostgreSQL", icon: "logos:postgresql" },
-      { name: "MariaDB", icon: "logos:mariadb" },
-      { name: "SQLite", icon: "vscode-icons:file-type-sqlite" },
-      { name: "MongoDB", icon: "logos:mongodb-icon" },
+      { name: 'MySQL',      icon: 'logos:mysql-icon'              },
+      { name: 'PostgreSQL', icon: 'logos:postgresql'              },
+      { name: 'MongoDB',    icon: 'logos:mongodb-icon'            },
+      { name: 'SQLite',     icon: 'vscode-icons:file-type-sqlite' },
     ],
   },
   {
-    title: "Design",
+    title: 'Design',
+    icon: 'fas fa-pen-ruler',
     level: 4,
-    color: "#fb8500",
-    description:
-      "Creating intuitive interfaces that balance aesthetics with functionality.",
+    description: 'Creating intuitive interfaces that balance form with function.',
     skills: [
-      { name: "Figma", icon: "logos:figma" },
-      { name: "Photoshop", icon: "logos:adobe-photoshop" },
-      { name: "Illustrator", icon: "logos:adobe-illustrator" },
-      { name: "Canva", icon: "simple-icons:canva" },
+      { name: 'Figma',       icon: 'logos:figma'              },
+      { name: 'Photoshop',   icon: 'logos:adobe-photoshop'    },
+      { name: 'Illustrator', icon: 'logos:adobe-illustrator'  },
+      { name: 'Canva',       icon: 'simple-icons:canva'       },
     ],
   },
   {
-    title: "DevOps",
+    title: 'DevOps',
+    icon: 'fas fa-gears',
     level: 3,
-    color: "#3b82f6",
-    description:
-      "Streamlining deployment and maintaining robust development workflows.",
+    description: 'Streamlining deployments and maintaining robust CI/CD workflows.',
     skills: [
-      { name: "Git", icon: "logos:git-icon" },
-      { name: "Docker", icon: "logos:docker-icon" },
-      { name: "CI/CD", icon: "logos:jenkins" },
-      { name: "AWS", icon: "logos:aws" },
+      { name: 'Git',    icon: 'logos:git-icon'    },
+      { name: 'Docker', icon: 'logos:docker-icon' },
+      { name: 'CI/CD',  icon: 'logos:jenkins'     },
+      { name: 'AWS',    icon: 'logos:aws'         },
     ],
   },
-];
+]
 
-const currentCategory = computed(() => skillCategories[activeCategory.value]);
+const currentCategory = computed(() => skillCategories[activeCategory.value])
 
 const totalSkills = computed(() =>
-  skillCategories.reduce((t, c) => t + c.skills.length, 0),
-);
-
-const averageLevel = computed(
-  () =>
-    skillCategories.reduce((s, c) => s + c.level, 0) / skillCategories.length,
-);
-
-const topCategory = computed(() =>
-  skillCategories.reduce(
-    (t, c) => (c.level > t.level ? c : t),
-    skillCategories[0],
-  ),
-);
-
-const getCategoryIcon = (title) => {
-  const icons = {
-    Frontend: "fas fa-code",
-    Backend: "fas fa-server",
-    Database: "fas fa-database",
-    Design: "fas fa-palette",
-    DevOps: "fas fa-cloud",
-  };
-  return icons[title] || "fas fa-code";
-};
-
-const getCategoryColor = (title) => {
-  const colors = {
-    Frontend: "#FF5E00",
-    Backend: "#06d6a0",
-    Database: "#f72585",
-    Design: "#fb8500",
-    DevOps: "#3b82f6",
-  };
-  return colors[title] || "#FF5E00";
-};
-
-const getSkillIcon = (icon) => `https://api.iconify.design/${icon}.svg`;
+  skillCategories.reduce((t, c) => t + c.skills.length, 0)
+)
 
 const getSkillLevel = (name) => {
   const levels = {
-    "Vue.js": 5,
-    React: 4,
-    TypeScript: 4,
-    JavaScript: 5,
-    HTML5: 5,
-    CSS3: 5,
-    "Tailwind CSS": 4,
-    Django: 4,
-    Python: 4,
-    "Node.js": 4,
-    FastAPI: 3,
-    Flask: 3,
-    GraphQL: 3,
-    "REST APIs": 5,
-    "PHP Laravel": 3,
-    "Express.js": 4,
-    MySQL: 4,
-    PostgreSQL: 4,
-    MariaDB: 3,
-    SQLite: 4,
-    MongoDB: 3,
-    Figma: 4,
-    Photoshop: 3,
-    Illustrator: 3,
-    Canva: 4,
-    Git: 5,
-    Docker: 3,
-    "CI/CD": 3,
-    AWS: 2,
-  };
-  return levels[name] || 3;
-};
-
-const getSkillCategory = (skillName) => {
-  for (const cat of skillCategories) {
-    if (cat.skills.find((s) => s.name === skillName)) {
-      return cat.title;
-    }
+    'Vue.js': 5, 'React': 4, 'TypeScript': 4, 'JavaScript': 5,
+    'HTML5': 5, 'CSS3': 5, 'Tailwind CSS': 4, 'Django': 4,
+    'Python': 4, 'Node.js': 4, 'Express.js': 4, 'PHP Laravel': 3,
+    'REST APIs': 5, 'MySQL': 4, 'PostgreSQL': 4, 'MongoDB': 3,
+    'SQLite': 4, 'Figma': 4, 'Photoshop': 3, 'Illustrator': 3,
+    'Canva': 4, 'Git': 5, 'Docker': 3, 'CI/CD': 3, 'AWS': 2,
   }
-  return "General";
-};
-
-const getSkillDescription = (name) => {
-  const descriptions = {
-    "Vue.js":
-      "Progressive JavaScript framework for building user interfaces with reactive components.",
-    React:
-      "Component-based library for building interactive UIs with virtual DOM.",
-    TypeScript:
-      "Typed superset of JavaScript that adds static typing capabilities.",
-    JavaScript:
-      "High-level, dynamic programming language essential for web development.",
-    HTML5:
-      "Latest HTML standard with semantic elements and multimedia support.",
-    CSS3: "Style sheet language for sophisticated layouts and animations.",
-    "Tailwind CSS": "Utility-first CSS framework for rapid custom designs.",
-    Django:
-      "High-level Python framework promoting rapid development and clean design.",
-    Python: "Versatile language known for readability and extensive libraries.",
-    "Node.js":
-      "JavaScript runtime for building scalable server-side applications.",
-    Docker:
-      "Containerization platform for consistent development and deployment.",
-    Git: "Distributed version control for tracking code changes and collaboration.",
-    Figma: "Cloud-based design tool for collaborative interface creation.",
-  };
-  return (
-    descriptions[name] ||
-    "Advanced proficiency in this technology through practical project experience."
-  );
-};
-
-const getProjectsForSkill = (name) => {
-  const projectMap = {
-    "Vue.js": ["Seed Savers Network", "INOFO Africa", "Greania Build"],
-    React: ["React Portfolio", "Techlungs", "SaleHub POS"],
-    TypeScript: ["Seed Savers Network", "INOFO Africa", "SaleHub POS"],
-    JavaScript: ["All Projects"],
-    Django: ["SaleHub POS"],
-    Python: ["SaleHub POS", "Data Analysis"],
-    MySQL: ["SaleHub POS", "Desiderata Consultancy"],
-    Figma: ["Nyakazi Ecommerce", "Nyakazi Corporate"],
-  };
-  return projectMap[name] || ["Various Projects"];
-};
-
-const getProjectsForCategory = (category) => {
-  const categoryProjects = {
-    Frontend: ["Seed Savers Network", "INOFO Africa", "React Portfolio"],
-    Backend: ["SaleHub POS", "Desiderata Consultancy"],
-    Database: ["SaleHub POS", "Desiderata Consultancy"],
-    Design: ["Nyakazi Ecommerce", "Nyakazi Corporate"],
-    DevOps: ["SaleHub POS", "Portfolio Deployment"],
-  };
-  return categoryProjects[category] || ["Multiple Projects"];
-};
-
-const getCertification = (name) => {
-  const certs = {
-    "Vue.js": "Vue Mastery Certification",
-    React: "React Fundamentals Certified",
-    Python: "Python Institute Certified",
-    Docker: "Docker Essentials",
-  };
-  return certs[name] || null;
-};
-
-const getRadarPath = () => {
-  const points = skillCategories.map((cat, idx) => {
-    const level = cat.level / 5;
-    const angle = ((idx * 72 - 90) * Math.PI) / 180;
-    const x = 50 + level * 50 * Math.cos(angle);
-    const y = 50 + level * 50 * Math.sin(angle);
-    return `${x}% ${y}%`;
-  });
-  return `polygon(${points.join(", ")})`;
-};
-
-const showSkillDetails = (skill) => {
-  selectedSkill.value = skill;
-  document.body.style.overflow = "hidden";
-};
-
-const closeSkillDetails = () => {
-  selectedSkill.value = null;
-  document.body.style.overflow = "";
-};
+  return levels[name] || 3
+}
 </script>
 
 <style scoped>
-.skills {
-  padding: 5rem 2rem;
-  background: var(--bg-secondary);
-  position: relative;
+/* ─── Tokens ─────────────────────────────────────────── */
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --accent: #c9a23b;
+  --accent-dim: rgba(201, 162, 59, 0.12);
+  --accent-border: rgba(201, 162, 59, 0.35);
+  --white: #f0f2f5;
+  --silver: #b0b8c1;
+  --muted: #7b8694;
+  --dim: #4a5568;
+  --border: rgba(255, 255, 255, 0.07);
 }
 
-.skills-container {
-  max-width: 1200px;
+/* ─── Section wrapper ────────────────────────────────── */
+.skills-section {
+  width: 100%;
+  max-width: 1380px;
   margin: 0 auto;
+  padding: 0 0 2.5rem;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-/* Header Styles */
-.skills-header {
-  text-align: center;
-  margin-bottom: 3rem;
+/* ─── Card ───────────────────────────────────────────── */
+.skills-card {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  padding: 2.2rem 2.8rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.4rem;
+  position: relative;
+  overflow: hidden;
 }
 
-.header-badge {
-  display: inline-flex;
+/* ambient glow — right side for skills */
+.skills-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 55%;
+  height: 100%;
+  background: radial-gradient(ellipse at 80% 25%, rgba(180, 100, 30, 0.14) 0%, transparent 65%);
+  pointer-events: none;
+}
+
+/* ─── Top bar ────────────────────────────────────────── */
+.top-bar {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.25rem 0.75rem;
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  margin-bottom: 1.5rem;
-}
-
-.badge-num {
-  font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-.badge-text {
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-}
-
-.skills-title {
-  font-family: var(--font-heading);
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 1rem;
-}
-
-.skills-title .accent {
-  color: var(--accent);
-}
-
-.skills-underline {
-  width: 60px;
-  height: 2px;
-  background: var(--accent);
-  margin: 0 auto 1rem;
-}
-
-.skills-subtitle {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Stats Grid */
-.skills-stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 1rem;
-  margin-bottom: 3rem;
+  position: relative;
+  z-index: 2;
 }
 
-.stat-pill {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  padding: 1.5rem 1rem;
-  text-align: center;
-  transition: all 0.3s;
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
 }
 
-.stat-pill:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
+.label-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
 }
 
-.stat-pill.highlight {
-  border-left: 3px solid var(--accent);
-  background: linear-gradient(
-    135deg,
-    var(--bg-card) 0%,
-    rgba(255, 94, 0, 0.05) 100%
-  );
-}
-
-.stat-pill-value {
-  font-family: var(--font-heading);
-  font-size: 2rem;
-  font-weight: 800;
-  color: var(--accent);
-  margin-bottom: 0.5rem;
-}
-
-.stat-pill-label {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  letter-spacing: 0.05em;
+.label-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.2em;
   text-transform: uppercase;
 }
 
-/* Skills Display */
-.skills-display {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  margin-bottom: 2rem;
-  overflow: hidden;
-}
-
-.skills-navigation {
-  display: flex;
-  background: var(--bg-elevated);
-  border-bottom: 1px solid var(--border-dark);
-}
-
-.nav-category {
-  flex: 1;
-  padding: 1rem;
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.85rem;
+.tech-count-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--accent-border);
+  border-radius: 3rem;
+  font-size: 0.74rem;
   font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s;
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+.tech-count-badge i { font-size: 0.7rem; }
+
+/* ─── Main grid ──────────────────────────────────────── */
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 3rem;
+  align-items: start;
   position: relative;
-  overflow: hidden;
+  z-index: 2;
+}
+
+/* ─── Left column ────────────────────────────────────── */
+.left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+}
+
+/* Headline */
+.headline-block { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.eyebrow {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.hl-solid {
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  color: var(--white);
+}
+
+.hl-outline {
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--white);
+}
+
+.hl-accent {
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.sub-desc {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.72;
+  margin: 0.3rem 0 0;
+  max-width: 420px;
+}
+
+/* Category pill nav */
+.cat-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.cat-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  padding: 0.44rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 3rem;
+  background: var(--bg-card);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.02em;
+}
+
+.cat-pill i { font-size: 0.7rem; }
+
+.cat-pill:hover {
+  border-color: var(--accent-border);
+  color: var(--silver);
+  background: rgba(201, 162, 59, 0.06);
+}
+
+.cat-pill.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #0d1117;
+}
+
+/* Summary card */
+.summary-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1.4rem;
+  padding: 1.2rem 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: border-color 0.2s;
+}
+
+.summary-card:hover { border-color: var(--accent-border); }
+
+.sc-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+}
+
+.sc-icon {
+  width: 38px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-}
-
-.nav-category i {
-  font-size: 1rem;
-}
-
-.nav-category:hover {
-  background: rgba(255, 94, 0, 0.05);
+  background: var(--accent-dim);
+  border: 1px solid var(--accent-border);
+  border-radius: 0.75rem;
   color: var(--accent);
+  font-size: 0.95rem;
+  flex-shrink: 0;
 }
 
-.nav-category.active {
-  color: var(--accent);
-  background: var(--bg-card);
-}
-
-.nav-level {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: 2px;
-  background: var(--accent);
-  transition: width 0.5s ease;
-}
-
-/* Skills Content */
-.skills-content {
-  padding: 2rem;
-}
-
-.category-header {
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--border-dark);
-}
-
-.category-title-section {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.category-title-section h3 {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
+.sc-title {
+  font-size: 0.88rem;
   font-weight: 700;
-  color: var(--text-white);
+  color: var(--white);
+  margin: 0 0 0.2rem;
+  letter-spacing: 0.02em;
 }
 
-.category-level {
+.sc-desc {
+  font-size: 0.76rem;
+  color: var(--muted);
+  line-height: 1.55;
+  margin: 0;
+}
+
+.sc-meta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
 }
 
-.category-level span {
-  font-size: 0.75rem;
-  color: var(--text-muted);
-}
+.sc-stat { display: flex; flex-direction: column; gap: 0.1rem; }
 
-.level-bar {
-  width: 150px;
-  height: 4px;
-  background: var(--border-dark);
-  overflow: hidden;
-}
-
-.level-fill {
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.5s ease;
-}
-
-.level-value {
-  font-weight: 600;
+.sc-num {
+  font-size: 1.3rem;
+  font-weight: 800;
   color: var(--accent);
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-.category-description {
-  color: var(--text-muted);
-  line-height: 1.6;
-  font-size: 0.9rem;
+.sc-label {
+  font-size: 0.62rem;
+  color: var(--dim);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-/* Skills Grid */
+.sc-divider {
+  width: 1px;
+  height: 2rem;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+.proficiency-dots {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  margin-left: auto;
+}
+
+.prof-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: all 0.25s;
+}
+
+.prof-dot.filled {
+  background: var(--accent);
+  box-shadow: 0 0 6px rgba(201, 162, 59, 0.4);
+}
+
+/* Terminal card */
+.terminal-card {
+  background: #080b0e;
+  border: 1px solid var(--border);
+  border-radius: 1.3rem;
+  padding: 1.2rem 1.3rem 1rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  transition: border-color 0.2s;
+}
+
+.terminal-card:hover { border-color: var(--accent-border); }
+
+.terminal-dots {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0.9rem;
+}
+
+.terminal-dots span {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.terminal-dots span:nth-child(1) { background: #ff5f56; }
+.terminal-dots span:nth-child(2) { background: #ffbd2e; }
+.terminal-dots span:nth-child(3) { background: #27c93f; }
+
+.code-line {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.74rem;
+  margin-bottom: 0.45rem;
+  flex-wrap: wrap;
+  word-break: break-all;
+}
+
+.prompt { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+.cmd    { color: #b0bec5; }
+.out    { color: var(--silver); opacity: 0.75; }
+.comment{ color: #4a5568; font-style: italic; }
+
+/* ─── Right column: Skills grid ──────────────────────── */
+.right-col { position: relative; z-index: 2; }
+
+.panel-fade-enter-active,
+.panel-fade-leave-active { transition: all 0.22s ease; }
+.panel-fade-enter-from   { opacity: 0; transform: translateY(8px); }
+.panel-fade-leave-to     { opacity: 0; transform: translateY(-8px); }
+
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-  margin-bottom: 2rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
 }
 
 .skill-card {
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-dark);
-  padding: 1rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1.2rem;
+  padding: 1rem 1.1rem;
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  cursor: pointer;
-  transition: all 0.3s;
-  position: relative;
-  overflow: hidden;
+  flex-direction: column;
+  gap: 0.75rem;
+  transition: all 0.22s ease;
 }
 
 .skill-card:hover {
-  border-color: var(--accent);
-  transform: translateX(4px);
+  border-color: var(--accent-border);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
+}
+
+.skill-top {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.skill-icon-wrap {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 0.5rem;
+  flex-shrink: 0;
 }
 
 .skill-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.skill-icon img {
-  width: 32px;
-  height: 32px;
+  width: 18px;
+  height: 18px;
   object-fit: contain;
 }
 
-.skill-info {
-  flex: 1;
-}
-
-.skill-info h4 {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-white);
-  margin-bottom: 0.5rem;
-}
-
-.skill-progress {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.progress-track {
-  flex: 1;
-  height: 3px;
-  background: var(--border-dark);
-  overflow: hidden;
-}
-
-.progress-fill {
-  height: 100%;
-  background: var(--accent);
-  transition: width 0.3s;
-}
-
-.progress-value {
-  font-size: 0.7rem;
-  color: var(--text-muted);
-}
-
-.skill-hover {
-  position: absolute;
-  right: -100px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--accent);
-  font-size: 0.7rem;
-  font-weight: 600;
-  transition: right 0.3s;
-}
-
-.skill-card:hover .skill-hover {
-  right: 1rem;
-}
-
-/* Related Projects */
-.related-projects {
-  padding-top: 1rem;
-  border-top: 1px solid var(--border-dark);
-}
-
-.related-projects h4 {
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.75rem;
-}
-
-.project-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.project-tag {
-  padding: 0.3rem 0.8rem;
-  background: var(--bg-elevated);
-  color: var(--text-muted);
-  font-size: 0.75rem;
-  transition: all 0.2s;
-}
-
-.project-tag:hover {
-  background: var(--accent);
-  color: #000;
-}
-
-/* View Toggle */
-.view-toggle {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.toggle-btn {
-  padding: 0.6rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--border-default);
-  color: var(--text-muted);
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-
-.toggle-btn i {
-  margin-right: 0.5rem;
-}
-
-.toggle-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.toggle-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #000;
-}
-
-/* Radar View */
-.radar-view {
-  background: var(--bg-card);
-  border: 1px solid var(--border-dark);
-  padding: 2rem;
-  margin-top: 2rem;
-}
-
-.radar-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  align-items: center;
-}
-
-.radar-chart {
-  position: relative;
-  aspect-ratio: 1;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.radar-grid {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 94, 0, 0.05);
-  border-radius: 50%;
-}
-
-.grid-circle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  border: 1px solid var(--border-dark);
-  border-radius: 50%;
-  transform-origin: center;
-  transform: translate(-50%, -50%) scale(0.2);
-}
-
-.radar-axis {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  height: 2px;
-  background: var(--border-dark);
-  transform-origin: left center;
-}
-
-.axis-label {
-  position: absolute;
-  right: -30px;
-  top: -8px;
-  font-size: 0.7rem;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.radar-polygon {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.polygon-fill {
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 94, 0, 0.3),
-    rgba(255, 94, 0, 0.1)
-  );
-  border: 2px solid var(--accent);
-}
-
-.radar-legend {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.legend-color {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
-}
-
-.legend-value {
-  margin-left: auto;
-  font-weight: 600;
-  color: var(--accent);
-}
-
-/* Modal */
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 2rem;
-}
-
-.modal-content {
-  background: var(--bg-card);
-  border: 1px solid var(--border-default);
-  max-width: 550px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.modal-header {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  border-bottom: 1px solid var(--border-dark);
-  position: relative;
-}
-
-.modal-icon-large {
-  width: 60px;
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-icon-large img {
-  width: 50px;
-  height: 50px;
-}
-
-.modal-title h2 {
-  font-family: var(--font-heading);
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin-bottom: 0.25rem;
-}
-
-.modal-category {
-  font-size: 0.7rem;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-}
-
-.modal-close {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 1.5rem;
-  cursor: pointer;
-}
-
-.modal-body {
-  padding: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.proficiency-section {
-  text-align: center;
-}
-
-.proficiency-label {
-  font-size: 0.7rem;
-  color: var(--text-dim);
-  margin-bottom: 0.5rem;
-}
-
-.proficiency-bar {
-  height: 6px;
-  background: var(--border-dark);
-  overflow: hidden;
-  margin-bottom: 0.5rem;
-}
-
-.proficiency-fill {
-  height: 100%;
-  background: var(--accent);
-}
-
-.proficiency-stars {
-  color: var(--accent);
-  font-size: 0.9rem;
-}
-
-.description-section h4,
-.projects-section h4,
-.certification-section h4 {
-  font-size: 0.7rem;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.5rem;
-}
-
-.description-section p {
-  color: var(--text-muted);
-  line-height: 1.6;
-  font-size: 0.85rem;
-}
-
-.project-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.project-badge {
-  padding: 0.3rem 0.8rem;
-  background: var(--bg-elevated);
-  color: var(--text-silver);
-  font-size: 0.75rem;
-}
-
-.cert-badge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  background: var(--bg-elevated);
-  color: var(--accent);
+.skill-name {
   font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--white);
+  letter-spacing: 0.01em;
 }
 
-/* Animations */
-.slide-fade-enter-active,
-.slide-fade-leave-active {
-  transition: all 0.3s ease;
+.skill-bar-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.slide-fade-enter-from {
-  opacity: 0;
-  transform: translateX(20px);
+.skill-bar {
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 1px;
+  overflow: hidden;
 }
 
-.slide-fade-leave-to {
-  opacity: 0;
-  transform: translateX(-20px);
+.skill-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.55s ease;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.3s;
+.skill-dots {
+  display: flex;
+  gap: 4px;
 }
 
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
+.sk-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.07);
+  transition: background 0.25s;
 }
 
-.modal-enter-active,
-.modal-leave-active {
-  transition: opacity 0.3s;
+.sk-dot.filled {
+  background: var(--accent);
+  box-shadow: 0 0 5px rgba(201, 162, 59, 0.35);
 }
 
-.modal-enter-from,
-.modal-leave-to {
-  opacity: 0;
+/* ─── Stats bar ──────────────────────────────────────── */
+.stats-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  padding-top: 1.6rem;
+  border-top: 1px solid var(--border);
+  position: relative;
+  z-index: 2;
 }
 
-/* Responsive */
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+}
+
+.stat-number {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.stat-desc {
+  font-size: 0.68rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.stat-divider {
+  width: 1px;
+  height: 2.2rem;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* ─── Responsive ─────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .skills-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+  .main-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
-  .radar-container {
-    grid-template-columns: 1fr;
-  }
+  .sub-desc { max-width: 100%; }
 }
 
 @media (max-width: 768px) {
-  .skills {
-    padding: 3rem 1rem;
+  .skills-card {
+    padding: 1.6rem 1.4rem;
+    border-radius: 1.5rem;
+    gap: 1.8rem;
   }
 
-  .skills-title {
-    font-size: 1.8rem;
-  }
-
-  .skills-stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .skills-navigation {
-    flex-wrap: wrap;
-  }
-
-  .nav-category {
-    min-width: 100px;
-  }
-
-  .skills-content {
-    padding: 1rem;
-  }
-
-  .category-title-section {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .skills-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .view-toggle {
-    flex-direction: column;
-  }
-
-  .toggle-btn {
-    width: 100%;
-  }
-
-  .modal-content {
-    margin: 1rem;
+  .hl-solid, .hl-outline, .hl-accent {
+    font-size: clamp(2rem, 7vw, 3rem);
   }
 }
 
 @media (max-width: 480px) {
-  .skills-stats-grid {
-    grid-template-columns: 1fr;
-  }
+  .skills-grid { grid-template-columns: 1fr; }
+  .stat-divider { display: none; }
 
-  .stat-pill-value {
-    font-size: 1.5rem;
+  .hl-solid, .hl-outline, .hl-accent {
+    font-size: clamp(1.8rem, 8vw, 2.5rem);
   }
 }
 </style>
