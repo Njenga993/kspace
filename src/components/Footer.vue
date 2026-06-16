@@ -1,679 +1,530 @@
 <template>
   <footer id="footer" class="footer">
-    <div class="footer-container">
-      <!-- Top Bar - Matching hero status bar -->
-      <div class="footer-topbar">
-        <div class="topbar-id">
-          <span class="id-dot"></span>
-          <span class="id-text">KELVIN KAMAU</span>
+    <div class="footer-inner">
+
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="tb-left">
+          <span class="label-dot"></span>
+          <span class="label-text">Kelvin Kamau</span>
         </div>
-        <div class="topbar-status">
-          <span class="status-dot"></span>
-          <span class="status-text">SYSTEM OPERATIONAL</span>
+        <div class="tb-right">
+          <span class="pulse-dot"></span>
+          <span class="sys-text">System Operational</span>
         </div>
       </div>
 
-      <!-- Main Grid -->
+      <!-- Main grid -->
       <div class="footer-grid">
-        <!-- Column 1: Brand -->
-        <div class="footer-brand">
+
+        <!-- Brand -->
+        <div class="brand-col">
           <div class="brand-avatar">
             <img src="/profile.JPG" alt="Kelvin Kamau" />
-            <div class="avatar-status"></div>
+            <span class="avatar-dot"></span>
           </div>
-          <div class="brand-info">
-            <h3 class="brand-name">KELVIN KAMAU</h3>
-            <p class="brand-role">FULL STACK DEVELOPER</p>
+          <div class="brand-copy">
+            <h3 class="brand-name">Kelvin Kamau</h3>
+            <p class="brand-role">Full‑Stack Engineer · Nairobi, Kenya</p>
             <p class="brand-tagline">
-              Building robust, scalable systems that drive business growth.
+              Building robust, scalable systems that help organisations in East Africa
+              operate efficiently and grow through modern technology.
             </p>
           </div>
         </div>
 
-        <!-- Column 2: Navigation -->
-        <div class="footer-section">
-          <h4 class="section-title">NAVIGATION</h4>
-          <ul class="nav-links">
+        <!-- Navigation -->
+        <div class="footer-col">
+          <h4 class="col-title">Navigation</h4>
+          <ul class="nav-list">
             <li v-for="link in navLinks" :key="link.id">
               <a
                 :href="`#${link.id}`"
-                @click="scrollToSection(link.id)"
+                @click.prevent="scrollToSection(link.id)"
                 class="nav-link"
               >
-                <span class="link-marker"></span>
+                <span class="nl-marker"></span>
                 {{ link.text }}
               </a>
             </li>
           </ul>
         </div>
 
-        <!-- Column 3: Connect -->
-        <div class="footer-section">
-          <h4 class="section-title">CONNECT</h4>
-          <div class="social-links">
+        <!-- Connect -->
+        <div class="footer-col">
+          <h4 class="col-title">Connect</h4>
+          <div class="social-row">
             <a
-              v-for="social in socialLinks"
-              :key="social.id"
-              :href="social.url"
+              v-for="s in socials"
+              :key="s.id"
+              :href="s.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="social-link"
+              :aria-label="s.name"
+              class="social-btn"
             >
-              <i :class="social.icon"></i>
-              <span>{{ social.name }}</span>
+              <i :class="s.icon"></i>
             </a>
           </div>
-          <div class="contact-info">
-            <div class="contact-row">
-              <i class="fas fa-envelope"></i>
-              <div class="contact-detail">
-                <span class="contact-label">EMAIL</span>
-                <a href="mailto:njengak993@gmail.com">njengak993@gmail.com</a>
+          <div class="contact-list">
+            <a href="mailto:kamaukelvin077@gmail.com" class="contact-item">
+              <i class="fas fa-envelope ci-icon"></i>
+              <div>
+                <span class="ci-label">Email</span>
+                <span class="ci-value">kamaukelvin077@gmail.com</span>
               </div>
-            </div>
-            <div class="contact-row">
-              <i class="fas fa-map-marker-alt"></i>
-              <div class="contact-detail">
-                <span class="contact-label">LOCATION</span>
-                <span>Nairobi, Kenya</span>
+            </a>
+            <div class="contact-item">
+              <i class="fas fa-map-marker-alt ci-icon"></i>
+              <div>
+                <span class="ci-label">Location</span>
+                <span class="ci-value">Nairobi, Kenya · EAT (UTC+3)</span>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Column 4: Expertise - Matching hero badge style -->
-        <div class="footer-section">
-          <h4 class="section-title">EXPERTISE</h4>
-          <div class="expertise-badges">
-            <span class="expertise-badge">Full Stack Development</span>
-            <span class="expertise-badge">SaaS Architecture</span>
-            <span class="expertise-badge">API Design</span>
-            <span class="expertise-badge">Cloud Infrastructure</span>
-            <span class="expertise-badge">Performance Optimization</span>
-            <span class="expertise-badge">System Design</span>
+        <!-- Expertise -->
+        <div class="footer-col">
+          <h4 class="col-title">Expertise</h4>
+          <div class="expertise-wrap">
+            <span
+              v-for="tag in expertise"
+              :key="tag"
+              class="expertise-tag"
+            >{{ tag }}</span>
           </div>
         </div>
+
       </div>
 
-      <!-- Bottom Bar - Matching hero trust stats -->
-      <div class="footer-bottombar">
-        <div class="bottom-stats">
-          <div class="b-stat">
-            <span class="b-stat-num">03+</span>
-            <span class="b-stat-label">YEARS</span>
+      <!-- Bottom bar -->
+      <div class="bottom-bar">
+        <div class="bb-stats">
+          <div class="bb-stat">
+            <span class="bbs-num">03+</span>
+            <span class="bbs-label">Years</span>
           </div>
-          <span class="b-stat-sep">/</span>
-          <div class="b-stat">
-            <span class="b-stat-num">20+</span>
-            <span class="b-stat-label">PROJECTS</span>
+          <div class="bb-divider"></div>
+          <div class="bb-stat">
+            <span class="bbs-num">20+</span>
+            <span class="bbs-label">Projects</span>
           </div>
-          <span class="b-stat-sep">/</span>
-          <div class="b-stat">
-            <span class="b-stat-num">100%</span>
-            <span class="b-stat-label">COMMITTED</span>
+          <div class="bb-divider"></div>
+          <div class="bb-stat">
+            <span class="bbs-num">100%</span>
+            <span class="bbs-label">Committed</span>
           </div>
         </div>
-        <div class="bottom-copyright">
+
+        <div class="bb-copy">
           <i class="far fa-copyright"></i>
           <span>{{ new Date().getFullYear() }} Kelvin Kamau. All rights reserved.</span>
         </div>
       </div>
+
     </div>
 
-    <!-- Back to Top - Matching hero button style -->
-    <transition name="fade-up">
+    <!-- Back to top -->
+    <Transition name="btt-fade">
       <button
         v-show="showBackToTop"
-        @click="scrollToTop"
         class="back-to-top"
+        @click="scrollToTop"
         aria-label="Back to top"
       >
         <i class="fas fa-arrow-up"></i>
       </button>
-    </transition>
+    </Transition>
   </footer>
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted } from 'vue'
 
-const showBackToTop = ref(false);
+const showBackToTop = ref(false)
 
 const navLinks = [
-  { id: "about", text: "About" },
-  { id: "skills", text: "Skills" },
-  { id: "experience", text: "Experience" },
-  { id: "projects", text: "Projects" },
-  { id: "contact", text: "Contact" },
-];
+  { id: 'about',      text: 'About'      },
+  { id: 'skills',     text: 'Skills'     },
+  { id: 'experience', text: 'Experience' },
+  { id: 'projects',   text: 'Projects'   },
+  { id: 'clients',    text: 'Clients'    },
+  { id: 'contact',    text: 'Contact'    },
+]
 
-const socialLinks = [
-  {
-    id: "github",
-    name: "GitHub",
-    icon: "fab fa-github",
-    url: "https://github.com/Njenga993",
-  },
-  {
-    id: "linkedin",
-    name: "LinkedIn",
-    icon: "fab fa-linkedin-in",
-    url: "https://www.linkedin.com/in/kelvin-kamau-788160277/",
-  },
-  {
-    id: "twitter",
-    name: "Twitter",
-    icon: "fab fa-twitter",
-    url: "https://x.com/kamau_nje",
-  },
-];
+const socials = [
+  { id: 'github',   name: 'GitHub',   icon: 'fab fa-github',      url: 'https://github.com/Njenga993' },
+  { id: 'linkedin', name: 'LinkedIn', icon: 'fab fa-linkedin-in',  url: 'https://www.linkedin.com/in/kelvin-kamau-788160277/' },
+  { id: 'x',        name: 'X',        icon: 'fab fa-x-twitter',    url: 'https://x.com/kamau_nje' },
+]
 
-const scrollToTop = () => {
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+const expertise = [
+  'Full‑Stack Development',
+  'SaaS Architecture',
+  'REST API Design',
+  'Cloud Deployment',
+  'E‑commerce Systems',
+  'POS & Inventory',
+  'Performance Optimisation',
+  'UI/UX Engineering',
+]
+
+const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
 const scrollToSection = (id) => {
-  const element = document.getElementById(id);
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth" });
+  const el = document.getElementById(id)
+  if (el) {
+    const top = el.getBoundingClientRect().top + window.scrollY - 80
+    window.scrollTo({ top, behavior: 'smooth' })
   }
-};
+}
 
-const checkScroll = () => {
-  showBackToTop.value = window.scrollY > 400;
-};
+const onScroll = () => { showBackToTop.value = window.scrollY > 400 }
 
-onMounted(() => {
-  window.addEventListener("scroll", checkScroll);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("scroll", checkScroll);
-});
+onMounted(() => window.addEventListener('scroll', onScroll, { passive: true }))
+onUnmounted(() => window.removeEventListener('scroll', onScroll))
 </script>
 
 <style scoped>
-/* ==============================
-   FOOTER
-   ============================== */
+/* ─── Tokens ─────────────────────────────────────────── */
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --accent: #c9a23b;
+  --accent-dim: rgba(201, 162, 59, 0.12);
+  --accent-border: rgba(201, 162, 59, 0.35);
+  --white: #f0f2f5;
+  --silver: #b0b8c1;
+  --muted: #7b8694;
+  --dim: #4a5568;
+  --border: rgba(255, 255, 255, 0.07);
+  --green: #2ecc71;
+}
+
+/* ─── Footer shell ───────────────────────────────────── */
 .footer {
   position: relative;
-  padding: 2.5rem 2rem 1.5rem;
-  background: var(--bg-primary, #0b0f13);
-  border-top: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
+  background: #0d1117;
+  border-top: 1px solid var(--border);
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-.footer-container {
-  max-width: 1200px;
+.footer-inner {
+  max-width: 1380px;
   margin: 0 auto;
+  padding: 2.4rem 2.8rem 1.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.2rem;
 }
 
-/* ==============================
-   TOP BAR - Matching hero status bar
-   ============================== */
-.footer-topbar {
+/* ─── Top bar ────────────────────────────────────────── */
+.top-bar {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 1.25rem;
+  gap: 1rem;
   padding-bottom: 2rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--border);
 }
 
-.topbar-id {
+.tb-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.55rem;
 }
 
-.id-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--accent, #c9a23b);
-  border-radius: 50%;
+.label-dot {
+  width: 7px; height: 7px;
+  background: var(--accent); border-radius: 50%;
 }
 
-.id-text {
-  font-family: var(--font-heading, 'Inter', sans-serif);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-muted, #7b8694);
-  letter-spacing: 0.2em;
+.label-text {
+  font-size: 0.8rem; font-weight: 700;
+  color: var(--silver); letter-spacing: 0.06em;
 }
 
-.topbar-status {
+.tb-right {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 1rem;
-  border: 1px solid rgba(34, 197, 94, 0.2);
+  gap: 0.5rem;
+  padding: 0.38rem 0.9rem;
+  border: 1px solid rgba(46, 204, 113, 0.22);
+  border-radius: 3rem;
 }
 
-.status-dot {
-  width: 6px;
-  height: 6px;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: softPulse 2s infinite;
+.pulse-dot {
+  width: 6px; height: 6px;
+  background: var(--green); border-radius: 50%;
+  box-shadow: 0 0 7px rgba(46, 204, 113, 0.7);
+  animation: pulse 2s infinite;
 }
 
-.status-text {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #22c55e;
-  letter-spacing: 0.15em;
+.sys-text {
+  font-size: 0.7rem; font-weight: 600;
+  color: var(--green); letter-spacing: 0.04em;
 }
 
-/* ==============================
-   FOOTER GRID
-   ============================== */
+/* ─── Main grid ──────────────────────────────────────── */
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1.2fr;
+  grid-template-columns: 1.6fr 1fr 1.2fr 1.2fr;
   gap: 3rem;
   padding-bottom: 2rem;
-  margin-bottom: 2rem;
-  border-bottom: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
+  border-bottom: 1px solid var(--border);
 }
 
-/* ==============================
-   BRAND SECTION
-   ============================== */
-.footer-brand {
+/* ─── Brand col ──────────────────────────────────────── */
+.brand-col {
   display: flex;
   gap: 1rem;
+  align-items: flex-start;
 }
 
 .brand-avatar {
   position: relative;
   flex-shrink: 0;
-  width: 64px;
-  height: 64px;
+  width: 56px; height: 56px;
 }
 
 .brand-avatar img {
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--accent, #c9a23b);
-  filter: grayscale(100%);
+  object-position: center 15%;
+  border: 1.5px solid var(--accent-border);
+  filter: grayscale(15%);
   transition: filter 0.3s;
+  display: block;
 }
 
-.brand-avatar:hover img {
-  filter: grayscale(0%);
-}
+.brand-avatar:hover img { filter: grayscale(0%); }
 
-.avatar-status {
+.avatar-dot {
   position: absolute;
-  bottom: 2px;
-  right: 2px;
-  width: 12px;
-  height: 12px;
-  background: #22c55e;
-  border-radius: 50%;
-  border: 2px solid var(--bg-primary, #0b0f13);
-  animation: softPulse 2s infinite;
+  bottom: 2px; right: 2px;
+  width: 10px; height: 10px;
+  background: var(--green); border-radius: 50%;
+  border: 2px solid #0d1117;
+  animation: pulse 2s infinite;
 }
 
-.brand-info {
-  flex: 1;
-}
+.brand-copy { flex: 1; display: flex; flex-direction: column; gap: 0.35rem; }
 
 .brand-name {
-  font-family: var(--font-heading);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-white, #f0f2f5);
-  letter-spacing: 0.08em;
-  margin-bottom: 0.25rem;
+  font-size: 0.96rem; font-weight: 700;
+  color: var(--white); letter-spacing: 0.02em; margin: 0;
 }
 
 .brand-role {
-  font-family: var(--font-heading);
-  font-size: 0.7rem;
-  font-weight: 600;
-  color: var(--accent, #c9a23b);
-  letter-spacing: 0.1em;
-  margin-bottom: 0.75rem;
+  font-size: 0.7rem; font-weight: 600;
+  color: var(--accent); letter-spacing: 0.04em; margin: 0;
 }
 
 .brand-tagline {
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  line-height: 1.6;
+  font-size: 0.78rem; color: var(--muted);
+  line-height: 1.65; margin: 0.25rem 0 0;
 }
 
-/* ==============================
-   FOOTER SECTION
-   ============================== */
-.footer-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+/* ─── Generic footer col ─────────────────────────────── */
+.footer-col {
+  display: flex; flex-direction: column; gap: 1rem;
 }
 
-.section-title {
-  font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: var(--accent, #c9a23b);
-  letter-spacing: 0.12em;
-  margin: 0;
+.col-title {
+  font-size: 0.66rem; font-weight: 700;
+  color: var(--accent); letter-spacing: 0.14em;
+  text-transform: uppercase; margin: 0;
 }
 
-/* Navigation Links */
-.nav-links {
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin: 0;
+/* Navigation */
+.nav-list {
+  list-style: none; padding: 0; margin: 0;
+  display: flex; flex-direction: column; gap: 0.45rem;
 }
 
 .nav-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.8rem;
-  transition: all 0.2s;
-  padding: 0.2rem 0;
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: var(--muted); text-decoration: none;
+  font-size: 0.82rem; transition: all 0.2s; padding: 0.15rem 0;
 }
 
-.link-marker {
-  width: 4px;
-  height: 4px;
-  background: var(--border-default, rgba(201, 162, 59, 0.25));
-  transition: all 0.2s;
+.nl-marker {
+  width: 4px; height: 4px;
+  background: var(--dim); border-radius: 50%;
+  transition: all 0.2s; flex-shrink: 0;
 }
 
 .nav-link:hover {
-  color: var(--accent, #c9a23b);
+  color: var(--accent);
   transform: translateX(4px);
 }
 
-.nav-link:hover .link-marker {
-  background: var(--accent, #c9a23b);
-  width: 8px;
+.nav-link:hover .nl-marker {
+  background: var(--accent);
+  width: 6px; height: 6px;
 }
 
-/* Social Links */
-.social-links {
-  display: flex;
-  gap: 0.5rem;
+/* Socials */
+.social-row { display: flex; gap: 0.45rem; }
+
+.social-btn {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); border-radius: 0.6rem;
+  color: var(--muted); font-size: 0.82rem;
+  text-decoration: none; transition: all 0.2s;
 }
 
-.social-link {
-  width: 38px;
-  height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
-  color: var(--text-muted);
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-}
-
-.social-link:hover {
-  border-color: var(--accent, #c9a23b);
-  color: var(--accent, #c9a23b);
+.social-btn:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
   transform: translateY(-2px);
 }
 
-.social-link span {
-  display: none;
+/* Contact list */
+.contact-list {
+  display: flex; flex-direction: column; gap: 0.65rem;
 }
 
-/* Contact Info */
-.contact-info {
+.contact-item {
+  display: flex; align-items: flex-start; gap: 0.6rem;
+  text-decoration: none; transition: color 0.2s;
+}
+
+a.contact-item:hover .ci-value { color: var(--accent); }
+
+.ci-icon {
+  width: 14px; color: var(--accent); font-size: 0.74rem;
+  margin-top: 0.15rem; flex-shrink: 0;
+}
+
+.contact-item > div {
+  display: flex; flex-direction: column; gap: 0.08rem;
+}
+
+.ci-label {
+  font-size: 0.56rem; font-weight: 700; color: var(--dim);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+.ci-value { font-size: 0.76rem; color: var(--silver); }
+
+/* Expertise */
+.expertise-wrap { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.expertise-tag {
+  display: inline-flex; align-items: center;
+  padding: 0.3rem 0.75rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 3rem; font-size: 0.68rem; color: var(--silver);
+  transition: all 0.2s;
+}
+
+.expertise-tag:hover {
+  border-color: var(--accent-border);
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* ─── Bottom bar ─────────────────────────────────────── */
+.bottom-bar {
   display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.contact-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.65rem;
-}
-
-.contact-row > i {
-  width: 14px;
-  color: var(--accent, #c9a23b);
-  font-size: 0.75rem;
-  margin-top: 0.1rem;
-}
-
-.contact-detail {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-}
-
-.contact-label {
-  font-size: 0.55rem;
-  color: var(--text-dim, #5a6572);
-  letter-spacing: 0.08em;
-}
-
-.contact-detail span,
-.contact-detail a {
-  font-size: 0.75rem;
-  color: var(--text-silver, #b0b8c1);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.contact-detail a:hover {
-  color: var(--accent, #c9a23b);
-}
-
-/* ==============================
-   EXPERTISE BADGES - Matching hero badge style
-   ============================== */
-.expertise-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.expertise-badge {
-  display: inline-flex;
   align-items: center;
-  padding: 0.4rem 0.85rem;
-  background: var(--bg-card, #141a20);
-  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
-  border-radius: 2rem;
-  font-size: 0.65rem;
-  font-weight: 500;
-  color: var(--text-silver);
-  transition: 0.2s;
-}
-
-.expertise-badge:hover {
-  border-color: var(--accent, #c9a23b);
-  background: #1e262e;
-}
-
-/* ==============================
-   BOTTOM BAR - Matching hero trust stats
-   ============================== */
-.footer-bottombar {
-  display: flex;
   justify-content: space-between;
-  align-items: center;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
-.bottom-stats {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
+.bb-stats {
+  display: flex; align-items: center; gap: 1.2rem;
 }
 
-.b-stat {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
+.bb-stat { display: flex; flex-direction: column; gap: 0.08rem; }
+
+.bbs-num {
+  font-size: 1.4rem; font-weight: 800;
+  color: var(--accent); letter-spacing: -0.02em; line-height: 1;
 }
 
-.b-stat-num {
-  font-family: var(--font-heading);
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--accent, #c9a23b);
-  letter-spacing: -0.01em;
+.bbs-label {
+  font-size: 0.6rem; color: var(--dim);
+  text-transform: uppercase; letter-spacing: 0.1em;
 }
 
-.b-stat-label {
-  font-family: var(--font-heading);
-  font-size: 0.55rem;
-  font-weight: 600;
-  color: var(--text-dim, #5a6572);
-  letter-spacing: 0.1em;
+.bb-divider {
+  width: 1px; height: 2rem;
+  background: var(--border); flex-shrink: 0;
 }
 
-.b-stat-sep {
-  color: var(--border-default, rgba(201, 162, 59, 0.25));
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 300;
-  margin: 0 0.15rem;
+.bb-copy {
+  display: flex; align-items: center; gap: 0.45rem;
+  font-size: 0.66rem; color: var(--dim);
 }
 
-.bottom-copyright {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.65rem;
-  color: var(--text-dim);
-}
+.bb-copy i { font-size: 0.66rem; }
 
-.bottom-copyright i {
-  font-size: 0.65rem;
-}
-
-/* ==============================
-   BACK TO TOP - Matching hero button
-   ============================== */
+/* ─── Back to top ────────────────────────────────────── */
 .back-to-top {
   position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  width: 44px;
-  height: 44px;
-  background: var(--accent, #c9a23b);
-  border: none;
-  color: #0b0f13;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1rem;
-  transition: all 0.3s;
+  bottom: 2rem; right: 2rem;
+  width: 42px; height: 42px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent); color: #0d1117;
+  border: none; border-radius: 50%;
+  font-size: 0.9rem; cursor: pointer;
+  transition: all 0.22s ease;
+  box-shadow: 0 4px 14px rgba(201, 162, 59, 0.3);
   z-index: 900;
-  box-shadow: 0 6px 18px rgba(201, 162, 59, 0.2);
 }
 
 .back-to-top:hover {
   background: #dbb24a;
   transform: translateY(-4px);
-  box-shadow: 0 12px 24px rgba(201, 162, 59, 0.3);
+  box-shadow: 0 8px 22px rgba(201, 162, 59, 0.4);
 }
 
-/* ==============================
-   ANIMATIONS
-   ============================== */
-@keyframes softPulse {
+.btt-fade-enter-active, .btt-fade-leave-active { transition: all 0.28s ease; }
+.btt-fade-enter-from, .btt-fade-leave-to { opacity: 0; transform: translateY(16px); }
+
+/* ─── Animations ─────────────────────────────────────── */
+@keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(0.9); }
+  50%       { opacity: 0.55; transform: scale(0.85); }
 }
 
-.fade-up-enter-active,
-.fade-up-leave-active {
-  transition: all 0.3s ease;
-}
-
-.fade-up-enter-from {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-.fade-up-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-/* ==============================
-   RESPONSIVE
-   ============================== */
-@media (max-width: 968px) {
+/* ─── Responsive ─────────────────────────────────────── */
+@media (max-width: 1024px) {
   .footer-grid {
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
   }
 
-  .footer-brand {
-    grid-column: span 2;
-  }
+  .brand-col { grid-column: span 2; }
 }
 
 @media (max-width: 768px) {
-  .footer {
-    padding: 2rem 1.5rem 1rem;
-  }
+  .footer-inner { padding: 2rem 1.4rem 1.4rem; }
 
   .footer-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1.6rem;
   }
 
-  .footer-brand {
-    grid-column: span 1;
-  }
+  .brand-col { grid-column: span 1; }
 
-  .footer-bottombar {
-    flex-direction: column;
-    text-align: center;
-  }
+  .bottom-bar { flex-direction: column; align-items: flex-start; }
 
-  .bottom-stats {
-    justify-content: center;
-  }
-
-  .back-to-top {
-    bottom: 1rem;
-    right: 1rem;
-    width: 40px;
-    height: 40px;
-  }
+  .back-to-top { bottom: 1.2rem; right: 1.2rem; width: 38px; height: 38px; }
 }
 
 @media (max-width: 480px) {
-  .footer {
-    padding: 1.5rem 1rem 1rem;
-  }
+  .footer-inner { padding: 1.6rem 1rem 1.2rem; }
+  .bb-divider { display: none; }
+  .bb-stats { gap: 1rem; }
 
-  .footer-brand {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .brand-avatar {
-    width: 80px;
-    height: 80px;
-  }
+  .brand-col { flex-direction: column; align-items: flex-start; }
 }
 </style>

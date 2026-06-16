@@ -1,860 +1,730 @@
 <template>
-  <section id="contact" class="contact-premium">
-    <div class="contact-container">
-      <!-- Top Bar - Matching hero status bar -->
-      <div class="contact-topbar">
-        <div class="topbar-id">
-          <span class="id-dot"></span>
-          <span class="id-text">CONNECT</span>
+  <section id="contact" class="contact-section">
+    <div class="contact-card">
+
+      <!-- Top bar -->
+      <div class="top-bar">
+        <div class="section-label">
+          <span class="label-dot"></span>
+          <span class="label-text">Connect</span>
         </div>
-        <div class="topbar-status">
-          <span class="status-dot"></span>
-          <span class="status-text">AVAILABLE FOR WORK</span>
+        <div class="avail-badge">
+          <span class="pulse-dot"></span>
+          <span>Available for work</span>
         </div>
       </div>
 
-      <!-- Main Content -->
-      <div class="contact-main">
-        <!-- Left: Typography Block - Matching hero left side -->
-        <div class="contact-type">
-          <h2 class="contact-headline">
-            <span class="t-line">Let's Build</span>
-            <span class="t-line t-outline">Something</span>
-            <span class="t-line t-accent">Great</span>
-          </h2>
+      <!-- Main grid -->
+      <div class="main-grid">
 
-          <p class="contact-desc">
-            Have a project in mind? Reach out and let's create something 
-            exceptional together. I respond within 24 hours.
-          </p>
+        <!-- LEFT: headline + contact info -->
+        <div class="left-col">
 
-          <!-- Contact Methods - Matching hero badge style -->
-          <div class="contact-methods">
-            <a href="mailto:njengak993@gmail.com" class="method-card">
-              <span class="method-icon"><i class="fas fa-envelope"></i></span>
-              <div class="method-info">
-                <span class="method-label">EMAIL</span>
-                <span class="method-value">njengak993@gmail.com</span>
+          <div class="headline-block">
+            <p class="eyebrow">Get In Touch</p>
+            <h2 class="headline">
+              <span class="hl-solid">Let's Build</span>
+              <span class="hl-outline">Something</span>
+              <span class="hl-accent">Great</span>
+            </h2>
+            <p class="sub-desc">
+              Have a project in mind? Reach out and let's create something
+              exceptional together. I respond within 24 hours.
+            </p>
+          </div>
+
+          <!-- Contact method cards -->
+          <div class="methods-list">
+            <a href="mailto:kamaukelvin077@gmail.com" class="method-card">
+              <div class="mc-icon">
+                <i class="fas fa-envelope"></i>
               </div>
+              <div class="mc-info">
+                <span class="mc-label">Email</span>
+                <span class="mc-value">kamaukelvin077@gmail.com</span>
+              </div>
+              <i class="fas fa-arrow-right mc-arrow"></i>
             </a>
+
             <a href="tel:+254703642280" class="method-card">
-              <span class="method-icon"><i class="fas fa-phone-alt"></i></span>
-              <div class="method-info">
-                <span class="method-label">PHONE</span>
-                <span class="method-value">+254 703 642 280</span>
+              <div class="mc-icon">
+                <i class="fas fa-phone-alt"></i>
               </div>
+              <div class="mc-info">
+                <span class="mc-label">Phone</span>
+                <span class="mc-value">+254 703 642 280</span>
+              </div>
+              <i class="fas fa-arrow-right mc-arrow"></i>
             </a>
-            <div class="method-card">
-              <span class="method-icon"><i class="fas fa-map-marker-alt"></i></span>
-              <div class="method-info">
-                <span class="method-label">LOCATION</span>
-                <span class="method-value">Nairobi, Kenya</span>
+
+            <div class="method-card method-card--static">
+              <div class="mc-icon">
+                <i class="fas fa-map-marker-alt"></i>
+              </div>
+              <div class="mc-info">
+                <span class="mc-label">Location</span>
+                <span class="mc-value">Nairobi, Kenya · EAT (UTC+3)</span>
               </div>
             </div>
           </div>
 
-          <!-- Social Links - Matching hero bottom socials -->
-          <div class="contact-socials">
-            <a href="https://github.com/Njenga993" target="_blank" rel="noopener" aria-label="GitHub">
+          <!-- Availability card -->
+          <div class="avail-card">
+            <div class="ac-top">
+              <span class="pulse-dot pulse-dot--sm"></span>
+              <span class="ac-status">Currently Available</span>
+            </div>
+            <p class="ac-desc">
+              Open to freelance projects, full-time roles, and consulting engagements.
+              Specialising in full-stack systems, e-commerce, and SaaS platforms.
+            </p>
+            <div class="ac-tags">
+              <span class="ac-tag">Freelance</span>
+              <span class="ac-tag">Full-time</span>
+              <span class="ac-tag">Remote</span>
+              <span class="ac-tag">On-site Nairobi</span>
+            </div>
+          </div>
+
+          <!-- Socials -->
+          <div class="socials-row">
+            <a href="https://github.com/Njenga993" target="_blank" rel="noopener" class="social-link" aria-label="GitHub">
               <i class="fab fa-github"></i>
             </a>
-            <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" rel="noopener" class="social-link" aria-label="LinkedIn">
               <i class="fab fa-linkedin-in"></i>
             </a>
-            <a href="https://x.com/kamau_nje" target="_blank" rel="noopener" aria-label="Twitter">
-              <i class="fab fa-twitter"></i>
+            <a href="https://x.com/kamau_nje" target="_blank" rel="noopener" class="social-link" aria-label="X / Twitter">
+              <i class="fab fa-x-twitter"></i>
+            </a>
+            <a href="mailto:kamaukelvin077@gmail.com" class="social-link" aria-label="Email">
+              <i class="fas fa-envelope"></i>
             </a>
           </div>
+
         </div>
 
-        <!-- Right: Contact Form - Matching hero right showcase -->
-        <div class="contact-form-wrap">
-          <!-- Status Terminal -->
-          <div class="form-terminal">
-            <div class="terminal-dots">
-              <span></span><span></span><span></span>
-            </div>
-            <div class="terminal-content">
-              <div class="code-line">
-                <span class="prompt">~/connect $</span>
-                <span>init-contact --secure</span>
+        <!-- RIGHT: form -->
+        <div class="right-col">
+
+          <!-- Terminal -->
+          <div class="terminal-card">
+            <div class="terminal-dots"><span></span><span></span><span></span></div>
+            <div class="t-lines">
+              <div class="t-line-row">
+                <span class="t-prompt">~/connect $</span>
+                <span class="t-cmd">init-contact --secure</span>
               </div>
-              <div class="code-line">
-                <span class="prompt">></span>
-                <span class="accent-text">{{ formStatus === 'success' ? 'Message delivered successfully' : 'Ready to receive your message...' }}</span>
+              <div class="t-line-row">
+                <span class="t-prompt">›</span>
+                <span class="t-accent-out">
+                  {{ formStatus === 'success' ? 'Message delivered successfully ✓' : 'Ready to receive your message...' }}
+                </span>
               </div>
             </div>
           </div>
 
-          <!-- Form or Success State -->
-          <transition name="form-fade" mode="out-in">
-            <div v-if="formStatus === 'success'" key="success" class="form-success">
-              <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
+          <!-- Form / Success -->
+          <Transition name="form-fade" mode="out-in">
+
+            <!-- Success state -->
+            <div v-if="formStatus === 'success'" key="success" class="success-panel">
+              <div class="sp-icon">
+                <i class="fas fa-check"></i>
               </div>
-              <h3 class="success-title">Message Delivered</h3>
-              <p class="success-desc">Thank you for reaching out. I'll respond within 24 hours.</p>
-              <button @click="resetForm" class="success-btn">
-                SEND ANOTHER MESSAGE
+              <h3 class="sp-title">Message Delivered</h3>
+              <p class="sp-desc">Thank you for reaching out. I'll respond within 24 hours.</p>
+              <button class="sp-reset" @click="resetForm">
+                Send Another Message
               </button>
             </div>
 
-            <form v-else key="form" @submit.prevent="handleSubmit" class="contact-form">
+            <!-- Form -->
+            <form v-else key="form" class="contact-form" @submit.prevent="handleSubmit" novalidate>
+
               <div class="form-row">
                 <div class="form-group">
-                  <label>NAME *</label>
+                  <label>Name <span class="req">*</span></label>
                   <input
                     type="text"
                     v-model="formData.name"
-                    placeholder="John Doe"
+                    placeholder="Wanjiru Mwangi"
                     :class="{ error: errors.name }"
+                    autocomplete="name"
                   />
                   <span class="field-error" v-if="errors.name">{{ errors.name }}</span>
                 </div>
                 <div class="form-group">
-                  <label>EMAIL *</label>
+                  <label>Email <span class="req">*</span></label>
                   <input
                     type="email"
                     v-model="formData.email"
-                    placeholder="john@example.com"
+                    placeholder="wanjiru@company.com"
                     :class="{ error: errors.email }"
+                    autocomplete="email"
                   />
                   <span class="field-error" v-if="errors.email">{{ errors.email }}</span>
                 </div>
               </div>
 
               <div class="form-group">
-                <label>SUBJECT *</label>
-                <select v-model="formData.subject" :class="{ error: errors.subject }">
-                  <option value="" disabled>Select a subject</option>
-                  <option value="Project Inquiry">Project Inquiry</option>
-                  <option value="Job Opportunity">Job Opportunity</option>
-                  <option value="Collaboration">Collaboration</option>
-                  <option value="Consultation">Consultation</option>
-                  <option value="Other">Other</option>
-                </select>
+                <label>Subject <span class="req">*</span></label>
+                <div class="select-wrap">
+                  <select v-model="formData.subject" :class="{ error: errors.subject }">
+                    <option value="" disabled>Select a subject</option>
+                    <option value="Project Inquiry">Project Inquiry</option>
+                    <option value="Job Opportunity">Job Opportunity</option>
+                    <option value="Collaboration">Collaboration</option>
+                    <option value="Consultation">Consultation</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  <i class="fas fa-chevron-down select-icon"></i>
+                </div>
                 <span class="field-error" v-if="errors.subject">{{ errors.subject }}</span>
               </div>
 
               <div class="form-group">
-                <label>MESSAGE *</label>
+                <label>Message <span class="req">*</span></label>
                 <textarea
                   v-model="formData.message"
                   rows="5"
-                  placeholder="Tell me about your project..."
+                  placeholder="Tell me about your project, timeline, and budget..."
                   :class="{ error: errors.message }"
                 ></textarea>
                 <span class="field-error" v-if="errors.message">{{ errors.message }}</span>
+                <span class="char-count">{{ formData.message.length }} / 500</span>
               </div>
 
-              <button type="submit" class="form-submit" :disabled="isSubmitting">
-                <span v-if="!isSubmitting">
-                  <span class="btn-idx">01</span>
-                  <span class="btn-label">SEND MESSAGE</span>
-                  <span class="btn-arrow"><i class="fas fa-paper-plane"></i></span>
-                </span>
-                <span v-else class="submitting">
-                  <i class="fas fa-spinner fa-pulse"></i> SENDING...
-                </span>
-              </button>
+              <div class="form-footer">
+                <button type="submit" class="submit-btn" :disabled="isSubmitting">
+                  <span v-if="!isSubmitting" class="sb-inner">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Message
+                  </span>
+                  <span v-else class="sb-inner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    Sending...
+                  </span>
+                </button>
+                <p class="form-note">
+                  <i class="fas fa-lock"></i>
+                  Your details are never shared.
+                </p>
+              </div>
+
             </form>
-          </transition>
+          </Transition>
+
         </div>
       </div>
 
-      <!-- Bottom Bar - Matching hero trust stats -->
-      <div class="contact-bottombar">
-        <div class="bottom-stats">
-          <div class="b-stat">
-            <span class="b-stat-num">24h</span>
-            <span class="b-stat-label">RESPONSE</span>
-          </div>
-          <span class="b-stat-sep">/</span>
-          <div class="b-stat">
-            <span class="b-stat-num">100%</span>
-            <span class="b-stat-label">COMMITTED</span>
-          </div>
-          <span class="b-stat-sep">/</span>
-          <div class="b-stat">
-            <span class="b-stat-num">EAT</span>
-            <span class="b-stat-label">UTC+3</span>
-          </div>
+      <!-- Stats + footer bar -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <span class="stat-number">24h</span>
+          <span class="stat-desc">Response time</span>
         </div>
-        <div class="bottom-copyright">
-          <span>{{ new Date().getFullYear() }} Kelvin Kamau</span>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">100%</span>
+          <span class="stat-desc">Committed</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">EAT</span>
+          <span class="stat-desc">UTC + 3</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <span class="stat-number">3+</span>
+          <span class="stat-desc">Years exp.</span>
+        </div>
+
+        <div class="copyright">
+          © {{ new Date().getFullYear() }} Kelvin Kamau · Nairobi, Kenya
         </div>
       </div>
+
     </div>
   </section>
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref } from 'vue'
 
-const formStatus = ref(null);
-const isSubmitting = ref(false);
+const formStatus  = ref(null)
+const isSubmitting = ref(false)
 
-const formData = ref({
-  name: "",
-  email: "",
-  subject: "",
-  message: "",
-});
-
-const errors = ref({
-  name: "",
-  email: "",
-  subject: "",
-  message: "",
-});
+const formData = ref({ name: '', email: '', subject: '', message: '' })
+const errors   = ref({ name: '', email: '', subject: '', message: '' })
 
 const validateForm = () => {
-  let isValid = true;
-  errors.value = { name: "", email: "", subject: "", message: "" };
+  let valid = true
+  errors.value = { name: '', email: '', subject: '', message: '' }
 
   if (!formData.value.name.trim()) {
-    errors.value.name = "Name is required";
-    isValid = false;
+    errors.value.name = 'Name is required'; valid = false
   } else if (formData.value.name.trim().length < 2) {
-    errors.value.name = "Name must be at least 2 characters";
-    isValid = false;
+    errors.value.name = 'Name must be at least 2 characters'; valid = false
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!formData.value.email.trim()) {
-    errors.value.email = "Email is required";
-    isValid = false;
-  } else if (!emailRegex.test(formData.value.email)) {
-    errors.value.email = "Please enter a valid email address";
-    isValid = false;
+    errors.value.email = 'Email is required'; valid = false
+  } else if (!emailRe.test(formData.value.email)) {
+    errors.value.email = 'Please enter a valid email'; valid = false
   }
 
   if (!formData.value.subject) {
-    errors.value.subject = "Please select a subject";
-    isValid = false;
+    errors.value.subject = 'Please select a subject'; valid = false
   }
 
   if (!formData.value.message.trim()) {
-    errors.value.message = "Message is required";
-    isValid = false;
+    errors.value.message = 'Message is required'; valid = false
   } else if (formData.value.message.trim().length < 10) {
-    errors.value.message = "Message must be at least 10 characters";
-    isValid = false;
+    errors.value.message = 'Message must be at least 10 characters'; valid = false
   }
 
-  return isValid;
-};
+  return valid
+}
 
 const handleSubmit = async () => {
-  if (!validateForm()) return;
-  isSubmitting.value = true;
+  if (!validateForm()) return
+  isSubmitting.value = true
   try {
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    formStatus.value = "success";
-  } catch (error) {
-    formStatus.value = "error";
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    formStatus.value = 'success'
   } finally {
-    isSubmitting.value = false;
+    isSubmitting.value = false
   }
-};
+}
 
 const resetForm = () => {
-  formStatus.value = null;
-  formData.value = { name: "", email: "", subject: "", message: "" };
-  errors.value = { name: "", email: "", subject: "", message: "" };
-};
+  formStatus.value = null
+  formData.value = { name: '', email: '', subject: '', message: '' }
+  errors.value   = { name: '', email: '', subject: '', message: '' }
+}
 </script>
 
 <style scoped>
-/* ==============================
-   SECTION - Matching hero card style
-   ============================== */
-.contact-premium {
+/* ─── Tokens ─────────────────────────────────────────── */
+:root {
+  --bg: #0d1117;
+  --bg-card: #161b22;
+  --accent: #c9a23b;
+  --accent-dim: rgba(201, 162, 59, 0.12);
+  --accent-border: rgba(201, 162, 59, 0.35);
+  --white: #f0f2f5;
+  --silver: #b0b8c1;
+  --muted: #7b8694;
+  --dim: #4a5568;
+  --border: rgba(255, 255, 255, 0.07);
+  --green: #2ecc71;
+  --red: #ef4444;
+}
+
+/* ─── Section ────────────────────────────────────────── */
+.contact-section {
   width: 100%;
-  max-width: 1440px;
+  max-width: 1380px;
   margin: 0 auto;
-  padding: 2.5rem 3rem;
+  padding: 0 0 2.5rem;
+  font-family: 'Inter', system-ui, sans-serif;
 }
 
-.contact-container {
-  background: var(--bg-primary, #0b0f13);
-  border: 1px solid var(--border-dark, rgba(255, 255, 255, 0.08));
-  border-radius: 2.5rem;
-  padding: 2.5rem 3rem;
+/* ─── Card ───────────────────────────────────────────── */
+.contact-card {
+  background: #0d1117;
+  border: 1px solid var(--border);
+  border-radius: 2rem;
+  padding: 2.2rem 2.8rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 3rem;
-  box-shadow: var(--shadow-card, 0 18px 35px -12px rgba(0, 0, 0, 0.6));
+  gap: 2.4rem;
+  position: relative;
+  overflow: hidden;
 }
 
-/* ==============================
-   TOP BAR - Matching hero status bar
-   ============================== */
-.contact-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1.25rem;
+/* ambient glow — right side for contact */
+.contact-card::after {
+  content: '';
+  position: absolute;
+  top: 0; right: 0;
+  width: 55%; height: 100%;
+  background: radial-gradient(ellipse at 80% 30%, rgba(180, 100, 30, 0.13) 0%, transparent 65%);
+  pointer-events: none;
 }
 
-.topbar-id {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+/* ─── Top bar ────────────────────────────────────────── */
+.top-bar {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap;
+  gap: 1rem; position: relative; z-index: 2;
 }
 
-.id-dot {
-  width: 6px;
-  height: 6px;
-  background: var(--accent, #c9a23b);
-  border-radius: 50%;
+.section-label { display: flex; align-items: center; gap: 0.55rem; }
+
+.label-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
+
+.label-text {
+  font-size: 0.72rem; font-weight: 700;
+  color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
 }
 
-.id-text {
-  font-family: var(--font-heading, 'Inter', sans-serif);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-muted, #7b8694);
-  letter-spacing: 0.2em;
+.avail-badge {
+  display: inline-flex; align-items: center; gap: 0.55rem;
+  padding: 0.42rem 1.1rem;
+  border: 1px solid rgba(46, 204, 113, 0.25); border-radius: 3rem;
+  font-size: 0.72rem; font-weight: 600; color: var(--green);
 }
 
-.topbar-status {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 1rem;
-  border: 1px solid rgba(34, 197, 94, 0.2);
+.pulse-dot {
+  width: 7px; height: 7px;
+  background: var(--green); border-radius: 50%;
+  box-shadow: 0 0 7px rgba(46, 204, 113, 0.7);
+  animation: pulse 2s infinite; flex-shrink: 0;
 }
 
-.status-dot {
-  width: 6px;
-  height: 6px;
-  background: #22c55e;
-  border-radius: 50%;
-  animation: softPulse 2s infinite;
-}
+.pulse-dot--sm { width: 6px; height: 6px; }
 
-.status-text {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: #22c55e;
-  letter-spacing: 0.15em;
-}
-
-/* ==============================
-   MAIN - Matching hero split layout
-   ============================== */
-.contact-main {
+/* ─── Main grid ──────────────────────────────────────── */
+.main-grid {
   display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 5rem;
-  align-items: start;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 3rem; align-items: start;
+  position: relative; z-index: 2;
 }
 
-/* ==============================
-   LEFT: TYPOGRAPHY - Matching hero left side
-   ============================== */
-.contact-type {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
+/* ─── Left col ───────────────────────────────────────── */
+.left-col { display: flex; flex-direction: column; gap: 1.6rem; }
+
+/* Headline */
+.headline-block { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.eyebrow {
+  font-size: 0.82rem; font-weight: 600;
+  color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
 }
 
-.contact-headline {
-  margin: 0;
-  line-height: 0.95;
-  letter-spacing: -0.03em;
+.headline {
+  display: flex; flex-direction: column;
+  line-height: 0.95; letter-spacing: -0.03em; margin: 0;
 }
 
-.t-line {
-  display: block;
-  font-family: var(--font-heading);
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  font-weight: 800;
-  color: var(--text-white, #f0f2f5);
-}
+.hl-solid  { font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 800; color: var(--white); }
+.hl-outline{ font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 800; color: transparent; -webkit-text-stroke: 1.5px var(--white); }
+.hl-accent { font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 800; color: var(--accent); }
 
-.t-outline {
-  color: transparent;
-  -webkit-text-stroke: 1.5px var(--text-white);
-  paint-order: stroke fill;
-}
+.sub-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.72; margin: 0.3rem 0 0; max-width: 400px; }
 
-.t-accent {
-  color: var(--accent, #c9a23b);
-}
-
-.contact-desc {
-  color: var(--text-muted);
-  font-size: 0.95rem;
-  line-height: 1.75;
-  max-width: 480px;
-  margin: 0;
-}
-
-/* Contact Methods - Matching hero stat cards */
-.contact-methods {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+/* Method cards */
+.methods-list { display: flex; flex-direction: column; gap: 0.6rem; }
 
 .method-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: var(--bg-card, #141a20);
-  border: 1px solid var(--border-dark);
-  border-radius: 1.2rem;
-  text-decoration: none;
-  transition: all 0.25s;
+  display: flex; align-items: center; gap: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 1.2rem; text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 a.method-card:hover {
-  border-color: var(--accent, #c9a23b);
+  border-color: var(--accent-border);
   transform: translateY(-2px);
-  box-shadow: 0 12px 22px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
-.method-icon {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(201, 162, 59, 0.08);
-  border: 1px solid var(--border-default, rgba(201, 162, 59, 0.25));
-  color: var(--accent, #c9a23b);
-  font-size: 0.9rem;
-  flex-shrink: 0;
+.method-card--static { cursor: default; }
+
+.mc-icon {
+  width: 38px; height: 38px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--accent-dim); border: 1px solid var(--accent-border);
+  border-radius: 0.75rem; color: var(--accent); font-size: 0.9rem;
 }
 
-.method-info {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
+.mc-info { display: flex; flex-direction: column; gap: 0.1rem; flex: 1; }
+
+.mc-label {
+  font-size: 0.58rem; font-weight: 700; color: var(--dim);
+  letter-spacing: 0.12em; text-transform: uppercase;
 }
 
-.method-label {
-  font-family: var(--font-heading);
-  font-size: 0.5rem;
-  font-weight: 600;
-  color: var(--text-dim, #5a6572);
-  letter-spacing: 0.15em;
+.mc-value { font-size: 0.8rem; color: var(--silver); font-weight: 500; }
+
+.mc-arrow {
+  font-size: 0.7rem; color: var(--dim);
+  transition: transform 0.2s, color 0.2s;
 }
 
-.method-value {
-  font-size: 0.78rem;
-  color: var(--text-silver, #b0b8c1);
+a.method-card:hover .mc-arrow { transform: translateX(4px); color: var(--accent); }
+
+/* Availability card */
+.avail-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 1.2rem; padding: 1.1rem 1.2rem;
+  display: flex; flex-direction: column; gap: 0.7rem;
 }
 
-/* Social Links - Matching hero bottom socials */
-.contact-socials {
-  display: flex;
-  gap: 0.6rem;
+.ac-top { display: flex; align-items: center; gap: 0.5rem; }
+
+.ac-status {
+  font-size: 0.78rem; font-weight: 700; color: var(--green);
+  letter-spacing: 0.03em;
 }
 
-.contact-socials a {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-muted);
-  text-decoration: none;
-  border: 1px solid var(--border-dark);
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
+.ac-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.65; margin: 0; }
+
+.ac-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.ac-tag {
+  padding: 0.28rem 0.65rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border); border-radius: 3rem;
+  font-size: 0.66rem; color: var(--silver);
 }
 
-.contact-socials a:hover {
-  color: var(--accent, #c9a23b);
-  border-color: var(--accent, #c9a23b);
-  transform: translateY(-2px);
+/* Socials */
+.socials-row { display: flex; gap: 0.5rem; }
+
+.social-link {
+  width: 34px; height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); border-radius: 0.6rem;
+  color: var(--muted); font-size: 0.82rem;
+  text-decoration: none; transition: all 0.2s;
 }
 
-/* ==============================
-   RIGHT: FORM - Matching hero right showcase
-   ============================== */
-.contact-form-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
+.social-link:hover { border-color: var(--accent-border); color: var(--accent); transform: translateY(-2px); }
+
+/* ─── Right col ──────────────────────────────────────── */
+.right-col {
+  display: flex; flex-direction: column; gap: 1.4rem;
+  position: relative; z-index: 2;
 }
 
-/* Terminal - Matching hero terminal */
-.form-terminal {
-  background: #0a0e12;
-  border: 1px solid var(--border-dark);
-  border-radius: 1.5rem;
-  padding: 1.4rem 1.4rem 1rem;
-  box-shadow: var(--shadow-sm, 0 8px 18px rgba(0, 0, 0, 0.4));
-  font-family: var(--font-mono, 'JetBrains Mono', monospace);
-  color: #b0bec5;
-  transition: box-shadow 0.3s, border-color 0.2s;
+/* Terminal */
+.terminal-card {
+  background: #080b0e; border: 1px solid var(--border);
+  border-radius: 1.3rem; padding: 1.2rem 1.3rem 1rem;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  transition: border-color 0.2s;
 }
 
-.form-terminal:hover {
-  border-color: var(--border-light, rgba(201, 162, 59, 0.45));
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.7);
-}
+.terminal-card:hover { border-color: var(--accent-border); }
 
-.terminal-dots {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 1rem;
-}
-
-.terminal-dots span {
-  width: 11px;
-  height: 11px;
-  border-radius: 50%;
-  background: #3a3f47;
-}
-
+.terminal-dots { display: flex; gap: 6px; margin-bottom: 0.9rem; }
+.terminal-dots span { width: 10px; height: 10px; border-radius: 50%; }
 .terminal-dots span:nth-child(1) { background: #ff5f56; }
 .terminal-dots span:nth-child(2) { background: #ffbd2e; }
 .terminal-dots span:nth-child(3) { background: #27c93f; }
 
-.terminal-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+.t-lines { display: flex; flex-direction: column; gap: 0.42rem; }
+.t-line-row { display: flex; gap: 0.55rem; font-size: 0.74rem; flex-wrap: wrap; }
+.t-prompt     { color: var(--accent); font-weight: 600; flex-shrink: 0; }
+.t-cmd        { color: #b0bec5; }
+.t-accent-out { color: var(--accent); font-weight: 600; }
 
-.code-line {
-  display: flex;
-  gap: 0.6rem;
-  font-size: 0.78rem;
-}
+/* Form transitions */
+.form-fade-enter-active, .form-fade-leave-active { transition: all 0.22s ease; }
+.form-fade-enter-from { opacity: 0; transform: translateY(8px); }
+.form-fade-leave-to   { opacity: 0; transform: translateY(-8px); }
 
-.prompt {
-  color: var(--accent, #c9a23b);
-  font-weight: 600;
-  flex-shrink: 0;
-}
-
-.accent-text {
-  color: var(--accent, #c9a23b);
-  font-weight: 600;
-}
-
-/* Form Fade Transition */
-.form-fade-enter-active,
-.form-fade-leave-active {
-  transition: all 0.22s ease;
-}
-
-.form-fade-enter-from {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.form-fade-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
-/* Contact Form */
+/* ─── Contact form ───────────────────────────────────── */
 .contact-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 1.4rem; padding: 1.5rem;
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
+  display: flex; flex-direction: column; gap: 0.4rem; position: relative;
 }
 
 .form-group label {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 600;
-  color: var(--text-dim);
-  letter-spacing: 0.1em;
+  font-size: 0.66rem; font-weight: 700; color: var(--dim);
+  letter-spacing: 0.1em; text-transform: uppercase;
 }
+
+.req { color: var(--accent); }
 
 .form-group input,
-.form-group select,
 .form-group textarea {
-  padding: 0.7rem 0.85rem;
-  background: var(--bg-card, #141a20);
-  border: 1px solid var(--border-dark);
-  border-radius: 0.8rem;
-  color: var(--text-white);
-  font-family: var(--font-heading);
-  font-size: 0.82rem;
-  transition: all 0.3s;
-  outline: none;
+  padding: 0.72rem 0.95rem;
+  background: #0d1117; border: 1px solid var(--border);
+  border-radius: 0.85rem; color: var(--white);
+  font-family: 'Inter', sans-serif; font-size: 0.84rem;
+  outline: none; transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
 }
 
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--dim); }
+
 .form-group input:focus,
-.form-group select:focus,
 .form-group textarea:focus {
-  border-color: var(--accent, #c9a23b);
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px rgba(201, 162, 59, 0.08);
 }
 
 .form-group input.error,
-.form-group select.error,
-.form-group textarea.error {
-  border-color: #ef4444;
+.form-group textarea.error,
+.form-group .select-wrap select.error {
+  border-color: var(--red);
 }
 
-.form-group select {
-  cursor: pointer;
+.form-group textarea { resize: vertical; min-height: 120px; }
+
+/* Select */
+.select-wrap { position: relative; }
+
+.select-wrap select {
+  width: 100%; padding: 0.72rem 2rem 0.72rem 0.95rem;
+  background: #0d1117; border: 1px solid var(--border);
+  border-radius: 0.85rem; color: var(--white);
+  font-family: 'Inter', sans-serif; font-size: 0.84rem;
+  outline: none; cursor: pointer; appearance: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.form-group select option {
-  background: var(--bg-card);
-  color: var(--text-white);
+.select-wrap select:focus {
+  border-color: var(--accent-border);
+  box-shadow: 0 0 0 3px rgba(201, 162, 59, 0.08);
 }
 
-.field-error {
-  font-size: 0.62rem;
-  color: #ef4444;
+.select-wrap select option { background: #161b22; color: var(--white); }
+
+.select-icon {
+  position: absolute; right: 0.9rem; top: 50%;
+  transform: translateY(-50%);
+  color: var(--dim); font-size: 0.7rem; pointer-events: none;
 }
 
-/* Submit Button - Matching hero button style */
-.form-submit {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.9rem;
-  padding: 0.85rem 0;
-  background: none;
-  border: none;
-  border-bottom: 2px solid var(--accent, #c9a23b);
-  cursor: pointer;
-  transition: all 0.35s ease;
-  width: fit-content;
-  margin-top: 0.5rem;
+/* Char count */
+.char-count {
+  font-size: 0.6rem; color: var(--dim);
+  align-self: flex-end; margin-top: -0.2rem;
 }
 
-.form-submit:hover:not(:disabled) {
-  border-bottom-color: #dbb24a;
+/* Field errors */
+.field-error { font-size: 0.62rem; color: var(--red); }
+
+/* Form footer */
+.form-footer {
+  display: flex; align-items: center;
+  justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  padding-top: 0.4rem;
 }
 
-.form-submit:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+/* Submit button */
+.submit-btn {
+  display: inline-flex; align-items: center;
+  padding: 0.8rem 1.8rem;
+  background: var(--accent); color: #0d1117;
+  font-size: 0.84rem; font-weight: 700;
+  letter-spacing: 0.04em;
+  border: none; border-radius: 3rem; cursor: pointer;
+  transition: all 0.22s ease; font-family: 'Inter', sans-serif;
+  box-shadow: 0 4px 14px rgba(201, 162, 59, 0.2);
 }
 
-.btn-idx {
-  font-family: var(--font-heading);
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: var(--accent, #c9a23b);
-  letter-spacing: 0.05em;
+.submit-btn:hover:not(:disabled) {
+  background: #dbb24a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(201, 162, 59, 0.3);
 }
 
-.btn-label {
-  font-family: var(--font-heading);
-  font-size: 0.78rem;
-  font-weight: 700;
-  color: var(--text-white);
-  letter-spacing: 0.08em;
+.submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.sb-inner {
+  display: inline-flex; align-items: center; gap: 0.55rem;
 }
 
-.btn-arrow {
-  display: flex;
-  align-items: center;
-  color: var(--accent, #c9a23b);
-  font-size: 0.75rem;
-  transition: transform 0.35s ease;
+.form-note {
+  font-size: 0.66rem; color: var(--dim);
+  display: flex; align-items: center; gap: 0.4rem; margin: 0;
 }
 
-.form-submit:hover .btn-arrow {
-  transform: translateX(4px);
+/* ─── Success panel ──────────────────────────────────── */
+.success-panel {
+  background: var(--bg-card); border: 1px solid rgba(46,204,113,0.2);
+  border-radius: 1.4rem; padding: 2.5rem 2rem;
+  display: flex; flex-direction: column;
+  align-items: center; text-align: center; gap: 1rem;
 }
 
-.submitting {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--accent, #c9a23b);
-  font-family: var(--font-heading);
-  font-size: 0.78rem;
-  font-weight: 700;
+.sp-icon {
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(46,204,113,0.12);
+  border: 1px solid rgba(46,204,113,0.3); border-radius: 50%;
+  color: var(--green); font-size: 1.3rem;
 }
 
-/* Success State */
-.form-success {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 1rem;
-  padding: 2rem;
+.sp-title {
+  font-size: 1.25rem; font-weight: 800; color: var(--white);
+  margin: 0; letter-spacing: -0.01em;
 }
 
-.success-icon {
-  font-size: 3rem;
-  color: #22c55e;
+.sp-desc { font-size: 0.86rem; color: var(--muted); margin: 0; line-height: 1.6; }
+
+.sp-reset {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.6rem 1.4rem;
+  background: transparent; border: 1px solid var(--accent-border);
+  border-radius: 3rem; font-size: 0.76rem; font-weight: 600;
+  color: var(--silver); cursor: pointer;
+  transition: all 0.2s; font-family: 'Inter', sans-serif;
+  margin-top: 0.25rem;
 }
 
-.success-title {
-  font-family: var(--font-heading);
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--text-white);
-  margin: 0;
+.sp-reset:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ─── Stats bar ──────────────────────────────────────── */
+.stats-bar {
+  display: flex; align-items: center; flex-wrap: wrap;
+  gap: 1.5rem; padding-top: 1.6rem;
+  border-top: 1px solid var(--border);
+  position: relative; z-index: 2;
 }
 
-.success-desc {
-  font-size: 0.88rem;
-  color: var(--text-muted);
-  margin: 0;
+.stat-item  { display: flex; flex-direction: column; gap: 0.12rem; }
+.stat-number{ font-size: 1.7rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
+.stat-desc  { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.stat-divider{ width: 1px; height: 2.2rem; background: var(--border); flex-shrink: 0; }
+
+.copyright {
+  margin-left: auto;
+  font-size: 0.66rem; color: var(--dim); letter-spacing: 0.03em;
 }
 
-.success-btn {
-  padding: 0.6rem 1.25rem;
-  background: none;
-  border: 1px solid var(--border-default);
-  border-radius: 2rem;
-  font-family: var(--font-heading);
-  font-size: 0.65rem;
-  font-weight: 600;
-  color: var(--text-silver);
-  cursor: pointer;
-  transition: all 0.25s ease;
-  margin-top: 0.5rem;
-}
-
-.success-btn:hover {
-  border-color: var(--accent, #c9a23b);
-  color: var(--accent, #c9a23b);
-}
-
-/* ==============================
-   BOTTOM BAR - Matching hero trust stats
-   ============================== */
-.contact-bottombar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  padding-top: 1.8rem;
-  border-top: 1px solid var(--border-dark);
-}
-
-.bottom-stats {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-}
-
-.b-stat {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-
-.b-stat-num {
-  font-family: var(--font-heading);
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--accent, #c9a23b);
-  letter-spacing: -0.01em;
-}
-
-.b-stat-label {
-  font-family: var(--font-heading);
-  font-size: 0.55rem;
-  font-weight: 600;
-  color: var(--text-dim, #5a6572);
-  letter-spacing: 0.1em;
-}
-
-.b-stat-sep {
-  color: var(--border-default);
-  font-family: var(--font-heading);
-  font-size: 0.75rem;
-  font-weight: 300;
-  margin: 0 0.15rem;
-}
-
-.bottom-copyright {
-  font-size: 0.65rem;
-  color: var(--text-dim);
-}
-
-/* ==============================
-   ANIMATIONS
-   ============================== */
-@keyframes softPulse {
+/* ─── Animations ─────────────────────────────────────── */
+@keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.6; transform: scale(0.9); }
+  50%       { opacity: 0.55; transform: scale(0.85); }
 }
 
-/* ==============================
-   RESPONSIVE
-   ============================== */
+/* ─── Responsive ─────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .contact-main {
-    grid-template-columns: 1fr;
-    gap: 2.5rem;
-  }
-
-  .contact-premium {
-    padding: 2rem 2rem;
-  }
-
-  .contact-container {
-    padding: 2rem 2rem;
-  }
+  .main-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .sub-desc  { max-width: 100%; }
 }
 
 @media (max-width: 768px) {
-  .contact-premium {
-    padding: 1.5rem;
-  }
-
-  .contact-container {
-    padding: 2rem 1.5rem;
-    border-radius: 2rem;
-  }
-
-  .t-line {
-    font-size: clamp(2rem, 7vw, 3rem);
-  }
-
-  .t-outline {
-    -webkit-text-stroke-width: 1px;
-  }
-
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-
-  .contact-bottombar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
+  .contact-card { padding: 1.6rem 1.4rem; border-radius: 1.5rem; gap: 1.8rem; }
+  .hl-solid, .hl-outline, .hl-accent { font-size: clamp(2rem, 7vw, 3rem); }
+  .form-row { grid-template-columns: 1fr; }
+  .form-footer { flex-direction: column; align-items: stretch; }
+  .submit-btn { width: 100%; justify-content: center; }
 }
 
 @media (max-width: 480px) {
-  .contact-premium {
-    padding: 1rem;
-  }
-
-  .contact-container {
-    padding: 1.5rem 1.25rem;
-    border-radius: 1.5rem;
-  }
-
-  .t-line {
-    font-size: clamp(1.8rem, 8vw, 2.5rem);
-  }
+  .stat-divider { display: none; }
+  .copyright    { margin-left: 0; width: 100%; }
+  .hl-solid, .hl-outline, .hl-accent { font-size: clamp(1.9rem, 8vw, 2.6rem); }
 }
 </style>
