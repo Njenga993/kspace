@@ -1,9 +1,10 @@
 <template>
+  <SiteLoader />
   <div id="app">
     <!-- Noise Texture Overlay -->
     <div class="noise-overlay"></div>
 
-    <Sidebar />
+   <!-- <Sidebar />-->
 
     <main class="main-content">
       <Intro />
@@ -16,10 +17,12 @@
       <Footer />
     </main>
   </div>
+  <FloatingWhatsApp />
+  <BackToTop/>
 </template>
 
 <script setup>
-import Sidebar from "./components/Sidebar.vue";
+//import Sidebar from "./components/Sidebar.vue";
 import Intro from "./components/Intro.vue";
 import About from "./components/About.vue";
 import Skills from "./components/Skills.vue";
@@ -28,29 +31,42 @@ import Projects from "./components/Projects.vue";
 import Clients from "./components/Clients.vue";
 import Contact from "./components/Contact.vue";
 import Footer from "./components/Footer.vue";
+import SiteLoader from './components/SiteLoader.vue'
+import BackToTop from './components/BackToTop.vue'
+import FloatingWhatsApp from './components/FloatingWhatsApp.vue'
 </script>
 
 <style>
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap");
 
 :root {
-  --bg-primary: #000000;
-  --bg-secondary: #0a0a0a;
-  --bg-card: #111111;
-  --bg-elevated: #1a1a1a;
-  --border-dark: #1a1a1a;
+  /* Backgrounds */
+  --bg-primary:    #000000;
+  --bg-secondary:  #0a0a0a;
+  --bg-card:       #111111;
+  --bg-elevated:   #1a1a1a;
+
+  /* Borders */
+  --border-dark:    #1a1a1a;
   --border-default: #262626;
-  --border-light: #333333;
-  --text-white: #ffffff;
-  --text-silver: #c0c0c0;
-  --text-muted: #666666;
-  --text-dim: #444444;
-  --accent: #ff5e00;
+  --border-light:   #333333;
+
+  /* Text — all bumped to WCAG-readable contrast on dark bg */
+  --text-white:  #ffffff;
+  --text-silver: #c8cdd5;   /* was #c0c0c0 — fine, kept similar */
+  --text-muted:  #a0a8b4;   /* was #666666 — FAR too dark, now readable */
+  --text-dim:    #6b7585;   /* was #444444 — too dark, now usable for labels */
+
+  /* Accent */
+  --accent:      #ff5e00;
   --accent-hover: #ff7a2e;
-  --accent-dim: rgba(255, 94, 0, 0.12);
+  --accent-dim:  rgba(255, 94, 0, 0.12);
   --accent-glow: rgba(255, 94, 0, 0.3);
+
+  /* Typography */
   --font-heading: "Oswald", sans-serif;
-  --font-body: "Inter", sans-serif;
+  --font-body:    "Inter", sans-serif;
+
   --nav-height: 70px;
 }
 
@@ -72,7 +88,7 @@ body {
   color: var(--text-silver);
   font-family: var(--font-body);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -115,17 +131,8 @@ a:hover {
   color: #000;
 }
 
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: var(--bg-primary);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--border-light);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--text-muted);
-}
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
+::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
 </style>

@@ -1,242 +1,174 @@
 <template>
-  <section id="clients" class="clients-section">
-    <div class="clients-card">
+  <section id="clients" class="clients" ref="clientsRef">
 
-      <!-- Top bar -->
-      <div class="top-bar">
-        <div class="section-label">
-          <span class="label-dot"></span>
-          <span class="label-text">Partners</span>
-        </div>
-        <div class="collab-badge">
-          <i class="fas fa-handshake"></i>
-          <span>{{ clients.length }} Collaborations</span>
-        </div>
+    <!-- Section header -->
+    <div class="clients__header anim" style="--d:0.08s">
+      <div class="clients__label">
+        <span class="clients__label-line"></span>
+        <span class="clients__label-text">Trusted Partners</span>
       </div>
-
-      <!-- Main grid -->
-      <div class="main-grid">
-
-        <!-- LEFT: headline + filters -->
-        <div class="left-col">
-          <div class="headline-block">
-            <p class="eyebrow">Trusted By</p>
-            <h2 class="headline">
-              <span class="hl-solid">Industry</span>
-              <span class="hl-outline">Leaders</span>
-              <span class="hl-accent">& Changemakers</span>
-            </h2>
-            <p class="sub-desc">
-              Collaborating with innovative organisations across East Africa —
-              from agri-tech NGOs to clean energy startups — delivering digital
-              solutions that create measurable impact.
-            </p>
-          </div>
-
-          <!-- Industry filter pills -->
-          <div class="filter-track">
-            <button
-              v-for="industry in industries"
-              :key="industry"
-              :class="['filter-pill', { active: activeIndustry === industry }]"
-              @click="activeIndustry = industry"
-            >
-              {{ industry }}
-              <span class="f-count">{{ getIndustryCount(industry) }}</span>
-            </button>
-          </div>
-
-          <!-- Quick stats -->
-          <div class="quick-stats">
-            <div class="qs-item">
-              <span class="qs-num">{{ clients.length }}</span>
-              <span class="qs-label">Clients</span>
-            </div>
-            <div class="qs-divider"></div>
-            <div class="qs-item">
-              <span class="qs-num">100%</span>
-              <span class="qs-label">Satisfaction</span>
-            </div>
-            <div class="qs-divider"></div>
-            <div class="qs-item">
-              <span class="qs-num">{{ uniqueIndustries }}</span>
-              <span class="qs-label">Industries</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT: testimonial showcase -->
-        <div class="right-col">
-          <!-- Terminal -->
-          <div class="terminal-card">
-            <div class="terminal-dots"><span></span><span></span><span></span></div>
-            <div class="t-lines">
-              <div class="t-line-row">
-                <span class="t-prompt">~/testimonials $</span>
-                <span class="t-cmd">cat client-feedback.txt</span>
-              </div>
-              <div class="t-line-row">
-                <span class="t-prompt">›</span>
-                <span class="t-accent-out">{{ testimonials[currentTestimonial].company }}</span>
-              </div>
-              <div class="t-line-row">
-                <span class="t-prompt">›</span>
-                <span class="t-out">Rating: {{ '★'.repeat(testimonials[currentTestimonial].rating) }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Testimonial card -->
-          <Transition name="testi-fade" mode="out-in">
-            <div :key="currentTestimonial" class="testimonial-card">
-              <div class="quote-mark">"</div>
-              <p class="testi-text">{{ testimonials[currentTestimonial].text }}</p>
-              <div class="testi-footer">
-                <div class="testi-author">
-                  <div class="ta-avatar">
-                    {{ testimonials[currentTestimonial].author.charAt(0) }}
-                  </div>
-                  <div class="ta-info">
-                    <strong>{{ testimonials[currentTestimonial].author }}</strong>
-                    <span>{{ testimonials[currentTestimonial].position }}, {{ testimonials[currentTestimonial].company }}</span>
-                  </div>
-                </div>
-                <div class="testi-stars">
-                  <i
-                    v-for="i in 5"
-                    :key="i"
-                    class="fas fa-star"
-                    :class="{ filled: i <= testimonials[currentTestimonial].rating }"
-                  ></i>
-                </div>
-              </div>
-            </div>
-          </Transition>
-
-          <!-- Nav -->
-          <div class="testi-nav">
-            <button class="tn-btn" :disabled="currentTestimonial === 0" @click="prevTestimonial">
-              <i class="fas fa-arrow-left"></i>
-            </button>
-            <div class="tn-dots">
-              <span
-                v-for="(_, idx) in testimonials"
-                :key="idx"
-                :class="['tn-dot', { active: currentTestimonial === idx }]"
-                @click="currentTestimonial = idx"
-              ></span>
-            </div>
-            <button class="tn-btn" :disabled="currentTestimonial === testimonials.length - 1" @click="nextTestimonial">
-              <i class="fas fa-arrow-right"></i>
-            </button>
-          </div>
-        </div>
+      <div class="clients__count-badge">
+        <span class="count-num">{{ clients.length }}</span>
+        <span class="count-text">Brands</span>
       </div>
+    </div>
 
-      <!-- Client grid -->
-      <div class="client-grid">
+    <!-- Headline -->
+    <div class="clients__headline-wrap anim" style="--d:0.14s">
+      <h2 class="clients__heading">
+        <span class="clients__hl-solid">Brands That</span>
+        <span class="clients__hl-outline">Trust My</span>
+        <span class="clients__hl-accent">Work.</span>
+      </h2>
+      <p class="clients__sub-desc">
+        From agri-tech NGOs to clean energy startups — delivering digital
+        solutions that create measurable impact across East Africa.
+      </p>
+    </div>
+
+    <!-- Filter pills -->
+    <div class="clients__filters anim" style="--d:0.20s">
+      <button
+        v-for="industry in industries"
+        :key="industry"
+        :class="['filter-pill', { active: activeIndustry === industry }]"
+        @click="activeIndustry = industry"
+      >
+        {{ industry }}
+        <span class="filter-count">{{ getIndustryCount(industry) }}</span>
+      </button>
+    </div>
+
+    <!-- Logo circles grid -->
+    <div class="clients__circles">
+
+      <TransitionGroup name="circle-stagger">
         <div
           v-for="(client, idx) in filteredClients"
           :key="client.name"
-          class="client-card"
+          class="client-circle anim"
+          :style="{ '--d': 0.28 + idx * 0.06 + 's' }"
           @click="openModal(client)"
         >
-          <div class="cc-visual">
-            <img :src="client.logo" :alt="client.name" class="cc-logo" />
-            <div class="cc-overlay">
-              <span>View Details</span>
-              <i class="fas fa-arrow-right"></i>
-            </div>
+          <!-- Outer ring -->
+          <div class="circle-ring">
+            <div class="circle-ring__track"></div>
           </div>
-          <div class="cc-body">
-            <span class="cc-industry">{{ client.industry }}</span>
-            <p class="cc-name">{{ client.name }}</p>
-            <span class="cc-project">{{ client.project }}</span>
-          </div>
-        </div>
-      </div>
 
-      <!-- Stats bar -->
-      <div class="stats-bar">
-        <div class="stat-item">
-          <span class="stat-number">{{ clients.length }}</span>
-          <span class="stat-desc">Clients</span>
+          <!-- Logo container -->
+          <div class="circle-inner">
+            <img
+              :src="client.logo"
+              :alt="client.name"
+              class="circle-logo"
+              draggable="false"
+            />
+          </div>
+
+          <!-- Info below -->
+          <div class="circle-info">
+            <span class="circle-industry">{{ client.industry }}</span>
+            <p class="circle-name">{{ client.name }}</p>
+            <span class="circle-project">{{ client.project }}</span>
+          </div>
+
+          <!-- Hover overlay -->
+          <div class="circle-overlay">
+            <span>View Details</span>
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+              <path d="M1 7h10M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5"/>
+            </svg>
+          </div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-number">100%</span>
-          <span class="stat-desc">Satisfaction</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-number">{{ uniqueIndustries }}</span>
-          <span class="stat-desc">Industries</span>
-        </div>
-        <div class="stat-divider"></div>
-        <div class="stat-item">
-          <span class="stat-number">3+</span>
-          <span class="stat-desc">Years</span>
-        </div>
-      </div>
+      </TransitionGroup>
 
     </div>
 
-    <!-- ─── Full-screen client modal ─── -->
-    <Teleport to="body">
-      <Transition name="modal-fade">
-        <div v-if="selectedClient" class="modal-backdrop" @click.self="closeModal">
-          <div class="modal-shell">
+    <!-- Bottom stats strip -->
+    <div class="clients__strip anim" style="--d:0.65s">
+      <div class="strip-stats">
+        <div class="strip-stat">
+          <span class="ss-num">{{ clients.length }}</span>
+          <span class="ss-label">Clients</span>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-stat">
+          <span class="ss-num">100%</span>
+          <span class="ss-label">Satisfaction</span>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-stat">
+          <span class="ss-num">{{ uniqueIndustries }}</span>
+          <span class="ss-label">Industries</span>
+        </div>
+        <div class="strip-divider"></div>
+        <div class="strip-stat">
+          <span class="ss-num">3+</span>
+          <span class="ss-label">Years</span>
+        </div>
+      </div>
+      <p class="strip-note">Want to join this list? <a href="#contact" @click.prevent="scrollToContact">Let's talk</a></p>
+    </div>
 
+  </section>
+
+  <!-- ─── Client Detail Modal ─── -->
+  <Teleport to="body">
+    <Transition name="modal-fade">
+      <div v-if="selectedClient" class="modal-backdrop" @click.self="closeModal">
+
+        <Transition name="modal-scale">
+          <div v-if="selectedClient" class="modal-shell">
+
+            <!-- Close button -->
             <button class="modal-close" @click="closeModal" aria-label="Close">
-              <i class="fas fa-times"></i>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              </svg>
             </button>
 
-            <!-- Left: visual panel -->
-            <div class="modal-visual">
-              <div class="mv-logo-wrap">
-                <img :src="selectedClient.logo" :alt="selectedClient.name" class="mv-logo" />
+            <!-- Top: logo + header -->
+            <div class="modal-top">
+              <div class="modal-logo-ring">
+                <div class="modal-logo-ring__track"></div>
+                <img :src="selectedClient.logo" :alt="selectedClient.name" class="modal-logo" />
               </div>
-              <div class="mv-gradient"></div>
-              <div class="mv-meta">
-                <span class="mv-industry">{{ selectedClient.industry }}</span>
-                <span class="mv-year">{{ selectedClient.year }}</span>
+              <div class="modal-header">
+                <span class="modal-cat">{{ selectedClient.industry }}</span>
+                <h3 class="modal-title">{{ selectedClient.name }}</h3>
+                <p class="modal-tagline">{{ selectedClient.project }} · {{ selectedClient.year }}</p>
               </div>
-              <div class="mv-watermark">{{ String(clients.findIndex(c => c.name === selectedClient.name) + 1).padStart(2,'0') }}</div>
             </div>
 
-            <!-- Right: content -->
-            <div class="modal-content">
+            <!-- Body: scrollable content -->
+            <div class="modal-body">
 
-              <div class="mc-header">
-                <span class="mc-cat">{{ selectedClient.industry }}</span>
-                <h2 class="mc-title">{{ selectedClient.name }}</h2>
-                <p class="mc-tagline">{{ selectedClient.project }}</p>
-              </div>
-
-              <p class="mc-desc">{{ selectedClient.description }}</p>
+              <p class="modal-desc">{{ selectedClient.description }}</p>
 
               <!-- Technologies -->
-              <div class="mc-block">
-                <div class="mcb-label">
-                  <span class="mcb-dot"></span> Technologies
+              <div class="modal-block">
+                <div class="modal-block__label">
+                  <span class="mb-dot"></span>
+                  Technologies
                 </div>
-                <div class="mcb-pills">
-                  <span v-for="tech in selectedClient.technologies" :key="tech" class="mcb-pill">{{ tech }}</span>
+                <div class="modal-pills">
+                  <span v-for="tech in selectedClient.technologies" :key="tech" class="modal-pill">{{ tech }}</span>
                 </div>
               </div>
 
               <!-- Deliverables -->
-              <div class="mc-block">
-                <div class="mcb-label">
-                  <span class="mcb-dot"></span> Deliverables
+              <div class="modal-block">
+                <div class="modal-block__label">
+                  <span class="mb-dot"></span>
+                  Key Deliverables
                 </div>
-                <div class="mcb-list">
+                <div class="modal-checklist">
                   <div
                     v-for="feat in getClientFeatures(selectedClient.name)"
                     :key="feat"
-                    class="mcb-item"
+                    class="check-item"
                   >
-                    <div class="mcbi-icon"><i class="fas fa-check"></i></div>
+                    <div class="check-icon"><i class="fas fa-check"></i></div>
                     <span>{{ feat }}</span>
                   </div>
                 </div>
@@ -245,31 +177,44 @@
               <!-- Testimonial if exists -->
               <div
                 v-if="getClientTestimonial(selectedClient.name)"
-                class="mc-testimonial"
+                class="modal-testimonial"
               >
-                <div class="mct-quote">"</div>
-                <p class="mct-text">{{ getClientTestimonial(selectedClient.name).text }}</p>
-                <div class="mct-author">
+                <div class="mt-quote">"</div>
+                <p class="mt-text">{{ getClientTestimonial(selectedClient.name).text }}</p>
+                <div class="mt-author">
                   <strong>{{ getClientTestimonial(selectedClient.name).author }}</strong>
-                  <span>{{ getClientTestimonial(selectedClient.name).position }}</span>
+                  <span>{{ getClientTestimonial(selectedClient.name).position }}, {{ getClientTestimonial(selectedClient.name).company }}</span>
                 </div>
               </div>
 
             </div>
-          </div>
-        </div>
-      </Transition>
-    </Teleport>
 
-  </section>
+            <!-- Footer CTA -->
+            <div class="modal-footer">
+              <a href="#contact" class="modal-cta" @click.prevent="scrollToContact">
+                Start a similar project
+                <span class="modal-cta-icon">
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M1 7h10M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5"/>
+                  </svg>
+                </span>
+              </a>
+            </div>
+
+          </div>
+        </Transition>
+
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 
-const activeIndustry   = ref('All')
-const selectedClient   = ref(null)
-const currentTestimonial = ref(0)
+const clientsRef = ref(null)
+const activeIndustry = ref('All')
+const selectedClient = ref(null)
 
 const clients = ref([
   {
@@ -352,6 +297,7 @@ const testimonials = [
   },
 ]
 
+/* ── Computed ────────────────────────────────────────── */
 const industries = computed(() => ['All', ...new Set(clients.value.map(c => c.industry))])
 
 const filteredClients = computed(() =>
@@ -403,6 +349,7 @@ const getClientFeatures = (name) => {
 const getClientTestimonial = (name) =>
   testimonials.find(t => name.toLowerCase().includes(t.company.toLowerCase().split(' ')[0])) || null
 
+/* ── Actions ─────────────────────────────────────────── */
 const openModal = (client) => {
   selectedClient.value = client
   document.body.style.overflow = 'hidden'
@@ -413,533 +360,867 @@ const closeModal = () => {
   document.body.style.overflow = ''
 }
 
-const prevTestimonial = () => { if (currentTestimonial.value > 0) currentTestimonial.value-- }
-const nextTestimonial = () => { if (currentTestimonial.value < testimonials.length - 1) currentTestimonial.value++ }
+const scrollToContact = () => {
+  closeModal()
+  setTimeout(() => {
+    const el = document.getElementById('contact')
+    if (el) {
+      const top = el.getBoundingClientRect().top + window.scrollY - 80
+      window.scrollTo({ top, behavior: 'smooth' })
+    }
+  }, 350)
+}
+
+/* ── Scroll animation ────────────────────────────────── */
+onMounted(() => {
+  const section = clientsRef.value
+  if (!section) return
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) {
+        section.classList.add('in-view')
+        io.unobserve(section)
+      }
+    })
+  }, { threshold: 0.06 })
+
+  io.observe(section)
+})
 </script>
 
 <style scoped>
-/* ─── Tokens ─────────────────────────────────────────── */
-:root {
-  --bg: #0d1117;
-  --bg-card: #161b22;
-  --accent: #c9a23b;
-  --accent-dim: rgba(201, 162, 59, 0.12);
-  --accent-border: rgba(201, 162, 59, 0.35);
-  --white: #f0f2f5;
-  --silver: #b0b8c1;
-  --muted: #7b8694;
-  --dim: #4a5568;
-  --border: rgba(255, 255, 255, 0.07);
-  --green: #2ecc71;
+/* ═══════════════════════════════════════════════════════
+   NO :root — all colors hardcoded. Orange #ff5500 palette.
+   ═══════════════════════════════════════════════════════ */
+
+/* ── Animation system ────────────────────────────────── */
+.anim {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: var(--d, 0s);
 }
 
-/* ─── Section ────────────────────────────────────────── */
-.clients-section {
+.in-view .anim {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anim {
+    transition-duration: 0.01ms !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* ── Section shell (full-bleed, no card) ─────────────── */
+.clients {
   width: 100%;
-  max-width: 1380px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 0 2.5rem;
+  padding: clamp(60px, 10vh, 120px) clamp(24px, 5vw, 96px) clamp(40px, 6vh, 80px);
   font-family: 'Inter', system-ui, sans-serif;
-}
-
-/* ─── Card ───────────────────────────────────────────── */
-.clients-card {
-  background: #0d1117;
-  border: 1px solid var(--border);
-  border-radius: 2rem;
-  padding: 2.2rem 2.8rem 2rem;
   display: flex;
   flex-direction: column;
-  gap: 2.4rem;
-  position: relative;
-  overflow: hidden;
+  gap: clamp(28px, 4vh, 48px);
 }
 
-.clients-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 45%; height: 100%;
-  background: radial-gradient(ellipse at 20% 35%, rgba(180, 100, 30, 0.12) 0%, transparent 65%);
-  pointer-events: none;
+/* ── Section header ──────────────────────────────────── */
+.clients__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-/* ─── Top bar ────────────────────────────────────────── */
-.top-bar {
-  display: flex; align-items: center; justify-content: space-between;
-  flex-wrap: wrap; gap: 1rem; position: relative; z-index: 2;
+.clients__label {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-.section-label { display: flex; align-items: center; gap: 0.55rem; }
-
-.label-dot { width: 7px; height: 7px; background: var(--accent); border-radius: 50%; }
-
-.label-text {
-  font-size: 0.72rem; font-weight: 700;
-  color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase;
+.clients__label-line {
+  display: block;
+  width: 32px;
+  height: 1px;
+  background: #ff5500;
 }
 
-.collab-badge {
-  display: inline-flex; align-items: center; gap: 0.5rem;
+.clients__label-text {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #ff5500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.clients__count-badge {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
   padding: 0.4rem 1rem;
-  border: 1px solid var(--accent-border); border-radius: 3rem;
-  font-size: 0.74rem; font-weight: 600;
-  color: var(--accent); background: var(--accent-dim);
+  border: 1px solid rgba(255, 85, 0, 0.25);
+  border-radius: 999px;
+  background: rgba(255, 85, 0, 0.06);
 }
 
-.collab-badge i { font-size: 0.68rem; }
-
-/* ─── Main grid ──────────────────────────────────────── */
-.main-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: 3rem; align-items: start;
-  position: relative; z-index: 2;
+.count-num {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #ff5500;
+  line-height: 1;
 }
 
-/* ─── Left col ───────────────────────────────────────── */
-.left-col { display: flex; flex-direction: column; gap: 1.6rem; }
-
-.headline-block { display: flex; flex-direction: column; gap: 0.5rem; }
-
-.eyebrow {
-  font-size: 0.82rem; font-weight: 600;
-  color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+.count-text {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #8a929e;
+  letter-spacing: 0.04em;
 }
 
-.headline { display: flex; flex-direction: column; line-height: 0.95; letter-spacing: -0.03em; margin: 0; }
+/* ── Headline ────────────────────────────────────────── */
+.clients__heading {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  line-height: 0.92;
+  gap: 0;
+}
 
-.hl-solid  { font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 800; color: var(--white); }
-.hl-outline{ font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 800; color: transparent; -webkit-text-stroke: 1.5px var(--white); }
-.hl-accent { font-size: clamp(2.4rem, 4.5vw, 3.8rem); font-weight: 800; color: var(--accent); }
+.clients__hl-solid,
+.clients__hl-outline,
+.clients__hl-accent {
+  display: block;
+  font-size: clamp(2.8rem, 5.5vw, 5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.92;
+}
 
-.sub-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.72; margin: 0.3rem 0 0; max-width: 420px; }
+.clients__hl-solid {
+  color: #ffffff;
+}
 
-/* Filter pills */
-.filter-track { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.clients__hl-outline {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.35);
+}
+
+.clients__hl-accent {
+  color: #ff5500;
+  font-style: italic;
+}
+
+.clients__sub-desc {
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: #8a929e;
+  max-width: 560px;
+}
+
+/* ── Filter pills ────────────────────────────────────── */
+.clients__filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
 
 .filter-pill {
-  display: inline-flex; align-items: center; gap: 0.45rem;
-  padding: 0.44rem 1rem;
-  border: 1px solid var(--border); border-radius: 3rem;
-  background: var(--bg-card);
-  font-size: 0.76rem; font-weight: 600; color: var(--muted);
-  cursor: pointer; transition: all 0.2s; font-family: 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.02);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #8a929e;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: 'Inter', sans-serif;
 }
 
-.filter-pill:hover { border-color: var(--accent-border); color: var(--silver); }
-.filter-pill.active { background: var(--accent); border-color: var(--accent); color: #0d1117; }
-
-.f-count { font-size: 0.62rem; opacity: 0.7; }
-
-/* Quick stats */
-.quick-stats {
-  display: flex; align-items: center; gap: 1.5rem;
-  padding: 1.1rem 1.3rem;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 1.2rem;
+.filter-pill:hover {
+  border-color: rgba(255, 85, 0, 0.25);
+  color: #c8cdd5;
 }
 
-.qs-item { display: flex; flex-direction: column; gap: 0.1rem; }
-
-.qs-num  { font-size: 1.5rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
-.qs-label{ font-size: 0.64rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-
-.qs-divider { width: 1px; height: 2rem; background: var(--border); flex-shrink: 0; }
-
-/* ─── Right col: testimonial ─────────────────────────── */
-.right-col { display: flex; flex-direction: column; gap: 1.4rem; position: relative; z-index: 2; }
-
-/* Terminal */
-.terminal-card {
-  background: #080b0e; border: 1px solid var(--border);
-  border-radius: 1.3rem; padding: 1.2rem 1.3rem 1rem;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
-  transition: border-color 0.2s;
+.filter-pill.active {
+  background: #ff5500;
+  border-color: #ff5500;
+  color: #ffffff;
 }
 
-.terminal-card:hover { border-color: var(--accent-border); }
-
-.terminal-dots { display: flex; gap: 6px; margin-bottom: 0.9rem; }
-.terminal-dots span { width: 10px; height: 10px; border-radius: 50%; }
-.terminal-dots span:nth-child(1) { background: #ff5f56; }
-.terminal-dots span:nth-child(2) { background: #ffbd2e; }
-.terminal-dots span:nth-child(3) { background: #27c93f; }
-
-.t-lines { display: flex; flex-direction: column; gap: 0.42rem; }
-.t-line-row { display: flex; gap: 0.55rem; font-size: 0.74rem; flex-wrap: wrap; }
-.t-prompt     { color: var(--accent); font-weight: 600; flex-shrink: 0; }
-.t-cmd        { color: #b0bec5; }
-.t-accent-out { color: var(--accent); font-weight: 700; }
-.t-out        { color: var(--silver); opacity: 0.7; }
-
-/* Testimonial card */
-.testi-fade-enter-active, .testi-fade-leave-active { transition: all 0.22s ease; }
-.testi-fade-enter-from { opacity: 0; transform: translateY(8px); }
-.testi-fade-leave-to   { opacity: 0; transform: translateY(-8px); }
-
-.testimonial-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 1.4rem; padding: 1.5rem;
-  display: flex; flex-direction: column; gap: 1rem;
-  transition: border-color 0.2s;
+.filter-pill.active .filter-count {
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.testimonial-card:hover { border-color: var(--accent-border); }
-
-.quote-mark {
-  font-size: 3.5rem; line-height: 0.7;
-  color: var(--accent); opacity: 0.5;
-  font-family: Georgia, serif;
+.filter-count {
+  font-size: 0.62rem;
+  opacity: 0.6;
 }
 
-.testi-text {
-  font-size: 0.88rem; color: var(--silver);
-  line-height: 1.75; margin: 0;
+/* ── Circle grid ─────────────────────────────────────── */
+.clients__circles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
 }
 
-.testi-footer {
-  display: flex; align-items: center;
-  justify-content: space-between; gap: 1rem;
-  padding-top: 1rem; border-top: 1px solid var(--border);
-  flex-wrap: wrap;
+/* TransitionGroup animations */
+.circle-stagger-enter-active {
+  transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.testi-author { display: flex; align-items: center; gap: 0.7rem; }
+.circle-stagger-leave-active {
+  transition: opacity 0.25s ease,
+              transform 0.25s ease;
+  position: absolute;
+}
 
-.ta-avatar {
-  width: 34px; height: 34px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--accent-dim); border: 1px solid var(--accent-border);
-  border-radius: 50%;
-  font-size: 0.82rem; font-weight: 700; color: var(--accent);
+.circle-stagger-enter-from {
+  opacity: 0;
+  transform: scale(0.85) translateY(16px);
+}
+
+.circle-stagger-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+
+.circle-stagger-move {
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Individual circle ───────────────────────────────── */
+.client-circle {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  padding: 1.5rem 1rem 1.25rem;
+  border-radius: 20px;
+  transition: background 0.3s ease;
+}
+
+.client-circle:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Outer ring */
+.circle-ring {
+  position: relative;
+  width: clamp(100px, 14vw, 140px);
+  height: clamp(100px, 14vw, 140px);
   flex-shrink: 0;
 }
 
-.ta-info strong { display: block; font-size: 0.82rem; font-weight: 700; color: var(--white); }
-.ta-info span   { font-size: 0.66rem; color: var(--dim); }
-
-.testi-stars i { font-size: 0.7rem; color: var(--border); margin: 0 1px; }
-.testi-stars i.filled { color: var(--accent); }
-
-/* Testimonial nav */
-.testi-nav {
-  display: flex; align-items: center; justify-content: center; gap: 1.2rem;
+.circle-ring__track {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.06);
+  transition: border-color 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.tn-btn {
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 0.7rem; color: var(--muted); font-size: 0.72rem;
-  cursor: pointer; transition: all 0.2s;
+.client-circle:hover .circle-ring__track {
+  border-color: rgba(255, 85, 0, 0.35);
+  transform: scale(1.04);
 }
 
-.tn-btn:hover:not(:disabled) { border-color: var(--accent-border); color: var(--accent); }
-.tn-btn:disabled { opacity: 0.25; cursor: not-allowed; }
-
-.tn-dots { display: flex; gap: 0.45rem; }
-
-.tn-dot {
-  width: 5px; height: 5px; border-radius: 50%;
-  background: rgba(255,255,255,0.1); cursor: pointer; transition: all 0.25s;
-}
-
-.tn-dot.active {
-  background: var(--accent);
-  box-shadow: 0 0 6px rgba(201,162,59,0.4);
-  transform: scale(1.5);
-}
-
-/* ─── Client grid ────────────────────────────────────── */
-.client-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 0.75rem;
-  position: relative; z-index: 2;
-}
-
-.client-card {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 1.3rem; overflow: hidden;
-  cursor: pointer; transition: all 0.22s ease;
-}
-
-.client-card:hover {
-  border-color: var(--accent-border);
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(0,0,0,0.45);
-}
-
-.cc-visual {
-  position: relative;
-  height: 100px;
-  display: flex; align-items: center; justify-content: center;
-  background: linear-gradient(135deg, #0d1117, #141c26);
+/* Inner circle (logo container) */
+.circle-inner {
+  position: absolute;
+  inset: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
   overflow: hidden;
+  transition: border-color 0.3s ease;
 }
 
-.cc-logo {
-  max-width: 65%; max-height: 60px;
+.client-circle:hover .circle-inner {
+  border-color: rgba(255, 85, 255, 0.1);
+}
+
+.circle-logo {
+  width: 60%;
+  height: 60%;
   object-fit: contain;
-  filter: grayscale(100%) brightness(0.9);
-  transition: filter 0.35s;
+  filter: grayscale(100%) brightness(0.85);
+  transition: filter 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.client-card:hover .cc-logo { filter: grayscale(0%) brightness(1); }
-
-.cc-overlay {
-  position: absolute; inset: 0;
-  background: rgba(13,17,23,0.75);
-  display: flex; align-items: center; justify-content: center;
-  gap: 0.5rem;
-  font-size: 0.72rem; font-weight: 700; color: var(--white);
-  opacity: 0; transition: opacity 0.25s;
-  backdrop-filter: blur(2px);
+.client-circle:hover .circle-logo {
+  filter: grayscale(0%) brightness(1);
+  transform: scale(1.08);
 }
 
-.client-card:hover .cc-overlay { opacity: 1; }
-
-.cc-body {
-  padding: 0.9rem 1rem;
-  display: flex; flex-direction: column; gap: 0.2rem;
+/* Info below circle */
+.circle-info {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  width: 100%;
 }
 
-.cc-industry {
-  font-size: 0.58rem; font-weight: 700;
-  color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase;
+.circle-industry {
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #ff5500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
-.cc-name {
-  font-size: 0.82rem; font-weight: 700; color: var(--white);
-  margin: 0; line-height: 1.25;
+.circle-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.25;
+  transition: color 0.25s ease;
 }
 
-.cc-project { font-size: 0.68rem; color: var(--muted); }
-
-/* ─── Stats bar ──────────────────────────────────────── */
-.stats-bar {
-  display: flex; align-items: center; flex-wrap: wrap;
-  gap: 1.5rem; padding-top: 1.6rem;
-  border-top: 1px solid var(--border);
-  position: relative; z-index: 2;
+.circle-project {
+  font-size: 0.68rem;
+  color: #6b7585;
+  line-height: 1.4;
 }
 
-.stat-item  { display: flex; flex-direction: column; gap: 0.12rem; }
-.stat-number{ font-size: 1.7rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; line-height: 1; }
-.stat-desc  { font-size: 0.68rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
-.stat-divider{ width: 1px; height: 2.2rem; background: var(--border); flex-shrink: 0; }
-
-/* ─── Modal ──────────────────────────────────────────── */
-.modal-fade-enter-active, .modal-fade-leave-active { transition: opacity 0.3s ease; }
-.modal-fade-enter-active .modal-shell,
-.modal-fade-leave-active .modal-shell { transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease; }
-.modal-fade-enter-from, .modal-fade-leave-to { opacity: 0; }
-.modal-fade-enter-from .modal-shell { transform: scale(0.95) translateY(20px); opacity: 0; }
-.modal-fade-leave-to .modal-shell   { transform: scale(0.95) translateY(20px); opacity: 0; }
-
-.modal-backdrop {
-  position: fixed; inset: 0;
-  background: rgba(5, 7, 10, 0.92);
-  backdrop-filter: blur(10px);
-  z-index: 2000;
-  display: flex; align-items: center; justify-content: center;
-  padding: 1.5rem;
-}
-
-.modal-shell {
-  width: 100%; max-width: 900px; max-height: 88vh;
-  background: #0d1117;
-  border: 1px solid rgba(201,162,59,0.22);
-  border-radius: 1.8rem;
-  display: grid; grid-template-columns: 0.75fr 1fr;
-  overflow: hidden; position: relative;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.8), 0 0 0 1px rgba(255,255,255,0.04);
-}
-
-.modal-close {
-  position: absolute; top: 1.2rem; right: 1.2rem; z-index: 10;
-  width: 36px; height: 36px;
-  display: flex; align-items: center; justify-content: center;
-  background: rgba(13,17,23,0.85); backdrop-filter: blur(6px);
-  border: 1px solid var(--border); border-radius: 50%;
-  color: var(--muted); font-size: 0.82rem;
-  cursor: pointer; transition: all 0.2s;
-}
-
-.modal-close:hover { border-color: var(--accent-border); color: var(--accent); }
-
-/* Visual panel */
-.modal-visual {
-  position: relative; overflow: hidden;
-  background: linear-gradient(135deg, #080b0e, #0d1520);
-  display: flex; align-items: center; justify-content: center;
-}
-
-.mv-logo-wrap {
-  width: 80%; display: flex; align-items: center; justify-content: center;
-  padding: 2rem;
-}
-
-.mv-logo {
-  max-width: 100%; max-height: 180px;
-  object-fit: contain;
-  filter: grayscale(20%) brightness(0.9);
-}
-
-.mv-gradient {
-  position: absolute; inset: 0;
-  background: linear-gradient(to right, transparent 50%, rgba(8,6,2,0.6) 100%);
+/* Hover overlay on the circle itself */
+.circle-overlay {
+  position: absolute;
+  top: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(100px, 14vw, 140px);
+  height: clamp(100px, 14vw, 140px);
+  border-radius: 50%;
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
   pointer-events: none;
 }
 
-.mv-meta {
-  position: absolute; bottom: 1.5rem; left: 1.5rem;
-  display: flex; flex-direction: column; gap: 0.4rem;
+.circle-overlay span {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.mv-industry {
-  font-size: 0.62rem; font-weight: 700;
-  color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 0.3rem 0.7rem;
-  background: rgba(8,6,2,0.8); backdrop-filter: blur(6px);
-  border: 1px solid var(--accent-border); border-radius: 3rem;
-  width: fit-content;
+.circle-overlay svg {
+  color: #ff5500;
 }
 
-.mv-year {
-  font-size: 0.68rem; color: var(--dim);
-  padding-left: 0.7rem;
+.client-circle:hover .circle-overlay {
+  opacity: 1;
 }
 
-.mv-watermark {
-  position: absolute; top: 1rem; left: 1.2rem;
-  font-size: 5rem; font-weight: 900;
-  color: rgba(255,255,255,0.04);
-  line-height: 1; pointer-events: none;
+/* ── Bottom strip ────────────────────────────────────── */
+.clients__strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding-top: clamp(24px, 4vh, 40px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Content panel */
-.modal-content {
-  overflow-y: auto; padding: 2rem 2rem 1.5rem;
-  display: flex; flex-direction: column; gap: 1.4rem;
-  scrollbar-width: thin; scrollbar-color: rgba(201,162,59,0.3) transparent;
+.strip-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.4rem;
 }
 
-.modal-content::-webkit-scrollbar { width: 4px; }
-.modal-content::-webkit-scrollbar-thumb { background: rgba(201,162,59,0.3); border-radius: 2px; }
-
-.mc-header { display: flex; flex-direction: column; gap: 0.45rem; }
-
-.mc-cat {
-  font-size: 0.68rem; font-weight: 700;
-  color: var(--accent); letter-spacing: 0.12em; text-transform: uppercase;
+.strip-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
 
-.mc-title {
-  font-size: 1.5rem; font-weight: 800; color: var(--white);
-  margin: 0; line-height: 1.1; letter-spacing: -0.02em;
+.ss-num {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #ff5500;
+  letter-spacing: -0.02em;
+  line-height: 1;
 }
 
-.mc-tagline {
-  font-size: 0.86rem; color: var(--muted); margin: 0;
-  border-left: 3px solid var(--accent); padding-left: 0.9rem;
-  line-height: 1.5;
+.ss-label {
+  font-size: 0.62rem;
+  color: #5a6270;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
 }
 
-.mc-desc {
-  font-size: 0.84rem; color: var(--muted); line-height: 1.75; margin: 0;
+.strip-divider {
+  width: 1px;
+  height: 2rem;
+  background: rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.strip-note {
+  margin: 0;
+  font-size: 0.72rem;
+  color: #4a5568;
+}
+
+.strip-note a {
+  color: #8a929e;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.strip-note a:hover {
+  color: #ff5500;
+}
+
+/* ═══════════════════════════════════════════════════════
+   MODAL
+   ═══════════════════════════════════════════════════════ */
+
+/* Backdrop */
+.modal-fade-enter-active,
+.modal-fade-leave-active { transition: opacity 0.3s ease; }
+.modal-fade-enter-from,
+.modal-fade-leave-to { opacity: 0; }
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+/* Shell */
+.modal-scale-enter-active {
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease;
+}
+
+.modal-scale-leave-active {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 1, 1),
+              opacity 0.2s ease;
+}
+
+.modal-scale-enter-from {
+  transform: scale(0.92) translateY(20px);
+  opacity: 0;
+}
+
+.modal-scale-leave-to {
+  transform: scale(0.95) translateY(10px);
+  opacity: 0;
+}
+
+.modal-shell {
+  width: 100%;
+  max-width: 640px;
+  max-height: 88vh;
+  background: #111111;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 24px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+}
+
+/* Close */
+.modal-close {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  color: #8a929e;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.modal-close:hover {
+  border-color: rgba(255, 85, 0, 0.35);
+  color: #ff5500;
+  transform: rotate(90deg);
+}
+
+/* Top: logo + header */
+.modal-top {
+  padding: 2rem 2rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modal-logo-ring {
+  position: relative;
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+
+.modal-logo-ring__track {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 85, 0, 0.3);
+}
+
+.modal-logo {
+  position: absolute;
+  inset: 6px;
+  width: calc(100% - 12px);
+  height: calc(100% - 12px);
+  border-radius: 50%;
+  object-fit: contain;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+}
+
+.modal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.modal-cat {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: #ff5500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.modal-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.modal-tagline {
+  font-size: 0.78rem;
+  color: #8a929e;
+  margin: 0;
+}
+
+/* Body */
+.modal-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 85, 0, 0.2) transparent;
+}
+
+.modal-body::-webkit-scrollbar { width: 4px; }
+.modal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 85, 0, 0.2);
+  border-radius: 2px;
+}
+
+.modal-desc {
+  font-size: 0.88rem;
+  color: #9aa3af;
+  line-height: 1.75;
+  margin: 0;
 }
 
 /* Blocks */
-.mc-block { display: flex; flex-direction: column; gap: 0.65rem; }
-
-.mcb-label {
-  display: flex; align-items: center; gap: 0.45rem;
-  font-size: 0.66rem; font-weight: 700; color: var(--accent);
-  letter-spacing: 0.12em; text-transform: uppercase;
+.modal-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
 }
 
-.mcb-dot { width: 5px; height: 5px; background: var(--accent); border-radius: 50%; }
+.modal-block__label {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: #ff5500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
 
-.mcb-pills { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.mb-dot {
+  width: 5px;
+  height: 5px;
+  background: #ff5500;
+  border-radius: 50%;
+}
 
-.mcb-pill {
+.modal-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.modal-pill {
   padding: 0.32rem 0.75rem;
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-radius: 3rem; font-size: 0.72rem; color: var(--silver);
-  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  color: #c8cdd5;
+  transition: all 0.2s ease;
 }
 
-.mcb-pill:hover { border-color: var(--accent-border); color: var(--accent); }
-
-.mcb-list { display: flex; flex-direction: column; gap: 0.5rem; }
-
-.mcb-item {
-  display: flex; align-items: flex-start; gap: 0.65rem;
+.modal-pill:hover {
+  border-color: rgba(255, 85, 0, 0.3);
+  color: #ff5500;
 }
 
-.mcbi-icon {
-  width: 20px; height: 20px;
-  display: flex; align-items: center; justify-content: center;
-  background: var(--accent-dim); border: 1px solid var(--accent-border);
-  border-radius: 50%; color: var(--accent); font-size: 0.55rem;
-  flex-shrink: 0; margin-top: 1px;
+/* Checklist */
+.modal-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
 }
 
-.mcb-item span { font-size: 0.82rem; color: var(--muted); line-height: 1.55; }
+.check-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+}
 
-/* Inline testimonial in modal */
-.mc-testimonial {
-  background: var(--bg-card); border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: 0 1rem 1rem 0;
+.check-icon {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 85, 0, 0.1);
+  border: 1px solid rgba(255, 85, 0, 0.25);
+  border-radius: 50%;
+  color: #ff5500;
+  font-size: 0.5rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.check-item span {
+  font-size: 0.82rem;
+  color: #9aa3af;
+  line-height: 1.55;
+}
+
+/* Testimonial */
+.modal-testimonial {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-left: 3px solid #ff5500;
+  border-radius: 0 14px 14px 0;
   padding: 1.1rem 1.2rem;
-  display: flex; flex-direction: column; gap: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
 }
 
-.mct-quote {
-  font-size: 2.5rem; line-height: 0.6;
-  color: var(--accent); opacity: 0.5;
+.mt-quote {
+  font-size: 2.5rem;
+  line-height: 0.6;
+  color: #ff5500;
+  opacity: 0.4;
   font-family: Georgia, serif;
 }
 
-.mct-text  { font-size: 0.82rem; color: var(--silver); line-height: 1.7; margin: 0; font-style: italic; }
-.mct-author strong { display: block; font-size: 0.78rem; font-weight: 700; color: var(--white); }
-.mct-author span   { font-size: 0.64rem; color: var(--dim); }
-
-/* ─── Animations ─────────────────────────────────────── */
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.55; transform: scale(0.85); }
+.mt-text {
+  font-size: 0.82rem;
+  color: #b0b8c4;
+  line-height: 1.7;
+  margin: 0;
+  font-style: italic;
 }
 
-/* ─── Responsive ─────────────────────────────────────── */
-@media (max-width: 1024px) {
-  .main-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .sub-desc  { max-width: 100%; }
-  .modal-shell { grid-template-columns: 1fr; max-height: 95vh; }
-  .modal-visual { height: 220px; }
-  .mv-logo { max-height: 120px; }
-  .mv-gradient { background: linear-gradient(to bottom, transparent 40%, rgba(8,6,2,0.7) 100%); }
+.mt-author strong {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffffff;
 }
 
-@media (max-width: 768px) {
-  .clients-card { padding: 1.6rem 1.4rem; border-radius: 1.5rem; gap: 1.8rem; }
-  .hl-solid, .hl-outline, .hl-accent { font-size: clamp(2rem, 7vw, 3rem); }
-  .client-grid { grid-template-columns: repeat(2, 1fr); }
+.mt-author span {
+  font-size: 0.66rem;
+  color: #6b7585;
 }
 
-@media (max-width: 480px) {
-  .client-grid { grid-template-columns: 1fr; }
-  .stat-divider { display: none; }
-  .qs-divider   { display: none; }
-  .modal-backdrop { padding: 0; }
-  .modal-shell {
-    border-radius: 1.5rem 1.5rem 0 0;
-    align-self: flex-end; max-height: 95vh;
+/* Footer */
+.modal-footer {
+  padding: 1.25rem 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modal-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1.5rem;
+  background: #ff5500;
+  color: #ffffff;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 999px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-cta:hover {
+  background: #ff6b1a;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255, 85, 0, 0.3);
+}
+
+.modal-cta-icon {
+  width: 22px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.modal-cta:hover .modal-cta-icon {
+  transform: translateX(3px);
+}
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .clients__circles {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
   }
-  .modal-content { padding: 1.4rem 1.2rem; }
-  .mc-title { font-size: 1.2rem; }
+}
+
+@media (max-width: 900px) {
+  .clients__circles {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .clients {
+    padding: clamp(48px, 8vh, 80px) clamp(20px, 5vw, 32px) clamp(32px, 5vh, 60px);
+  }
+
+  .clients__hl-solid,
+  .clients__hl-outline,
+  .clients__hl-accent {
+    font-size: clamp(2.2rem, 9vw, 3.5rem);
+  }
+
+  .clients__circles {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .client-circle {
+    padding: 1.25rem 0.75rem 1rem;
+  }
+
+  .circle-info {
+    gap: 0.15rem;
+  }
+
+  .circle-name {
+    font-size: 0.78rem;
+  }
+
+  .circle-project {
+    font-size: 0.62rem;
+  }
+
+  .clients__strip {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .modal-top {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.5rem 1.5rem 1.25rem;
+  }
+
+  .modal-body {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .modal-footer {
+    padding: 1rem 1.5rem;
+  }
+
+  .modal-cta {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .clients__circles {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .circle-ring,
+  .circle-overlay {
+    width: 80px;
+    height: 80px;
+  }
+
+  .strip-divider {
+    display: none;
+  }
 }
 </style>
