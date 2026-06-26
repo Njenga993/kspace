@@ -33,7 +33,7 @@
           <!-- Floating tag: bottom left -->
           <div class="about__tag about__tag--bl anim-scale" style="--d:0.75s">
             <span class="tag-label">Location</span>
-            <span class="tag-value">Nairobi, KE 🌍</span>
+            <span class="tag-value">Nairobi, KE </span>
           </div>
         </div>
 

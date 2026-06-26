@@ -1,386 +1,455 @@
 <template>
-  <section id="projects" class="projects" ref="projectsRef">
+  <section id="projects" class="proj" ref="sectionRef">
 
-    <!-- Section header -->
-    <div class="projects__header anim" style="--d:0.08s">
-      <div class="projects__label">
-        <span class="projects__label-line"></span>
-        <span class="projects__label-text">Portfolio</span>
+    <!-- ─── Header ─── -->
+    <header class="proj-head reveal">
+      <div class="proj-head__left">
+        <span class="proj-head__line"></span>
+        <span class="proj-head__label">02 — Selected Work</span>
       </div>
-      <div class="projects__header-right">
-        <div class="live-badge">
-          <span class="pulse-dot"></span>
-          <span>{{ liveCount }} Live · {{ projects.length }} Total</span>
-        </div>
-        <a href="https://github.com/Njenga993" target="_blank" class="github-pill">
-          <i class="fab fa-github"></i>
+      <div class="proj-head__right">
+        <span class="proj-head__live">
+          <span class="dot dot--live"></span>
+          {{ liveCount }} Live&ensp;·&ensp;{{ projects.length }} Total
+        </span>
+        <a
+          href="https://github.com/Njenga993"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="proj-head__gh"
+        >
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           <span>Njenga993</span>
         </a>
       </div>
-    </div>
+    </header>
 
-    <!-- Main split -->
-    <div class="projects__main">
-
-      <!-- LEFT: headline + filters -->
-      <div class="projects__left">
-
-        <div class="projects__headline-block anim" style="--d:0.14s">
-          <p class="projects__eyebrow">Selected Work</p>
-          <h2 class="projects__heading">
-            <span class="projects__hl-solid">Real</span>
-            <span class="projects__hl-outline">World</span>
-            <span class="projects__hl-accent">Solutions.</span>
-          </h2>
-          <p class="projects__sub-desc">
-            Five production systems solving real problems across East Africa — from
-            seed sovereignty to clean energy, indigenous food e-commerce to enterprise POS.
-          </p>
-        </div>
-
-        <div class="projects__filters anim" style="--d:0.22s">
-          <button
-            v-for="cat in categories"
-            :key="cat"
-            :class="['filter-pill', { active: activeFilter === cat }]"
-            @click="activeFilter = cat"
-          >
-            {{ cat }}
-            <span class="filter-count">{{ cat === 'All' ? projects.length : projects.filter(p => p.category === cat).length }}</span>
-          </button>
-        </div>
-
-        <div class="projects__sort anim" style="--d:0.26s">
-          <span class="sort-label">Sort</span>
-          <button
-            v-for="s in sortOptions"
-            :key="s.val"
-            :class="['sort-pill', { active: sortBy === s.val }]"
-            @click="sortBy = s.val"
-          >{{ s.label }}</button>
-        </div>
-
-      </div>
-
-      <!-- RIGHT: featured project -->
-      <div class="projects__right">
-
-        <Transition name="panel-fade" mode="out-in">
-          <div :key="featured.id" class="featured-wrap">
-
-            <!-- Terminal -->
-            <div class="terminal anim-featured" style="--pd:0s" @click="openModal(featured)">
-              <div class="terminal__dots"><span></span><span></span><span></span></div>
-              <div class="terminal__lines">
-                <div class="terminal__row">
-                  <span class="terminal__prompt">~/projects/{{ featured.slug }} $</span>
-                  <span class="terminal__cmd">cat readme.md</span>
-                </div>
-                <div class="terminal__row">
-                  <span class="terminal__prompt">›</span>
-                  <span class="terminal__out--accent">{{ featured.title }}</span>
-                </div>
-                <div class="terminal__row">
-                  <span class="terminal__prompt">›</span>
-                  <span class="terminal__out">{{ featured.stack.join(' · ') }}</span>
-                </div>
-                <div class="terminal__row">
-                  <span class="terminal__prompt">›</span>
-                  <span :class="featured.status === 'live' ? 'terminal__live' : 'terminal__dev'">
-                    {{ featured.status === 'live' ? '● DEPLOYED' : '◌ IN DEVELOPMENT' }}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Featured image -->
-            <div class="featured-img-wrap anim-featured" style="--pd:0.08s" @click="openModal(featured)">
-              <div class="featured-img">
-                <img
-                  v-if="featured.image"
-                  :src="featured.image"
-                  :alt="featured.title"
-                  @error="onImgError"
-                />
-                <div v-else class="img-placeholder">
-                  <span class="ph-icon">{{ featured.icon }}</span>
-                  <span class="ph-name">{{ featured.title }}</span>
-                </div>
-                <div class="img-gradient"></div>
-                <div class="img-hover">
-                  <i class="fas fa-expand-alt"></i>
-                  <span>View Case Study</span>
-                </div>
-              </div>
-              <div class="corner corner-tl"></div>
-              <div class="corner corner-br"></div>
-              <div class="watermark">01</div>
-            </div>
-
-            <!-- Actions -->
-            <div class="featured-actions anim-featured" style="--pd:0.16s">
-              <button class="action-link action-primary" @click="openModal(featured)">
-                <span class="al-num">01</span>
-                <span class="al-label">View Case Study</span>
-                <i class="fas fa-arrow-right al-arrow"></i>
-              </button>
-              <a v-if="featured.demo && featured.demo !== '#'" :href="featured.demo" target="_blank" class="action-link action-secondary">
-                <span class="al-num">EXT</span>
-                <span class="al-label">Live Demo</span>
-              </a>
-            </div>
-
-          </div>
-        </Transition>
-
-      </div>
-    </div>
-
-    <!-- Project grid -->
-    <div class="projects__grid" :key="activeFilter + sortBy">
+    <!-- ─── Featured Project ─── -->
+    <Transition name="feat" mode="out-in">
       <div
-        v-for="(project, idx) in filteredSorted"
-        :key="project.id"
-        class="project-card"
-        :style="{ '--card-delay': 0.03 + idx * 0.06 + 's' }"
-        @click="openModal(project)"
+        :key="featured.id"
+        class="feat reveal"
+        ref="featRef"
+        @mousemove="onFeatMove"
+        @mouseleave="onFeatLeave"
+        @click="openModal(featured)"
+        @keydown.enter="openModal(featured)"
+        tabindex="0"
+        role="button"
+        :aria-label="'View ' + featured.title + ' case study'"
       >
-        <div class="pc-visual">
+        <div class="feat__bg">
           <img
-            v-if="project.image"
-            :src="project.image"
-            :alt="project.title"
-            class="pc-img"
-            @error="onImgError"
+            v-if="featured.image && !failedImages.has(featured.id)"
+            :src="featured.image"
+            :alt="featured.title"
+            loading="eager"
+            @error="failedImages.add(featured.id)"
           />
-          <div v-else class="pc-placeholder">
-            <span class="pcp-icon">{{ project.icon }}</span>
+          <div v-else class="feat__fallback">
+            <span class="feat__fallback-icon">{{ featured.icon }}</span>
+            <span class="feat__fallback-name">{{ featured.title }}</span>
           </div>
-          <div class="pc-overlay">
-            <span>View Case Study</span>
-            <i class="fas fa-arrow-right"></i>
-          </div>
-          <div class="pc-num">{{ String(idx + 1).padStart(2, '0') }}</div>
-          <div class="pc-status" :class="project.status"></div>
+          <div class="feat__overlay"></div>
+          <div class="feat__glow"></div>
         </div>
-        <div class="pc-body">
-          <div class="pc-top">
-            <span class="pc-cat">{{ project.category }}</span>
-            <span v-if="project.impact" class="pc-impact">{{ project.impact }}</span>
+
+        <div class="feat__content">
+          <div class="feat__top">
+            <span class="feat__num">01</span>
+            <span class="feat__status" :class="featured.status">
+              {{ featured.status === 'live' ? '● Deployed' : '◌ In Development' }}
+            </span>
           </div>
-          <h4 class="pc-title">{{ project.title }}</h4>
-          <p class="pc-desc">{{ project.tagline }}</p>
-          <div class="pc-stack">
-            <span v-for="tech in project.stack.slice(0, 3)" :key="tech" class="pc-tech">{{ tech }}</span>
-            <span v-if="project.stack.length > 3" class="pc-more">+{{ project.stack.length - 3 }}</span>
+          <div class="feat__mid">
+            <span class="feat__cat">{{ featured.category }}</span>
+            <h2 class="feat__title">{{ featured.title }}</h2>
+            <p class="feat__tag">{{ featured.tagline }}</p>
+          </div>
+          <div class="feat__bot">
+            <div class="feat__stack">
+              <span v-for="t in featured.stack.slice(0, 4)" :key="t">{{ t }}</span>
+            </div>
+            <span class="feat__explore">
+              Explore Project
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+            </span>
           </div>
         </div>
       </div>
+    </Transition>
+
+    <!-- ─── Filters ─── -->
+    <nav
+      class="proj-filters reveal"
+      ref="filtersRef"
+      role="tablist"
+      aria-label="Filter projects by category"
+    >
+      <button
+        v-for="cat in categories"
+        :key="cat"
+        :ref="el => { if (el) filterBtnEls[cat] = el }"
+        :class="['proj-filters__btn', { active: activeFilter === cat }]"
+        role="tab"
+        :aria-selected="String(activeFilter === cat)"
+        @click="activeFilter = cat"
+      >
+        {{ cat }}
+        <span class="proj-filters__cnt">{{ getCount(cat) }}</span>
+      </button>
+      <span class="proj-filters__bar" :style="indicatorStyle"></span>
+    </nav>
+
+    <!-- ─── Project List ─── -->
+    <div class="proj-list" :key="activeFilter + sortBy">
+      <article
+        v-for="(p, i) in filteredSorted"
+        :key="p.id"
+        class="proj-row reveal"
+        :style="{ '--d': 0.04 + i * 0.06 + 's' }"
+        :ref="el => { if (el) rowEls[p.id] = el }"
+        @click="openModal(p)"
+        @keydown.enter="openModal(p)"
+        @mousemove="onRowMove($event, p.id)"
+        @mouseleave="onRowLeave(p.id)"
+        tabindex="0"
+        role="button"
+        :aria-label="'View ' + p.title + ' case study'"
+      >
+        <span class="proj-row__num">{{ String(i + 2).padStart(2, '0') }}</span>
+
+        <div class="proj-row__thumb">
+          <img
+            v-if="p.image && !failedImages.has(p.id)"
+            :src="p.image"
+            
+            loading="lazy"
+            @error="failedImages.add(p.id)"
+          />
+          <span v-else class="proj-row__thumb-fb">{{ p.icon }}</span>
+          <div class="proj-row__glow"></div>
+        </div>
+
+        <div class="proj-row__info">
+          <div class="proj-row__meta">
+            <span class="proj-row__cat">{{ p.category }}</span>
+            <span v-if="p.impact" class="proj-row__impact">{{ p.impact }}</span>
+          </div>
+          <h3 class="proj-row__title">{{ p.title }}</h3>
+          <p class="proj-row__tag">{{ p.tagline }}</p>
+          <div class="proj-row__techs">
+            <span v-for="t in p.stack.slice(0, 3)" :key="t">{{ t }}</span>
+            <span v-if="p.stack.length > 3" class="proj-row__more">+{{ p.stack.length - 3 }}</span>
+          </div>
+        </div>
+
+        <div class="proj-row__end">
+          <span class="proj-row__dot" :class="p.status" :title="p.status === 'live' ? 'Live' : 'In development'"></span>
+          <svg class="proj-row__arrow" width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+        </div>
+      </article>
     </div>
 
-    <!-- Inquiry CTA -->
-    <div class="projects__cta anim" style="--d:0.5s">
-      <div class="cta-text">
+    <!-- ─── CTA ─── -->
+    <div class="proj-cta reveal" ref="ctaRef">
+      <div class="proj-cta__text">
         <h3>Have a project in mind?</h3>
         <p>I specialise in full-stack systems, e-commerce platforms, and data-driven tools for African markets.</p>
       </div>
-      <a href="#contact" class="cta-btn" @click.prevent="scrollToContact">
+      <a href="#contact" class="proj-cta__btn" @click.prevent="scrollToContact">
         <span>Let's Build Together</span>
-        <span class="cta-btn-icon">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M1 7h10M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5"/>
-          </svg>
+        <span class="proj-cta__btn-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
         </span>
       </a>
     </div>
 
-    <!-- Bottom strip -->
-    <div class="projects__strip anim" style="--d:0.58s">
-      <div class="strip-stats">
-        <div class="strip-stat">
-          <span class="ss-num">{{ projects.length }}</span>
-          <span class="ss-label">Projects</span>
+    <!-- ─── Stats Strip ─── -->
+    <footer class="proj-stats reveal" ref="statsRef">
+      <div class="proj-stats__items">
+        <div class="proj-stats__item">
+          <span class="proj-stats__num">{{ displayedCounts.projects }}</span>
+          <span class="proj-stats__label">Projects</span>
         </div>
-        <div class="strip-divider"></div>
-        <div class="strip-stat">
-          <span class="ss-num">{{ liveCount }}</span>
-          <span class="ss-label">Live</span>
+        <span class="proj-stats__div"></span>
+        <div class="proj-stats__item">
+          <span class="proj-stats__num">{{ displayedCounts.live }}</span>
+          <span class="proj-stats__label">Live</span>
         </div>
-        <div class="strip-divider"></div>
-        <div class="strip-stat">
-          <span class="ss-num">{{ totalTech }}</span>
-          <span class="ss-label">Technologies</span>
+        <span class="proj-stats__div"></span>
+        <div class="proj-stats__item">
+          <span class="proj-stats__num">{{ displayedCounts.tech }}</span>
+          <span class="proj-stats__label">Technologies</span>
         </div>
-        <div class="strip-divider"></div>
-        <div class="strip-stat">
-          <span class="ss-num">4</span>
-          <span class="ss-label">Industries</span>
+        <span class="proj-stats__div"></span>
+        <div class="proj-stats__item">
+          <span class="proj-stats__num">{{ displayedCounts.industries }}</span>
+          <span class="proj-stats__label">Industries</span>
         </div>
       </div>
-      <div class="strip-socials">
-        <a href="https://github.com/Njenga993" target="_blank" class="strip-social" aria-label="GitHub"><i class="fab fa-github"></i></a>
-        <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" class="strip-social" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        <a href="https://x.com/kamau_nje" target="_blank" class="strip-social" aria-label="X"><i class="fab fa-x-twitter"></i></a>
+      <div class="proj-stats__socials">
+        <a href="https://github.com/Njenga993" target="_blank" rel="noopener" aria-label="GitHub" class="proj-stats__soc">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        </a>
+        <a href="https://www.linkedin.com/in/kelvin-kamau-788160277/" target="_blank" rel="noopener" aria-label="LinkedIn" class="proj-stats__soc">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+        </a>
+        <a href="https://x.com/kamau_nje" target="_blank" rel="noopener" aria-label="X" class="proj-stats__soc">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        </a>
       </div>
-    </div>
-
+    </footer>
   </section>
 
-  <!-- ═══════ MODAL ═══════ -->
+  <!-- ════════════════════ MODAL ════════════════════ -->
   <Teleport to="body">
-    <Transition name="modal-fade">
-      <div v-if="activeProject" class="modal-backdrop" @click.self="closeModal">
-
-        <button class="modal-close" @click="closeModal" aria-label="Close">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-            <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
+    <Transition name="modal">
+      <div
+        v-if="activeProject"
+        class="modal-overlay"
+        @click.self="closeModal"
+        role="dialog"
+        aria-modal="true"
+        :aria-label="activeProject.title + ' case study'"
+      >
+        <button class="modal__close" @click="closeModal" aria-label="Close">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
 
-        <div class="modal-shell">
-
-          <!-- LEFT: image panel -->
-          <div class="modal-visual">
-            <img
-              v-if="activeProject.image"
-              :src="activeProject.image"
-              :alt="activeProject.title"
-              class="mv-img"
-              @error="onImgError"
-            />
-            <div v-else class="mv-placeholder">
-              <span class="mvp-icon">{{ activeProject.icon }}</span>
-              <span class="mvp-name">{{ activeProject.title }}</span>
-            </div>
-            <div class="mv-gradient"></div>
-
-            <div class="mv-info">
-              <div class="mv-status" :class="activeProject.status">
+        <div class="modal" ref="modalRef">
+          <!-- Left: visual -->
+          <div class="modal__vis">
+            <Transition name="vis-fade" mode="out-in">
+              <img
+                v-if="activeProject.image && !failedImages.has(activeProject.id)"
+                :key="'img-' + activeProject.id"
+                :src="activeProject.image"
+                :alt="activeProject.title"
+                class="modal__vis-img"
+                @error="failedImages.add(activeProject.id)"
+              />
+              <div v-else :key="'fb-' + activeProject.id" class="modal__vis-fb">
+                <span class="modal__vis-fb-icon">{{ activeProject.icon }}</span>
+                <span class="modal__vis-fb-name">{{ activeProject.title }}</span>
+              </div>
+            </Transition>
+            <div class="modal__vis-grad"></div>
+            <div class="modal__vis-info">
+              <span class="modal__vis-status" :class="activeProject.status">
                 <span class="ms-dot"></span>
-                <span>{{ activeProject.status === 'live' ? 'Live in Production' : 'In Development' }}</span>
-              </div>
-              <div class="mv-links">
-                <a v-if="activeProject.demo && activeProject.demo !== '#'" :href="activeProject.demo" target="_blank" class="mv-link mv-link--primary">
-                  <i class="fas fa-external-link-alt"></i> Live Demo
+                {{ activeProject.status === 'live' ? 'Live in Production' : 'In Development' }}
+              </span>
+              <div class="modal__vis-links">
+                <a
+                  v-if="activeProject.demo && activeProject.demo !== '#'"
+                  :href="activeProject.demo"
+                  target="_blank"
+                  rel="noopener"
+                  class="modal__vis-link modal__vis-link--primary"
+                >
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6M15 3h6v6M10 14L21 3"/></svg>
+                  Live Demo
                 </a>
-                <a v-if="activeProject.github" :href="activeProject.github" target="_blank" class="mv-link mv-link--ghost">
-                  <i class="fab fa-github"></i> Source
+                <a
+                  v-if="activeProject.github"
+                  :href="activeProject.github"
+                  target="_blank"
+                  rel="noopener"
+                  class="modal__vis-link modal__vis-link--ghost"
+                >
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+                  Source
                 </a>
               </div>
             </div>
-
-            <div class="mv-watermark">{{ String(projects.findIndex(p => p.id === activeProject.id) + 1).padStart(2,'0') }}</div>
+            <span class="modal__vis-wm">{{ String(currentIdx + 1).padStart(2, '0') }}</span>
           </div>
 
-          <!-- RIGHT: scrollable content -->
-          <div class="modal-content" ref="modalContentRef">
-
-            <div class="mc-header modal-item" style="--mi:0.05s">
-              <span class="mc-cat">{{ activeProject.category }}</span>
-              <h2 class="mc-title">{{ activeProject.title }}</h2>
-              <p class="mc-tagline">{{ activeProject.tagline }}</p>
+          <!-- Right: content -->
+          <div class="modal__body" :key="activeProject.id" ref="modalBodyRef">
+            <div class="mi" style="--mi:0.05s">
+              <span class="modal__cat">{{ activeProject.category }}</span>
+              <h2 class="modal__title">{{ activeProject.title }}</h2>
+              <p class="modal__tagline">{{ activeProject.tagline }}</p>
             </div>
 
-            <p class="mc-desc modal-item" style="--mi:0.1s">{{ activeProject.description }}</p>
+            <p class="modal__desc mi" style="--mi:0.1s">{{ activeProject.description }}</p>
 
-            <div class="mc-problem-solution modal-item" style="--mi:0.16s">
-              <div class="mc-block">
-                <div class="mcb-head">
-                  <span class="mcb-dot mcb-dot--problem"></span>
+            <div class="modal__ps mi" style="--mi:0.16s">
+              <div class="modal__block">
+                <div class="modal__block-head">
+                  <span class="modal__block-dot modal__block-dot--prob"></span>
                   <span>The Problem</span>
                 </div>
-                <p class="mcb-text">{{ activeProject.problem }}</p>
+                <p>{{ activeProject.problem }}</p>
               </div>
-              <div class="mc-block">
-                <div class="mcb-head">
-                  <span class="mcb-dot mcb-dot--solution"></span>
+              <div class="modal__block">
+                <div class="modal__block-head">
+                  <span class="modal__block-dot modal__block-dot--sol"></span>
                   <span>The Solution</span>
                 </div>
-                <p class="mcb-text">{{ activeProject.solution }}</p>
+                <p>{{ activeProject.solution }}</p>
               </div>
             </div>
 
-            <div class="mc-metrics modal-item" style="--mi:0.22s" v-if="activeProject.metrics">
-              <div class="mc-section-label">
-                <i class="fas fa-chart-line"></i> Impact Metrics
+            <div class="modal__metrics mi" style="--mi:0.22s" v-if="activeProject.metrics?.length">
+              <div class="modal__sec-label">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                Impact Metrics
               </div>
-              <div class="mcm-grid">
-                <div v-for="m in activeProject.metrics" :key="m.label" class="mcm-item">
-                  <span class="mcm-value">{{ m.value }}</span>
-                  <span class="mcm-desc">{{ m.label }}</span>
+              <div class="modal__metrics-grid">
+                <div v-for="m in activeProject.metrics" :key="m.label" class="modal__metric">
+                  <span class="modal__metric-val">{{ m.value }}</span>
+                  <span class="modal__metric-label">{{ m.label }}</span>
                 </div>
               </div>
             </div>
 
-            <div class="mc-features modal-item" style="--mi:0.28s">
-              <div class="mc-section-label">
-                <span class="mcs-dot"></span> Key Features
+            <div class="modal__features mi" style="--mi:0.28s">
+              <div class="modal__sec-label">
+                <span class="modal__sec-dot"></span>
+                Key Features
               </div>
-              <div class="mcf-list">
-                <div v-for="feat in activeProject.features" :key="feat" class="mcf-item">
-                  <div class="mcf-icon"><i class="fas fa-check"></i></div>
-                  <span>{{ feat }}</span>
-                </div>
+              <ul class="modal__feat-list">
+                <li v-for="f in activeProject.features" :key="f">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <span>{{ f }}</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="modal__stack mi" style="--mi:0.34s">
+              <div class="modal__sec-label">
+                <span class="modal__sec-dot"></span>
+                Tech Stack
+              </div>
+              <div class="modal__pills">
+                <span v-for="t in activeProject.stack" :key="t" class="modal__pill">{{ t }}</span>
               </div>
             </div>
 
-            <div class="mc-stack modal-item" style="--mi:0.34s">
-              <div class="mc-section-label">
-                <span class="mcs-dot"></span> Tech Stack
-              </div>
-              <div class="mcs-pills">
-                <span v-for="tech in activeProject.stack" :key="tech" class="mcs-pill">{{ tech }}</span>
-              </div>
-            </div>
-
-            <!-- Nav -->
-            <div class="mc-nav modal-item" style="--mi:0.4s">
-              <button class="mcn-btn" :disabled="!prevProject" @click="navigateProject('prev')">
-                <i class="fas fa-arrow-left"></i> Prev
+            <div class="modal__nav mi" style="--mi:0.4s">
+              <button class="modal__nav-btn" :disabled="!prevProject" @click="navigate('prev')">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 7H1M6 2L1 7l5 5"/></svg>
+                Prev
               </button>
-              <span class="mcn-counter">
-                {{ String(projects.findIndex(p => p.id === activeProject.id) + 1).padStart(2,'0') }}
-                /
-                {{ String(projects.length).padStart(2,'0') }}
+              <span class="modal__nav-counter">
+                {{ String(currentIdx + 1).padStart(2, '0') }}<span class="modal__nav-sep">/</span>{{ String(projects.length).padStart(2, '0') }}
               </span>
-              <button class="mcn-btn" :disabled="!nextProject" @click="navigateProject('next')">
-                Next <i class="fas fa-arrow-right"></i>
+              <button class="modal__nav-btn" :disabled="!nextProject" @click="navigate('next')">
+                Next
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
               </button>
             </div>
-
           </div>
         </div>
-
       </div>
     </Transition>
   </Teleport>
-
-
 </template>
 
-<script setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
 
-const projectsRef = ref(null)
+<script setup>
+import { ref, reactive, computed, watch, onMounted, onUnmounted, nextTick } from 'vue'
+
+/* ═══════════════════════════════════════════════════════
+   Composables
+   ═══════════════════════════════════════════════════════ */
+
+/** Observe .reveal elements inside a root and add .revealed on intersect */
+function useReveal(rootRef) {
+  let io = null
+  onMounted(() => {
+    if (!rootRef.value) return
+    io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); io.unobserve(e.target) } }),
+      { threshold: 0.08, rootMargin: '0px 0px -30px 0px' }
+    )
+    rootRef.value.querySelectorAll('.reveal').forEach(el => io.observe(el))
+  })
+  onUnmounted(() => { if (io) io.disconnect() })
+}
+
+/** Animated counter that eases from 0 → target */
+function useCounter(target, duration = 1400) {
+  const current = ref(0)
+  let raf = null
+  function start() {
+    const t0 = performance.now()
+    const tick = (now) => {
+      const p = Math.min((now - t0) / duration, 1)
+      current.value = Math.round((1 - Math.pow(1 - p, 3)) * target)
+      if (p < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+  }
+  function stop() { if (raf) cancelAnimationFrame(raf) }
+  return { current, start, stop }
+}
+
+/** Focus trap for modal accessibility */
+function useFocusTrap(containerRef) {
+  let prev = null
+  const handler = (e) => {
+    if (e.key !== 'Tab' || !containerRef.value) return
+    const focusable = containerRef.value.querySelectorAll(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    )
+    if (!focusable.length) return
+    const first = focusable[0], last = focusable[focusable.length - 1]
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus() }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus() }
+  }
+  function activate() {
+    prev = document.activeElement
+    document.addEventListener('keydown', handler)
+    nextTick(() => {
+      const first = containerRef.value?.querySelector('button, a[href]')
+      first?.focus()
+    })
+  }
+  function deactivate() {
+    document.removeEventListener('keydown', handler)
+    if (prev) { prev.focus(); prev = null }
+  }
+  return { activate, deactivate }
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   State
+   ═══════════════════════════════════════════════════════ */
+
+const sectionRef = ref(null)
+const featRef = ref(null)
+const filtersRef = ref(null)
+const statsRef = ref(null)
+const modalRef = ref(null)
+const modalBodyRef = ref(null)
+
 const activeFilter = ref('All')
 const sortBy = ref('featured')
 const activeProject = ref(null)
-const modalContentRef = ref(null)
+const failedImages = reactive(new Set())
+
+// Refs populated imperatively
+const filterBtnEls = {}
+const rowEls = {}
+
+/* ═══════════════════════════════════════════════════════
+   Data — identical shape to original
+   ═══════════════════════════════════════════════════════ */
 
 const projects = ref([
   {
-    id: 1,
-    slug: 'sellsync-pos',
-    title: 'SellSync POS System',
+    id: 1, slug: 'sellsync-pos', title: 'SellSync POS System',
     tagline: 'Multi-tenant SaaS point of sale built for the Kenyan retail market.',
     description: 'SellSync is a production-grade, multi-tenant Point of Sale platform built with Laravel 11 and PostgreSQL, live on Railway. Designed specifically for Kenyan SMEs, it consolidates inventory, sales analytics, branch management, and role-based access control into one cohesive system — replacing the fragmented spreadsheet workflows most local retailers depend on.',
     problem: 'Kenyan SMEs lose thousands of shillings monthly to stock discrepancies, manual reconciliation errors, and the absence of real-time sales visibility across branches.',
     solution: 'A cloud-native POS with per-tenant data isolation, a cashier-optimised touch interface, live inventory deductions, and branch-level reporting — deployable via a single Railway URL with zero infrastructure overhead.',
-    category: 'Full Stack · SaaS',
-    icon: '⚡',
-    image: './sellsync-dashboard.png',
-    status: 'live',
-    impact: 'SaaS',
+    category: 'Full Stack · SaaS', icon: '⚡', image: './sellsync-dashboard.png',
+    status: 'live', impact: 'SaaS',
     github: 'https://github.com/Njenga993/pos-project',
     demo: 'https://sellsync-pos-production.up.railway.app/',
     stack: ['Laravel 11', 'PostgreSQL', 'Vue.js', 'Tailwind CSS', 'Railway', 'PHP'],
@@ -401,18 +470,13 @@ const projects = ref([
     ],
   },
   {
-    id: 2,
-    slug: 'nyakazi-ecommerce',
-    title: 'Nyakazi Organics',
+    id: 2, slug: 'nyakazi-ecommerce', title: 'Nyakazi Organics',
     tagline: 'E-commerce platform reconnecting Kenyans with indigenous solar-dried vegetables.',
     description: 'A full-featured Next.js e-commerce storefront for Nyakazi Organics — a Kenyan brand selling solar-dried indigenous vegetables. The platform handles product discovery, cart management, and WhatsApp-native order processing, meeting customers exactly where they already transact in the Kenyan market.',
     problem: 'Indigenous Kenyan vegetables are disappearing from urban tables because there was no modern, accessible channel connecting rural producers to city consumers who actively want them.',
     solution: 'A performant Next.js storefront with a curated product catalog, WhatsApp checkout integration formatted for Kenyan ordering habits, and SEO optimised for "African vegetables Kenya" search intent.',
-    category: 'E-commerce',
-    icon: '🌿',
-    image: './Ecommerc.png',
-    status: 'live',
-    impact: 'Live',
+    category: 'E-commerce', icon: '🌿', image: './Ecommerc.png',
+    status: 'live', impact: 'Live',
     github: 'https://github.com/Njenga993/nyakazi-ecommerce-',
     demo: 'https://nyakazi.org/',
     stack: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'WhatsApp API'],
@@ -432,18 +496,13 @@ const projects = ref([
     ],
   },
   {
-    id: 3,
-    slug: 'seed-savers-network',
-    title: 'Seed Savers Network Kenya',
+    id: 3, slug: 'seed-savers-network', title: 'Seed Savers Network Kenya',
     tagline: "Digital platform for East Africa's indigenous seed sovereignty movement.",
     description: 'A React + TypeScript website for Seed Savers Network Kenya — an NGO working to preserve indigenous seed varieties and promote food sovereignty across East Africa. The site serves as the primary digital face for the organisation, hosting their programs, events, resource library, and the EA-ISC 2026 Conference.',
     problem: 'The Seed Savers Network had no unified digital presence capable of serving their diverse stakeholders — farmers, researchers, partner NGOs, and international donors — with consistent, accessible information.',
     solution: 'A component-driven React site with clearly structured program pages, an events system for the EA-ISC 2026 Conference, a multilingual-ready resource library, and donation pathways optimised for both local M-Pesa and international payment flows.',
-    category: 'Web Development',
-    icon: '🌱',
-    image: './ssn.PNG',
-    status: 'live',
-    impact: 'NGO',
+    category: 'Web Development', icon: '🌱', image: './ssn.PNG',
+    status: 'live', impact: 'NGO',
     github: 'https://github.com/Njenga993/SeedSavers',
     demo: 'https://seedsaverskenya.org/',
     stack: ['React', 'TypeScript', 'Vite', 'Tailwind CSS', 'HTML5'],
@@ -464,50 +523,76 @@ const projects = ref([
     ],
   },
   {
-    id: 4,
-    slug: 'mne-platform',
-    title: 'M&E Management System',
-    tagline: 'Django-powered monitoring and evaluation platform for NGO project reporting.',
-    description: 'A full-stack Monitoring & Evaluation system built in Python Django for NGOs and development organisations. The platform manages logframes, tracks activity completion, handles task assignment, enables comment-thread collaboration, and generates standardised donor-ready performance reports — eliminating manual Excel-based M&E workflows.',
-    problem: 'NGOs waste enormous staff hours compiling M&E data from disconnected spreadsheets and email chains. Donor report deadlines trigger panic rather than confidence because there is no single source of truth for project data.',
-    solution: 'A structured Django web application where programme staff log activities against logframes in real time, project managers track task completion, and finance teams pull auto-generated reports formatted to common donor templates.',
-    category: 'Full Stack',
-    icon: '📊',
-    image: null,
-    status: 'development',
-    impact: 'NGO Tool',
-    github: 'https://github.com/Njenga993/MnE',
-    demo: '#',
-    stack: ['Python', 'Django', 'SQLite', 'JavaScript', 'HTML5', 'CSS3'],
-    metrics: [
-      { value: '15h+', label: 'Saved per week' },
-      { value: 'Real-time', label: 'Activity tracking' },
-      { value: 'Auto', label: 'Report generation' },
-      { value: 'Multi-role', label: 'Access control' },
-    ],
-    features: [
-      'Logframe builder with indicators, targets, and baseline tracking',
-      'Activity log with date, responsible person, and completion status',
-      'Task management with assignment, due dates, and comment threads',
-      'Auto-generated PDF reports formatted for common donor templates',
-      'Mobile API for field officers to log activities from smartphones',
-      'Budget tracking and variance analysis per project activity',
-      'Role-based permissions for Programme Staff, Managers, and Finance',
-    ],
-  },
+  id: 4,
+  slug: 'ea-indigenous-seed-conference',
+  title: 'Eastern Africa Indigenous Seed Conference Platform',
+  tagline: 'A comprehensive conference management platform powering the 1st Eastern Africa Indigenous Seed Conference.',
+  description: 'A modern full-stack conference website and event management platform developed for the 1st Eastern Africa Indigenous Seed Conference (EA-ISC 2026). The platform serves as the digital hub for one of Eastern Africa’s largest gatherings on indigenous seeds, farmer-managed seed systems, biodiversity conservation, and seed sovereignty. It provides conference information, online registration, abstract submission, programme management, speaker profiling, sponsorship opportunities, exhibition management, news publishing, and participant engagement through an intuitive, mobile-first experience.',
+
+  problem: 'Large regional conferences often rely on disconnected tools for registrations, abstract submissions, programme updates, exhibitor management, and communication. This creates administrative overhead, fragmented participant experiences, duplicated data, and difficulty managing hundreds of stakeholders including researchers, farmers, policymakers, civil society organisations, exhibitors, sponsors, and development partners.',
+
+  solution: 'Developed a centralized conference management platform that streamlines participant registration, call for abstracts, programme publication, speaker management, exhibitor showcases, sponsor visibility, event communications, and resource sharing within a single responsive web application. The platform enables organizers to efficiently manage the conference lifecycle while providing attendees with a seamless digital experience before, during, and after the event.',
+
+  category: 'Event Management',
+  icon: '🌱',
+  image: './conference.png',
+
+  status: 'live',
+  impact: 'Regional Conference Platform',
+
+  github: '#',
+  demo: 'https://eaindigenousseedconference.org/',
+
+  stack: [
+    'React',
+    'TypeScript',
+    'Laravel',
+    'MySQL',
+    'REST API',
+    'HTML5',
+    'CSS3',
+    'JavaScript',
+    'Responsive Design'
+  ],
+
+  metrics: [
+    { value: '1st', label: 'Regional Conference' },
+    { value: '6', label: 'Conference Themes' },
+    { value: '100%', label: 'Mobile Responsive' },
+    { value: 'Multi-role', label: 'Content Management' },
+  ],
+
+  features: [
+    'Comprehensive conference information portal with dynamic content management',
+    'Online participant registration with streamlined attendee onboarding',
+    'Call for abstracts and paper submission workflows',
+    'Scientific programme publication with sessions, tracks, and schedules',
+    'Speaker profiles showcasing researchers, practitioners, and community leaders',
+    'Exhibitor and partner showcase pages highlighting innovations and organizations',
+    'Sponsor visibility through dedicated sponsorship sections and branding opportunities',
+    'News and announcements management for conference updates',
+    'Event countdown and important conference milestones',
+    'Responsive navigation optimized for desktop, tablet, and mobile devices',
+    'Dedicated pages for conference themes, objectives, and expected outcomes',
+    'Information hub covering farmer-managed seed systems, seed sovereignty, agroecology, biodiversity conservation, indigenous knowledge systems, and climate resilience',
+    'Integrated contact forms for participant enquiries and partnership requests',
+    'Resource centre for conference documents, publications, and important downloads',
+    'Venue information with logistics, accommodation, and travel guidance',
+    'Committee and organizing team profiles',
+    'Partner and supporting organization directory',
+    'SEO-optimized architecture for increased regional and international visibility',
+    'Accessibility-focused user interface for diverse audiences',
+    'CMS-powered content management enabling organizers to publish updates without developer intervention'
+  ],
+},
   {
-    id: 5,
-    slug: 'elixir-biotech',
-    title: 'Elixir Biotech',
+    id: 5, slug: 'elixir-biotech', title: 'Elixir Biotech',
     tagline: 'React/TypeScript website for a Nairobi clean energy startup.',
     description: 'A premium React + TypeScript marketing and product site for Elixir Biotech, a Nairobi-based clean energy company developing biogas and waste-to-energy systems for the East African market. The build focuses on editorial authority, scroll-reveal storytelling, and SEO structured data to attract B2B clients and impact investors.',
     problem: 'Elixir Biotech had a compelling product but no digital presence that matched their ambition. Their old site undermined investor confidence and failed to articulate the economic case for biogas adoption to Kenyan agribusinesses.',
     solution: 'A full UI overhaul across all sections with IntersectionObserver scroll animations, JSON-LD structured data, and pre-rendering via vite-plugin-prerender to maximise SEO for clean energy search terms in East Africa.',
-    category: 'Frontend',
-    icon: '🔋',
-    image: './elixbiotech.png',
-    status: 'live',
-    impact: 'Clean Energy',
+    category: 'Frontend', icon: '🔋', image: './elixbiotech.png',
+    status: 'live', impact: 'Clean Energy',
     github: 'https://github.com/Njenga993',
     demo: 'https://elixirbiotech.co.ke/',
     stack: ['React', 'TypeScript', 'Vite', 'CSS3', 'React Helmet', 'JSON-LD'],
@@ -529,1419 +614,1317 @@ const projects = ref([
   },
 ])
 
-/* ── Computed ────────────────────────────────────────── */
-const categories = computed(() => ['All', ...new Set(projects.value.map(p => p.category))])
 
-const sortOptions = [
-  { val: 'featured', label: 'Featured' },
-  { val: 'live', label: 'Live first' },
-]
+/* ═══════════════════════════════════════════════════════
+   Computed
+   ═══════════════════════════════════════════════════════ */
+
+const categories = computed(() => ['All', ...new Set(projects.value.map(p => p.category))])
 
 const filteredSorted = computed(() => {
   let list = activeFilter.value === 'All'
     ? [...projects.value]
     : projects.value.filter(p => p.category === activeFilter.value)
-  if (sortBy.value === 'live') {
-    list.sort((a, b) => (b.status === 'live' ? 1 : 0) - (a.status === 'live' ? 1 : 0))
-  }
+  if (sortBy.value === 'live') list.sort((a, b) => (b.status === 'live' ? 1 : 0) - (a.status === 'live' ? 1 : 0))
   return list
 })
 
 const featured = computed(() => filteredSorted.value[0] || projects.value[0])
 const liveCount = computed(() => projects.value.filter(p => p.status === 'live').length)
-const totalTech = computed(() => {
-  const s = new Set()
-  projects.value.forEach(p => p.stack.forEach(t => s.add(t)))
-  return s.size
+const totalTech = computed(() => { const s = new Set(); projects.value.forEach(p => p.stack.forEach(t => s.add(t))); return s.size })
+
+const currentIdx = computed(() => activeProject.value ? projects.value.findIndex(p => p.id === activeProject.value.id) : -1)
+const prevProject = computed(() => currentIdx.value > 0 ? projects.value[currentIdx.value - 1] : null)
+const nextProject = computed(() => currentIdx.value < projects.value.length - 1 ? projects.value[currentIdx.value + 1] : null)
+
+const getCount = (cat) => cat === 'All' ? projects.value.length : projects.value.filter(p => p.category === cat).length
+
+// Filter indicator — measures real DOM positions
+const indicatorStyle = computed(() => {
+  const btn = filterBtnEls[activeFilter.value]
+  if (!btn) return { opacity: 0, width: '0px', transform: 'translateX(0px)' }
+  return {
+    width: btn.offsetWidth + 'px',
+    transform: `translateX(${btn.offsetLeft}px)`,
+    opacity: 1,
+  }
 })
 
-const prevProject = computed(() => {
-  if (!activeProject.value) return null
-  const idx = projects.value.findIndex(p => p.id === activeProject.value.id)
-  return idx > 0 ? projects.value[idx - 1] : null
-})
 
-const nextProject = computed(() => {
-  if (!activeProject.value) return null
-  const idx = projects.value.findIndex(p => p.id === activeProject.value.id)
-  return idx < projects.value.length - 1 ? projects.value[idx + 1] : null
-})
+/* ═══════════════════════════════════════════════════════
+   Featured card — mouse-tracking spotlight + 3D tilt
+   ═══════════════════════════════════════════════════════ */
 
-/* ── Modal controls ──────────────────────────────────── */
-const openModal = (project) => {
-  activeProject.value = project
-  document.body.style.overflow = 'hidden'
-  setTimeout(() => {
-    if (modalContentRef.value) modalContentRef.value.scrollTop = 0
-  }, 50)
+function onFeatMove(e) {
+  const el = featRef.value
+  if (!el) return
+  const rect = el.getBoundingClientRect()
+  const x = (e.clientX - rect.left) / rect.width - 0.5
+  const y = (e.clientY - rect.top) / rect.height - 0.5
+  el.style.setProperty('--rx', `${y * -4}deg`)
+  el.style.setProperty('--ry', `${x * 4}deg`)
+  el.style.setProperty('--mx', `${e.clientX - rect.left}px`)
+  el.style.setProperty('--my', `${e.clientY - rect.top}px`)
 }
 
-const closeModal = () => {
+function onFeatLeave() {
+  const el = featRef.value
+  if (!el) return
+  el.style.setProperty('--rx', '0deg')
+  el.style.setProperty('--ry', '0deg')
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   Row spotlight — per-row mouse glow
+   ═══════════════════════════════════════════════════════ */
+
+function onRowMove(e, id) {
+  const el = rowEls[id]
+  if (!el) return
+  const rect = el.getBoundingClientRect()
+  el.style.setProperty('--mx', `${e.clientX - rect.left}px`)
+  el.style.setProperty('--my', `${e.clientY - rect.top}px`)
+}
+
+function onRowLeave(id) {
+  const el = rowEls[id]
+  if (el) {
+    el.style.removeProperty('--mx')
+    el.style.removeProperty('--my')
+  }
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   Modal
+   ═══════════════════════════════════════════════════════ */
+
+const focusTrap = useFocusTrap(modalRef)
+
+function openModal(project) {
+  activeProject.value = project
+  document.body.style.overflow = 'hidden'
+}
+
+function closeModal() {
   activeProject.value = null
   document.body.style.overflow = ''
 }
 
-const navigateProject = (dir) => {
+function navigate(dir) {
   const target = dir === 'prev' ? prevProject.value : nextProject.value
-  if (target) {
-    activeProject.value = target
-    setTimeout(() => {
-      if (modalContentRef.value) modalContentRef.value.scrollTop = 0
-    }, 50)
-  }
+  if (target) activeProject.value = target
 }
 
-const onImgError = (e) => {
-  e.target.style.display = 'none'
-  const placeholder = e.target.nextElementSibling
-  if (placeholder && placeholder.classList.contains('img-placeholder')) {
-    placeholder.style.display = 'flex'
+// Reset scroll + activate trap when modal project changes
+watch(activeProject, (val) => {
+  if (val) {
+    nextTick(() => {
+      if (modalBodyRef.value) modalBodyRef.value.scrollTop = 0
+      focusTrap.activate()
+    })
+  } else {
+    focusTrap.deactivate()
   }
-}
+})
 
-const scrollToContact = () => {
-  const el = document.getElementById('contact')
-  if (el) {
-    const top = el.getBoundingClientRect().top + window.scrollY - 80
-    window.scrollTo({ top, behavior: 'smooth' })
-  }
-}
 
-const handleKey = (e) => {
+/* ═══════════════════════════════════════════════════════
+   Keyboard
+   ═══════════════════════════════════════════════════════ */
+
+function onKey(e) {
   if (!activeProject.value) return
   if (e.key === 'Escape') closeModal()
-  if (e.key === 'ArrowLeft') navigateProject('prev')
-  if (e.key === 'ArrowRight') navigateProject('next')
+  if (e.key === 'ArrowLeft' && prevProject.value) navigate('prev')
+  if (e.key === 'ArrowRight' && nextProject.value) navigate('next')
 }
 
-/* ── Scroll trigger ──────────────────────────────────── */
+
+/* ═══════════════════════════════════════════════════════
+   Scroll helpers
+   ═══════════════════════════════════════════════════════ */
+
+function scrollToContact() {
+  const el = document.getElementById('contact')
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   Animated stat counters
+   ═══════════════════════════════════════════════════════ */
+
+const cProjects = useCounter(projects.value.length)
+const cLive = useCounter(liveCount.value)
+const cTech = useCounter(totalTech.value)
+const cIndustries = useCounter(4)
+
+const displayedCounts = computed(() => ({
+  projects: cProjects.current.value,
+  live: cLive.current.value,
+  tech: cTech.current.value,
+  industries: cIndustries.current.value,
+}))
+
+let statsTriggered = false
+function maybeStartCounters() {
+  if (statsTriggered) return
+  statsTriggered = true
+  cProjects.start()
+  cLive.start()
+  cTech.start()
+  cIndustries.start()
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   Lifecycle
+   ═══════════════════════════════════════════════════════ */
+
+useReveal(sectionRef)
+
 onMounted(() => {
-  document.addEventListener('keydown', handleKey)
+  document.addEventListener('keydown', onKey)
 
-  const section = projectsRef.value
-  if (!section) return
+  // Observe stats section to trigger counters
+  if (statsRef.value) {
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) { maybeStartCounters(); io.unobserve(entry.target) }
+    }, { threshold: 0.3 })
+    io.observe(statsRef.value)
+  }
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => {
-      if (e.isIntersecting) {
-        section.classList.add('in-view')
-        io.unobserve(section)
-      }
-    })
-  }, { threshold: 0.04 })
-
-  io.observe(section)
+  // Re-observe .reveal elements after filter changes (new elements)
+  const observer = new MutationObserver(() => {
+    if (!sectionRef.value) return
+    const io2 = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('revealed'); io2.unobserve(e.target) } }),
+      { threshold: 0.08 }
+    )
+    sectionRef.value.querySelectorAll('.reveal:not(.revealed)').forEach(el => io2.observe(el))
+  })
+  if (sectionRef.value) observer.observe(sectionRef.value, { childList: true, subtree: true })
+  onUnmounted(() => observer.disconnect())
 })
 
 onUnmounted(() => {
-  document.removeEventListener('keydown', handleKey)
+  document.removeEventListener('keydown', onKey)
   document.body.style.overflow = ''
+  cProjects.stop(); cLive.stop(); cTech.stop(); cIndustries.stop()
 })
 </script>
 
+
 <style scoped>
 /* ═══════════════════════════════════════════════════════
-   NO :root — all colors hardcoded. Orange #ff5500 palette.
+   BASE
    ═══════════════════════════════════════════════════════ */
+.proj {
+  --accent: #ff5500;
+  --accent-h: #ff6b1a;
+  --bg: #0a0a0b;
+  --surface: rgba(255,255,255,0.025);
+  --border: rgba(255,255,255,0.07);
+  --border-h: rgba(255,85,0,0.3);
+  --t1: #f0f0f0;
+  --t2: #8a929e;
+  --t3: #5a6270;
+  --green: #22c55e;
+  --amber: #f59e0b;
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', ui-monospace, monospace;
 
-/* ── Scroll animation system ─────────────────────────── */
-.anim {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-  transition-delay: var(--d, 0s);
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: clamp(64px, 10vh, 120px) clamp(20px, 4vw, 80px) clamp(48px, 6vh, 80px);
+  font-family: var(--font);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(24px, 3.5vh, 44px);
+  color: var(--t2);
 }
 
-.in-view .anim {
+
+/* ═══════════════════════════════════════════════════════
+   REVEAL SYSTEM — per-element IntersectionObserver
+   ═══════════════════════════════════════════════════════ */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1),
+              transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  transition-delay: var(--d, 0s);
+}
+.revealed {
   opacity: 1;
   transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .anim { transition-duration: 0.01ms !important; opacity: 1 !important; transform: none !important; }
-  .project-card { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .anim-featured { animation: none !important; opacity: 1 !important; transform: none !important; }
-  .modal-item { animation: none !important; opacity: 1 !important; transform: none !important; }
+  .reveal, .mi { transition-duration: 0.01ms !important; opacity: 1 !important; transform: none !important; }
+  .feat { transition: none !important; }
+  .proj-row { transition: none !important; }
 }
 
-/* ── Section shell (full-bleed) ─────────────────────── */
-.projects {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: clamp(60px, 10vh, 120px) clamp(24px, 5vw, 96px) clamp(40px, 6vh, 80px);
-  font-family: 'Inter', system-ui, sans-serif;
-  display: flex;
-  flex-direction: column;
-  gap: clamp(28px, 4vh, 48px);
-}
 
-/* ── Section header ──────────────────────────────────── */
-.projects__header {
+/* ═══════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════ */
+.proj-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 1rem;
 }
-
-.projects__label {
+.proj-head__left {
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
-
-.projects__label-line {
-  display: block;
-  width: 32px;
+.proj-head__line {
+  width: 28px;
   height: 1px;
-  background: #ff5500;
+  background: var(--accent);
 }
-
-.projects__label-text {
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #ff5500;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.projects__header-right {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.live-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.38rem 1rem;
-  border: 1px solid rgba(255, 85, 0, 0.25);
-  border-radius: 999px;
+.proj-head__label {
   font-size: 0.7rem;
-  font-weight: 600;
-  color: #ff5500;
-  background: rgba(255, 85, 0, 0.06);
-}
-
-.pulse-dot {
-  width: 6px;
-  height: 6px;
-  background: #22c55e;
-  border-radius: 50%;
-  box-shadow: 0 0 7px rgba(34, 197, 94, 0.7);
-  animation: pulse 2s infinite;
-  flex-shrink: 0;
-}
-
-.github-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.38rem 0.9rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 500;
-  color: #8a929e;
-  text-decoration: none;
-  transition: all 0.25s ease;
-}
-
-.github-pill:hover {
-  border-color: rgba(255, 85, 0, 0.3);
-  color: #ff5500;
-}
-
-/* ── Main split ──────────────────────────────────────── */
-.projects__main {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr;
-  gap: clamp(32px, 5vw, 64px);
-  align-items: start;
-}
-
-/* ── Left column ────────────────────────────────────── */
-.projects__left {
-  display: flex;
-  flex-direction: column;
-  gap: 1.6rem;
-}
-
-.projects__eyebrow {
-  font-size: 0.8rem;
   font-weight: 700;
-  color: #ff5500;
-  letter-spacing: 0.14em;
+  color: var(--accent);
+  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
-
-.projects__heading {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  line-height: 0.92;
-  gap: 0;
-}
-
-.projects__hl-solid,
-.projects__hl-outline,
-.projects__hl-accent {
-  display: block;
-  font-size: clamp(2.8rem, 5.5vw, 5rem);
-  font-weight: 900;
-  letter-spacing: -0.04em;
-  line-height: 0.92;
-}
-
-.projects__hl-solid { color: #ffffff; }
-
-.projects__hl-outline {
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.35);
-}
-
-.projects__hl-accent {
-  color: #ff5500;
-  font-style: italic;
-}
-
-.projects__sub-desc {
-  margin: 0.5rem 0 0;
-  font-size: 0.92rem;
-  line-height: 1.75;
-  color: #8a929e;
-  max-width: 420px;
-}
-
-/* Filters */
-.projects__filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.filter-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.42rem 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.02);
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: #8a929e;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  font-family: 'Inter', sans-serif;
-}
-
-.filter-pill:hover {
-  border-color: rgba(255, 85, 0, 0.25);
-  color: #c8cdd5;
-}
-
-.filter-pill.active {
-  background: #ff5500;
-  border-color: #ff5500;
-  color: #ffffff;
-}
-
-.filter-pill.active .filter-count { color: rgba(255, 255, 255, 0.7); }
-
-.filter-count {
-  font-size: 0.62rem;
-  opacity: 0.6;
-}
-
-/* Sort */
-.projects__sort {
+.proj-head__right {
   display: flex;
   align-items: center;
   gap: 0.65rem;
 }
-
-.sort-label {
-  font-size: 0.64rem;
-  font-weight: 700;
-  color: #4a5568;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-
-.sort-pill {
-  padding: 0.32rem 0.75rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 999px;
-  background: transparent;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: #6b7585;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: 'Inter', sans-serif;
-}
-
-.sort-pill:hover,
-.sort-pill.active {
-  border-color: rgba(255, 85, 0, 0.3);
-  color: #ff5500;
-}
-
-/* ── Right column: featured ─────────────────────────── */
-.projects__right {
-  position: relative;
-}
-
-/* Featured panel transition */
-.panel-fade-enter-active,
-.panel-fade-leave-active { transition: all 0.22s ease; }
-.panel-fade-enter-from { opacity: 0; transform: translateY(8px); }
-.panel-fade-leave-to { opacity: 0; transform: translateY(-8px); }
-
-@keyframes featuredIn {
-  from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.anim-featured {
-  opacity: 0;
-  animation: featuredIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--pd, 0s);
-}
-
-.featured-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 1.2rem;
-}
-
-/* Terminal */
-.terminal {
-  background: #060809;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 1.1rem 1.3rem 1rem;
-  font-family: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
-  cursor: pointer;
-  transition: border-color 0.25s ease;
-}
-
-.terminal:hover { border-color: rgba(255, 85, 0, 0.25); }
-
-.terminal__dots {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 0.85rem;
-}
-
-.terminal__dots span {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.terminal__dots span:nth-child(1) { background: #ff5f56; }
-.terminal__dots span:nth-child(2) { background: #ffbd2e; }
-.terminal__dots span:nth-child(3) { background: #27c93f; }
-
-.terminal__lines {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-
-.terminal__row {
-  display: flex;
-  gap: 0.55rem;
-  font-size: 0.72rem;
-  flex-wrap: wrap;
-}
-
-.terminal__prompt { color: #ff5500; font-weight: 600; flex-shrink: 0; }
-.terminal__cmd { color: #6b7585; }
-.terminal__out--accent { color: #ff5500; font-weight: 700; }
-.terminal__out { color: #8a929e; opacity: 0.7; }
-.terminal__live { color: #22c55e; font-weight: 700; }
-.terminal__dev { color: #f59e0b; }
-
-/* Featured image */
-.featured-img-wrap {
-  position: relative;
-  cursor: pointer;
-}
-
-.featured-img {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.featured-img img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: grayscale(100%) brightness(0.85);
-  transition: filter 0.5s ease, transform 0.5s ease;
-  display: block;
-}
-
-.featured-img-wrap:hover .featured-img img {
-  filter: grayscale(0%) brightness(0.92);
-  transform: scale(1.03);
-}
-
-.img-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  background: linear-gradient(135deg, #0a0a0a, #111);
-}
-
-.ph-icon { font-size: 3rem; opacity: 0.3; }
-.ph-name { font-size: 0.85rem; font-weight: 700; color: rgba(255, 255, 255, 0.15); }
-
-.img-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, transparent 50%, rgba(10, 10, 10, 0.55) 100%);
-  pointer-events: none;
-}
-
-.img-hover {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.6rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: #ffffff;
-  background: rgba(10, 10, 10, 0.65);
-  border-radius: 14px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  letter-spacing: 0.04em;
-}
-
-.featured-img-wrap:hover .img-hover { opacity: 1; }
-
-.corner {
-  position: absolute;
-  width: 28px;
-  height: 28px;
-  pointer-events: none;
-}
-
-.corner-tl { top: -10px; left: -10px; border-top: 2px solid #ff5500; border-left: 2px solid #ff5500; }
-.corner-br { bottom: -10px; right: -10px; border-bottom: 2px solid #ff5500; border-right: 2px solid #ff5500; }
-
-.watermark {
-  position: absolute;
-  top: -18px;
-  right: -8px;
-  font-size: 5rem;
-  font-weight: 900;
-  color: rgba(255, 255, 255, 0.03);
-  pointer-events: none;
-  line-height: 1;
-}
-
-/* Featured actions */
-.featured-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-}
-
-.action-link {
+.proj-head__live {
   display: inline-flex;
   align-items: center;
-  gap: 0.9rem;
-  padding: 0.75rem 0;
-  text-decoration: none;
-  border: none;
-  border-bottom: 2px solid transparent;
-  background: none;
-  cursor: pointer;
-  font-family: 'Inter', sans-serif;
-  width: fit-content;
-  transition: all 0.25s ease;
-}
-
-.action-primary { border-bottom-color: #ff5500; }
-
-.al-num { font-size: 0.62rem; font-weight: 700; color: #ff5500; }
-.al-label { font-size: 0.82rem; font-weight: 700; color: #ffffff; letter-spacing: 0.06em; }
-.al-arrow { color: #ff5500; font-size: 0.72rem; transition: transform 0.25s ease; }
-.action-primary:hover .al-arrow { transform: translateX(5px); }
-
-.action-secondary { border-bottom-color: rgba(255, 255, 255, 0.06); }
-.action-secondary .al-num { color: #4a5568; }
-.action-secondary .al-label { color: #6b7585; }
-.action-secondary:hover { border-bottom-color: rgba(255, 85, 0, 0.3); }
-.action-secondary:hover .al-num,
-.action-secondary:hover .al-label { color: #ff5500; }
-
-/* ── Project grid ───────────────────────────────────── */
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.projects__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-  gap: 0.85rem;
-}
-
-.project-card {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  opacity: 0;
-  animation: cardIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--card-delay, 0s);
-  transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.project-card:hover {
-  border-color: rgba(255, 85, 0, 0.3);
-  transform: translateY(-4px);
-  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4);
-}
-
-.pc-visual {
-  position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  background: linear-gradient(135deg, #0a0a0a, #111);
-}
-
-.pc-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: grayscale(100%) brightness(0.8);
-  transition: all 0.45s ease;
-  display: block;
-}
-
-.project-card:hover .pc-img {
-  filter: grayscale(20%) brightness(1.02);
-  transform: scale(1.06);
-}
-
-.pc-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.pcp-icon { font-size: 2.5rem; opacity: 0.25; }
-
-.pc-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(10, 10, 10, 0.72);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.55rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: 0.05em;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  backdrop-filter: blur(3px);
-  -webkit-backdrop-filter: blur(3px);
-}
-
-.project-card:hover .pc-overlay { opacity: 1; }
-
-.pc-num {
-  position: absolute;
-  top: 0.7rem;
-  right: 0.7rem;
+  gap: 0.45rem;
+  padding: 0.35rem 0.9rem;
+  border: 1px solid rgba(255,85,0,0.2);
+  border-radius: 999px;
   font-size: 0.68rem;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.3);
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(255,85,0,0.05);
 }
-
-.pc-status {
-  position: absolute;
-  bottom: 0.7rem;
-  right: 0.7rem;
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
+.dot {
+  width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0;
+}
+.dot--live {
+  background: var(--green);
+  box-shadow: 0 0 6px rgba(34,197,94,0.7);
   animation: pulse 2s infinite;
 }
-
-.pc-status.live { background: #22c55e; box-shadow: 0 0 7px rgba(34, 197, 94, 0.7); }
-.pc-status.development { background: #f59e0b; box-shadow: 0 0 7px rgba(245, 158, 11, 0.7); }
-
-.pc-body {
-  padding: 1rem 1.15rem 1.2rem;
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.proj-head__gh {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: var(--t3);
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+.proj-head__gh:hover {
+  border-color: var(--border-h);
+  color: var(--accent);
 }
 
-.pc-top {
+
+/* ═══════════════════════════════════════════════════════
+   FEATURED CARD
+   ═══════════════════════════════════════════════════════ */
+.feat {
+  position: relative;
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.2s ease-out;
+  will-change: transform;
+  outline: none;
+}
+.feat:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Transition for filter switch */
+.feat-enter-active, .feat-leave-active { transition: opacity 0.25s ease, transform 0.25s ease; }
+.feat-enter-from { opacity: 0; transform: perspective(1200px) scale(0.97) translateY(12px); }
+.feat-leave-to { opacity: 0; transform: perspective(1200px) scale(1.01) translateY(-8px); }
+
+.feat__bg {
+  position: absolute;
+  inset: 0;
+}
+.feat__bg img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(80%) brightness(0.55);
+  transition: filter 0.6s ease, transform 0.6s ease;
+}
+.feat:hover .feat__bg img {
+  filter: grayscale(30%) brightness(0.65);
+  transform: scale(1.04);
+}
+.feat__fallback {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0.75rem;
+  background: linear-gradient(135deg, #08090a, #0f1318);
+}
+.feat__fallback-icon { font-size: 4rem; opacity: 0.15; }
+.feat__fallback-name { font-size: 0.9rem; font-weight: 700; color: rgba(255,255,255,0.1); }
+
+.feat__overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(10,10,11,0.3) 0%,
+    rgba(10,10,11,0.55) 50%,
+    rgba(10,10,11,0.92) 100%
+  );
+}
+.feat__glow {
+  position: absolute; inset: 0;
+  background: radial-gradient(
+    550px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255,85,0,0.08),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+.feat:hover .feat__glow { opacity: 1; }
+
+.feat__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: clamp(320px, 48vh, 480px);
+  padding: clamp(1.2rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.5rem);
+}
+.feat__top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.4rem;
+}
+.feat__num {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: rgba(255,255,255,0.15);
+  letter-spacing: 0.08em;
+  font-family: var(--mono);
+}
+.feat__status {
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+}
+.feat__status.live { color: var(--green); }
+.feat__status.development { color: var(--amber); }
+
+.feat__mid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 600px;
+}
+.feat__cat {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.feat__title {
+  font-size: clamp(1.8rem, 4vw, 3rem);
+  font-weight: 800;
+  color: var(--t1);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+.feat__tag {
+  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
+  color: var(--t2);
+  line-height: 1.6;
+  margin: 0;
 }
 
-.pc-cat {
+.feat__bot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.feat__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+.feat__stack span {
+  padding: 0.25rem 0.65rem;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.feat__explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: 0.04em;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s;
+}
+.feat:hover .feat__explore {
+  opacity: 1;
+  transform: translateX(0);
+}
+.feat__explore svg {
+  transition: transform 0.25s ease;
+}
+.feat:hover .feat__explore svg {
+  transform: translateX(4px);
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   FILTERS
+   ═══════════════════════════════════════════════════════ */
+.proj-filters {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding-bottom: 0.5rem;
+}
+.proj-filters__btn {
+  position: relative;
+  padding: 0.45rem 0.9rem;
+  background: none;
+  border: none;
+  font-family: var(--font);
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--t3);
+  cursor: pointer;
+  transition: color 0.25s ease;
+  z-index: 1;
+}
+.proj-filters__btn:hover { color: var(--t2); }
+.proj-filters__btn.active { color: var(--t1); }
+.proj-filters__cnt {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  margin-left: 0.2rem;
+}
+.proj-filters__bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: var(--accent);
+  border-radius: 1px;
+  transition: width 0.35s cubic-bezier(0.16,1,0.3,1),
+              transform 0.35s cubic-bezier(0.16,1,0.3,1),
+              opacity 0.25s ease;
+}
+
+
+/* ═══════════════════════════════════════════════════════
+   PROJECT ROWS — the key layout differentiator
+   ═══════════════════════════════════════════════════════ */
+.proj-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.proj-row {
+  display: grid;
+  grid-template-columns: 40px 110px 1fr auto;
+  gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  align-items: center;
+  padding: 0.85rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+  outline: none;
+  position: relative;
+  overflow: hidden;
+}
+.proj-row::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(
+    350px circle at var(--mx, -200px) var(--my, -200px),
+    rgba(255,85,0,0.035),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.proj-row:hover::before { opacity: 1; }
+.proj-row:hover {
+  border-color: var(--border-h);
+  background: rgba(255,255,255,0.035);
+  transform: translateX(4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+}
+.proj-row:focus-visible {
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Number */
+.proj-row__num {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--t3);
+  font-family: var(--mono);
+  transition: color 0.25s ease;
+}
+.proj-row:hover .proj-row__num { color: var(--accent); }
+
+/* Thumbnail */
+.proj-row__thumb {
+  position: relative;
+  width: 110px;
+  aspect-ratio: 16 / 10;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0c0d0e, #12141a);
+  flex-shrink: 0;
+}
+.proj-row__thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) brightness(0.7);
+  transition: filter 0.4s ease, transform 0.4s ease;
+}
+.proj-row:hover .proj-row__thumb img {
+  filter: grayscale(30%) brightness(0.85);
+  transform: scale(1.08);
+}
+.proj-row__thumb-fb {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.8rem; opacity: 0.2;
+}
+
+/* Info */
+.proj-row__info {
+  min-width: 0;
+}
+.proj-row__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+.proj-row__cat {
   font-size: 0.6rem;
   font-weight: 700;
-  color: #ff5500;
+  color: var(--accent);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
-
-.pc-impact {
-  font-size: 0.58rem;
+.proj-row__impact {
+  font-size: 0.56rem;
   font-weight: 600;
-  color: #5a6270;
-  padding: 0.15rem 0.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: var(--t3);
+  padding: 0.12rem 0.45rem;
+  border: 1px solid var(--border);
   border-radius: 999px;
 }
-
-.pc-title {
-  font-size: 0.9rem;
+.proj-row__title {
+  font-size: 0.92rem;
   font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.3rem;
+  color: var(--t1);
+  margin: 0 0 0.15rem;
   line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
-
-.pc-desc {
-  font-size: 0.76rem;
-  color: #8a929e;
+.proj-row__tag {
+  font-size: 0.74rem;
+  color: var(--t3);
   line-height: 1.5;
-  margin: 0 0 0.7rem;
+  margin: 0 0 0.45rem;
   display: -webkit-box;
-  --webkit-line-clamp: 2;
+  --webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
-
-.pc-stack {
+.proj-row__techs {
   display: flex;
   flex-wrap: wrap;
   gap: 0.3rem;
 }
-
-.pc-tech {
-  padding: 0.22rem 0.55rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.07);
+.proj-row__techs span {
+  padding: 0.18rem 0.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
   border-radius: 999px;
-  font-size: 0.64rem;
-  color: #9aa3af;
+  font-size: 0.6rem;
+  color: var(--t3);
+  white-space: nowrap;
+}
+.proj-row__more {
+  color: var(--accent) !important;
+  font-weight: 700;
+  border-color: transparent !important;
+  background: none !important;
 }
 
-.pc-more {
-  font-size: 0.64rem;
-  color: #ff5500;
-  font-weight: 600;
-  padding: 0.22rem 0;
+/* End: status + arrow */
+.proj-row__end {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-shrink: 0;
+}
+.proj-row__dot {
+  width: 7px; height: 7px; border-radius: 50%;
+}
+.proj-row__dot.live { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.6); animation: pulse 2s infinite; }
+.proj-row__dot.development { background: var(--amber); box-shadow: 0 0 6px rgba(245,158,11,0.5); }
+.proj-row__arrow {
+  color: var(--t3);
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+.proj-row:hover .proj-row__arrow {
+  color: var(--accent);
+  transform: translateX(4px);
 }
 
-/* ── Inquiry CTA ─────────────────────────────────────── */
-.projects__cta {
+
+/* ═══════════════════════════════════════════════════════
+   CTA
+   ═══════════════════════════════════════════════════════ */
+.proj-cta {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 2rem;
   flex-wrap: wrap;
-  background: rgba(255, 85, 0, 0.04);
-  border: 1px solid rgba(255, 85, 0, 0.15);
+  padding: 1.6rem 1.8rem;
   border-radius: 18px;
-  padding: 1.8rem 2rem;
   position: relative;
   overflow: hidden;
+  background: rgba(255,85,0,0.03);
+  border: 1px solid rgba(255,85,0,0.12);
 }
-
-.projects__cta::before {
+.proj-cta::before {
   content: '';
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 40%;
-  height: 100%;
-  background: radial-gradient(ellipse at 80% 50%, rgba(255, 85, 0, 0.08) 0%, transparent 70%);
+  top: 0; right: 0;
+  width: 45%; height: 100%;
+  background: radial-gradient(ellipse at 85% 50%, rgba(255,85,0,0.07) 0%, transparent 70%);
   pointer-events: none;
 }
-
-.cta-text h3 {
-  font-size: 1.15rem;
+.proj-cta__text { position: relative; z-index: 1; }
+.proj-cta__text h3 {
+  font-size: 1.1rem;
   font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 0.3rem;
+  color: var(--t1);
+  margin: 0 0 0.25rem;
 }
-
-.cta-text p {
-  font-size: 0.84rem;
-  color: #8a929e;
+.proj-cta__text p {
+  font-size: 0.82rem;
+  color: var(--t2);
   margin: 0;
   line-height: 1.6;
 }
-
-.cta-btn {
+.proj-cta__btn {
+  position: relative;
+  z-index: 1;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.8rem 1.7rem;
-  background: #ff5500;
-  color: #ffffff;
-  font-size: 0.85rem;
+  padding: 0.75rem 1.6rem;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.82rem;
   font-weight: 700;
   border-radius: 999px;
   text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.25s cubic-bezier(0.16,1,0.3,1);
   white-space: nowrap;
-  box-shadow: 0 4px 16px rgba(255, 85, 0, 0.2);
-  position: relative;
-  z-index: 1;
+  box-shadow: 0 4px 16px rgba(255,85,0,0.2);
 }
-
-.cta-btn:hover {
-  background: #ff6b1a;
+.proj-cta__btn:hover {
+  background: var(--accent-h);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(255, 85, 0, 0.35);
+  box-shadow: 0 8px 24px rgba(255,85,0,0.35);
 }
-
-.cta-btn-icon {
-  width: 22px;
-  height: 22px;
-  background: rgba(255, 255, 255, 0.2);
+.proj-cta__btn-icon {
+  width: 22px; height: 22px;
+  background: rgba(255,255,255,0.2);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex; align-items: center; justify-content: center;
+  transition: transform 0.3s ease;
 }
+.proj-cta__btn:hover .proj-cta__btn-icon { transform: translateX(3px); }
 
-.cta-btn:hover .cta-btn-icon { transform: translateX(3px); }
 
-/* ── Bottom strip ────────────────────────────────────── */
-.projects__strip {
+/* ═══════════════════════════════════════════════════════
+   STATS STRIP
+   ═══════════════════════════════════════════════════════ */
+.proj-stats {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1.25rem;
-  padding-top: clamp(24px, 4vh, 40px);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  gap: 1.2rem;
+  padding-top: clamp(20px, 3.5vh, 36px);
+  border-top: 1px solid var(--border);
 }
-
-.strip-stats {
+.proj-stats__items {
   display: flex;
   align-items: center;
-  gap: 1.4rem;
+  gap: 1.3rem;
 }
-
-.strip-stat {
+.proj-stats__item {
   display: flex;
   flex-direction: column;
-  gap: 0.1rem;
+  gap: 0.08rem;
 }
-
-.ss-num {
-  font-size: 1.5rem;
+.proj-stats__num {
+  font-size: 1.4rem;
   font-weight: 800;
-  color: #ff5500;
+  color: var(--accent);
   letter-spacing: -0.02em;
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
-
-.ss-label {
-  font-size: 0.62rem;
-  color: #5a6270;
+.proj-stats__label {
+  font-size: 0.6rem;
+  color: var(--t3);
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
-
-.strip-divider {
+.proj-stats__div {
   width: 1px;
-  height: 2rem;
-  background: rgba(255, 255, 255, 0.06);
+  height: 1.8rem;
+  background: var(--border);
   flex-shrink: 0;
 }
-
-.strip-socials {
+.proj-stats__socials {
   display: flex;
-  gap: 0.55rem;
+  gap: 0.45rem;
 }
-
-.strip-social {
-  width: 36px;
-  height: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.proj-stats__soc {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border);
   border-radius: 10px;
-  color: #8a929e;
-  font-size: 0.85rem;
+  color: var(--t3);
   text-decoration: none;
   transition: all 0.25s ease;
 }
-
-.strip-social:hover {
-  border-color: rgba(255, 85, 0, 0.35);
-  color: #ff5500;
+.proj-stats__soc:hover {
+  border-color: var(--border-h);
+  color: var(--accent);
   transform: translateY(-2px);
 }
+
 
 /* ═══════════════════════════════════════════════════════
    MODAL
    ═══════════════════════════════════════════════════════ */
+.modal-enter-active, .modal-leave-active { transition: opacity 0.28s ease; }
+.modal-enter-from, .modal-leave-to { opacity: 0; }
 
-.modal-fade-enter-active,
-.modal-fade-leave-active { transition: opacity 0.3s ease; }
-.modal-fade-enter-from,
-.modal-fade-leave-to { opacity: 0; }
-
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
-.modal-close {
+.modal__close {
   position: fixed;
-  top: 1.2rem;
-  right: 1.2rem;
+  top: 1rem; right: 1rem;
   z-index: 2100;
-  width: 40px;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(10, 10, 10, 0.9);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 85, 0, 0.3);
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(10,10,11,0.9);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-h);
   border-radius: 50%;
-  color: #c8cdd5;
+  color: var(--t2);
   cursor: pointer;
   transition: all 0.25s ease;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+}
+.modal__close:hover {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
-.modal-close:hover {
-  background: #ff5500;
-  color: #ffffff;
-  border-color: #ff5500;
-}
-
-/* Shell */
-.modal-shell {
+.modal {
   width: 100%;
-  max-width: 1080px;
-  height: calc(100vh - 3rem);
-  max-height: 820px;
-  background: #111111;
-  border: 1px solid rgba(255, 85, 0, 0.15);
+  max-width: 1060px;
+  height: calc(100vh - 2.5rem);
+  max-height: 780px;
+  background: #111113;
+  border: 1px solid rgba(255,85,0,0.12);
   border-radius: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   overflow: hidden;
-  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7);
-  animation: shellIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.7);
+  animation: modalIn 0.35s cubic-bezier(0.16,1,0.3,1) both;
 }
-
-@keyframes shellIn {
-  from { opacity: 0; transform: scale(0.95) translateY(20px); }
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.96) translateY(16px); }
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
-/* Left: visual panel */
-.modal-visual {
+/* Visual panel */
+.modal__vis {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(135deg, #060809, #0d1520);
+  background: linear-gradient(135deg, #07080a, #0d1118);
 }
+.vis-fade-enter-active, .vis-fade-leave-active { transition: opacity 0.2s ease; }
+.vis-fade-enter-from, .vis-fade-leave-to { opacity: 0; }
 
-.mv-img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  display: block;
-  filter: brightness(0.65);
+.modal__vis-img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.6);
 }
-
-.mv-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  background: linear-gradient(135deg, #060809, #0d1520);
+.modal__vis-fb {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 0.75rem;
+  background: linear-gradient(135deg, #07080a, #0d1118);
 }
+.modal__vis-fb-icon { font-size: 4.5rem; opacity: 0.12; }
+.modal__vis-fb-name { font-size: 0.95rem; font-weight: 700; color: rgba(255,255,255,0.1); text-align: center; padding: 0 1.5rem; }
 
-.mvp-icon { font-size: 5rem; opacity: 0.15; }
-.mvp-name { font-size: 1rem; font-weight: 700; color: rgba(255, 255, 255, 0.12); text-align: center; padding: 0 1.5rem; }
-
-.mv-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, transparent 40%, rgba(10, 10, 10, 0.7) 100%);
+.modal__vis-grad {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(17,17,19,1) 0%, transparent 45%, transparent 70%, rgba(17,17,19,0.5) 100%);
   pointer-events: none;
 }
-
-.mv-info {
+.modal__vis-info {
   position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
-  right: 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+  bottom: 1.25rem; left: 1.25rem; right: 1.25rem;
+  display: flex; flex-direction: column; gap: 0.6rem;
 }
-
-.mv-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.4rem 0.9rem;
-  border: 1px solid;
-  background: rgba(10, 10, 10, 0.85);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  width: fit-content;
-}
-
-.mv-status.live { color: #22c55e; border-color: rgba(34, 197, 94, 0.4); }
-.mv-status.development { color: #f59e0b; border-color: rgba(245, 158, 11, 0.4); }
-
-.ms-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  animation: pulse 2s infinite;
-}
-
-.mv-links {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.mv-link {
+.modal__vis-status {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.45rem 1rem;
-  font-size: 0.74rem;
+  padding: 0.35rem 0.85rem;
+  border: 1px solid;
+  background: rgba(10,10,11,0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: fit-content;
+  font-family: var(--mono);
+}
+.modal__vis-status.live { color: var(--green); border-color: rgba(34,197,94,0.35); }
+.modal__vis-status.development { color: var(--amber); border-color: rgba(245,158,11,0.35); }
+.ms-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+  animation: pulse 2s infinite;
+}
+.modal__vis-links { display: flex; gap: 0.45rem; flex-wrap: wrap; }
+.modal__vis-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.9rem;
+  font-size: 0.72rem;
   font-weight: 700;
   border-radius: 999px;
   text-decoration: none;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   transition: all 0.25s ease;
 }
-
-.mv-link--primary {
-  background: #ff5500;
-  color: #ffffff;
+.modal__vis-link--primary {
+  background: var(--accent);
+  color: #fff;
 }
-
-.mv-link--primary:hover {
-  background: #ff6b1a;
-  transform: translateY(-2px);
+.modal__vis-link--primary:hover {
+  background: var(--accent-h);
+  transform: translateY(-1px);
 }
-
-.mv-link--ghost {
-  background: rgba(10, 10, 10, 0.8);
-  color: #c8cdd5;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.modal__vis-link--ghost {
+  background: rgba(10,10,11,0.8);
+  color: var(--t2);
+  border: 1px solid var(--border);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
-
-.mv-link--ghost:hover {
-  border-color: rgba(255, 85, 0, 0.3);
-  color: #ff5500;
+.modal__vis-link--ghost:hover {
+  border-color: var(--border-h);
+  color: var(--accent);
 }
-
-.mv-watermark {
+.modal__vis-wm {
   position: absolute;
-  top: 1rem;
-  left: 1.2rem;
-  font-size: 5rem;
+  top: 0.8rem; left: 1rem;
+  font-size: 4.5rem;
   font-weight: 900;
-  color: rgba(255, 255, 255, 0.03);
+  color: rgba(255,255,255,0.025);
   line-height: 1;
   pointer-events: none;
+  font-family: var(--mono);
 }
 
-/* Right: scrollable content */
-.modal-content {
+/* Scrollable body */
+.modal__body {
   overflow-y: auto;
-  padding: 2rem 2rem 1.5rem;
+  overflow-x: hidden;
+  padding: clamp(1.5rem, 3vw, 2.5rem);
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 85, 0, 0.2) transparent;
+  scrollbar-color: rgba(255,255,255,0.08) transparent;
 }
+.modal__body::-webkit-scrollbar { width: 5px; }
+.modal__body::-webkit-scrollbar-track { background: transparent; }
+.modal__body::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 3px; }
 
-.modal-content::-webkit-scrollbar { width: 4px; }
-.modal-content::-webkit-scrollbar-thumb { background: rgba(255, 85, 0, 0.2); border-radius: 2px; }
-
-/* Modal content cascade animation */
-@keyframes modalItemIn {
+/* Staggered item animation */
+.mi {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: miIn 0.45s cubic-bezier(0.16,1,0.3,1) both;
+  animation-delay: var(--mi, 0s);
+}
+@keyframes miIn {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-.modal-item {
-  opacity: 0;
-  animation: modalItemIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
-  animation-delay: var(--mi, 0s);
-}
-
-.mc-header { display: flex; flex-direction: column; gap: 0.4rem; }
-
-.mc-cat {
-  font-size: 0.68rem;
+.modal__cat {
+  font-size: 0.65rem;
   font-weight: 700;
-  color: #ff5500;
+  color: var(--accent);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-
-.mc-title {
-  font-size: 1.5rem;
+.modal__title {
+  font-size: clamp(1.4rem, 2.5vw, 1.8rem);
   font-weight: 800;
-  color: #ffffff;
-  margin: 0;
+  color: var(--t1);
+  margin: 0.35rem 0 0.3rem;
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
-
-.mc-tagline {
-  font-size: 0.86rem;
-  color: #8a929e;
+.modal__tagline {
+  font-size: 0.88rem;
+  color: var(--t2);
+  line-height: 1.55;
   margin: 0;
-  border-left: 3px solid #ff5500;
-  padding-left: 0.9rem;
-  line-height: 1.5;
 }
-
-.mc-desc {
-  font-size: 0.86rem;
-  color: #9aa3af;
+.modal__desc {
+  font-size: 0.84rem;
+  color: var(--t2);
   line-height: 1.75;
   margin: 0;
 }
 
 /* Problem / Solution */
-.mc-problem-solution {
+.modal__ps {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.85rem;
 }
-
-.mc-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.modal__block {
+  padding: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
 }
-
-.mcb-head {
+.modal__block-head {
   display: flex;
   align-items: center;
-  gap: 0.45rem;
-  font-size: 0.66rem;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: #ff5500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: var(--t1);
+  letter-spacing: 0.04em;
 }
-
-.mcb-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
+.modal__block-dot {
+  width: 8px; height: 8px; border-radius: 50%;
 }
-
-.mcb-dot--problem { background: #ef4444; }
-.mcb-dot--solution { background: #22c55e; }
-
-.mcb-text {
-  font-size: 0.8rem;
-  color: #8a929e;
+.modal__block-dot--prob { background: #ef4444; }
+.modal__block-dot--sol { background: var(--green); }
+.modal__block p {
+  font-size: 0.78rem;
+  color: var(--t2);
   line-height: 1.65;
   margin: 0;
 }
 
 /* Metrics */
-.mc-metrics { display: flex; flex-direction: column; gap: 0.65rem; }
-
-.mc-section-label {
+.modal__sec-label {
   display: flex;
   align-items: center;
   gap: 0.45rem;
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  color: #ff5500;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: var(--t1);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.7rem;
 }
-
-.mc-section-label i { font-size: 0.72rem; }
-
-.mcs-dot {
-  width: 5px;
-  height: 5px;
-  background: #ff5500;
-  border-radius: 50%;
+.modal__sec-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
 }
-
-.mcm-grid {
+.modal__metrics-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
+  gap: 0.6rem;
 }
-
-.mcm-item {
-  padding: 0.75rem 0.9rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+.modal__metric {
+  padding: 0.85rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 12px;
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
 }
-
-.mcm-value {
-  font-size: 1rem;
+.modal__metric-val {
+  font-size: 1.1rem;
   font-weight: 800;
-  color: #ff5500;
+  color: var(--accent);
   letter-spacing: -0.02em;
-  line-height: 1;
 }
-
-.mcm-desc {
-  font-size: 0.66rem;
-  color: #6b7585;
-  line-height: 1.3;
+.modal__metric-label {
+  font-size: 0.65rem;
+  color: var(--t3);
 }
 
 /* Features */
-.mc-features { display: flex; flex-direction: column; gap: 0.65rem; }
-
-.mcf-list {
+.modal__feat-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
-
-.mcf-item {
+.modal__feat-list li {
   display: flex;
   align-items: flex-start;
-  gap: 0.65rem;
-}
-
-.mcf-icon {
-  width: 20px;
-  height: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 85, 0, 0.1);
-  border: 1px solid rgba(255, 85, 0, 0.25);
-  border-radius: 50%;
-  color: #ff5500;
-  font-size: 0.5rem;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-
-.mcf-item span {
-  font-size: 0.82rem;
-  color: #9aa3af;
+  gap: 0.55rem;
+  font-size: 0.78rem;
+  color: var(--t2);
   line-height: 1.55;
 }
+.modal__feat-list li svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--green);
+}
 
-/* Stack */
-.mc-stack { display: flex; flex-direction: column; gap: 0.65rem; }
-
-.mcs-pills {
+/* Stack pills */
+.modal__pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.35rem;
 }
-
-.mcs-pill {
-  padding: 0.32rem 0.75rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+.modal__pill {
+  padding: 0.3rem 0.7rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 999px;
-  font-size: 0.72rem;
-  color: #c8cdd5;
-  transition: all 0.2s ease;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--t2);
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
-
-.mcs-pill:hover {
-  border-color: rgba(255, 85, 0, 0.3);
-  color: #ff5500;
+.modal__pill:hover {
+  border-color: var(--border-h);
+  color: var(--accent);
 }
 
 /* Nav */
-.mc-nav {
+.modal__nav {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: 1rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-  margin-top: auto;
+  padding-top: 0.8rem;
+  border-top: 1px solid var(--border);
+  margin-top: 0.4rem;
 }
-
-.mcn-btn {
+.modal__nav-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 0.35rem;
+  padding: 0.45rem 0.9rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 999px;
-  color: #8a929e;
-  font-size: 0.74rem;
+  font-family: var(--font);
+  font-size: 0.72rem;
   font-weight: 600;
+  color: var(--t2);
   cursor: pointer;
   transition: all 0.25s ease;
-  font-family: 'Inter', sans-serif;
 }
-
-.mcn-btn:hover:not(:disabled) {
-  border-color: rgba(255, 85, 0, 0.3);
-  color: #ff5500;
+.modal__nav-btn:hover:not(:disabled) {
+  border-color: var(--border-h);
+  color: var(--accent);
 }
-
-.mcn-btn:disabled {
+.modal__nav-btn:disabled {
   opacity: 0.25;
   cursor: not-allowed;
 }
-
-.mcn-counter {
-  font-size: 0.72rem;
+.modal__nav-counter {
+  font-size: 0.75rem;
   font-weight: 700;
-  color: #5a6270;
-  letter-spacing: 0.08em;
+  color: var(--t3);
+  font-family: var(--mono);
+}
+.modal__nav-sep {
+  margin: 0 0.15rem;
+  color: var(--border);
 }
 
-/* ── Keyframes ───────────────────────────────────────── */
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.55; transform: scale(0.85); }
-}
 
-/* ── Responsive ──────────────────────────────────────── */
-@media (max-width: 1100px) {
-  .projects__main {
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+
+/* Tablet: rows become more compact */
+@media (max-width: 860px) {
+  .proj-row {
+    grid-template-columns: 32px 85px 1fr auto;
+    gap: 0.65rem;
+    padding: 0.7rem 0.85rem;
+  }
+  .modal {
     grid-template-columns: 1fr;
-    gap: 2.5rem;
+    max-height: 90vh;
+    height: auto;
   }
-
-  .projects__sub-desc { max-width: 100%; }
-
-  .modal-shell { grid-template-columns: 1fr; max-height: 95vh; }
-  .modal-visual { height: 240px; }
-  .mv-gradient { background: linear-gradient(to bottom, transparent 40%, rgba(10, 10, 10, 0.75) 100%); }
-  .mc-problem-solution { grid-template-columns: 1fr; }
+  .modal__vis {
+    height: 220px;
+    min-height: 180px;
+  }
+  .modal__ps {
+    grid-template-columns: 1fr;
+  }
 }
 
-@media (max-width: 768px) {
-  .projects {
-    padding: clamp(48px, 8vh, 80px) clamp(20px, 5vw, 32px) clamp(32px, 5vh, 60px);
+/* Mobile: rows stack, modal full screen */
+@media (max-width: 640px) {
+  .proj {
+    padding-left: 16px;
+    padding-right: 16px;
   }
-
-  .projects__hl-solid,
-  .projects__hl-outline,
-  .projects__hl-accent {
-    font-size: clamp(2.2rem, 9vw, 3.5rem);
-  }
-
-  .projects__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .projects__cta {
+  .proj-head {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1.25rem;
+    gap: 0.65rem;
+  }
+  .feat__content {
+    min-height: 280px;
+    padding: 1rem 1.15rem;
+  }
+  .feat__title {
+    font-size: 1.5rem;
   }
 
-  .cta-btn { width: 100%; justify-content: center; }
+  .proj-row {
+    grid-template-columns: 1fr 28px;
+    grid-template-rows: auto auto;
+    gap: 0 0.5rem;
+    padding: 0.75rem;
+    border-radius: 14px;
+  }
+  .proj-row__num { display: none; }
+  .proj-row__thumb {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    grid-column: 1 / -1;
+    order: -1;
+    border-radius: 10px;
+  }
+  .proj-row__info { grid-column: 1; }
+  .proj-row__end {
+    grid-column: 2;
+    grid-row: 2;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .proj-row__tag { --webkit-line-clamp: 2; }
 
-  .projects__strip {
+  .modal-overlay { padding: 0; }
+  .modal {
+    border-radius: 0;
+    height: 100vh;
+    max-height: 100vh;
+    grid-template-columns: 1fr;
+  }
+  .modal__vis { height: 200px; }
+  .modal__body { padding: 1.15rem; }
+  .modal__metrics-grid { grid-template-columns: 1fr 1fr; }
+  .modal__close { top: 0.65rem; right: 0.65rem; }
+
+  .proj-cta {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
+    padding: 1.25rem;
   }
-
-  .modal-content { padding: 1.5rem; }
-  .mcm-grid { grid-template-columns: 1fr; }
-}
-
-@media (max-width: 480px) {
-  .projects__grid { grid-template-columns: 1fr; }
-
-  .strip-divider { display: none; }
-
-  .modal-backdrop { padding: 0; }
-  .modal-shell {
-    border-radius: 20px 20px 0 0;
-    align-self: flex-end;
-    max-height: 95vh;
-  }
-
-  .modal-content { padding: 1.25rem 1.2rem; }
-  .mc-title { font-size: 1.2rem; }
-}
-
-@media (min-width: 2000px) {
-  .projects__grid {
-    grid-template-columns: repeat(3, 1fr);
+  .proj-stats {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 </style>
