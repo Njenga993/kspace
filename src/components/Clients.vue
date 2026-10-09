@@ -34,99 +34,124 @@
       </button>
     </div>
 
-    <!-- ── Work rows ───────────────────────────────────── -->
-    <div class="wi__rows">
-      <TransitionGroup name="row-fade">
-        <div
+    <!-- ── Client accordion ────────────────────────────── -->
+    <div class="wi__stage anim" style="--d:0.24s">
+      <div
+        class="wc"
+        :class="{ 'wc--paused': paused }"
+        :key="activeFilter"
+        role="list"
+        aria-label="Client work"
+        @mouseenter="hovering = true"
+        @mouseleave="onStageLeave"
+        @focusin="focusInside = true"
+        @focusout="focusInside = false"
+        @keydown="onStageKey"
+      >
+        <article
           v-for="(client, idx) in filtered"
           :key="client.name"
-          class="wi__row anim"
-          :style="{ '--d': 0.22 + idx * 0.05 + 's' }"
-          :class="{ 'wi__row--open': openRow === client.name }"
-          @click="toggleRow(client.name)"
+          :ref="el => { if (el) cardEls[client.name] = el }"
+          class="wc__card"
+          :class="{ 'is-active': client.name === activeName }"
+          :style="{ '--h': hueFor(client.industry) }"
+          role="listitem"
+          tabindex="0"
+          :aria-label="client.name + ' — ' + client.project"
+          @mouseenter="onCardEnter(client.name)"
+          @mouseleave="clearHoverTimer"
+          @focus="activate(client.name)"
+          @pointerdown="onCardDown(client.name)"
+          @click="onCardClick(client.name)"
         >
-          <!-- ── Row summary (always visible) ─────────── -->
-          <div class="wir__summary">
+          <!-- Backdrop: tinted gradient + oversized, ghosted logo -->
+          <div class="wc__bg"></div>
+          <img
+            v-if="client.logo && !failedLogos.has(client.name)"
+            class="wc__ghost"
+            :src="client.logo"
+            alt=""
+            aria-hidden="true"
+            loading="lazy"
+            draggable="false"
+            @error="failedLogos.add(client.name)"
+          />
+          <div class="wc__shade"></div>
+          <div class="wc__glow"></div>
 
-            <!-- Left: index + name -->
-            <div class="wir__left">
-              <span class="wir__idx">{{ String(idx + 1).padStart(2, '0') }}</span>
-              <div class="wir__name-block">
-                <span class="wir__name">{{ client.name }}</span>
-                <span class="wir__project">{{ client.project }}</span>
-              </div>
+          <!-- Strip furniture (visible when collapsed) -->
+          <span class="wc__num" aria-hidden="true">{{ String(idx + 1).padStart(2, '0') }}</span>
+          <span class="wc__vlabel" aria-hidden="true">{{ client.name }}</span>
+
+          <!-- Logo chip: centred on a strip, glides to top-left when active -->
+          <span class="wc__chip" aria-hidden="true">
+            <img
+              v-if="client.logo && !failedLogos.has(client.name)"
+              :src="client.logo"
+              alt=""
+              draggable="false"
+              @error="failedLogos.add(client.name)"
+            />
+            <b v-else>{{ initials(client.name) }}</b>
+          </span>
+
+          <!-- Active content -->
+          <div class="wc__content">
+            <div class="wc__tags">
+              <span class="wc__industry">{{ client.industry }}</span>
+              <span class="wc__year">{{ client.year }}</span>
             </div>
 
-            <!-- Centre: tags -->
-            <div class="wir__tags">
-              <span class="wir__industry">{{ client.industry }}</span>
-              <span class="wir__year">{{ client.year }}</span>
+            <div class="wc__head">
+              <h3 class="wc__name">{{ client.name }}</h3>
+              <p class="wc__project">
+                {{ client.project }}
+                <span class="wc__metric">{{ client.metric }}</span>
+              </p>
             </div>
 
-            <!-- Right: metric + toggle -->
-            <div class="wir__right">
-              <span class="wir__metric">{{ client.metric }}</span>
-              <span class="wir__toggle" aria-hidden="true">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                  <path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-                </svg>
-              </span>
-            </div>
-
-          </div>
-
-          <!-- ── Expanded detail (accordion) ──────────── -->
-          <Transition name="expand">
-            <div v-if="openRow === client.name" class="wir__detail" @click.stop>
-
-              <div class="wid__grid">
-
-                <!-- Description -->
-                <div class="wid__desc-col">
-                  <p class="wid__desc">{{ client.description }}</p>
-                  <div class="wid__stack">
-                    <span v-for="tech in client.technologies" :key="tech" class="wid__tag">{{ tech }}</span>
+            <div class="wc__body">
+              <div class="wc__cols">
+                <div class="wc__col">
+                  <p class="wc__desc">{{ client.description }}</p>
+                  <div class="wc__stack">
+                    <span v-for="tech in client.technologies" :key="tech">{{ tech }}</span>
                   </div>
                 </div>
-
-                <!-- Deliverables -->
-                <div class="wid__list-col">
-                  <p class="wid__list-label">Key deliverables</p>
-                  <ul class="wid__list">
+                <div class="wc__col">
+                  <p class="wc__label">Key deliverables</p>
+                  <ul class="wc__list">
                     <li v-for="item in getFeatures(client.name)" :key="item">{{ item }}</li>
                   </ul>
                 </div>
-
               </div>
 
-              <!-- Testimonial if present -->
-              <div v-if="getTestimonial(client.name)" class="wid__testimonial">
-                <p class="widt__text">"{{ getTestimonial(client.name).text }}"</p>
-                <span class="widt__author">
-                  {{ getTestimonial(client.name).author }},
-                  {{ getTestimonial(client.name).position }} · {{ getTestimonial(client.name).company }}
-                </span>
-              </div>
-
-              <!-- CTA -->
-              <div class="wid__cta-row">
-                <a href="#contact" class="wid__cta" @click.prevent="goToContact">
+              <div class="wc__foot">
+                <blockquote v-if="getTestimonial(client.name)" class="wc__quote">
+                  <p>"{{ getTestimonial(client.name).text }}"</p>
+                  <cite>
+                    {{ getTestimonial(client.name).author }},
+                    {{ getTestimonial(client.name).position }} · {{ getTestimonial(client.name).company }}
+                  </cite>
+                </blockquote>
+                <a href="#contact" class="wc__cta" @click.prevent.stop="goToContact">
                   Start a similar project
                   <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
                     <path d="M1 7h10M8 2l5 5-5 5" stroke="currentColor" stroke-width="1.5"/>
                   </svg>
                 </a>
               </div>
-
             </div>
-          </Transition>
+          </div>
 
-        </div>
-      </TransitionGroup>
+          <!-- Progress bar → drives auto-advance -->
+          <span class="wc__bar" @animationend="onBarEnd"></span>
+        </article>
+      </div>
     </div>
 
     <!-- ── Bottom strip ────────────────────────────────── -->
-    <div class="wi__strip anim" style="--d:0.7s">
+    <div class="wi__strip anim" style="--d:0.4s">
       <div class="wis__stats">
         <div class="wis__stat">
           <span class="wiss-n">{{ clients.length }}</span>
@@ -158,11 +183,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, computed, watch, nextTick, onMounted, onUnmounted } from 'vue'
 
 const sectionRef   = ref(null)
 const activeFilter = ref('All')
-const openRow      = ref(null)
 
 const clients = ref([
   {
@@ -174,6 +198,16 @@ const clients = ref([
     logo: './SSN.JPG',
     technologies: ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
     description: 'Developed the primary digital platform for Seed Savers Network Kenya — an NGO preserving indigenous seed varieties and promoting food sovereignty across East Africa. The site supports program delivery, the EA-ISC 2026 Conference, and donor engagement.',
+  },
+  {
+    name: '1st East African Indigenous Seeds Conference',
+    industry: 'Agriculture',
+    project: 'Web Application',
+    year: '2026',
+    metric: 'NGO digital platform',
+    logo: './conference.png',
+    technologies: ['React', 'TypeScript', 'Vite', 'Tailwind CSS'],
+    description: 'Developed the 1st East African Indigenous Seeds Conference website — a digital hub for the EA-ISC 2026 conference hosted by Seed Savers Network Kenya. The site supports registration, program information, and resource sharing for participants across East Africa.',
   },
   {
     name: 'INOFO Africa',
@@ -206,43 +240,53 @@ const clients = ref([
     description: 'Full e-commerce platform and digital branding overhaul for a Kenyan business selling solar-dried indigenous vegetables. Implemented a WhatsApp-native checkout flow matched to how Kenyan consumers actually purchase online.',
   },
   {
-    name: 'SaleHub POS',
+    name: 'AgroDakk Foods',
+    industry: 'E-commerce',
+    project: 'E-commerce Platform & Branding',
+    year: '2026',
+    metric: 'WhatsApp-native checkout',
+    logo: './Agrodakk.png',
+    technologies: ['Next.js', 'TypeScript', 'Tailwind CSS', 'WhatsApp API'],
+    description: 'Full e-commerce platform and digital branding overhaul for a Kenyan business selling solar-dried indigenous vegetables. Implemented a WhatsApp-native checkout flow matched to how Kenyan consumers actually purchase online.',
+  },
+  {
+    name: 'SellSync POS',
     industry: 'Retail Technology',
     project: 'Multi-tenant SaaS POS',
-    year: '2024',
+    year: '2026',
     metric: 'Live · Railway production',
-    logo: './salehubPOS.png',
+    logo: './sellsync-dashboard.png',
     technologies: ['Laravel 11', 'PostgreSQL', 'Vue.js', 'Railway'],
     description: 'Designed and developed SaleHub — a multi-tenant, cloud-native Point of Sale SaaS platform targeting Kenyan SMEs. Live on Railway with role-based access, branch management, and real-time inventory deductions.',
   },
   {
-    name: 'Desiderata Consultancy',
+    name: 'Mary Kamau Personal Portfolio',
     industry: 'Consulting',
-    project: 'Corporate Website',
-    year: '2023',
-    metric: '60% faster load time',
-    logo: './Desiderata.png',
+    project: 'Personal Website',
+    year: '2026',
+    metric: '90% faster load time',
+    logo: './mary-portfolio.png',
     technologies: ['HTML5', 'CSS3', 'JavaScript', 'Google Maps API'],
-    description: 'Professional corporate website for Desiderata Consultancy with service showcases, client case studies, contact form integration, and Google Maps. Delivered a 60% reduction in page load time versus the previous site.',
+    description: 'Developed a personal portfolio website for a Nairobi-based consultant. The site features a responsive design, interactive project showcase, and integrated Google Maps location for client inquiries.',
   },
 ])
 
 const testimonials = [
   {
     text: 'Kelvin delivered an exceptional platform that exceeded our expectations. His understanding of our market and how Kenyan customers actually shop made all the difference.',
-    author: 'Sarah Mwangi',
+    author: 'Julia',
     position: 'CEO',
     company: 'Nyakazi Organics',
   },
   {
     text: 'Working with Kelvin was seamless. He understood our requirements and delivered a platform that has significantly improved how we serve our farmer network.',
-    author: 'John Kariuki',
+    author: 'Tabby ',
     position: 'Project Manager',
     company: 'Seed Savers Network',
   },
   {
     text: 'Professional, technically sharp, and always on time. The website has received outstanding feedback from clients and partners.',
-    author: 'Mary Wanjiku',
+    author: 'Eng. Johanna',
     position: 'Director',
     company: 'Greania Build Solutions',
   },
@@ -286,33 +330,121 @@ const getCount    = (ind) => ind === 'All' ? clients.value.length : clients.valu
 const getFeatures = (name) => features[name] || ['Responsive design across all devices', 'Performance-optimised architecture', 'SEO-friendly implementation', 'Post-launch support included']
 const getTestimonial = (name) => testimonials.find(t => name.toLowerCase().includes(t.company.toLowerCase().split(' ')[0])) || null
 
-const toggleRow = (name) => {
-  openRow.value = openRow.value === name ? null : name
-}
+/* Per-industry tint for the card backdrops */
+const HUES = { Agriculture: 150, Construction: 38, 'E-commerce': 18, 'Retail Technology': 215, Consulting: 265 }
+const hueFor   = (industry) => HUES[industry] ?? 215
+const initials = (name) => name.split(/\s+/).slice(0, 2).map(w => w[0]).join('').toUpperCase()
+
+const failedLogos = reactive(new Set())
 
 const goToContact = () => {
-  openRow.value = null
   setTimeout(() => {
     const el = document.getElementById('contact')
     if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' })
-  }, 320)
+  }, 80)
 }
 
+
+/* ═══════════════════════════════════════════════════════
+   Accordion — hover/click to expand, auto-cycles
+   ═══════════════════════════════════════════════════════ */
+
+const activeName   = ref(clients.value[0]?.name ?? null)
+const cardEls      = {}
+const hovering     = ref(false)
+const focusInside  = ref(false)
+const inView       = ref(false)
+const pageVisible  = ref(true)
+let hoverTimer = null
+let downWasActive = false
+let io = null
+
+// Keep a valid active card whenever the filter changes
+watch(filtered, (list) => {
+  if (!list.some(c => c.name === activeName.value)) activeName.value = list[0]?.name ?? null
+}, { immediate: true })
+
+const paused = computed(() => hovering.value || focusInside.value || !inView.value || !pageVisible.value)
+
+function activate(name) { activeName.value = name }
+
+function clearHoverTimer() {
+  if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null }
+}
+
+// Small delay so sweeping across strips doesn't thrash the layout
+function onCardEnter(name) {
+  clearHoverTimer()
+  if (name === activeName.value) return
+  hoverTimer = setTimeout(() => activate(name), 70)
+}
+
+function onStageLeave() {
+  hovering.value = false
+  clearHoverTimer()
+}
+
+// Touch-safe: record state before emulated mouseenter fires
+function onCardDown(name) { downWasActive = name === activeName.value }
+function onCardClick(name) {
+  clearHoverTimer()
+  if (!downWasActive) activate(name)
+  downWasActive = false
+}
+
+function step(dir) {
+  const list = filtered.value
+  if (!list.length) return null
+  const i = list.findIndex(c => c.name === activeName.value)
+  const next = list[(i + dir + list.length) % list.length]
+  activeName.value = next.name
+  return next
+}
+
+function onBarEnd(e) {
+  if (!e.target.classList.contains('wc__bar')) return
+  step(1)
+}
+
+function onStageKey(e) {
+  const k = e.key
+  if (k !== 'ArrowRight' && k !== 'ArrowLeft' && k !== 'ArrowDown' && k !== 'ArrowUp') return
+  // let links/buttons inside the card keep their own behaviour
+  e.preventDefault()
+  const next = step(k === 'ArrowRight' || k === 'ArrowDown' ? 1 : -1)
+  if (next) nextTick(() => cardEls[next.name]?.focus({ preventScroll: true }))
+}
+
+function onVisibility() { pageVisible.value = !document.hidden }
+
 onMounted(() => {
+  document.addEventListener('visibilitychange', onVisibility)
+
   const section = sectionRef.value
   if (!section) return
-  const io = new IntersectionObserver((entries) => {
+  // one-shot reveal
+  const reveal = new IntersectionObserver((entries) => {
     entries.forEach((e) => {
-      if (e.isIntersecting) { section.classList.add('in-view'); io.unobserve(section) }
+      if (e.isIntersecting) { section.classList.add('in-view'); reveal.unobserve(section) }
     })
   }, { threshold: 0.05 })
+  reveal.observe(section)
+
+  // autoplay only while on screen
+  io = new IntersectionObserver(([entry]) => { inView.value = entry.isIntersecting }, { threshold: 0.1 })
   io.observe(section)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', onVisibility)
+  clearHoverTimer()
+  if (io) io.disconnect()
 })
 </script>
 
 <style scoped>
 /* ── Tokens ──────────────────────────────────────────── */
-:root {
+.work-index {
   --acc:     #e84a00;
   --acc-dim: rgba(232, 74, 0, 0.10);
   --acc-bd:  rgba(232, 74, 0, 0.28);
@@ -342,6 +474,7 @@ onMounted(() => {
 .work-index {
   width: 100%;
   max-width: 1440px;
+  box-sizing: border-box;
   margin: 0 auto;
   padding: clamp(60px, 10vh, 120px) clamp(24px, 5vw, 96px) clamp(48px, 7vh, 96px);
   font-family: 'Inter', system-ui, sans-serif;
@@ -440,269 +573,378 @@ onMounted(() => {
 
 .wif-n { font-size: 0.6rem; opacity: 0.55; }
 
-/* ── Rows container ──────────────────────────────────── */
-.wi__rows {
+/* ── Client accordion ────────────────────────────────── */
+.wi__stage { width: 100%; }
+
+.wc {
   display: flex;
-  flex-direction: column;
-  border-top: 1px solid rgba(255,255,255,0.07);
+  gap: 10px;
+  height: clamp(560px, 80vh, 660px);
+  width: 100%;
+}
+
+.wc__card {
+  --tint: hsl(var(--h) 45% 14%);
+  --tint-hi: hsl(var(--h) 60% 22%);
   position: relative;
-}
-
-/* Row transition */
-.row-fade-enter-active { transition: opacity 0.4s ease, transform 0.4s var(--ease); }
-.row-fade-leave-active { transition: opacity 0.2s ease; position: absolute; width: 100%; }
-.row-fade-enter-from   { opacity: 0; transform: translateY(10px); }
-.row-fade-leave-to     { opacity: 0; }
-.row-fade-move         { transition: transform 0.4s var(--ease); }
-
-/* ── Single row ──────────────────────────────────────── */
-.wi__row {
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  flex: 1 1 0%;
+  min-width: 0;
+  border-radius: 18px;
+  overflow: hidden;
   cursor: pointer;
-  transition: background 0.25s ease;
+  outline: none;
+  isolation: isolate;
+  background: #0b0c10;
+  border: 1px solid rgba(255,255,255,0.07);
+  transition: flex-grow 0.85s var(--ease), border-color 0.4s ease, box-shadow 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.wi__row:hover { background: rgba(255,255,255,0.02); }
-.wi__row--open { background: rgba(232,74,0,0.04); border-bottom-color: rgba(232,74,0,0.15); }
+.wc__card:hover { border-color: rgba(255,255,255,0.14); }
+.wc__card.is-active { flex-grow: 10; cursor: default; border-color: rgba(232,74,0,0.28); }
+.wc__card:focus-visible { box-shadow: 0 0 0 2px var(--acc); }
 
-/* Summary bar */
-.wir__summary {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: clamp(1rem, 3vw, 2.5rem);
-  padding: clamp(18px, 2.5vh, 26px) 0;
+/* Backdrop */
+.wc__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -4;
+  background:
+    radial-gradient(120% 90% at 0% 0%, var(--tint-hi) 0%, transparent 60%),
+    linear-gradient(160deg, var(--tint) 0%, #08090d 100%);
 }
-
-.wir__left {
-  display: flex;
-  align-items: center;
-  gap: clamp(0.75rem, 2vw, 1.5rem);
-  min-width: 0;
+.wc__ghost {
+  position: absolute;
+  right: -6%;
+  bottom: -8%;
+  width: 62%;
+  max-width: 560px;
+  aspect-ratio: 1;
+  object-fit: contain;
+  z-index: -3;
+  opacity: 0.05;
+  filter: grayscale(1) brightness(2);
+  transform: scale(0.85) rotate(-6deg);
+  transition: opacity 0.9s ease, transform 1.2s var(--ease);
+  pointer-events: none;
+  user-select: none;
 }
+.wc__card.is-active .wc__ghost { opacity: 0.09; transform: scale(1) rotate(0); }
+.wc__shade {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(to bottom, rgba(6,7,12,0.1), rgba(6,7,12,0.55));
+  transition: background 0.8s ease;
+}
+.wc__card.is-active .wc__shade {
+  background:
+    linear-gradient(110deg, rgba(6,7,12,0.55) 0%, rgba(6,7,12,0.1) 60%, transparent 100%),
+    linear-gradient(to top, rgba(6,7,12,0.7) 0%, transparent 55%);
+}
+.wc__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(540px circle at 15% 105%, rgba(232,74,0,0.18), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+.wc__card.is-active .wc__glow { opacity: 1; }
 
-.wir__idx {
+/* Strip furniture */
+.wc__num {
+  position: absolute;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
   font-size: 0.62rem;
-  font-weight: 700;
-  color: rgba(255,255,255,0.2);
-  letter-spacing: 0.06em;
-  flex-shrink: 0;
-  width: 20px;
-}
-.wi__row--open .wir__idx { color: #e84a00; }
-
-.wir__name-block {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
-}
-
-.wir__name {
-  font-size: clamp(1rem, 1.8vw, 1.25rem);
-  font-weight: 700;
-  color: #ffffff;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color 0.22s;
-}
-.wi__row:hover .wir__name { color: #e84a00; }
-
-.wir__project {
-  font-size: 0.72rem;
-  color: #6b7585;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-/* Tags */
-.wir__tags {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  flex-shrink: 0;
-}
-
-.wir__industry {
-  font-size: 0.62rem;
-  font-weight: 700;
-  color: #e84a00;
+  font-weight: 800;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 0.22rem 0.65rem;
-  border: 1px solid rgba(232,74,0,0.2);
-  border-radius: 999px;
-  background: rgba(232,74,0,0.07);
+  color: rgba(255,255,255,0.35);
+  transition: opacity 0.3s ease;
+}
+.wc__vlabel {
+  position: absolute;
+  left: 50%;
+  bottom: 20px;
+  max-height: 46%;
+  overflow: hidden;
+  writing-mode: vertical-rl;
+  transform: translateX(-50%) rotate(180deg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
   white-space: nowrap;
+  color: rgba(255,255,255,0.6);
+  transition: opacity 0.3s ease, color 0.3s ease;
 }
+.wc__card:hover:not(.is-active) .wc__vlabel { color: #fff; }
+.wc__card.is-active .wc__num,
+.wc__card.is-active .wc__vlabel { opacity: 0; pointer-events: none; }
 
-.wir__year {
-  font-size: 0.65rem;
-  color: rgba(255,255,255,0.25);
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-}
-
-/* Right */
-.wir__right {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  flex-shrink: 0;
-}
-
-.wir__metric {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: rgba(255,255,255,0.45);
-  text-align: right;
-  white-space: nowrap;
-}
-
-.wir__toggle {
-  width: 28px;
-  height: 28px;
+/* Logo chip — centred on strip, glides to top-left when active */
+.wc__chip {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 44px;
+  height: 44px;
+  padding: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 50%;
-  color: rgba(255,255,255,0.3);
-  flex-shrink: 0;
-  transition: all 0.35s var(--ease);
+  border-radius: 13px;
+  background: #fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.35);
+  transform: translate(-50%, -50%);
+  transition:
+    top 0.85s var(--ease),
+    left 0.85s var(--ease),
+    transform 0.85s var(--ease),
+    width 0.85s var(--ease),
+    height 0.85s var(--ease);
+  z-index: 2;
+  overflow: hidden;
 }
-.wi__row:hover .wir__toggle { border-color: rgba(232,74,0,0.3); color: #e84a00; }
-.wi__row--open .wir__toggle {
-  background: #e84a00;
-  border-color: #e84a00;
-  color: #ffffff;
-  transform: rotate(180deg);
-}
-
-/* ── Expanded detail ─────────────────────────────────── */
-.expand-enter-active { transition: all 0.45s var(--ease); }
-.expand-leave-active { transition: all 0.25s ease; }
-.expand-enter-from   { opacity: 0; transform: translateY(-8px); }
-.expand-leave-to     { opacity: 0; }
-
-.wir__detail {
-  padding: 0 0 clamp(24px, 3.5vh, 36px);
-  padding-left: calc(20px + clamp(0.75rem, 2vw, 1.5rem));
-  border-top: 1px solid rgba(255,255,255,0.05);
-  margin-top: 0;
+.wc__chip img { width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; }
+.wc__chip b { font-size: 0.8rem; font-weight: 800; color: #0b0c10; letter-spacing: 0.02em; }
+.wc__card.is-active .wc__chip {
+  top: 24px;
+  left: 28px;
+  width: 52px;
+  height: 52px;
+  transform: translate(0, 0);
 }
 
-.wid__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(24px, 4vw, 56px);
-  padding-top: clamp(20px, 3vh, 28px);
-}
-
-.wid__desc {
-  font-size: 0.88rem;
-  line-height: 1.75;
-  color: #9aa3af;
-  margin: 0 0 1rem;
-}
-
-.wid__stack {
+/* Content */
+.wc__content {
+  position: absolute;
+  inset: 0;
+  min-width: 560px;
+  max-width: 980px;
+  padding: 24px 32px 28px 28px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
+  flex-direction: column;
+  gap: 1.1rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+.wc__card.is-active .wc__content {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.5s ease 0.3s, visibility 0s;
 }
 
-.wid__tag {
-  padding: 0.22rem 0.6rem;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 999px;
-  font-size: 0.65rem;
-  color: #c8cdd5;
-  letter-spacing: 0.02em;
+/* staggered rise-in */
+.wc__tags, .wc__head, .wc__cols, .wc__foot {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
 }
+.wc__card.is-active .wc__tags,
+.wc__card.is-active .wc__head,
+.wc__card.is-active .wc__cols,
+.wc__card.is-active .wc__foot {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s var(--ease), transform 0.7s var(--ease);
+}
+.wc__card.is-active .wc__tags { transition-delay: 0.32s; }
+.wc__card.is-active .wc__head { transition-delay: 0.4s; }
+.wc__card.is-active .wc__cols { transition-delay: 0.5s; }
+.wc__card.is-active .wc__foot { transition-delay: 0.6s; }
 
-.wid__list-label {
+.wc__tags {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.7rem;
+  min-height: 52px;
+  margin-left: 68px;
+}
+.wc__industry {
+  margin-right: auto;
   font-size: 0.62rem;
   font-weight: 700;
-  color: #e84a00;
-  letter-spacing: 0.12em;
+  color: var(--acc);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  margin: 0 0 0.75rem;
+  padding: 0.22rem 0.65rem;
+  border: 1px solid rgba(232,74,0,0.28);
+  border-radius: 999px;
+  background: rgba(232,74,0,0.1);
+  white-space: nowrap;
+}
+.wc__year {
+  font-size: 0.68rem;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 0.04em;
 }
 
-.wid__list {
-  list-style: none;
-  padding: 0;
+.wc__name {
   margin: 0;
+  font-size: clamp(1.6rem, 3.1vw, 2.7rem);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+.wc__project {
+  margin: 0.55rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.82rem;
+  color: #9aa3af;
+}
+.wc__metric {
+  padding: 0.18rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 0.66rem;
+  font-weight: 600;
+  color: rgba(255,255,255,0.7);
+  white-space: nowrap;
+}
+
+.wc__body {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.wc__cols {
+  display: grid;
+  grid-template-columns: 1.15fr 1fr;
+  gap: clamp(20px, 3vw, 44px);
+}
+.wc__desc {
+  margin: 0 0 0.9rem;
+  font-size: 0.86rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.8);
+}
+.wc__stack { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.wc__stack span {
+  padding: 0.22rem 0.6rem;
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px;
+  font-size: 0.65rem;
+  color: #d3d8df;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.wc__label {
+  margin: 0 0 0.7rem;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--acc);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.wc__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
 }
-
-.wid__list li {
-  font-size: 0.82rem;
-  color: #9aa3af;
-  line-height: 1.5;
-  padding-left: 1rem;
+.wc__list li {
   position: relative;
+  padding-left: 1rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(255,255,255,0.7);
 }
-.wid__list li::before {
+.wc__list li::before {
   content: '';
   position: absolute;
   left: 0;
   top: 0.55em;
   width: 4px;
   height: 4px;
-  background: #e84a00;
   border-radius: 50%;
+  background: var(--acc);
 }
 
-/* Testimonial */
-.wid__testimonial {
-  margin-top: clamp(16px, 2.5vh, 24px);
-  padding: 1rem 1.25rem;
-  border-left: 2px solid #e84a00;
-  background: rgba(232,74,0,0.04);
+.wc__foot {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.wc__quote {
+  flex: 1 1 320px;
+  margin: 0;
+  padding: 0.8rem 1.1rem;
+  border-left: 2px solid var(--acc);
+  background: rgba(232,74,0,0.06);
   border-radius: 0 10px 10px 0;
 }
-
-.widt__text {
-  font-size: 0.82rem;
-  color: #b0b8c4;
-  line-height: 1.7;
+.wc__quote p {
+  margin: 0 0 0.35rem;
+  font-size: 0.78rem;
+  line-height: 1.6;
   font-style: italic;
-  margin: 0 0 0.5rem;
+  color: #c3cad4;
 }
-
-.widt__author {
-  font-size: 0.65rem;
-  color: #6b7585;
+.wc__quote cite {
+  font-size: 0.64rem;
+  font-style: normal;
+  color: #7b8594;
   letter-spacing: 0.04em;
 }
-
-/* CTA row */
-.wid__cta-row {
-  margin-top: clamp(16px, 2.5vh, 24px);
-}
-
-.wid__cta {
+.wc__cta {
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.65rem 1.4rem;
-  background: #e84a00;
-  color: #ffffff;
-  font-size: 0.82rem;
+  padding: 0.65rem 1.3rem;
+  background: var(--acc);
+  color: #fff;
+  font-size: 0.8rem;
   font-weight: 700;
   text-decoration: none;
   border-radius: 999px;
+  box-shadow: 0 6px 20px rgba(232,74,0,0.3);
+  white-space: nowrap;
   transition: background 0.25s ease, transform 0.3s var(--ease);
 }
-.wid__cta:hover { background: #ff5c10; transform: translateY(-2px); color: #ffffff; }
+.wc__cta:hover { background: #ff5c10; transform: translateY(-2px); }
+
+/* Progress bar → auto-advance */
+.wc__bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--acc);
+  transform-origin: left center;
+  transform: scaleX(0);
+  opacity: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.wc__card.is-active .wc__bar { opacity: 0.9; animation: wcBar 8s linear forwards; }
+.wc--paused .wc__card.is-active .wc__bar { animation-play-state: paused; }
+@keyframes wcBar { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .wc__card, .wc__chip, .wc__ghost, .wc__content,
+  .wc__tags, .wc__head, .wc__cols, .wc__foot { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+  .wc__bar { display: none; }
+}
 
 /* ── Bottom strip ────────────────────────────────────── */
 .wi__strip {
@@ -759,25 +1001,44 @@ onMounted(() => {
 .wis__note a:hover { color: #e84a00; }
 
 /* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 1100px) {
+  .wc__content { min-width: 480px; }
+  .wc__cols { grid-template-columns: 1fr; gap: 1rem; }
+  .wc__list li:nth-child(n+3) { display: none; }
+}
+
 @media (max-width: 900px) {
   .wi__head { grid-template-columns: 1fr; gap: 1rem; }
-
-  .wir__summary { grid-template-columns: 1fr auto; }
-  .wir__tags { display: none; }
-
-  .wid__grid { grid-template-columns: 1fr; gap: 1.25rem; }
 }
 
 @media (max-width: 640px) {
   .work-index { padding: clamp(48px, 8vh, 72px) 20px clamp(40px, 6vh, 64px); }
-
   .wih-solid, .wih-outline, .wih-accent { font-size: clamp(2.2rem, 9vw, 3.5rem); }
 
-  .wir__summary { gap: 0.75rem; }
-  .wir__metric { display: none; }
-  .wir__name { font-size: 0.95rem; }
-
-  .wir__detail { padding-left: 0; }
+  /* accordion turns vertical */
+  .wc { flex-direction: column; height: 820px; gap: 8px; }
+  .wc__card { border-radius: 14px; min-height: 62px; }
+  .wc__card.is-active { flex-grow: 9; }
+  .wc__num { top: 50%; left: auto; right: 16px; transform: translateY(-50%); }
+  .wc__vlabel {
+    writing-mode: horizontal-tb;
+    left: 76px; bottom: auto; top: 50%; max-height: none; max-width: calc(100% - 130px);
+    overflow: hidden; text-overflow: ellipsis;
+    transform: translateY(-50%);
+  }
+  .wc__chip { left: 38px; }
+  .wc__card.is-active .wc__chip { top: 16px; left: 18px; width: 46px; height: 46px; }
+  .wc__content {
+    min-width: 0; max-width: none; padding: 16px 18px 20px;
+    overflow-y: auto; gap: 0.8rem;
+    scrollbar-width: thin;
+  }
+  .wc__tags { min-height: 46px; margin-left: 58px; }
+  .wc__name { font-size: 1.5rem; }
+  .wc__cols { grid-template-columns: 1fr; }
+  .wc__list li:nth-child(n+3) { display: block; }
+  .wc__foot { flex-direction: column; align-items: stretch; }
+  .wc__cta { margin-left: 0; justify-content: center; }
 
   .wi__strip { flex-direction: column; align-items: flex-start; gap: 1rem; }
   .wis__div { display: none; }
@@ -785,6 +1046,5 @@ onMounted(() => {
 
 @media (max-width: 380px) {
   .work-index { padding: 40px 16px 48px; }
-  .wir__industry { display: none; }
 }
 </style>

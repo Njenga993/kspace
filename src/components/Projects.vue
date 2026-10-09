@@ -24,61 +24,6 @@
       </div>
     </header>
 
-    <!-- ─── Featured Project ─── -->
-    <Transition name="feat" mode="out-in">
-      <div
-        :key="featured.id"
-        class="feat reveal"
-        ref="featRef"
-        @mousemove="onFeatMove"
-        @mouseleave="onFeatLeave"
-        @click="openModal(featured)"
-        @keydown.enter="openModal(featured)"
-        tabindex="0"
-        role="button"
-        :aria-label="'View ' + featured.title + ' case study'"
-      >
-        <div class="feat__bg">
-          <img
-            v-if="featured.image && !failedImages.has(featured.id)"
-            :src="featured.image"
-            :alt="featured.title"
-            loading="eager"
-            @error="failedImages.add(featured.id)"
-          />
-          <div v-else class="feat__fallback">
-            <span class="feat__fallback-icon">{{ featured.icon }}</span>
-            <span class="feat__fallback-name">{{ featured.title }}</span>
-          </div>
-          <div class="feat__overlay"></div>
-          <div class="feat__glow"></div>
-        </div>
-
-        <div class="feat__content">
-          <div class="feat__top">
-            <span class="feat__num">01</span>
-            <span class="feat__status" :class="featured.status">
-              {{ featured.status === 'live' ? '● Deployed' : '◌ In Development' }}
-            </span>
-          </div>
-          <div class="feat__mid">
-            <span class="feat__cat">{{ featured.category }}</span>
-            <h2 class="feat__title">{{ featured.title }}</h2>
-            <p class="feat__tag">{{ featured.tagline }}</p>
-          </div>
-          <div class="feat__bot">
-            <div class="feat__stack">
-              <span v-for="t in featured.stack.slice(0, 4)" :key="t">{{ t }}</span>
-            </div>
-            <span class="feat__explore">
-              Explore Project
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
-            </span>
-          </div>
-        </div>
-      </div>
-    </Transition>
-
     <!-- ─── Filters ─── -->
     <nav
       class="proj-filters reveal"
@@ -101,54 +46,86 @@
       <span class="proj-filters__bar" :style="indicatorStyle"></span>
     </nav>
 
-    <!-- ─── Project List ─── -->
-    <div class="proj-list" :key="activeFilter + sortBy">
+    <!-- ─── Project Accordion ─── -->
+    <div class="acc-wrap reveal">
+    <div
+      class="acc"
+      :class="{ 'acc--paused': accPaused }"
+      :key="activeFilter"
+      role="list"
+      aria-label="Projects"
+      @mouseenter="hovering = true"
+      @mouseleave="onAccLeave"
+      @focusin="focusInside = true"
+      @focusout="focusInside = false"
+      @keydown="onAccKey"
+    >
       <article
         v-for="(p, i) in filteredSorted"
         :key="p.id"
-        class="proj-row reveal"
-        :style="{ '--d': 0.04 + i * 0.06 + 's' }"
-        :ref="el => { if (el) rowEls[p.id] = el }"
-        @click="openModal(p)"
-        @keydown.enter="openModal(p)"
-        @mousemove="onRowMove($event, p.id)"
-        @mouseleave="onRowLeave(p.id)"
+        :ref="el => { if (el) cardEls[p.id] = el }"
+        class="acc__card"
+        :class="{ 'is-active': p.id === activeId }"
+        role="listitem"
         tabindex="0"
-        role="button"
-        :aria-label="'View ' + p.title + ' case study'"
+        :aria-label="p.title + (p.id === activeId ? ' — press Enter to open case study' : '')"
+        @mouseenter="onCardEnter(p.id)"
+        @mouseleave="clearHoverTimer"
+        @focus="activate(p.id)"
+        @pointerdown="onCardDown(p.id)"
+        @click="onCardClick(p)"
+        @keydown.enter.prevent="p.id === activeId ? openModal(p) : activate(p.id)"
       >
-        <span class="proj-row__num">{{ String(i + 2).padStart(2, '0') }}</span>
-
-        <div class="proj-row__thumb">
+        <!-- Image -->
+        <div class="acc__media">
           <img
             v-if="p.image && !failedImages.has(p.id)"
             :src="p.image"
-            
+            :alt="p.title"
             loading="lazy"
+            draggable="false"
             @error="failedImages.add(p.id)"
           />
-          <span v-else class="proj-row__thumb-fb">{{ p.icon }}</span>
-          <div class="proj-row__glow"></div>
-        </div>
-
-        <div class="proj-row__info">
-          <div class="proj-row__meta">
-            <span class="proj-row__cat">{{ p.category }}</span>
-            <span v-if="p.impact" class="proj-row__impact">{{ p.impact }}</span>
-          </div>
-          <h3 class="proj-row__title">{{ p.title }}</h3>
-          <p class="proj-row__tag">{{ p.tagline }}</p>
-          <div class="proj-row__techs">
-            <span v-for="t in p.stack.slice(0, 3)" :key="t">{{ t }}</span>
-            <span v-if="p.stack.length > 3" class="proj-row__more">+{{ p.stack.length - 3 }}</span>
+          <div v-else class="acc__fallback">
+            <span>{{ p.icon }}</span>
           </div>
         </div>
+        <div class="acc__shade"></div>
+        <div class="acc__glow"></div>
 
-        <div class="proj-row__end">
-          <span class="proj-row__dot" :class="p.status" :title="p.status === 'live' ? 'Live' : 'In development'"></span>
-          <svg class="proj-row__arrow" width="16" height="16" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+        <!-- Icon: sits centered on a collapsed strip, glides to top-left when active -->
+        <span class="acc__icon" aria-hidden="true">{{ p.icon }}</span>
+        <span class="acc__strip-num" aria-hidden="true">{{ String(i + 1).padStart(2, '0') }}</span>
+
+        <!-- Content: only visible on the active card -->
+        <div class="acc__content">
+          <div class="acc__top">
+            <span class="acc__cat">{{ p.category }}</span>
+            <span class="acc__status" :class="p.status">
+              {{ p.status === 'live' ? '● Deployed' : '◌ In Development' }}
+            </span>
+          </div>
+
+          <h3 class="acc__title">{{ p.title }}</h3>
+
+          <div class="acc__bot">
+            <p class="acc__tag">{{ p.tagline }}</p>
+            <div class="acc__stack">
+              <span v-if="p.impact" class="acc__impact">{{ p.impact }}</span>
+              <span v-for="t in p.stack.slice(0, 4)" :key="t">{{ t }}</span>
+              <span v-if="p.stack.length > 4" class="acc__more">+{{ p.stack.length - 4 }}</span>
+            </div>
+            <span class="acc__explore">
+              Explore Project
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 7h12M8 2l5 5-5 5"/></svg>
+            </span>
+          </div>
         </div>
+
+        <!-- Auto-advance progress (its animationend moves to the next card) -->
+        <span class="acc__bar" @animationend="onBarEnd"></span>
       </article>
+    </div>
     </div>
 
     <!-- ─── CTA ─── -->
@@ -422,7 +399,6 @@ function useFocusTrap(containerRef) {
    ═══════════════════════════════════════════════════════ */
 
 const sectionRef = ref(null)
-const featRef = ref(null)
 const filtersRef = ref(null)
 const statsRef = ref(null)
 const modalRef = ref(null)
@@ -435,10 +411,9 @@ const failedImages = reactive(new Set())
 
 // Refs populated imperatively
 const filterBtnEls = {}
-const rowEls = {}
 
 /* ═══════════════════════════════════════════════════════
-   Data — identical shape to original
+   Data
    ═══════════════════════════════════════════════════════ */
 
 const projects = ref([
@@ -448,7 +423,7 @@ const projects = ref([
     description: 'SellSync is a production-grade, multi-tenant Point of Sale platform built with Laravel 11 and PostgreSQL, live on Railway. Designed specifically for Kenyan SMEs, it consolidates inventory, sales analytics, branch management, and role-based access control into one cohesive system — replacing the fragmented spreadsheet workflows most local retailers depend on.',
     problem: 'Kenyan SMEs lose thousands of shillings monthly to stock discrepancies, manual reconciliation errors, and the absence of real-time sales visibility across branches.',
     solution: 'A cloud-native POS with per-tenant data isolation, a cashier-optimised touch interface, live inventory deductions, and branch-level reporting — deployable via a single Railway URL with zero infrastructure overhead.',
-    category: 'Full Stack · SaaS', icon: '⚡', image: './sellsync-dashboard.png',
+    category: 'Full Stack · SaaS', icon: '', image: './sellsync-dashboard.png',
     status: 'live', impact: 'SaaS',
     github: 'https://github.com/Njenga993/pos-project',
     demo: 'https://sellsync-pos-production.up.railway.app/',
@@ -475,10 +450,10 @@ const projects = ref([
     description: 'A full-featured Next.js e-commerce storefront for Nyakazi Organics — a Kenyan brand selling solar-dried indigenous vegetables. The platform handles product discovery, cart management, and WhatsApp-native order processing, meeting customers exactly where they already transact in the Kenyan market.',
     problem: 'Indigenous Kenyan vegetables are disappearing from urban tables because there was no modern, accessible channel connecting rural producers to city consumers who actively want them.',
     solution: 'A performant Next.js storefront with a curated product catalog, WhatsApp checkout integration formatted for Kenyan ordering habits, and SEO optimised for "African vegetables Kenya" search intent.',
-    category: 'E-commerce', icon: '🌿', image: './Ecommerc.png',
+    category: 'E-commerce', icon: '', image: './Ecommerc.png',
     status: 'live', impact: 'Live',
     github: 'https://github.com/Njenga993/nyakazi-ecommerce-',
-    demo: 'https://nyakazi.org/',
+    demo: 'https://nyakaziorganics.org/',
     stack: ['Next.js', 'TypeScript', 'React', 'Tailwind CSS', 'WhatsApp API'],
     metrics: [
       { value: '95+', label: 'Lighthouse score' },
@@ -501,7 +476,7 @@ const projects = ref([
     description: 'A React + TypeScript website for Seed Savers Network Kenya — an NGO working to preserve indigenous seed varieties and promote food sovereignty across East Africa. The site serves as the primary digital face for the organisation, hosting their programs, events, resource library, and the EA-ISC 2026 Conference.',
     problem: 'The Seed Savers Network had no unified digital presence capable of serving their diverse stakeholders — farmers, researchers, partner NGOs, and international donors — with consistent, accessible information.',
     solution: 'A component-driven React site with clearly structured program pages, an events system for the EA-ISC 2026 Conference, a multilingual-ready resource library, and donation pathways optimised for both local M-Pesa and international payment flows.',
-    category: 'Web Development', icon: '🌱', image: './ssn.PNG',
+    category: 'Web Development', icon: '', image: './ssn.PNG',
     status: 'live', impact: 'NGO',
     github: 'https://github.com/Njenga993/SeedSavers',
     demo: 'https://seedsaverskenya.org/',
@@ -534,7 +509,7 @@ const projects = ref([
   solution: 'Developed a centralized conference management platform that streamlines participant registration, call for abstracts, programme publication, speaker management, exhibitor showcases, sponsor visibility, event communications, and resource sharing within a single responsive web application. The platform enables organizers to efficiently manage the conference lifecycle while providing attendees with a seamless digital experience before, during, and after the event.',
 
   category: 'Event Management',
-  icon: '🌱',
+  icon: '',
   image: './conference.png',
 
   status: 'live',
@@ -586,15 +561,69 @@ const projects = ref([
   ],
 },
   {
-    id: 5, slug: 'elixir-biotech', title: 'Elixir Biotech',
+    id: 5, slug: 'AgroDakk Foods', title: 'AgroDakk Foods',
+    tagline: 'Next.js/TypeScript e-commerce platform for a Kenyan indigenous food business.',
+    description: 'A full-stack Next.js + TypeScript e-commerce platform for AgroDakk Foods, a Kenyan business selling solar-dried indigenous vegetables. The build focuses on mobile-first design, WhatsApp-native checkout, and SEO optimization for regional search terms.',
+    problem: 'AgroDakk Foods had a unique product but no digital platform that effectively reached their target audience. Their old site failed to convey the value of their products and lacked the functionality needed for seamless online purchasing.',
+    solution: 'A modern, responsive e-commerce solution with a WhatsApp-native checkout flow, optimized for low-end Android devices, and integrated with SEO best practices to improve visibility in the Kenyan market.',
+    category: 'Full-Stack', icon: '', image: './Agrodakk.png',
+    status: 'live', impact: 'Clean Energy',
+    github: 'https://github.com/Njenga993',
+    demo: 'https://elixirbiotech.co.ke/',
+    stack: ['React', 'TypeScript', 'Vite', 'CSS3', 'React Helmet', 'JSON-LD'],
+    metrics: [
+      { value: 'SEO', label: 'Structured data markup' },
+      { value: 'GSAP', label: 'Scroll animations' },
+      { value: 'AA', label: 'Accessibility standard' },
+      { value: 'SSG', label: 'Pre-rendered pages' },
+    ],
+    features: [
+      'Full-bleed hero with dark overlay and scroll-triggered content reveal',
+      'IntersectionObserver scroll animations across all sections',
+      'JSON-LD structured data for Product, Organization, and FAQ schemas',
+      'Pre-rendering via vite-plugin-prerender for SEO-ready static output',
+      'React Helmet Async for per-page meta, OG tags, and canonical URLs',
+      'Product section with technical specifications and impact metrics',
+      'Contact form with form validation and WhatsApp fallback integration',
+    ],
+  },
+  {
+    id: 6, slug: 'elixir-biotech', title: 'Elixir Biotech',
     tagline: 'React/TypeScript website for a Nairobi clean energy startup.',
     description: 'A premium React + TypeScript marketing and product site for Elixir Biotech, a Nairobi-based clean energy company developing biogas and waste-to-energy systems for the East African market. The build focuses on editorial authority, scroll-reveal storytelling, and SEO structured data to attract B2B clients and impact investors.',
     problem: 'Elixir Biotech had a compelling product but no digital presence that matched their ambition. Their old site undermined investor confidence and failed to articulate the economic case for biogas adoption to Kenyan agribusinesses.',
     solution: 'A full UI overhaul across all sections with IntersectionObserver scroll animations, JSON-LD structured data, and pre-rendering via vite-plugin-prerender to maximise SEO for clean energy search terms in East Africa.',
-    category: 'Frontend', icon: '🔋', image: './elixbiotech.png',
+    category: 'Frontend', icon: '', image: './elixbiotech.png',
     status: 'live', impact: 'Clean Energy',
     github: 'https://github.com/Njenga993',
     demo: 'https://elixirbiotech.co.ke/',
+    stack: ['React', 'TypeScript', 'Vite', 'CSS3', 'React Helmet', 'JSON-LD'],
+    metrics: [
+      { value: 'SEO', label: 'Structured data markup' },
+      { value: 'GSAP', label: 'Scroll animations' },
+      { value: 'AA', label: 'Accessibility standard' },
+      { value: 'SSG', label: 'Pre-rendered pages' },
+    ],
+    features: [
+      'Full-bleed hero with dark overlay and scroll-triggered content reveal',
+      'IntersectionObserver scroll animations across all sections',
+      'JSON-LD structured data for Product, Organization, and FAQ schemas',
+      'Pre-rendering via vite-plugin-prerender for SEO-ready static output',
+      'React Helmet Async for per-page meta, OG tags, and canonical URLs',
+      'Product section with technical specifications and impact metrics',
+      'Contact form with form validation and WhatsApp fallback integration',
+    ],
+  },
+  {
+    id: 7, slug: 'mary-kamau', title: 'Mary Kamau',
+    tagline: 'Personal portfolio website for a Nairobi-based consultant.',
+    description: 'A modern, responsive personal portfolio website for a Nairobi-based consultant. The site features a clean design, interactive project showcase, and integrated Google Maps location for client inquiries.',
+    problem: 'Mary needed a professional online presence that showcased her expertise and made it easy for clients to reach out.',
+    solution: 'Developed a sleek, user-friendly portfolio site with a focus on performance and mobile responsiveness, ensuring seamless navigation across all devices.',
+    category: 'Frontend', icon: '', image: './mary-portfolio.png',
+    status: 'live', impact: 'Clean Energy',
+    github: 'https://github.com/Njenga993',
+    demo: 'https://mary-kamau-portfolio.vercel.app/',
     stack: ['React', 'TypeScript', 'Vite', 'CSS3', 'React Helmet', 'JSON-LD'],
     metrics: [
       { value: 'SEO', label: 'Structured data markup' },
@@ -629,7 +658,6 @@ const filteredSorted = computed(() => {
   return list
 })
 
-const featured = computed(() => filteredSorted.value[0] || projects.value[0])
 const liveCount = computed(() => projects.value.filter(p => p.status === 'live').length)
 const totalTech = computed(() => { const s = new Set(); projects.value.forEach(p => p.stack.forEach(t => s.add(t))); return s.size })
 
@@ -652,48 +680,101 @@ const indicatorStyle = computed(() => {
 
 
 /* ═══════════════════════════════════════════════════════
-   Featured card — mouse-tracking spotlight + 3D tilt
+   Accordion cards — hover/click to expand, auto-cycles
    ═══════════════════════════════════════════════════════ */
 
-function onFeatMove(e) {
-  const el = featRef.value
-  if (!el) return
-  const rect = el.getBoundingClientRect()
-  const x = (e.clientX - rect.left) / rect.width - 0.5
-  const y = (e.clientY - rect.top) / rect.height - 0.5
-  el.style.setProperty('--rx', `${y * -4}deg`)
-  el.style.setProperty('--ry', `${x * 4}deg`)
-  el.style.setProperty('--mx', `${e.clientX - rect.left}px`)
-  el.style.setProperty('--my', `${e.clientY - rect.top}px`)
+const activeId = ref(projects.value[0]?.id ?? null)
+const cardEls = {}
+const hovering = ref(false)
+const focusInside = ref(false)
+const inView = ref(false)
+const pageVisible = ref(true)
+let hoverTimer = null
+let downWasActive = false
+let accIO = null
+
+// Keep a valid active card whenever the filter changes
+watch(filteredSorted, (list) => {
+  if (!list.some(p => p.id === activeId.value)) activeId.value = list[0]?.id ?? null
+}, { immediate: true })
+
+const accPaused = computed(() =>
+  hovering.value || focusInside.value || !inView.value || !pageVisible.value || !!activeProject.value
+)
+
+function activate(id) { activeId.value = id }
+
+function clearHoverTimer() {
+  if (hoverTimer) { clearTimeout(hoverTimer); hoverTimer = null }
 }
 
-function onFeatLeave() {
-  const el = featRef.value
-  if (!el) return
-  el.style.setProperty('--rx', '0deg')
-  el.style.setProperty('--ry', '0deg')
+// Small delay so sweeping the cursor across strips doesn't thrash the layout
+function onCardEnter(id) {
+  clearHoverTimer()
+  if (id === activeId.value) return
+  hoverTimer = setTimeout(() => activate(id), 70)
 }
 
-
-/* ═══════════════════════════════════════════════════════
-   Row spotlight — per-row mouse glow
-   ═══════════════════════════════════════════════════════ */
-
-function onRowMove(e, id) {
-  const el = rowEls[id]
-  if (!el) return
-  const rect = el.getBoundingClientRect()
-  el.style.setProperty('--mx', `${e.clientX - rect.left}px`)
-  el.style.setProperty('--my', `${e.clientY - rect.top}px`)
+function onAccLeave() {
+  hovering.value = false
+  clearHoverTimer()
 }
 
-function onRowLeave(id) {
-  const el = rowEls[id]
-  if (el) {
-    el.style.removeProperty('--mx')
-    el.style.removeProperty('--my')
+// Touch: first tap expands, tapping the expanded card opens the case study.
+// (Mobile browsers fire emulated mouseenter before click, so record state on pointerdown.)
+function onCardDown(id) { downWasActive = id === activeId.value }
+
+function onCardClick(p) {
+  clearHoverTimer()
+  if (downWasActive || p.id === activeId.value && hovering.value) {
+    openModal(p)
+  } else {
+    activate(p.id)
   }
+  downWasActive = false
 }
+
+function step(dir) {
+  const list = filteredSorted.value
+  if (!list.length) return
+  const i = list.findIndex(p => p.id === activeId.value)
+  const next = list[(i + dir + list.length) % list.length]
+  activeId.value = next.id
+  return next
+}
+
+function onBarEnd(e) {
+  if (!e.target.classList.contains('acc__bar')) return
+  step(1)
+}
+
+function onAccKey(e) {
+  if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return
+  e.preventDefault()
+  const next = step(e.key === 'ArrowRight' || e.key === 'ArrowDown' ? 1 : -1)
+  if (next) nextTick(() => cardEls[next.id]?.focus({ preventScroll: true }))
+}
+
+function onVisibility() { pageVisible.value = !document.hidden }
+
+onMounted(() => {
+  document.addEventListener('visibilitychange', onVisibility)
+  if (sectionRef.value && 'IntersectionObserver' in window) {
+    accIO = new IntersectionObserver(
+      ([entry]) => { inView.value = entry.isIntersecting },
+      { threshold: 0.1 }
+    )
+    accIO.observe(sectionRef.value)
+  } else {
+    inView.value = true
+  }
+})
+
+onUnmounted(() => {
+  document.removeEventListener('visibilitychange', onVisibility)
+  clearHoverTimer()
+  if (accIO) accIO.disconnect()
+})
 
 
 /* ═══════════════════════════════════════════════════════
@@ -865,8 +946,6 @@ onUnmounted(() => {
 
 @media (prefers-reduced-motion: reduce) {
   .reveal, .mi { transition-duration: 0.01ms !important; opacity: 1 !important; transform: none !important; }
-  .feat { transition: none !important; }
-  .proj-row { transition: none !important; }
 }
 
 
@@ -947,174 +1026,314 @@ onUnmounted(() => {
 
 
 /* ═══════════════════════════════════════════════════════
-   FEATURED CARD
+   PROJECT ACCORDION
    ═══════════════════════════════════════════════════════ */
-.feat {
+.acc {
+  --acc-h: clamp(380px, 64vh, 560px);
+  --acc-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  gap: 10px;
+  height: var(--acc-h);
+  width: 100%;
+}
+
+.acc__card {
   position: relative;
-  border-radius: 20px;
+  flex: 1 1 0%;
+  min-width: 0;
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  transform: perspective(1200px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transition: transform 0.2s ease-out;
-  will-change: transform;
   outline: none;
+  background: #0c0d0e;
+  isolation: isolate;
+  transition: flex-grow 0.85s var(--acc-ease), box-shadow 0.3s ease;
+  -webkit-tap-highlight-color: transparent;
 }
-.feat:focus-visible {
+.acc__card.is-active {
+  flex-grow: 9;
+  cursor: pointer;
+}
+.acc__card:focus-visible {
   box-shadow: 0 0 0 2px var(--accent);
 }
 
-/* Transition for filter switch */
-.feat-enter-active, .feat-leave-active { transition: opacity 0.25s ease, transform 0.25s ease; }
-.feat-enter-from { opacity: 0; transform: perspective(1200px) scale(0.97) translateY(12px); }
-.feat-leave-to { opacity: 0; transform: perspective(1200px) scale(1.01) translateY(-8px); }
-
-.feat__bg {
+/* Image */
+.acc__media {
   position: absolute;
   inset: 0;
+  z-index: -3;
 }
-.feat__bg img {
-  width: 100%; height: 100%;
+.acc__media img {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  filter: grayscale(80%) brightness(0.55);
-  transition: filter 0.6s ease, transform 0.6s ease;
+  object-position: top center;
+  display: block;
+  user-select: none;
+  filter: brightness(0.6) saturate(0.7);
+  transform: scale(1.12);
+  transition: filter 0.8s var(--acc-ease), transform 1.1s var(--acc-ease);
 }
-.feat:hover .feat__bg img {
-  filter: grayscale(30%) brightness(0.65);
-  transform: scale(1.04);
+.acc__card:hover .acc__media img {
+  filter: brightness(0.7) saturate(0.85);
 }
-.feat__fallback {
-  width: 100%; height: 100%;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 0.75rem;
-  background: linear-gradient(135deg, #08090a, #0f1318);
+.acc__card.is-active .acc__media img {
+  filter: brightness(0.82) saturate(1);
+  transform: scale(1);
 }
-.feat__fallback-icon { font-size: 4rem; opacity: 0.15; }
-.feat__fallback-name { font-size: 0.9rem; font-weight: 700; color: rgba(255,255,255,0.1); }
-
-.feat__overlay {
-  position: absolute; inset: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(10,10,11,0.3) 0%,
-    rgba(10,10,11,0.55) 50%,
-    rgba(10,10,11,0.92) 100%
-  );
-}
-.feat__glow {
-  position: absolute; inset: 0;
-  background: radial-gradient(
-    550px circle at var(--mx, 50%) var(--my, 50%),
-    rgba(255,85,0,0.08),
-    transparent 40%
-  );
-  opacity: 0;
-  transition: opacity 0.35s ease;
-  pointer-events: none;
-}
-.feat:hover .feat__glow { opacity: 1; }
-
-.feat__content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: clamp(320px, 48vh, 480px);
-  padding: clamp(1.2rem, 2.5vw, 2rem) clamp(1.5rem, 3vw, 2.5rem);
-}
-.feat__top {
+.acc__fallback {
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  background: linear-gradient(135deg, #08090a, #12161d);
+  font-size: 4rem;
+  opacity: 0.9;
 }
-.feat__num {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: rgba(255,255,255,0.15);
-  letter-spacing: 0.08em;
-  font-family: var(--mono);
-}
-.feat__status {
-  font-size: 0.68rem;
-  font-weight: 700;
-  font-family: var(--mono);
-  letter-spacing: 0.04em;
-}
-.feat__status.live { color: var(--green); }
-.feat__status.development { color: var(--amber); }
+.acc__fallback span { opacity: 0.12; }
 
-.feat__mid {
+/* Shade: navy wash that deepens when the card is expanded */
+.acc__shade {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(to bottom, rgba(10,12,22,0.55) 0%, rgba(10,12,22,0.15) 42%, rgba(10,12,22,0.5) 100%);
+  transition: background 0.8s ease;
+}
+.acc__card.is-active .acc__shade {
+  background:
+    linear-gradient(105deg, rgba(8,10,22,0.82) 0%, rgba(8,10,22,0.35) 55%, rgba(8,10,22,0.1) 100%),
+    linear-gradient(to top, rgba(8,10,20,0.92) 0%, rgba(8,10,20,0.55) 30%, transparent 62%);
+}
+.acc__glow {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(520px circle at 20% 100%, rgba(255,85,0,0.16), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  pointer-events: none;
+}
+.acc__card.is-active .acc__glow { opacity: 1; }
+
+/* Icon — centered on strip, glides to top-left on the active card */
+.acc__icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  border-radius: 12px;
+  background: rgba(10,10,14,0.45);
+  border: 1px solid rgba(255,255,255,0.14);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transform: translate(-50%, -50%);
+  transition:
+    top 0.85s var(--acc-ease),
+    left 0.85s var(--acc-ease),
+    transform 0.85s var(--acc-ease),
+    background 0.4s ease;
+  z-index: 2;
+}
+.acc__card:hover:not(.is-active) .acc__icon { background: rgba(255,85,0,0.35); }
+.acc__card.is-active .acc__icon {
+  top: 22px;
+  left: 24px;
+  transform: translate(0, 0);
+}
+
+/* Little index number at the foot of collapsed strips */
+.acc__strip-num {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: rgba(255,255,255,0.5);
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+.acc__card.is-active .acc__strip-num { opacity: 0; }
+
+/* Content */
+.acc__content {
+  position: absolute;
+  inset: 0;
+  min-width: 420px;           /* keeps text from re-wrapping while the card animates */
+  max-width: 760px;
+  padding: 22px 28px 26px 24px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  max-width: 600px;
+  justify-content: space-between;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
 }
-.feat__cat {
-  font-size: 0.68rem;
+.acc__card.is-active .acc__content {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transition: opacity 0.5s ease 0.3s, visibility 0s;
+}
+
+/* staggered rise-in of the text blocks */
+.acc__top, .acc__title, .acc__bot > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+.acc__card.is-active .acc__top,
+.acc__card.is-active .acc__title,
+.acc__card.is-active .acc__bot > * {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s var(--acc-ease), transform 0.7s var(--acc-ease);
+}
+.acc__card.is-active .acc__top { transition-delay: 0.32s; }
+.acc__card.is-active .acc__title { transition-delay: 0.4s; }
+.acc__card.is-active .acc__bot > :nth-child(1) { transition-delay: 0.48s; }
+.acc__card.is-active .acc__bot > :nth-child(2) { transition-delay: 0.54s; }
+.acc__card.is-active .acc__bot > :nth-child(3) { transition-delay: 0.6s; }
+
+.acc__top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.9rem;
+  min-height: 38px;
+  margin-left: 52px;           /* clear of the icon */
+}
+.acc__cat {
+  margin-right: auto;
+  font-size: 0.66rem;
   font-weight: 700;
   color: var(--accent);
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
-.feat__title {
-  font-size: clamp(1.8rem, 4vw, 3rem);
-  font-weight: 800;
-  color: var(--t1);
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  margin: 0;
+.acc__status {
+  font-size: 0.66rem;
+  font-weight: 700;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
 }
-.feat__tag {
-  font-size: clamp(0.82rem, 1.2vw, 0.95rem);
-  color: var(--t2);
-  line-height: 1.6;
+.acc__status.live { color: var(--green); }
+.acc__status.development { color: var(--amber); }
+
+.acc__title {
+  position: absolute;
+  top: 70px;
+  left: 24px;
+  right: 28px;
   margin: 0;
+  font-size: clamp(1.45rem, 2.7vw, 2.3rem);
+  font-weight: 800;
+  line-height: 1.08;
+  letter-spacing: -0.03em;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(0,0,0,0.35);
 }
 
-.feat__bot {
+.acc__bot {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.8rem;
+  align-items: flex-start;
 }
-.feat__stack {
+.acc__tag {
+  margin: 0;
+  max-width: 520px;
+  font-size: clamp(0.78rem, 1.05vw, 0.9rem);
+  line-height: 1.6;
+  color: rgba(255,255,255,0.85);
+}
+.acc__stack {
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem;
 }
-.feat__stack span {
+.acc__stack span {
   padding: 0.25rem 0.65rem;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 999px;
   font-size: 0.65rem;
   font-weight: 600;
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.75);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
 }
-.feat__explore {
+.acc__stack .acc__impact {
+  background: rgba(255,85,0,0.18);
+  border-color: rgba(255,85,0,0.4);
+  color: #ffb089;
+}
+.acc__stack .acc__more {
+  background: none;
+  border-color: transparent;
+  color: var(--accent);
+  font-weight: 700;
+}
+.acc__explore {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: 0.78rem;
+  padding: 0.5rem 1rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.74rem;
   font-weight: 700;
-  color: var(--t1);
   letter-spacing: 0.04em;
+  box-shadow: 0 6px 20px rgba(255,85,0,0.3);
+}
+.acc__explore svg { transition: transform 0.25s ease; }
+.acc__card:hover .acc__explore svg { transform: translateX(4px); }
+
+/* Progress bar → drives auto-advance */
+.acc__bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--accent);
+  transform-origin: left center;
+  transform: scaleX(0);
   opacity: 0;
-  transform: translateX(-10px);
-  transition: opacity 0.35s ease 0.05s, transform 0.35s ease 0.05s;
+  z-index: 3;
+  pointer-events: none;
 }
-.feat:hover .feat__explore {
-  opacity: 1;
-  transform: translateX(0);
+.acc__card.is-active .acc__bar {
+  opacity: 0.9;
+  animation: accBar 6.5s linear forwards;
 }
-.feat__explore svg {
-  transition: transform 0.25s ease;
+.acc--paused .acc__card.is-active .acc__bar {
+  animation-play-state: paused;
 }
-.feat:hover .feat__explore svg {
-  transform: translateX(4px);
+@keyframes accBar {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .acc__card, .acc__icon, .acc__media img, .acc__content,
+  .acc__top, .acc__title, .acc__bot > * { transition-duration: 0.01ms !important; transition-delay: 0s !important; }
+  .acc__bar { display: none; }
 }
 
 
@@ -1158,177 +1377,6 @@ onUnmounted(() => {
   transition: width 0.35s cubic-bezier(0.16,1,0.3,1),
               transform 0.35s cubic-bezier(0.16,1,0.3,1),
               opacity 0.25s ease;
-}
-
-
-/* ═══════════════════════════════════════════════════════
-   PROJECT ROWS — the key layout differentiator
-   ═══════════════════════════════════════════════════════ */
-.proj-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.proj-row {
-  display: grid;
-  grid-template-columns: 40px 110px 1fr auto;
-  gap: clamp(0.75rem, 1.5vw, 1.25rem);
-  align-items: center;
-  padding: 0.85rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  cursor: pointer;
-  transition: border-color 0.3s ease, background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-  outline: none;
-  position: relative;
-  overflow: hidden;
-}
-.proj-row::before {
-  content: '';
-  position: absolute; inset: 0;
-  background: radial-gradient(
-    350px circle at var(--mx, -200px) var(--my, -200px),
-    rgba(255,85,0,0.035),
-    transparent 40%
-  );
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  pointer-events: none;
-}
-.proj-row:hover::before { opacity: 1; }
-.proj-row:hover {
-  border-color: var(--border-h);
-  background: rgba(255,255,255,0.035);
-  transform: translateX(4px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
-}
-.proj-row:focus-visible {
-  box-shadow: 0 0 0 2px var(--accent);
-}
-
-/* Number */
-.proj-row__num {
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: var(--t3);
-  font-family: var(--mono);
-  transition: color 0.25s ease;
-}
-.proj-row:hover .proj-row__num { color: var(--accent); }
-
-/* Thumbnail */
-.proj-row__thumb {
-  position: relative;
-  width: 110px;
-  aspect-ratio: 16 / 10;
-  border-radius: 10px;
-  overflow: hidden;
-  background: linear-gradient(135deg, #0c0d0e, #12141a);
-  flex-shrink: 0;
-}
-.proj-row__thumb img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  filter: grayscale(100%) brightness(0.7);
-  transition: filter 0.4s ease, transform 0.4s ease;
-}
-.proj-row:hover .proj-row__thumb img {
-  filter: grayscale(30%) brightness(0.85);
-  transform: scale(1.08);
-}
-.proj-row__thumb-fb {
-  width: 100%; height: 100%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.8rem; opacity: 0.2;
-}
-
-/* Info */
-.proj-row__info {
-  min-width: 0;
-}
-.proj-row__meta {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.25rem;
-}
-.proj-row__cat {
-  font-size: 0.6rem;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-}
-.proj-row__impact {
-  font-size: 0.56rem;
-  font-weight: 600;
-  color: var(--t3);
-  padding: 0.12rem 0.45rem;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-}
-.proj-row__title {
-  font-size: 0.92rem;
-  font-weight: 700;
-  color: var(--t1);
-  margin: 0 0 0.15rem;
-  line-height: 1.25;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.proj-row__tag {
-  font-size: 0.74rem;
-  color: var(--t3);
-  line-height: 1.5;
-  margin: 0 0 0.45rem;
-  display: -webkit-box;
-  --webkit-line-clamp: 1;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.proj-row__techs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-}
-.proj-row__techs span {
-  padding: 0.18rem 0.5rem;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 999px;
-  font-size: 0.6rem;
-  color: var(--t3);
-  white-space: nowrap;
-}
-.proj-row__more {
-  color: var(--accent) !important;
-  font-weight: 700;
-  border-color: transparent !important;
-  background: none !important;
-}
-
-/* End: status + arrow */
-.proj-row__end {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-  flex-shrink: 0;
-}
-.proj-row__dot {
-  width: 7px; height: 7px; border-radius: 50%;
-}
-.proj-row__dot.live { background: var(--green); box-shadow: 0 0 6px rgba(34,197,94,0.6); animation: pulse 2s infinite; }
-.proj-row__dot.development { background: var(--amber); box-shadow: 0 0 6px rgba(245,158,11,0.5); }
-.proj-row__arrow {
-  color: var(--t3);
-  transition: color 0.25s ease, transform 0.25s ease;
-}
-.proj-row:hover .proj-row__arrow {
-  color: var(--accent);
-  transform: translateX(4px);
 }
 
 
@@ -1841,13 +1889,8 @@ onUnmounted(() => {
    RESPONSIVE
    ═══════════════════════════════════════════════════════ */
 
-/* Tablet: rows become more compact */
 @media (max-width: 860px) {
-  .proj-row {
-    grid-template-columns: 32px 85px 1fr auto;
-    gap: 0.65rem;
-    padding: 0.7rem 0.85rem;
-  }
+  .acc__content { min-width: 360px; }
   .modal {
     grid-template-columns: 1fr;
     max-height: 90vh;
@@ -1862,7 +1905,7 @@ onUnmounted(() => {
   }
 }
 
-/* Mobile: rows stack, modal full screen */
+/* Mobile: accordion turns vertical, modal goes full screen */
 @media (max-width: 640px) {
   .proj {
     padding-left: 16px;
@@ -1873,37 +1916,21 @@ onUnmounted(() => {
     align-items: flex-start;
     gap: 0.65rem;
   }
-  .feat__content {
-    min-height: 280px;
-    padding: 1rem 1.15rem;
-  }
-  .feat__title {
-    font-size: 1.5rem;
-  }
 
-  .proj-row {
-    grid-template-columns: 1fr 28px;
-    grid-template-rows: auto auto;
-    gap: 0 0.5rem;
-    padding: 0.75rem;
-    border-radius: 14px;
-  }
-  .proj-row__num { display: none; }
-  .proj-row__thumb {
-    width: 100%;
-    aspect-ratio: 16 / 9;
-    grid-column: 1 / -1;
-    order: -1;
-    border-radius: 10px;
-  }
-  .proj-row__info { grid-column: 1; }
-  .proj-row__end {
-    grid-column: 2;
-    grid-row: 2;
+  .acc {
     flex-direction: column;
-    gap: 0.3rem;
+    height: 600px;
+    gap: 8px;
   }
-  .proj-row__tag { --webkit-line-clamp: 2; }
+  .acc__card { border-radius: 14px; min-height: 58px; }
+  .acc__card.is-active { flex-grow: 7; }
+  .acc__strip-num { left: auto; right: 16px; bottom: auto; top: 50%; transform: translateY(-50%); }
+  .acc__content { min-width: 0; max-width: none; padding: 18px 18px 20px 18px; }
+  .acc__card.is-active .acc__icon { top: 16px; left: 18px; }
+  .acc__title { top: 62px; left: 18px; right: 18px; font-size: 1.4rem; }
+  .acc__top { margin-left: 50px; }
+  .acc__bot { gap: 0.6rem; }
+  .acc__tag { font-size: 0.78rem; line-height: 1.5; }
 
   .modal-overlay { padding: 0; }
   .modal {

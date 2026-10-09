@@ -131,6 +131,39 @@ a:hover {
   color: #000;
 }
 
+/* Base Styles & Reset */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #1a1a1a; color: #ffffff; font-family: 'Inter', sans-serif; }
+a { text-decoration: none; color: inherit; }
+ul { list-style: none; }
+
+/* Utility */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+.btn-primary {
+  background: #ff6b35; /* The Persona Orange */
+  color: #fff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.btn-primary:hover { background: #e55a2b; }
+
+/* Existing Animation Logic */
+.is-loaded .anim-rise {
+  opacity: 1;
+  transform: translateY(0) rotate(0deg);
+}
+.anim-rise {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 4px; }
